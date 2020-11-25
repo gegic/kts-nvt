@@ -1,10 +1,9 @@
-package model;
+package rs.ac.uns.ftn.ktsnvt.kultura.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +14,9 @@ public class User {
     @Id
     @Getter
     private UUID id;
+    @Getter
+    @Setter
+    private String username;
     @Getter
     @Setter
     private String email;
@@ -42,9 +44,6 @@ public class User {
     @Setter
     private List<Authority> authorities;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Getter
-    @Setter
-    private HashSet<Subscription> subscriptions;
-
+    @ManyToMany(mappedBy = "subscribedUsers")
+    private List<CulturalOffering> subscriptions;
 }

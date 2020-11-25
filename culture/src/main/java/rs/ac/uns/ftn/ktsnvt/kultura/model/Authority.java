@@ -1,4 +1,4 @@
-package model;
+package rs.ac.uns.ftn.ktsnvt.kultura.model;
 
 import javax.persistence.Id;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package model;
+package rs.ac.uns.ftn.ktsnvt.kultura.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -77,9 +78,12 @@ public class CulturalOffering {
     @Setter
     private HashSet<Post> posts;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "subscription",
+            joinColumns = @JoinColumn(name = "cultural_offering_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     @Getter
     @Setter
-    private HashSet<Subscription> subscriptions;
+    private List<User> subscribedUsers;
 
 }
