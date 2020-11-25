@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.ktsnvt.culture;
+package rs.ac.uns.ftn.ktsnvt.kultura;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
