@@ -7,8 +7,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+@Entity
 public class User {
 
     @Id
@@ -42,8 +44,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     @Getter
     @Setter
-    private List<Authority> authorities;
+    private Set<Authority> authorities;
 
     @ManyToMany(mappedBy = "subscribedUsers")
-    private List<CulturalOffering> subscriptions;
+    private Set<CulturalOffering> subscriptions;
 }

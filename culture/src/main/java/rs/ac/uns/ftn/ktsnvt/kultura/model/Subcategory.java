@@ -5,8 +5,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+@Entity
 public class Subcategory {
 
     @Id
@@ -25,7 +27,7 @@ public class Subcategory {
     @OneToMany(mappedBy = "subcategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private List<CulturalOffering> culturalOfferings;
+    private Set<CulturalOffering> culturalOfferings;
 
 
 }

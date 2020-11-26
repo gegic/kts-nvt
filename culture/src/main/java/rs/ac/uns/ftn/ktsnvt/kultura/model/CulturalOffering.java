@@ -9,8 +9,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class CulturalOffering {
@@ -58,25 +60,25 @@ public class CulturalOffering {
     @Setter
     private String additionalInfo;
 
-    @OneToOne
+    @ManyToOne
     @Getter
     @Setter
     private Subcategory subcategory;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private HashSet<Review> reviews;
+    private Set<Review> reviews;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private HashSet<Photo> photos;
+    private Set<Photo> photos;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private HashSet<Post> posts;
+    private Set<Post> posts;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "subscription",

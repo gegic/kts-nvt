@@ -28,6 +28,10 @@ public class UserService {
         return userRepository.findAll(p);
     }
 
+//    public Page<User> readByType(Pageable p, String authority) {
+//
+//    }
+
     public Optional<User> readById(UUID id) {
         return userRepository.findById(id);
     }
