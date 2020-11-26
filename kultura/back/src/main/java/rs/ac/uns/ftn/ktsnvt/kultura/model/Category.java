@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category {
+
     @Id
     @Getter
     private UUID id;

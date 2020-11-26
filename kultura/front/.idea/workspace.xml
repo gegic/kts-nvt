@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4736b11d-c123-4664-a1fe-4324338a8c4a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/KulturaApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/controller/CategoryController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/controller/CulturalOfferingController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/controller/PhotoController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/controller/PostController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/controller/ReviewController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/model/Authority.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/model/Category.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/model/CulturalOffering.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/model/Photo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/model/Post.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/model/Review.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/model/Subcategory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/model/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/repository/CategoryRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/repository/CulturalOfferingRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/repository/PhotoRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/repository/PostRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/repository/ReviewRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/repository/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/service/CategoryService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/service/CulturalOfferingService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/service/PhotoService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/service/PostService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/service/ReviewService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/rs/ac/uns/ftn/ktsnvt/kultura/utils/PageableExtractor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/rs/ac/uns/ftn/ktsnvt/kultura/CultureApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="1kpkOo31NORiAYgoxLUnPpoJLcD" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4736b11d-c123-4664-a1fe-4324338a8c4a" name="Default Changelist" comment="" />
+      <created>1606404891241</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1606404891241</updated>
+      <workItem from="1606404892408" duration="142000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="549" y="153" key="FileChooserDialogImpl" timestamp="1606405007651">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="549" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1606405007651" />
+  </component>
+</project>
