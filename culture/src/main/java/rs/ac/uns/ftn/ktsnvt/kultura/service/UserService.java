@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,8 +28,8 @@ public class UserService {
         return userRepository.findAll(p);
     }
 
-    public User readById(UUID id) {
-        return userRepository.findById(id).orElse(null);
+    public Optional<User> readById(UUID id) {
+        return userRepository.findById(id);
     }
 
     public User create(User entity) throws Exception {

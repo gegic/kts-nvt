@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,8 +23,8 @@ public class CulturalOfferingService {
         return culturalOfferingRepository.findAll(p);
     }
 
-    public CulturalOffering readById(UUID id) {
-        return culturalOfferingRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public Optional<CulturalOffering> readById(UUID id) {
+        return culturalOfferingRepository.findById(id);
     }
 
     public CulturalOffering save(CulturalOffering c) {

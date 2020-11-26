@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingService;
+import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,30 +23,34 @@ public class CulturalOfferingController {
     private CulturalOfferingService culturalOfferingService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<CulturalOffering>> getAll(@RequestBody Pageable p) {
-        // TODO videcemo da li slat cijelu stranu DTOa ili radit neki dto od svega ovoga :D
-        return new ResponseEntity<>(this.culturalOfferingService.readAll(p), HttpStatus.OK);
+    public ResponseEntity<Page<CulturalOffering>> getAll(@RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "3") int size,
+                                                         @RequestParam(defaultValue = "id,desc") String[] sort) {
+
+        Pageable p = PageableExtractor.extract(page, size, sort);
+        return ResponseEntity.ok(this.culturalOfferingService.readAll(p));
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<CulturalOffering> get(@PathVariable String id){
-        return new ResponseEntity<>(this.culturalOfferingService.readById(UUID.fromString(id)), HttpStatus.OK);
+        return ResponseEntity.of(this.culturalOfferingService.readById(UUID.fromString(id)));
     }
 
-    @PostMapping()
+    @PostMapping
     ResponseEntity<CulturalOffering> add(@RequestBody CulturalOffering culturalOffering){
-        return new ResponseEntity<>(this.culturalOfferingService.save(culturalOffering), HttpStatus.CREATED);
+        CulturalOffering saved = this.culturalOfferingService.save(culturalOffering);
+        return ResponseEntity.created(URI.create("/api/cultural-offering/" + saved.getId())).body(saved);
     }
 
-    @PutMapping()
+    @PutMapping
     ResponseEntity<CulturalOffering> update(@RequestBody CulturalOffering culturalOffering){
-        return new ResponseEntity<>(this.culturalOfferingService.save(culturalOffering), HttpStatus.CREATED);
+        return ResponseEntity.ok(this.culturalOfferingService.save(culturalOffering));
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id){
         this.culturalOfferingService.delete(UUID.fromString(id));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 }

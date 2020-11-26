@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Photo;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.PhotoService;
+import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -22,37 +24,36 @@ public class PhotoController {
     private PhotoService photoService;
 
 
-    @GetMapping(path = "/{culturalOfferingId}/{pageNumber}/{pageSize}/{sort}/{desc}", produces = "application/json")
+    @GetMapping(path = "/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<Photo>> get(@PathVariable String culturalOfferingId,
-                                     @PathVariable int pageNumber,
-                                     @PathVariable int pageSize,
-                                     @PathVariable String sort,
-                                     @PathVariable boolean desc){
-        Pageable p;
-        if (sort != null) {
-            Sort s;
-            if (desc) s = Sort.by(Sort.Direction.DESC, sort);
-            else s = Sort.by(Sort.Direction.ASC, sort);
-            p = PageRequest.of(--pageNumber, pageSize, s);
-        } else p = PageRequest.of(--pageNumber, pageSize);
-        return new ResponseEntity<>(this.photoService.readAllByCulturalOfferingId(UUID.fromString(culturalOfferingId),
-                p), HttpStatus.OK);
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "3") int size,
+                                           @RequestParam(defaultValue = "id,desc") String[] sort){
+
+        Pageable p = PageableExtractor.extract(page, size, sort);
+        return ResponseEntity.ok(this.photoService.readAllByCulturalOfferingId(UUID.fromString(culturalOfferingId), p));
     }
 
-    @PostMapping()
+    @GetMapping(path="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Photo> getById(@PathVariable UUID id) {
+        return ResponseEntity.of(this.photoService.readById(id));
+    }
+
+    @PostMapping
     ResponseEntity<Photo> add(@RequestBody Photo Photo){
-        return new ResponseEntity<>(this.photoService.save(Photo), HttpStatus.CREATED);
+        Photo saved = this.photoService.save(Photo);
+        return ResponseEntity.created(URI.create(String.format("/api/photo/%s", saved.getId()))).body(saved);
     }
 
-    @PutMapping()
+    @PutMapping
     ResponseEntity<Photo> update(@RequestBody Photo Photo){
-        return new ResponseEntity<>(this.photoService.save(Photo), HttpStatus.CREATED);
+        return ResponseEntity.ok(this.photoService.save(Photo));
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id){
         this.photoService.delete(UUID.fromString(id));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 }

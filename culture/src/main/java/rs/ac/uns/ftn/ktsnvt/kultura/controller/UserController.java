@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
+import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -19,31 +21,35 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<User>> getAll(@RequestBody Pageable p) {
+    @GetMapping(path = "moderators", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<User>> getModerators(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "3") int size,
+                                                    @RequestParam(defaultValue = "id,desc") String[] sort) {
         // TODO DTO and factory soon
-        return new ResponseEntity<>(this.userService.readAll(p), HttpStatus.OK);
+        Pageable p = PageableExtractor.extract(page, size, sort);
+        return ResponseEntity.ok(this.userService.readAll(p));
     }
 
-    @GetMapping(path = "/{id}", produces = "application/json")
+    @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> get(@PathVariable String id){
-        return new ResponseEntity<>(this.userService.readById(UUID.fromString(id)), HttpStatus.OK);
+        return ResponseEntity.of(this.userService.readById(UUID.fromString(id)));
     }
 
-    @PostMapping()
+    @PostMapping
     ResponseEntity<User> add(@RequestBody User user) throws Exception {
-        return new ResponseEntity<>(this.userService.create(user), HttpStatus.CREATED);
+        User saved = this.userService.create(user);
+        return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
 
-    @PutMapping()
+    @PutMapping
     ResponseEntity<User> update(@RequestBody User user) throws Exception {
-        return new ResponseEntity<>(this.userService.update(user), HttpStatus.CREATED);
+        return ResponseEntity.ok(this.userService.update(user));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     ResponseEntity<Void> delete(@PathVariable String id) throws Exception {
         this.userService.delete(UUID.fromString(id));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 }

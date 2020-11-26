@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,8 +21,8 @@ public class CategoryService {
         return categoryRepository.findAll(p);
     }
 
-    public Category readById(UUID id) {
-        return categoryRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public Optional<Category> readById(UUID id) {
+        return categoryRepository.findById(id);
     }
 
     public Category save(Category c) {

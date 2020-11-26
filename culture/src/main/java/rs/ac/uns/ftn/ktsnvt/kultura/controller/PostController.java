@@ -10,8 +10,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.PostService;
+import rs.ac.uns.ftn.ktsnvt.kultura.service.PostService;
+import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -21,38 +25,36 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-
-    @GetMapping(path = "/{culturalOfferingId}/{pageNumber}/{pageSize}/{sort}/{desc}", produces = "application/json")
+    @GetMapping(path = "/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<Post>> get(@PathVariable String culturalOfferingId,
-                                    @PathVariable int pageNumber,
-                                    @PathVariable int pageSize,
-                                    @PathVariable String sort,
-                                    @PathVariable boolean desc){
-        Pageable p;
-        if (sort != null) {
-            Sort s;
-            if (desc) s = Sort.by(Sort.Direction.DESC, sort);
-            else s = Sort.by(Sort.Direction.ASC, sort);
-            p = PageRequest.of(--pageNumber, pageSize, s);
-        } else p = PageRequest.of(--pageNumber, pageSize);
-        return new ResponseEntity<>(this.postService.readAllByCulturalOfferingId(UUID.fromString(culturalOfferingId),
-                p), HttpStatus.OK);
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "3") int size,
+                                           @RequestParam(defaultValue = "id,desc") String[] sort){
+
+        Pageable p = PageableExtractor.extract(page, size, sort);
+        return ResponseEntity.ok(this.postService.readAllByCulturalOfferingId(UUID.fromString(culturalOfferingId), p));
     }
 
-    @PostMapping()
-    ResponseEntity<Post> add(@RequestBody Post post){
-        return new ResponseEntity<>(this.postService.save(post), HttpStatus.CREATED);
+    @GetMapping(path="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Post> getById(@PathVariable UUID id) {
+        return ResponseEntity.of(this.postService.readById(id));
     }
 
-    @PutMapping()
-    ResponseEntity<Post> update(@RequestBody Post post){
-        return new ResponseEntity<>(this.postService.save(post), HttpStatus.CREATED);
+    @PostMapping
+    ResponseEntity<Post> add(@RequestBody Post Post){
+        Post saved = this.postService.save(Post);
+        return ResponseEntity.created(URI.create(String.format("/api/post/%s", saved.getId()))).body(saved);
+    }
+
+    @PutMapping
+    ResponseEntity<Post> update(@RequestBody Post Post){
+        return ResponseEntity.ok(this.postService.save(Post));
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id){
         this.postService.delete(UUID.fromString(id));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 }
