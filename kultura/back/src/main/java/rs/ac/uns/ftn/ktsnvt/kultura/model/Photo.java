@@ -8,19 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-public class Photo {
-    @Id
-    @Getter
-    private UUID id;
-    @Getter
-    @Setter
-    private int width;
-    @Getter
-    @Setter
-    private int height;
-    @Getter
-    @Setter
-    private LocalDateTime timeAdded;
+public class Photo extends AbstractPhoto {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter

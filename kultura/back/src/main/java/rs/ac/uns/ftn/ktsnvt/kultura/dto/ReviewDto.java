@@ -1,15 +1,18 @@
-package rs.ac.uns.ftn.ktsnvt.kultura.model;
+package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Photo;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity
-public class Review {
+@AllArgsConstructor
+public class ReviewDto {
     @Id
     @Getter
     private UUID id;
@@ -26,14 +29,11 @@ public class Review {
     @Setter
     private LocalDateTime timeAdded;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
-    private CulturalOffering culturalOffering;
+    private UUID culturalOfferingId;
 
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private Set<Photo> photos;
-
+    private Set<UUID> photos;
 }
