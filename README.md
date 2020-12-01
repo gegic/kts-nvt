@@ -1,6 +1,6 @@
 # kultura
 
-**kultura** is being developed by the _team14_ for the KTSNVT class at the FTNUNS.
+**kultura** is being developed by the _Team14_ for the KTSNVT class at the FTNUNS.
 
 ## Prototype
 
