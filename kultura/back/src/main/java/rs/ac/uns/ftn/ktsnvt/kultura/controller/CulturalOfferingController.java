@@ -1,9 +1,9 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,15 +12,20 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/api/cultural-offering/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CulturalOfferingController {
 
-    @Autowired
     private CulturalOfferingService culturalOfferingService;
+    private ModelMapper modelMapper;
+
+    @Autowired
+    public CulturalOfferingController(CulturalOfferingService culturalOfferingService, ModelMapper modelMapper) {
+        this.culturalOfferingService = culturalOfferingService;
+        this.modelMapper = modelMapper;
+    }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CulturalOffering>> getAll(@RequestParam(defaultValue = "0") int page,

@@ -1,10 +1,9 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +18,14 @@ import java.util.UUID;
 @RequestMapping(path = "/api/category/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CategoryController {
 
-    @Autowired
     private CategoryService categoryService;
+    private ModelMapper modelMapper;
+
+    @Autowired
+    public CategoryController(CategoryService categoryService, ModelMapper modelMapper) {
+        this.categoryService = categoryService;
+        this.modelMapper = modelMapper;
+    }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<Category>> getAll(@RequestParam(defaultValue = "0") int page,

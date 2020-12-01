@@ -1,18 +1,13 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Review;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.Review;
-import rs.ac.uns.ftn.ktsnvt.kultura.service.ReviewService;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.ReviewService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
@@ -22,9 +17,15 @@ import java.util.UUID;
 @RestController
 @RequestMapping(path = "/api/review/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ReviewController {
-    @Autowired
-    private ReviewService reviewService;
 
+    private ReviewService reviewService;
+    private ModelMapper modelMapper;
+
+    @Autowired
+    public ReviewController(ReviewService reviewService, ModelMapper modelMapper) {
+        this.reviewService = reviewService;
+        this.modelMapper = modelMapper;
+    }
 
     @GetMapping(path = "/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<Review>> get(@PathVariable String culturalOfferingId,
