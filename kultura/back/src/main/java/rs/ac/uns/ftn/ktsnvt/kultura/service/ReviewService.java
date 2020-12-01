@@ -26,6 +26,9 @@ public class ReviewService {
     }
 
     public Review save(Review p) {
+//        if(p.getCulturalOffering()==null){
+//            throw new Exception("Added review has no reviewwd cultural offering.");
+//        }
         return reviewRepository.save(p);
     }
 

@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Review {
     @Id
     @Getter
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @Getter
     @Setter
@@ -34,6 +34,6 @@ public class Review {
     @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private Set<Photo> photos;
+    private Set<ReviewPhoto> photos;
 
 }
