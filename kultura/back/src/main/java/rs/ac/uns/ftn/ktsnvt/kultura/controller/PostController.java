@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.PostDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.PostService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
@@ -26,29 +27,33 @@ public class PostController {
     }
 
     @GetMapping(path = "/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<Post>> get(@PathVariable String culturalOfferingId,
+    public ResponseEntity<Page<PostDto>> get(@PathVariable String culturalOfferingId,
                                            @RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "3") int size,
                                            @RequestParam(defaultValue = "id,desc") String[] sort){
 
         Pageable p = PageableExtractor.extract(page, size, sort);
-        return ResponseEntity.ok(this.postService.readAllByCulturalOfferingId(UUID.fromString(culturalOfferingId), p));
+        Page<PostDto> postDtos = this.postService
+                .readAllByCulturalOfferingId(UUID.fromString(culturalOfferingId), p)
+                .map(post -> modelMapper.map(post, PostDto.class));
+        return ResponseEntity.ok(postDtos);
     }
 
     @GetMapping(path="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Post> getById(@PathVariable UUID id) {
-        return ResponseEntity.of(this.postService.readById(id));
+    public ResponseEntity<PostDto> getById(@PathVariable UUID id) {
+        return ResponseEntity.of(this.postService.readById(id).map(post -> modelMapper.map(post, PostDto.class)));
     }
 
     @PostMapping
-    ResponseEntity<Post> add(@RequestBody Post Post){
+    ResponseEntity<PostDto> add(@RequestBody Post Post){
         Post saved = this.postService.save(Post);
-        return ResponseEntity.created(URI.create(String.format("/api/post/%s", saved.getId()))).body(saved);
+        return ResponseEntity.created(URI.create(String.format("/api/post/%s", saved.getId())))
+                .body(modelMapper.map(saved, PostDto.class));
     }
 
     @PutMapping
-    ResponseEntity<Post> update(@RequestBody Post Post){
-        return ResponseEntity.ok(this.postService.save(Post));
+    ResponseEntity<PostDto> update(@RequestBody Post Post){
+        return ResponseEntity.ok(modelMapper.map(this.postService.save(Post), PostDto.class));
     }
 
     @DeleteMapping("/{id}")

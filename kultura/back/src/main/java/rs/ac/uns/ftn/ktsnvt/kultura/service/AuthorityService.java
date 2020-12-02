@@ -22,7 +22,7 @@ public class AuthorityService {
     }
 
     public List<Authority> findByName(String name) {
-        Authority auth = this.authorityRepository.findByName(name);
+        Authority auth = this.authorityRepository.findByAuthority(name);
         List<Authority> auths = new ArrayList<>();
         auths.add(auth);
         return auths;

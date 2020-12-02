@@ -8,23 +8,17 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name="authority")
 public class Authority implements GrantedAuthority {
 
     @Getter
     @Setter
     @Id
-    @Column(name="id")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Getter
     @Setter
-    @Column(name="name")
-    String name;
-
-
-    public String getAuthority() {
-        return name;
-    }
+    @Column
+    private String authority; // name of the authority
 }

@@ -39,18 +39,20 @@ public class UserController {
 
     @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> get(@PathVariable String id){
-        return ResponseEntity.of(this.userService.readById(UUID.fromString(id)).map(u -> modelMapper.map(u, UserDto.class)));
+        return ResponseEntity.of(this.userService.readById(UUID.fromString(id))
+                .map(u -> modelMapper.map(u, UserDto.class)));
     }
 
     @PostMapping
-    ResponseEntity<User> add(@RequestBody User user) throws Exception {
+    ResponseEntity<UserDto> add(@RequestBody User user) throws Exception {
         User saved = this.userService.create(user);
-        return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
+        return ResponseEntity.created(URI.create("/api/user/" + saved.getId()))
+                .body(modelMapper.map(saved, UserDto.class));
     }
 
     @PutMapping
-    ResponseEntity<User> update(@RequestBody User user) throws Exception {
-        return ResponseEntity.ok(this.userService.update(user));
+    ResponseEntity<UserDto> update(@RequestBody User user) throws Exception {
+        return ResponseEntity.ok(modelMapper.map(this.userService.update(user), UserDto.class));
     }
 
     @DeleteMapping("{id}")

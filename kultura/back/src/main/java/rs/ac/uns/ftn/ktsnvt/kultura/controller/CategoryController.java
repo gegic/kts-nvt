@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CategoryService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
@@ -28,30 +29,32 @@ public class CategoryController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<Category>> getAll(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<Page<CategoryDto>> getAll(@RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "3") int size,
                                                  @RequestParam(defaultValue = "id,desc") String[] sort) {
 
-        // TODO DTO and factory soon
-
         Pageable p = PageableExtractor.extract(page, size, sort);
-        return ResponseEntity.ok(this.categoryService.readAll(p));
+        Page<CategoryDto> categoryDtos = this.categoryService.readAll(p)
+                .map(c -> modelMapper.map(c, CategoryDto.class));
+        return ResponseEntity.ok(categoryDtos);
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<Category> get(@PathVariable String id){
-        return ResponseEntity.of(this.categoryService.readById(UUID.fromString(id)));
+    public ResponseEntity<CategoryDto> get(@PathVariable String id){
+        return ResponseEntity.of(this.categoryService.readById(UUID.fromString(id))
+                .map(c -> modelMapper.map(c, CategoryDto.class)));
     }
 
     @PostMapping
-    ResponseEntity<Category> add(@RequestBody Category category){
+    ResponseEntity<CategoryDto> add(@RequestBody Category category){
         Category saved = this.categoryService.save(category);
-        return ResponseEntity.created(URI.create("/api/category/" + saved.getId())).body(saved);
+        return ResponseEntity.created(URI.create("/api/category/" + saved.getId()))
+                .body(modelMapper.map(saved, CategoryDto.class));
     }
 
     @PutMapping
-    ResponseEntity<Category> update(@RequestBody Category category){
-        return ResponseEntity.ok(this.categoryService.save(category));
+    ResponseEntity<CategoryDto> update(@RequestBody Category category){
+        return ResponseEntity.ok(modelMapper.map(this.categoryService.save(category), CategoryDto.class));
     }
 
     @DeleteMapping("/{id}")

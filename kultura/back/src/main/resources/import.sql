@@ -1,3 +1,2 @@
-
-INSERT INTO authority (name) VALUES ('ROLE_ADMIN');
-INSERT INTO authority (name) VALUES ('ROLE_USER');
+INSERT INTO authority (authority) VALUES ('ROLE_ADMIN');
+INSERT INTO authority (authority) VALUES ('ROLE_USER');

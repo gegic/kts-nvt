@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-public class User {
+public class User implements UserDetails {
 
     @Id
     @Getter
@@ -48,4 +49,24 @@ public class User {
 
     @ManyToMany(mappedBy = "subscribedUsers")
     private Set<CulturalOffering> subscriptions;
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

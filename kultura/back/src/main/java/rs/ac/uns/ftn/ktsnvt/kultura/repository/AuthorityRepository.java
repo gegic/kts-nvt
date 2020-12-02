@@ -5,5 +5,5 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {
 
-    Authority findByName(String name);
+    Authority findByAuthority(String authority);
 }

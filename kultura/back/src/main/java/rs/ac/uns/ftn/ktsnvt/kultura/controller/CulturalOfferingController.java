@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
@@ -28,28 +29,33 @@ public class CulturalOfferingController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<CulturalOffering>> getAll(@RequestParam(defaultValue = "0") int page,
-                                                         @RequestParam(defaultValue = "3") int size,
-                                                         @RequestParam(defaultValue = "id,desc") String[] sort) {
+    public ResponseEntity<Page<CulturalOfferingDto>> getAll(@RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "3") int size,
+                                                            @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         Pageable p = PageableExtractor.extract(page, size, sort);
-        return ResponseEntity.ok(this.culturalOfferingService.readAll(p));
+        return ResponseEntity.ok(this.culturalOfferingService.readAll(p)
+                .map(co -> modelMapper.map(co, CulturalOfferingDto.class)));
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<CulturalOffering> get(@PathVariable String id){
-        return ResponseEntity.of(this.culturalOfferingService.readById(UUID.fromString(id)));
+    public ResponseEntity<CulturalOfferingDto> get(@PathVariable String id){
+        return ResponseEntity.of(this.culturalOfferingService
+                .readById(UUID.fromString(id))
+                .map(co -> modelMapper.map(co, CulturalOfferingDto.class)));
     }
 
     @PostMapping
-    ResponseEntity<CulturalOffering> add(@RequestBody CulturalOffering culturalOffering){
+    ResponseEntity<CulturalOfferingDto> add(@RequestBody CulturalOffering culturalOffering){
         CulturalOffering saved = this.culturalOfferingService.save(culturalOffering);
-        return ResponseEntity.created(URI.create("/api/cultural-offering/" + saved.getId())).body(saved);
+        return ResponseEntity.created(URI.create("/api/cultural-offering/" + saved.getId()))
+                .body(modelMapper.map(saved, CulturalOfferingDto.class));
     }
 
     @PutMapping
-    ResponseEntity<CulturalOffering> update(@RequestBody CulturalOffering culturalOffering){
-        return ResponseEntity.ok(this.culturalOfferingService.save(culturalOffering));
+    ResponseEntity<CulturalOfferingDto> update(@RequestBody CulturalOffering culturalOffering){
+        return ResponseEntity.ok(modelMapper
+                .map(this.culturalOfferingService.save(culturalOffering), CulturalOfferingDto.class));
     }
 
     @DeleteMapping("/{id}")

@@ -3,18 +3,20 @@ package rs.ac.uns.ftn.ktsnvt.kultura.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
-
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
@@ -77,4 +79,8 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
 
+    @Override
+    public User loadUserByUsername(String s) throws UsernameNotFoundException {
+        return userRepository.findByEmailUsername(s).orElseThrow(() -> new UsernameNotFoundException(s));
+    }
 }
