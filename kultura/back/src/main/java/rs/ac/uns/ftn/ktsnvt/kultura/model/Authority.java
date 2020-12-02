@@ -1,19 +1,29 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-public class Authority {
+@Table(name="authority")
+public class Authority implements GrantedAuthority {
 
+    @Getter
+    @Setter
     @Id
-    private UUID id;
+    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
-    private String name;
+    @Getter
+    @Setter
+    @Column(name="name")
+    String name;
 
 
-    // will override something from ssecurity
     public String getAuthority() {
         return name;
     }
