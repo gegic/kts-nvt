@@ -8,7 +8,6 @@ import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 

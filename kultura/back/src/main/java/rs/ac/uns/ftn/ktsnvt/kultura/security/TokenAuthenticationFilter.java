@@ -1,10 +1,6 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
