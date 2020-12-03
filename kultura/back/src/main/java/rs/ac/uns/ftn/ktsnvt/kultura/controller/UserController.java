@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.controller;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
@@ -20,12 +18,10 @@ import java.net.URI;
 public class UserController {
 
     private UserService userService;
-    private ModelMapper modelMapper;
 
     @Autowired
-    private UserController(UserService userService, ModelMapper modelMapper) {
+    private UserController(UserService userService) {
         this.userService = userService;
-        this.modelMapper = modelMapper;
     }
 
     @GetMapping(path = "moderators", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,14 +29,13 @@ public class UserController {
                                                     @RequestParam(defaultValue = "3") int size,
                                                     @RequestParam(defaultValue = "id,desc") String[] sort) {
         Pageable p = PageableExtractor.extract(page, size, sort);
-        Page<UserDto> moderatorsDto = this.userService.readAll(p).map(m -> modelMapper.map(m, UserDto.class));
+        Page<UserDto> moderatorsDto = this.userService.readAll(p);
         return ResponseEntity.ok(moderatorsDto);
     }
 
     @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> get(@PathVariable String id){
-        return ResponseEntity.of(this.userService.readById(Long.parseLong(id))
-                .map(u -> modelMapper.map(u, UserDto.class)));
+    public ResponseEntity<UserDto> get(@PathVariable long id){
+        return ResponseEntity.of(this.userService.readById(id));
     }
 
     @PostMapping

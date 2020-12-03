@@ -13,11 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.security.RestAuthenticationEntryPoint;
-import rs.ac.uns.ftn.ktsnvt.kultura.security.Token;
-import rs.ac.uns.ftn.ktsnvt.kultura.security.TokenAuthenticationFilter;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
 
 @Configuration

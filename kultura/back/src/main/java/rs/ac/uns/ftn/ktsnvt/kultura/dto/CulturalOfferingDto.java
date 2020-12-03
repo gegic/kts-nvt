@@ -6,12 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityField;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.*;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingPhoto;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor

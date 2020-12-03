@@ -3,7 +3,6 @@ package rs.ac.uns.ftn.ktsnvt.kultura.security;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 
 public class Token extends AbstractAuthenticationToken {

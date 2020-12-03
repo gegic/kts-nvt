@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Ignore;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.IgnoreType;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 

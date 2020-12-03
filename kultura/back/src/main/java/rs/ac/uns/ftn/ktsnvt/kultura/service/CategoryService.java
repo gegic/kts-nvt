@@ -1,12 +1,12 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 
 import java.util.Optional;

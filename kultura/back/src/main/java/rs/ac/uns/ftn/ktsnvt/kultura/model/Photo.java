@@ -3,8 +3,9 @@ package rs.ac.uns.ftn.ktsnvt.kultura.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 
 
 @Entity

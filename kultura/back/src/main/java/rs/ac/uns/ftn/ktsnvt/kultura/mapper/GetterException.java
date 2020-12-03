@@ -1,7 +1,5 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.mapper;
 
-import lombok.Getter;
-
 import javax.el.MethodNotFoundException;
 import java.lang.reflect.Field;
 

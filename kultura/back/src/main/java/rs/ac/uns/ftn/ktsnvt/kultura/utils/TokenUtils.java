@@ -2,8 +2,6 @@ package rs.ac.uns.ftn.ktsnvt.kultura.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 
 import javax.servlet.http.HttpServletRequest;
