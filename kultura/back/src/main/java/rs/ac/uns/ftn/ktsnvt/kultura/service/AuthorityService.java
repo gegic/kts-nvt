@@ -6,13 +6,19 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.AuthorityRepository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AuthorityService {
 
+    private final AuthorityRepository authorityRepository;
+
     @Autowired
-    private AuthorityRepository authorityRepository;
+    public AuthorityService(AuthorityRepository authorityRepository) {
+        this.authorityRepository = authorityRepository;
+    }
 
     public List<Authority> findById(Long id) {
         Authority auth = this.authorityRepository.getOne(id);
@@ -21,9 +27,9 @@ public class AuthorityService {
         return auths;
     }
 
-    public List<Authority> findByName(String name) {
+    public Set<Authority> findByName(String name) {
         Authority auth = this.authorityRepository.findByAuthority(name);
-        List<Authority> auths = new ArrayList<>();
+        Set<Authority> auths = new HashSet<>();
         auths.add(auth);
         return auths;
     }

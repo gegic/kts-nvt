@@ -20,42 +20,39 @@ import java.net.URI;
 public class PhotoController {
 
     private PhotoService photoService;
-    private ModelMapper modelMapper;
 
     @Autowired
-    public PhotoController(PhotoService photoService, ModelMapper modelMapper) {
+    public PhotoController(PhotoService photoService) {
         this.photoService = photoService;
-        this.modelMapper = modelMapper;
     }
 
     @GetMapping(path = "/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<PhotoDto>> get(@PathVariable String culturalOfferingId,
-                                           @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "3") int size,
-                                           @RequestParam(defaultValue = "id,desc") String[] sort){
+    public ResponseEntity<Page<PhotoDto>> get(@PathVariable long culturalOfferingId,
+                                              @RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "3") int size,
+                                              @RequestParam(defaultValue = "id,desc") String[] sort){
 
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<PhotoDto> photoDtos = this.photoService
-                .readAllByCulturalOfferingId(Long.parseLong(culturalOfferingId), p)
-                .map(photo -> modelMapper.map(photo, PhotoDto.class));
+                .readAllByCulturalOfferingId(culturalOfferingId, p);
         return ResponseEntity.ok(photoDtos);
     }
 
     @GetMapping(path="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PhotoDto> getById(@PathVariable long id) {
-        return ResponseEntity.of(this.photoService.readById(id).map(photo -> modelMapper.map(photo, PhotoDto.class)));
+        return ResponseEntity.of(this.photoService.readById(id));
     }
 
     @PostMapping
-    ResponseEntity<PhotoDto> add(@RequestBody Photo Photo){
-        Photo saved = this.photoService.save(Photo);
+    ResponseEntity<PhotoDto> add(@RequestBody PhotoDto photoDto){
+        PhotoDto saved = this.photoService.save(photoDto);
         return ResponseEntity.created(URI.create(String.format("/api/photo/%s", saved.getId())))
-                .body(modelMapper.map(saved, PhotoDto.class));
+                .body(saved);
     }
 
     @PutMapping
-    ResponseEntity<PhotoDto> update(@RequestBody Photo Photo){
-        return ResponseEntity.ok(modelMapper.map(this.photoService.save(Photo), PhotoDto.class));
+    ResponseEntity<PhotoDto> update(@RequestBody PhotoDto photoDto){
+        return ResponseEntity.ok(this.photoService.save(photoDto));
     }
 
     @DeleteMapping("/{id}")

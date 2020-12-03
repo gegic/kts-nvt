@@ -44,15 +44,14 @@ public class UserController {
     }
 
     @PostMapping
-    ResponseEntity<UserDto> add(@RequestBody User user) throws Exception {
-        User saved = this.userService.create(user);
-        return ResponseEntity.created(URI.create("/api/user/" + saved.getId()))
-                .body(modelMapper.map(saved, UserDto.class));
+    ResponseEntity<UserDto> add(@RequestBody UserDto userDto) throws Exception {
+        UserDto saved = this.userService.create(userDto);
+        return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
 
     @PutMapping
-    ResponseEntity<UserDto> update(@RequestBody User user) throws Exception {
-        return ResponseEntity.ok(modelMapper.map(this.userService.update(user), UserDto.class));
+    ResponseEntity<UserDto> update(@RequestBody UserDto userDto) throws Exception {
+        return ResponseEntity.ok(this.userService.update(userDto));
     }
 
     @DeleteMapping("{id}")

@@ -4,32 +4,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.Photo;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Review;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.ReviewRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 
 @Service
 public class ReviewService {
-    
+
+
+    private final ReviewRepository reviewRepository;
+    private final Mapper mapper;
+
     @Autowired
-    private ReviewRepository reviewRepository;
-
-    public Page<Review> readAllByCulturalOfferingId(long culturalOfferingId, Pageable p) {
-        return reviewRepository.findAllByCulturalOfferingId(culturalOfferingId, p);
+    public ReviewService(ReviewRepository reviewRepository, Mapper mapper) {
+        this.reviewRepository = reviewRepository;
+        this.mapper = mapper;
     }
 
-    public Optional<Review> readById(long id) {
-        return reviewRepository.findById(id);
+    public Page<ReviewDto> readAllByCulturalOfferingId(long culturalOfferingId, Pageable p) {
+        return reviewRepository.findAllByCulturalOfferingId(culturalOfferingId, p)
+                .map(review -> mapper.fromEntity(review, ReviewDto.class));
     }
 
-    public Review save(Review p) {
-//        if(p.getCulturalOffering()==null){
-//            throw new Exception("Added review has no reviewwd cultural offering.");
-//        }
-        return reviewRepository.save(p);
+    public Optional<ReviewDto> readById(long id) {
+        return reviewRepository.findById(id).map(review -> mapper.fromEntity(review, ReviewDto.class));
+    }
+
+    public ReviewDto save(ReviewDto p) {
+        return mapper.fromEntity(reviewRepository.save(mapper.fromDto(p, Review.class)), ReviewDto.class);
     }
 
     public void delete(long id) {

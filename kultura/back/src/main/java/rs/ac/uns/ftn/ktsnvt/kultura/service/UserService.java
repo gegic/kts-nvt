@@ -6,65 +6,77 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
+import sun.security.util.Password;
+
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service
 public class UserService implements UserDetailsService {
+
+    private final UserRepository userRepository;
+    private final Mapper mapper;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthorityService authorityService;
     @Autowired
-    private UserRepository userRepository;
+    public UserService(UserRepository userRepository,
+                       Mapper mapper,
+                       PasswordEncoder passwordEncoder,
+                       AuthorityService authorityService) {
+        this.userRepository = userRepository;
+        this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
+        this.authorityService = authorityService;
+    }
 
-//    @Autowired // will be used in spring security
-//    private PasswordEncoder passwordEncoder;
-
-//    @Autowired
-//    private AuthorityService authService;
-
-    public Page<User> readAll(Pageable p) {
-        return userRepository.findAll(p);
+    public Page<UserDto> readAll(Pageable p) {
+        return userRepository.findAll(p).map(u -> mapper.fromEntity(u, UserDto.class));
     }
 
 //    public Page<User> readByType(Pageable p, String authority) {
 //
 //    }
 
-    public Optional<User> readById(long id) {
-        return userRepository.findById(id);
+    public Optional<UserDto> readById(long id) {
+        return userRepository.findById(id).map(u -> mapper.fromEntity(u, UserDto.class));
     }
 
-    public User create(User entity) throws Exception {
-        if(!userRepository.findByEmail(entity.getEmail()).isPresent()){
+    public UserDto create(UserDto dto) throws Exception {
+        if(!userRepository.findByEmail(dto.getEmail()).isPresent()){
             throw new Exception("User with given email address already exists");
         }
         User u = new User();
-        u.setUsername(entity.getUsername());
-        // pre nego sto postavimo lozinku u atribut hesiramo je
-//        u.setPassword(passwordEncoder.encode(entity.getPassword()));
-        u.setFirstName(entity.getFirstName());
-        u.setLastName(entity.getLastName());
-        u.setEmail(entity.getEmail());
+        u.setUsername(dto.getUsername());
+        u.setPassword(passwordEncoder.encode(dto.getPassword()));
+        u.setFirstName(dto.getFirstName());
+        u.setLastName(dto.getLastName());
+        u.setEmail(dto.getEmail());
 
-//        List<Authority> auth = authService.findByName("ROLE_USER");
-        // u primeru se registruju samo obicni korisnici i u skladu sa tim im se i dodeljuje samo rola USER
-//        u.setAuthorities(auth);
+        Set<Authority> auth = authorityService.findByName("ROLE_USER");
+        u.setAuthorities(auth);
 
         u = this.userRepository.save(u);
-        return u;
+        return mapper.fromEntity(u, UserDto.class);
     }
 
-    public User update(User entity) throws Exception {
-        User existingUser =  userRepository.findById(entity.getId()).orElse(null);
+    public UserDto update(UserDto userDto) throws Exception {
+        User existingUser =  userRepository.findById(userDto.getId()).orElse(null);
         if(existingUser == null){
             throw new Exception("User with given id doesn't exist");
         }
-        existingUser.setPassword(entity.getPassword());
-        return userRepository.save(existingUser);
+        existingUser.setPassword(userDto.getPassword());
+        return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
     }
 
     public void delete(long id) throws Exception {
@@ -73,10 +85,6 @@ public class UserService implements UserDetailsService {
             throw new Exception("User with given id doesn't exist");
         }
         userRepository.delete(existingUser);
-    }
-
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

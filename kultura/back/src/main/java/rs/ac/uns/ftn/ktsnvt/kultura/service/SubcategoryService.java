@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.SubcategoryDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.mapper.SubcategoryMapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
@@ -14,11 +14,14 @@ import java.util.Optional;
 @Service
 public class SubcategoryService {
 
-    @Autowired
     private SubcategoryRepository subcategoryRepository;
+    private Mapper mapper;
 
     @Autowired
-    private SubcategoryMapper subcategoryMapper;
+    public SubcategoryService(SubcategoryRepository categoryRepository, Mapper mapper) {
+        this.subcategoryRepository = categoryRepository;
+        this.mapper = mapper;
+    }
 
     public Optional<Subcategory> findById(long id) {
         return subcategoryRepository.findById(id);
@@ -29,6 +32,7 @@ public class SubcategoryService {
     }
 
     public Page<SubcategoryDto> findAllByCategoryId(long categoryId, Pageable p) {
-        return subcategoryRepository.findAllByCategoryId(categoryId, p).map(subcategoryMapper::fromEntity);
+        return subcategoryRepository.findAllByCategoryId(categoryId, p)
+                .map(s -> mapper.fromEntity(s, SubcategoryDto.class));
     }
 }

@@ -57,6 +57,11 @@ public class Mapper {
         Method m;
         Object fieldValue;
         for (Field field : fields) {
+            if(field.isAnnotationPresent(Ignore.class)
+                    && (field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.BOTH ||
+                    field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.ENTITY_TO_DTO)) {
+                continue;
+            }
             if (field.isAnnotationPresent(EntityKey.class)) {
                 setterName = String.format("set%s", StringUtils
                         .capitalize(field.getAnnotation(EntityKey.class).fieldName()));
@@ -122,6 +127,11 @@ public class Mapper {
         Method m;
         Object fieldValue;
         for (Field field : fields) {
+            if(field.isAnnotationPresent(Ignore.class)
+                    && (field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.BOTH ||
+                    field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.ENTITY_TO_DTO)) {
+                continue;
+            }
             setterName = String.format("set%s", StringUtils.capitalize(field.getName()));
             if (field.isAnnotationPresent(EntityKey.class)) {
                 try {
@@ -182,7 +192,6 @@ public class Mapper {
     private <TEntity> Object getOriginFromFieldName(Field field, TEntity entity) throws NoSuchFieldException, InvocationTargetException {
         String[] origins = Arrays.stream(StringUtils.splitByCharacterTypeCamelCase(field.getName()))
                 .map(StringUtils::lowerCase).toArray(String[]::new);
-
         return getOrigin(entity, origins);
     }
 

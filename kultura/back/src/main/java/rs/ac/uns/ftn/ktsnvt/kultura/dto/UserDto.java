@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Ignore;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.IgnoreType;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 
@@ -24,6 +26,11 @@ public class UserDto {
     @Getter
     @Setter
     private String email;
+
+    @Getter
+    @Setter
+    @Ignore(ignoreType = IgnoreType.ENTITY_TO_DTO)
+    private String password;
 
     @Getter
     @Setter
