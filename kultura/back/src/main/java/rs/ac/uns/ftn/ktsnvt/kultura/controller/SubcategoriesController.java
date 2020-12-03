@@ -1,0 +1,64 @@
+package rs.ac.uns.ftn.ktsnvt.kultura.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.SubcategoryDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.service.SubcategoryService;
+import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
+
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import java.net.URI;
+
+@RestController
+@RequestMapping(path = "/api/subcategories", produces = MediaType.APPLICATION_JSON_VALUE)
+public class SubcategoriesController {
+    private final SubcategoryService subcategoryService;
+
+    @Autowired
+    public SubcategoriesController(SubcategoryService subcategoryService) {
+        this.subcategoryService = subcategoryService;
+    }
+
+    @GetMapping("/category/{categoryId}")
+    ResponseEntity<Page<SubcategoryDto>> getSubcategoriesByCategoryId(@PathVariable long categoryId,
+                                                                      @RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(defaultValue = "3") int size,
+                                                                      @RequestParam(defaultValue = "id,desc") String[] sort) {
+        Pageable p = PageableExtractor.extract(page, size, sort);
+        return ResponseEntity.ok(this.subcategoryService.findAllByCategoryId(categoryId, p));
+    }
+
+    @PostMapping
+    ResponseEntity<SubcategoryDto> create(@RequestBody SubcategoryDto subcategoryDto) {
+        try {
+            SubcategoryDto saved = subcategoryService.create(subcategoryDto);
+            return ResponseEntity.created(URI.create(String.format("/%d", saved.getId()))).body(saved);
+        } catch (EntityExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+    }
+
+    @PutMapping
+    ResponseEntity<SubcategoryDto> update(@RequestBody SubcategoryDto subcategoryDto) {
+        try {
+            SubcategoryDto updated = subcategoryService.update(subcategoryDto);
+            return ResponseEntity.ok(updated);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> delete(@PathVariable long id) {
+        subcategoryService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+
+}

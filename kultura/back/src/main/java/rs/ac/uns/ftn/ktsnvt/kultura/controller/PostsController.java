@@ -14,21 +14,21 @@ import java.net.URI;
 
 
 @RestController
-@RequestMapping(path = "/api/post", produces = MediaType.APPLICATION_JSON_VALUE)
-public class PostController {
+@RequestMapping(path = "/api/posts", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PostsController {
 
-    private PostService postService;
+    private final PostService postService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostsController(PostService postService) {
         this.postService = postService;
     }
 
     @GetMapping(path = "/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<PostDto>> get(@PathVariable long culturalOfferingId,
-                                              @RequestParam(defaultValue = "0") int page,
-                                              @RequestParam(defaultValue = "3") int size,
-                                              @RequestParam(defaultValue = "id,desc") String[] sort){
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "3") int size,
+                                             @RequestParam(defaultValue = "id,desc") String[] sort){
 
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<PostDto> postDtos = this.postService

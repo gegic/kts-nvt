@@ -16,16 +16,14 @@ import java.net.URI;
 
 
 @RestController
-@RequestMapping(path = "/api/category", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CategoryController {
+@RequestMapping(path = "/api/categories", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CategoriesController {
 
-    private CategoryService categoryService;
-    private SubcategoryService subcategoryService;
+    private final CategoryService categoryService;
 
     @Autowired
-    public CategoryController(CategoryService categoryService, SubcategoryService subcategoryService) {
+    public CategoriesController(CategoryService categoryService) {
         this.categoryService = categoryService;
-        this.subcategoryService = subcategoryService;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,14 +58,6 @@ public class CategoryController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/subcategory/{categoryId}")
-    ResponseEntity<Page<SubcategoryDto>> getSubcategoriesByCategoryId(@PathVariable long categoryId,
-                                                                @RequestParam(defaultValue = "0") int page,
-                                                                @RequestParam(defaultValue = "3") int size,
-                                                                @RequestParam(defaultValue = "id,desc") String[] sort) {
-        Pageable p = PageableExtractor.extract(page, size, sort);
 
-        return ResponseEntity.ok(this.subcategoryService.findAllByCategoryId(categoryId, p));
-    }
 
 }

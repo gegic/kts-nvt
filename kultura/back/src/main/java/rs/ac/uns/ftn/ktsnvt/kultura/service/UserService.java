@@ -40,16 +40,16 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll(p).map(u -> mapper.fromEntity(u, UserDto.class));
     }
 
-//    public Page<User> readByType(Pageable p, String authority) {
-//
-//    }
+    public Page<UserDto> readByAuthority(Pageable p, String authority) {
+        return userRepository.findByAuthority(authority, p).map(u -> mapper.fromEntity(u, UserDto.class));
+    }
 
     public Optional<UserDto> readById(long id) {
         return userRepository.findById(id).map(u -> mapper.fromEntity(u, UserDto.class));
     }
 
     public UserDto create(UserDto dto) throws Exception {
-        if(!userRepository.findByEmail(dto.getEmail()).isPresent()){
+        if(userRepository.findByEmail(dto.getEmail()).isPresent()){
             throw new Exception("User with given email address already exists");
         }
         User u = new User();

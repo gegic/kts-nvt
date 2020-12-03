@@ -14,26 +14,36 @@ import java.net.URI;
 
 
 @RestController
-@RequestMapping(path = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController {
+@RequestMapping(path = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UsersController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    private UserController(UserService userService) {
+    private UsersController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping(path = "moderators", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<UserDto>> getModerators(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "3") int size,
-                                                    @RequestParam(defaultValue = "id,desc") String[] sort) {
+    @GetMapping
+    public ResponseEntity<Page<UserDto>> getUsers(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "3") int size,
+                                                  @RequestParam(defaultValue = "id,desc") String[] sort) {
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<UserDto> moderatorsDto = this.userService.readAll(p);
         return ResponseEntity.ok(moderatorsDto);
     }
 
-    @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @GetMapping(path = "/moderators")
+    public ResponseEntity<Page<UserDto>> getModerators(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "3") int size,
+                                                       @RequestParam(defaultValue = "id,desc") String[] sort) {
+        Pageable p = PageableExtractor.extract(page, size, sort);
+        Page<UserDto> moderatorsDto = this.userService.readByAuthority(p, "ROLE_MODERATOR");
+        return ResponseEntity.ok(moderatorsDto);
+    }
+
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> get(@PathVariable long id){
         return ResponseEntity.of(this.userService.readById(id));
     }
@@ -49,7 +59,7 @@ public class UserController {
         return ResponseEntity.ok(this.userService.update(userDto));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id) throws Exception {
         this.userService.delete(Long.parseLong(id));
         return ResponseEntity.ok().build();

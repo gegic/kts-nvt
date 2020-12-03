@@ -26,12 +26,17 @@ public class Review {
 
     @Getter
     @Setter
-    private LocalDateTime timeAdded;
+    private LocalDateTime timeAdded = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
     private CulturalOffering culturalOffering;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @Getter
+    @Setter
+    private User user;
 
     @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter

@@ -39,7 +39,6 @@ public class UserDto {
     @Getter
     @Setter
     private boolean verified;
-
     @Getter
     @Setter
     private Set<String> authorities;

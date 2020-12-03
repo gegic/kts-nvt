@@ -9,6 +9,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -27,12 +30,29 @@ public class SubcategoryService {
         return subcategoryRepository.findById(id);
     }
 
-    public Subcategory save(Subcategory subcategory) {
-        return subcategoryRepository.save(subcategory);
+    @Transactional
+    public SubcategoryDto create(SubcategoryDto subcategoryDto) {
+        Subcategory toAdd = mapper.fromDto(subcategoryDto, Subcategory.class);
+        if (subcategoryRepository.existsById(toAdd.getId())) throw new EntityExistsException();
+
+        return mapper.fromEntity(subcategoryRepository.save(toAdd), SubcategoryDto.class);
     }
+
+    @Transactional
+    public SubcategoryDto update(SubcategoryDto subcategoryDto) {
+        Subcategory toUpdate = mapper.fromDto(subcategoryDto, Subcategory.class);
+        if (!subcategoryRepository.existsById(toUpdate.getId())) throw new EntityNotFoundException();
+
+        return mapper.fromEntity(subcategoryRepository.save(toUpdate), SubcategoryDto.class);
+    }
+
 
     public Page<SubcategoryDto> findAllByCategoryId(long categoryId, Pageable p) {
         return subcategoryRepository.findAllByCategoryId(categoryId, p)
                 .map(s -> mapper.fromEntity(s, SubcategoryDto.class));
+    }
+
+    public void delete(long id) {
+        subcategoryRepository.deleteById(id);
     }
 }

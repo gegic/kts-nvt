@@ -14,13 +14,13 @@ import java.net.URI;
 
 
 @RestController
-@RequestMapping(path = "/api/cultural-offering", produces = MediaType.APPLICATION_JSON_VALUE)
-public class CulturalOfferingController {
+@RequestMapping(path = "/api/cultural-offerings", produces = MediaType.APPLICATION_JSON_VALUE)
+public class CulturalOfferingsController {
 
     private CulturalOfferingService culturalOfferingService;
 
     @Autowired
-    public CulturalOfferingController(CulturalOfferingService culturalOfferingService) {
+    public CulturalOfferingsController(CulturalOfferingService culturalOfferingService) {
         this.culturalOfferingService = culturalOfferingService;
     }
 

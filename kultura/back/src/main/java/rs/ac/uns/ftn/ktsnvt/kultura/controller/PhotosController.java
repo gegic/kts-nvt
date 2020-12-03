@@ -6,56 +6,56 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.service.ReviewService;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.PhotoDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.service.PhotoService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
 import java.net.URI;
 
 
 @RestController
-@RequestMapping(path = "/api/review", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ReviewController {
+@RequestMapping(path = "/api/photos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PhotosController {
 
-    private final ReviewService reviewService;
+    private final PhotoService photoService;
 
     @Autowired
-    public ReviewController(ReviewService reviewService) {
-        this.reviewService = reviewService;
+    public PhotosController(PhotoService photoService) {
+        this.photoService = photoService;
     }
 
     @GetMapping(path = "/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<ReviewDto>> get(@PathVariable long culturalOfferingId,
+    public ResponseEntity<Page<PhotoDto>> get(@PathVariable long culturalOfferingId,
                                               @RequestParam(defaultValue = "0") int page,
                                               @RequestParam(defaultValue = "3") int size,
                                               @RequestParam(defaultValue = "id,desc") String[] sort){
 
         Pageable p = PageableExtractor.extract(page, size, sort);
-        Page<ReviewDto> reviewDtos = this.reviewService
+        Page<PhotoDto> photoDtos = this.photoService
                 .readAllByCulturalOfferingId(culturalOfferingId, p);
-        return ResponseEntity.ok(reviewDtos);
+        return ResponseEntity.ok(photoDtos);
     }
 
     @GetMapping(path="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReviewDto> getById(@PathVariable long id) {
-        return ResponseEntity.of(this.reviewService.readById(id));
+    public ResponseEntity<PhotoDto> getById(@PathVariable long id) {
+        return ResponseEntity.of(this.photoService.readById(id));
     }
 
     @PostMapping
-    ResponseEntity<ReviewDto> add(@RequestBody ReviewDto reviewDto){
-        ReviewDto saved = this.reviewService.save(reviewDto);
-        return ResponseEntity.created(URI.create(String.format("/api/review/%s", saved.getId())))
+    ResponseEntity<PhotoDto> add(@RequestBody PhotoDto photoDto){
+        PhotoDto saved = this.photoService.save(photoDto);
+        return ResponseEntity.created(URI.create(String.format("/api/photo/%s", saved.getId())))
                 .body(saved);
     }
 
     @PutMapping
-    ResponseEntity<ReviewDto> update(@RequestBody ReviewDto reviewDto){
-        return ResponseEntity.ok(this.reviewService.save(reviewDto));
+    ResponseEntity<PhotoDto> update(@RequestBody PhotoDto photoDto){
+        return ResponseEntity.ok(this.photoService.save(photoDto));
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id){
-        this.reviewService.delete(Long.parseLong(id));
+        this.photoService.delete(Long.parseLong(id));
         return ResponseEntity.ok().build();
     }
 

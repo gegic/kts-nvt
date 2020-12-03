@@ -1,12 +1,12 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.mapper;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.Fetch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -55,62 +55,14 @@ public class Mapper {
             return null; // throw something else
         }
 
-        Field[] fields = dtoClass.getDeclaredFields();
-        String setterName;
-        Method m;
-        Object fieldValue;
-        for (Field field : fields) {
-            if(field.isAnnotationPresent(Ignore.class)
-                    && (field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.BOTH ||
-                    field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.ENTITY_TO_DTO)) {
-                continue;
-            }
-            if (field.isAnnotationPresent(EntityKey.class)) {
-                setterName = String.format("set%s", StringUtils
-                        .capitalize(field.getAnnotation(EntityKey.class).fieldName()));
-                try {
-                    fieldValue = entityKeyToEntity(field, dto);
-                } catch (InvocationTargetException e) {
-                    continue;
-                }
-                try {
-                    m = entityClass.getMethod(setterName, field.getAnnotation(EntityKey.class).entityType());
-                } catch (NoSuchMethodException e) {
-                    System.err.printf("No setter %s in class %s%n", setterName, entityClass.getName());
-                    continue;
-                }
+        return this.toExistingEntity(dto, entity, dtoClass, entityClass);
+    }
 
-            } else if (field.isAnnotationPresent(EntityField.class)) {
-                // ignore
-                continue;
-            }
-            else {
-                setterName = String.format("set%s", StringUtils.capitalize(field.getName()));
-                try {
-                    fieldValue = invokeGetMethod(field, dto);
-                } catch (InvocationTargetException e) {
-                    System.err.println("Can't access getter for something.");
-                    continue;
-                }
-                try {
-                    m = entityClass.getMethod(setterName, field.getType());
-                } catch (NoSuchMethodException e) {
-                    System.err.printf("No setter %s in class %s%n", setterName, entityClass.getName());
-                    continue;
-                }
-            }
+    public <TEntity, TDto> TEntity toExistingEntity(TDto dto, TEntity entity) {
+        Class<?> dtoClass = dto.getClass();
+        Class<?> entityClass = entity.getClass();
 
-
-
-            try {
-                m.invoke(entity, fieldValue);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                System.err.printf("Can't access setter for field %s in class %s%n",
-                        field.getName(), entityClass.getName());
-            }
-
-        }
-        return entity;
+        return this.toExistingEntity(dto, entity, dtoClass, entityClass);
     }
 
     public <TEntity, TDto> TDto fromEntity(TEntity entity, Class<TDto> dtoClass) {
@@ -177,6 +129,77 @@ public class Mapper {
         return dto;
     }
 
+    private <TEntity, TDto> TEntity toExistingEntity(TDto dto,
+                                                     TEntity entity,
+                                                     Class<?> dtoClass,
+                                                     Class<?> entityClass) {
+        Field[] fields = dtoClass.getDeclaredFields();
+        String setterName;
+        Method m;
+        Object fieldValue;
+        for (Field field : fields) {
+            if(field.isAnnotationPresent(Ignore.class)
+                    && (field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.BOTH ||
+                    field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.ENTITY_TO_DTO)) {
+                continue;
+            }
+            if (field.isAnnotationPresent(EntityKey.class)) {
+                setterName = String.format("set%s", StringUtils
+                        .capitalize(field.getAnnotation(EntityKey.class).fieldName()));
+                try {
+                    fieldValue = entityKeyToEntity(field, dto);
+                } catch (InvocationTargetException e) {
+                    continue;
+                }
+                try {
+                    m = entityClass.getMethod(setterName, field.getAnnotation(EntityKey.class).entityType());
+                } catch (NoSuchMethodException e) {
+                    System.err.printf("No setter %s in class %s%n", setterName, entityClass.getName());
+                    continue;
+                }
+
+            } else if (field.isAnnotationPresent(EntityField.class)) {
+                // ignore
+                continue;
+            }
+            else {
+                setterName = String.format("set%s", StringUtils.capitalize(field.getName()));
+                try {
+                    fieldValue = invokeGetMethod(field, dto);
+                } catch (InvocationTargetException e) {
+                    System.err.println("Can't access getter for something.");
+                    continue;
+                }
+
+                try {
+                    if(invokeGetMethod(field, entity) != null && fieldValue == null) continue;
+                } catch (InvocationTargetException ignored) {
+                    System.err.printf("Entity %s doesn't have a get method for %s",
+                            entityClass.getName(), field.getName());
+                }
+
+
+                try {
+                    m = entityClass.getMethod(setterName, field.getType());
+                } catch (NoSuchMethodException e) {
+                    System.err.printf("No setter %s in class %s%n", setterName, entityClass.getName());
+                    continue;
+                }
+            }
+
+
+
+            try {
+                m.invoke(entity, fieldValue);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                System.err.printf("Can't access setter for field %s in class %s%n",
+                        field.getName(), entityClass.getName());
+            }
+
+        }
+        return entity;
+    }
+
     private <TEntity> Object entityToEntityField(Field field, TEntity entity) throws NoSuchFieldException, InvocationTargetException {
         EntityField annotatedField = field.getAnnotation(EntityField.class);
         if (annotatedField.origin().equals(INFER_ORIGIN)) {
@@ -199,9 +222,20 @@ public class Mapper {
     }
 
     private Object getOrigin(Object currentOrigin, String[] origins) throws NoSuchFieldException, InvocationTargetException {
+        EntityManager entityManager = null;
         for (String originName : origins) {
             if (currentOrigin == null) throw new NullEntityFieldException();
+            Field previousField = currentOrigin.getClass().getDeclaredField(originName);
+
             currentOrigin = invokeGetMethod(originName, currentOrigin);
+
+            if((previousField.isAnnotationPresent(ManyToOne.class) && previousField.getAnnotation(ManyToOne.class).fetch().equals(FetchType.LAZY)) ||
+                    (previousField.isAnnotationPresent(OneToOne.class) && previousField.getAnnotation(OneToOne.class).fetch().equals(FetchType.LAZY)) ||
+                    (previousField.isAnnotationPresent(OneToMany.class) && previousField.getAnnotation(ManyToOne.class).fetch().equals(FetchType.LAZY)) ||
+                    (previousField.isAnnotationPresent(ManyToMany.class) && previousField.getAnnotation(ManyToMany.class).fetch().equals(FetchType.LAZY))) {
+                Hibernate.initialize(currentOrigin);
+                // TODO resolve this sutra tako ti svega
+            }
         }
         return currentOrigin;
     }
@@ -269,7 +303,7 @@ public class Mapper {
     protected Object getOneEntity(Class<?> entityFieldClass, Object key) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-
+        if (key == null) return null;
         Object found = entityManager.find(entityFieldClass, key);
         if (found != null) entityManager.detach(found);
         return found;
@@ -294,11 +328,14 @@ public class Mapper {
     }
 
     private Method getGetMethod(Class<?> c, Field f) {
-        return getGetMethod(c, f.getName());
+        boolean isBoolean = f.getType().isAssignableFrom(boolean.class);
+        return getGetMethod(c, f.getName(), isBoolean);
     }
 
-    private Method getGetMethod(Class<?> c, String fieldName) throws GetterException {
-        String getterName = String.format("get%s", StringUtils.capitalize(fieldName));
+    private Method getGetMethod(Class<?> c, String fieldName, boolean isBoolean) throws GetterException {
+
+        String getterName = isBoolean ? String.format("is%s", StringUtils.capitalize(fieldName)) :
+                String.format("get%s", StringUtils.capitalize(fieldName));
         try {
             return c.getDeclaredMethod(getterName);
         } catch (NoSuchMethodException e) {
