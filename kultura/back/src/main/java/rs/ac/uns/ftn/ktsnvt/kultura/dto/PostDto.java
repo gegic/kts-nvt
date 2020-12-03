@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 
 import javax.persistence.FetchType;
@@ -29,6 +30,7 @@ public class PostDto {
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
+    @EntityKey(entityType = CulturalOffering.class, fieldName = "culturalOffering")
     private long culturalOfferingId;
 
 }

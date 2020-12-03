@@ -18,6 +18,7 @@ public class Subcategory {
 
     @Id
     @Getter
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 

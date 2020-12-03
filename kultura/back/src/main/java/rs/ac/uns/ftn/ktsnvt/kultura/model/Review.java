@@ -12,6 +12,7 @@ import java.util.Set;
 public class Review {
     @Id
     @Getter
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 

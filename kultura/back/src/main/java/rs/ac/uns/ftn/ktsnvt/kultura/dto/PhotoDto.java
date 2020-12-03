@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 
 import javax.persistence.Id;
 import java.time.LocalDateTime;
@@ -24,7 +27,9 @@ public class PhotoDto {
     @Getter
     @Setter
     private LocalDateTime timeAdded;
+
     @Getter
     @Setter
+    @EntityKey(entityType = CulturalOffering.class, fieldName = "culturalOffering")
     private long culturalOfferingId;
 }

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityField;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.*;
 
 import javax.persistence.*;
@@ -40,6 +42,7 @@ public class CulturalOfferingDto {
 
     @Getter
     @Setter
+    @EntityKey(entityType = CulturalOfferingPhoto.class, fieldName = "photo")
     private long photoId;
 
     @Getter
@@ -60,9 +63,11 @@ public class CulturalOfferingDto {
 
     @Getter
     @Setter
+    @EntityKey(entityType = Subcategory.class, fieldName = "subcategory")
     private long subcategoryId;
 
     @Getter
     @Setter
+    @EntityField
     private String subcategoryName;
 }
