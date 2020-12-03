@@ -23,7 +23,7 @@ public class Mapper {
 
     public static final String INFER_ORIGIN = "@infer";
 
-    private EntityManagerFactory entityManagerFactory;
+    private final EntityManagerFactory entityManagerFactory;
 
     @Autowired
     public Mapper(EntityManagerFactory entityManagerFactory) {
