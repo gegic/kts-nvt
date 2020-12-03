@@ -24,6 +24,7 @@ public class UserService implements UserDetailsService {
     private final Mapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityService authorityService;
+
     @Autowired
     public UserService(UserRepository userRepository,
                        Mapper mapper,

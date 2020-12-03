@@ -23,12 +23,10 @@ public class UserDto {
     @Getter
     @Setter
     private String email;
-
     @Getter
     @Setter
     @Ignore(ignoreType = IgnoreType.ENTITY_TO_DTO)
     private String password;
-
     @Getter
     @Setter
     private String firstName;
