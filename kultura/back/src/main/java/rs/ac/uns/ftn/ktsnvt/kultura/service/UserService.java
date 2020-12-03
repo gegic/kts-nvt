@@ -13,7 +13,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 public class UserService implements UserDetailsService {
@@ -34,7 +34,7 @@ public class UserService implements UserDetailsService {
 //
 //    }
 
-    public Optional<User> readById(UUID id) {
+    public Optional<User> readById(long id) {
         return userRepository.findById(id);
     }
 
@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(existingUser);
     }
 
-    public void delete(UUID id) throws Exception {
+    public void delete(long id) throws Exception {
         User existingUser = userRepository.findById(id).orElse(null);
         if(existingUser == null){
             throw new Exception("User with given id doesn't exist");

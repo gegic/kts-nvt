@@ -9,14 +9,15 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+
 
 @Entity
 public class User implements UserDetails {
 
     @Id
     @Getter
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Getter
     @Setter
     private String username;

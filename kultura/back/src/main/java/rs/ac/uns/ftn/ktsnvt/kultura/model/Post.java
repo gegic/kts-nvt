@@ -5,13 +5,14 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 @Entity
 public class Post {
     @Id
     @Getter
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Getter
     @Setter
     private String content;

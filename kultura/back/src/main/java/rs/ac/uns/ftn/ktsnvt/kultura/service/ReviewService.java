@@ -9,7 +9,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.Review;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.ReviewRepository;
 
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 public class ReviewService {
@@ -17,11 +17,11 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public Page<Review> readAllByCulturalOfferingId(UUID culturalOfferingId, Pageable p) {
+    public Page<Review> readAllByCulturalOfferingId(long culturalOfferingId, Pageable p) {
         return reviewRepository.findAllByCulturalOfferingId(culturalOfferingId, p);
     }
 
-    public Optional<Review> readById(UUID id) {
+    public Optional<Review> readById(long id) {
         return reviewRepository.findById(id);
     }
 
@@ -32,7 +32,7 @@ public class ReviewService {
         return reviewRepository.save(p);
     }
 
-    public void delete(UUID id) {
+    public void delete(long id) {
         reviewRepository.deleteById(id);
     }
 }

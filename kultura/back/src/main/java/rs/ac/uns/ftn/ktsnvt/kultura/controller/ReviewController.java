@@ -16,7 +16,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 import java.net.URI;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping(path = "/api/review", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,13 +39,13 @@ public class ReviewController {
 
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<ReviewDto> reviewDtos = this.reviewService
-                .readAllByCulturalOfferingId(UUID.fromString(culturalOfferingId), p)
+                .readAllByCulturalOfferingId(Long.parseLong(culturalOfferingId), p)
                 .map(review -> modelMapper.map(review, ReviewDto.class));
         return ResponseEntity.ok(reviewDtos);
     }
 
     @GetMapping(path="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ReviewDto> getById(@PathVariable UUID id) {
+    public ResponseEntity<ReviewDto> getById(@PathVariable long id) {
         return ResponseEntity.of(this.reviewService.readById(id).map(r -> modelMapper.map(r, ReviewDto.class)));
     }
 
@@ -63,7 +63,7 @@ public class ReviewController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id) {
-        this.reviewService.delete(UUID.fromString(id));
+        this.reviewService.delete(Long.parseLong(id));
         return ResponseEntity.ok().build();
     }
 }

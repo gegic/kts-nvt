@@ -4,13 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+
 
 @Entity
 @NoArgsConstructor
@@ -18,7 +21,8 @@ import java.util.UUID;
 public class CulturalOffering {
     @Id
     @Getter
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Getter
     @Setter
@@ -42,14 +46,17 @@ public class CulturalOffering {
 
     @Getter
     @Setter
-    private UUID photoId;
+    @OneToOne
+    private CulturalOfferingPhoto photo;
 
     @Getter
     @Setter
+    @ColumnDefault(value = "0")
     private float overallRating;
 
     @Getter
     @Setter
+    @ColumnDefault(value = "0")
     private int numReviews;
 
     @Getter
@@ -60,7 +67,7 @@ public class CulturalOffering {
     @Setter
     private String additionalInfo;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @Getter
     @Setter
     private Subcategory subcategory;

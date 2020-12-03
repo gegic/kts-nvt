@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Photo;
@@ -9,13 +10,15 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.Photo;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
+
+@NoArgsConstructor
 @AllArgsConstructor
 public class ReviewDto {
-    @Id
+
     @Getter
-    private UUID id;
+    @Setter
+    private long id;
 
     @Getter
     @Setter
@@ -31,9 +34,9 @@ public class ReviewDto {
 
     @Getter
     @Setter
-    private UUID culturalOfferingId;
+    private long culturalOfferingId;
 
     @Getter
     @Setter
-    private Set<UUID> photos;
+    private Set<Long> photos;
 }

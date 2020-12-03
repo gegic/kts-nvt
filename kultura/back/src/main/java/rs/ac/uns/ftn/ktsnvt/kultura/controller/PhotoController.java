@@ -13,10 +13,10 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.PhotoService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
 import java.net.URI;
-import java.util.UUID;
+
 
 @RestController
-@RequestMapping(path = "/api/photo/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/photo", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PhotoController {
 
     private PhotoService photoService;
@@ -36,13 +36,13 @@ public class PhotoController {
 
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<PhotoDto> photoDtos = this.photoService
-                .readAllByCulturalOfferingId(UUID.fromString(culturalOfferingId), p)
+                .readAllByCulturalOfferingId(Long.parseLong(culturalOfferingId), p)
                 .map(photo -> modelMapper.map(photo, PhotoDto.class));
         return ResponseEntity.ok(photoDtos);
     }
 
     @GetMapping(path="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PhotoDto> getById(@PathVariable UUID id) {
+    public ResponseEntity<PhotoDto> getById(@PathVariable long id) {
         return ResponseEntity.of(this.photoService.readById(id).map(photo -> modelMapper.map(photo, PhotoDto.class)));
     }
 
@@ -60,7 +60,7 @@ public class PhotoController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id){
-        this.photoService.delete(UUID.fromString(id));
+        this.photoService.delete(Long.parseLong(id));
         return ResponseEntity.ok().build();
     }
 

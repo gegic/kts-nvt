@@ -11,7 +11,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.PostRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 public class PostService {
@@ -19,11 +19,11 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    public Page<Post> readAllByCulturalOfferingId(UUID culturalOfferingId, Pageable p) {
+    public Page<Post> readAllByCulturalOfferingId(long culturalOfferingId, Pageable p) {
         return postRepository.findAllByCulturalOfferingId(culturalOfferingId, p);
     }
 
-    public Optional<Post> readById(UUID id) {
+    public Optional<Post> readById(long id) {
         return postRepository.findById(id);
     }
 
@@ -31,7 +31,7 @@ public class PostService {
         return postRepository.save(p);
     }
 
-    public void delete(UUID id) {
+    public void delete(long id) {
         postRepository.deleteById(id);
     }
 }

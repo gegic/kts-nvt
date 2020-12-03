@@ -1,37 +1,73 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.CulturalOfferingMapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
+import javax.transaction.Transactional;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 public class CulturalOfferingService {
-    
+
+    private final CulturalOfferingRepository culturalOfferingRepository;
+    private final SubcategoryRepository subcategoryRepository;
+    private final CulturalOfferingMapper modelMapper;
+
     @Autowired
-    private CulturalOfferingRepository culturalOfferingRepository;
-
-    public Page<CulturalOffering> readAll(Pageable p) {
-        return culturalOfferingRepository.findAll(p);
+    public CulturalOfferingService(CulturalOfferingRepository culturalOfferingRepository,
+                                   SubcategoryRepository subcategoryRepository,
+                                   CulturalOfferingMapper modelMapper) {
+        this.culturalOfferingRepository = culturalOfferingRepository;
+        this.subcategoryRepository = subcategoryRepository;
+        this.modelMapper = modelMapper;
     }
 
-    public Optional<CulturalOffering> readById(UUID id) {
-        return culturalOfferingRepository.findById(id);
+
+    public Page<CulturalOfferingDto> readAll(Pageable p) {
+        return culturalOfferingRepository.findAll(p).map(modelMapper::fromEntity);
     }
 
-    public CulturalOffering save(CulturalOffering c) {
-        return culturalOfferingRepository.save(c);
+    public Optional<CulturalOfferingDto> readById(long id) {
+        return culturalOfferingRepository.findById(id).map(modelMapper::fromEntity);
     }
 
-    public void delete(UUID id) {
+    @Transactional
+    public CulturalOfferingDto create(CulturalOfferingDto c) {
+        if (culturalOfferingRepository.existsById(c.getId())) throw new EntityExistsException();
+        return this.save(c);
+    }
+
+    @Transactional
+    public CulturalOfferingDto update(CulturalOfferingDto c) {
+        if (!culturalOfferingRepository.existsById(c.getId())) throw new EntityNotFoundException();
+
+        return this.save(c);
+    }
+
+    @Transactional
+    protected CulturalOfferingDto save(CulturalOfferingDto c) {
+        CulturalOffering culturalOffering = modelMapper.fromDto(c);
+        Subcategory s = subcategoryRepository.findById(c.getSubcategoryId()).orElseThrow(EntityNotFoundException::new);
+
+        culturalOffering.setSubcategory(s);
+        culturalOffering = culturalOfferingRepository.save(culturalOffering);
+        subcategoryRepository.save(s);
+
+        return modelMapper.fromEntity(culturalOffering);
+    }
+
+    public void delete(long id) {
         culturalOfferingRepository.deleteById(id);
     }
 }

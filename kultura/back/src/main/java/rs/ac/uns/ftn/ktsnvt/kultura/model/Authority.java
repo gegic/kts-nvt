@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.util.UUID;
+
 
 @Entity
 public class Authority implements GrantedAuthority {
@@ -15,7 +15,7 @@ public class Authority implements GrantedAuthority {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private long id;
 
     @Getter
     @Setter

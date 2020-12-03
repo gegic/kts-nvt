@@ -2,16 +2,19 @@ package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
+
+@NoArgsConstructor
 @AllArgsConstructor
 public class PhotoDto {
     @Getter
-    private UUID id;
+    @Setter
+    private long id;
     @Getter
     @Setter
     private int width;
@@ -23,5 +26,5 @@ public class PhotoDto {
     private LocalDateTime timeAdded;
     @Getter
     @Setter
-    private UUID culturalOfferingId;
+    private long culturalOfferingId;
 }

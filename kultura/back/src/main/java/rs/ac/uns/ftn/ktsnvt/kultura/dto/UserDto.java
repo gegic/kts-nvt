@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
@@ -9,13 +10,14 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
 
     @Getter
-    private UUID id;
+    @Setter
+    private long id;
     @Getter
     @Setter
     private String username;

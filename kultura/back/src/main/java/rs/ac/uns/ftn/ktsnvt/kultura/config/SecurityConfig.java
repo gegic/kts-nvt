@@ -24,17 +24,14 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserService userService;
-    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
-    private TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final UserService userService;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Autowired
     public SecurityConfig(UserService userService,
-                          RestAuthenticationEntryPoint restAuthenticationEntryPoint,
-                          TokenAuthenticationFilter tokenAuthenticationFilter) {
+                          RestAuthenticationEntryPoint restAuthenticationEntryPoint){
         this.userService = userService;
         this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
-        this.tokenAuthenticationFilter = tokenAuthenticationFilter;
     }
 
     @Bean
@@ -58,21 +55,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated().and()
-                .cors().and()
-                .addFilterBefore(tokenAuthenticationFilter, BasicAuthenticationFilter.class);
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/", "/home").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .loginPage("/login")
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .permitAll();
+//                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
+//                .anyRequest().authenticated().and()
+                .authorizeRequests().anyRequest().permitAll().and()
+                .cors();
+//                .addFilterBefore(tokenAuthenticationFilter, BasicAuthenticationFilter.class);
+
+        http.csrf().disable();
+
     }
 
     @Override

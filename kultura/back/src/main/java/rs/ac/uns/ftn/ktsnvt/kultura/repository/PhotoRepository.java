@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
 
-import java.util.UUID;
+
 
 @Repository
-public interface PhotoRepository extends JpaRepository<Photo, UUID> {
-    Page<Photo> findAllByCulturalOfferingId(UUID culturalOfferingId, Pageable p);
+public interface PhotoRepository extends JpaRepository<Photo, Long> {
+    Page<Photo> findAllByCulturalOfferingId(long culturalOfferingId, Pageable p);
 
 }

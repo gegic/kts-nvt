@@ -13,10 +13,10 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
 import java.net.URI;
-import java.util.UUID;
+
 
 @RestController
-@RequestMapping(path = "/api/user/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     private UserService userService;
@@ -39,7 +39,7 @@ public class UserController {
 
     @GetMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> get(@PathVariable String id){
-        return ResponseEntity.of(this.userService.readById(UUID.fromString(id))
+        return ResponseEntity.of(this.userService.readById(Long.parseLong(id))
                 .map(u -> modelMapper.map(u, UserDto.class)));
     }
 
@@ -57,7 +57,7 @@ public class UserController {
 
     @DeleteMapping("{id}")
     ResponseEntity<Void> delete(@PathVariable String id) throws Exception {
-        this.userService.delete(UUID.fromString(id));
+        this.userService.delete(Long.parseLong(id));
         return ResponseEntity.ok().build();
     }
 

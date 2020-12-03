@@ -12,10 +12,10 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.PostService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
 import java.net.URI;
-import java.util.UUID;
+
 
 @RestController
-@RequestMapping(path = "/api/post/", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/post", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostController {
 
     private PostService postService;
@@ -34,13 +34,13 @@ public class PostController {
 
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<PostDto> postDtos = this.postService
-                .readAllByCulturalOfferingId(UUID.fromString(culturalOfferingId), p)
+                .readAllByCulturalOfferingId(Long.parseLong(culturalOfferingId), p)
                 .map(post -> modelMapper.map(post, PostDto.class));
         return ResponseEntity.ok(postDtos);
     }
 
     @GetMapping(path="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDto> getById(@PathVariable UUID id) {
+    public ResponseEntity<PostDto> getById(@PathVariable long id) {
         return ResponseEntity.of(this.postService.readById(id).map(post -> modelMapper.map(post, PostDto.class)));
     }
 
@@ -58,7 +58,7 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id){
-        this.postService.delete(UUID.fromString(id));
+        this.postService.delete(Long.parseLong(id));
         return ResponseEntity.ok().build();
     }
 

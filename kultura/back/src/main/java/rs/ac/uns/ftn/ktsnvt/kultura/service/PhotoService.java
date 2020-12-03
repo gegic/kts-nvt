@@ -9,7 +9,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.PhotoRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 public class PhotoService {
@@ -17,11 +17,11 @@ public class PhotoService {
     @Autowired
     private PhotoRepository photoRepository;
 
-    public Page<Photo> readAllByCulturalOfferingId(UUID culturalOfferingId, Pageable p) {
+    public Page<Photo> readAllByCulturalOfferingId(long culturalOfferingId, Pageable p) {
         return photoRepository.findAllByCulturalOfferingId(culturalOfferingId, p);
     }
 
-    public Optional<Photo> readById(UUID id) {
+    public Optional<Photo> readById(long id) {
         return photoRepository.findById(id);
     }
 
@@ -29,7 +29,7 @@ public class PhotoService {
         return photoRepository.save(p);
     }
 
-    public void delete(UUID id) {
+    public void delete(long id) {
         photoRepository.deleteById(id);
     }
 }

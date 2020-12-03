@@ -16,12 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserService userService;
 
-    @Autowired
     public TokenAuthenticationFilter(UserService userService) {
         this.userService = userService;
     }

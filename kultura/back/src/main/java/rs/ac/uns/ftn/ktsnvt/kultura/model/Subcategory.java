@@ -1,19 +1,25 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+
+
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Subcategory {
 
     @Id
     @Getter
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
