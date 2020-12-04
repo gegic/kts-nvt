@@ -24,3 +24,7 @@ INSERT INTO user_authority (user_id, authority_id) VALUES (2, 2);
 INSERT INTO user_authority (user_id, authority_id) VALUES (3, 3);
 
 INSERT INTO review (comment, rating, time_added, cultural_offering_id, user_id) VALUES ('Komentar', '3', NOW(), 2, 3);
+
+INSERT INTO post (content, time_added, cultural_offering_id) VALUES ("vrlo zanimljiv post", NOW(), 1);
+
+INSERT INTO post (content, time_added, cultural_offering_id) VALUES ("vrlo zanimljiv post broj dva", NOW(), 1);
