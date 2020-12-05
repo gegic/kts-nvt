@@ -28,6 +28,7 @@ public class Subcategory {
 
     @Getter
     @Setter
+    @Column(unique = true)
     private String name;
 
     @OneToMany(mappedBy = "subcategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

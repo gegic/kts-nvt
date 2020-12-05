@@ -15,13 +15,13 @@ import java.time.LocalDateTime;
 public class PhotoDto {
     @Getter
     @Setter
-    private long id;
+    private Long id;
     @Getter
     @Setter
-    private int width;
+    private Integer width;
     @Getter
     @Setter
-    private int height;
+    private Integer height;
     @Getter
     @Setter
     private LocalDateTime timeAdded;
@@ -29,5 +29,5 @@ public class PhotoDto {
     @Getter
     @Setter
     @EntityKey(entityType = CulturalOffering.class, fieldName = "culturalOffering")
-    private long culturalOfferingId;
+    private Long culturalOfferingId;
 }

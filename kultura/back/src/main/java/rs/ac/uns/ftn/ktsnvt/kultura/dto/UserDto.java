@@ -16,7 +16,7 @@ public class UserDto {
 
     @Getter
     @Setter
-    private long id;
+    private Long id;
     @Getter
     @Setter
     private String username;
@@ -38,8 +38,10 @@ public class UserDto {
     private LocalDateTime lastPasswordChange;
     @Getter
     @Setter
+    @Ignore(ignoreType = IgnoreType.DTO_TO_ENTITY)
     private boolean verified;
     @Getter
     @Setter
+    @Ignore(ignoreType = IgnoreType.DTO_TO_ENTITY)
     private Set<String> authorities;
 }

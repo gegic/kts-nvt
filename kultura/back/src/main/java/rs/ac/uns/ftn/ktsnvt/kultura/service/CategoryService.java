@@ -9,6 +9,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 
@@ -32,10 +35,23 @@ public class CategoryService {
         return categoryRepository.findById(id).map(c -> mapper.fromEntity(c, CategoryDto.class));
     }
 
-    public CategoryDto save(CategoryDto c) {
+    public CategoryDto create(CategoryDto c) {
+        if(c.getId() != null && categoryRepository.existsById(c.getId())) throw new EntityExistsException();
         Category toAdd = mapper.fromDto(c, Category.class);
 
         return mapper.fromEntity(categoryRepository.save(toAdd), CategoryDto.class);
+    }
+
+    @Transactional
+    public CategoryDto update(CategoryDto c) {
+        if(c.getId() == null) throw new NullPointerException();
+
+        Category toUpdate = categoryRepository.findById(c.getId()).orElseThrow(EntityNotFoundException::new);
+        mapper.toExistingEntity(c, toUpdate);
+
+        toUpdate = categoryRepository.save(toUpdate);
+
+        return mapper.fromEntity(toUpdate, CategoryDto.class);
     }
 
     public void delete(long id) {

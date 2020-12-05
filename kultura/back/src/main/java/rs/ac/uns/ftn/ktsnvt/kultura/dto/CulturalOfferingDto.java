@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class CulturalOfferingDto {
     @Getter
     @Setter
-    private long id;
+    private Long id;
 
     @Getter
     @Setter
@@ -28,11 +28,11 @@ public class CulturalOfferingDto {
 
     @Getter
     @Setter
-    private float latitude;
+    private Float latitude;
 
     @Getter
     @Setter
-    private float longitude;
+    private Float longitude;
 
     @Getter
     @Setter
@@ -41,15 +41,15 @@ public class CulturalOfferingDto {
     @Getter
     @Setter
     @EntityKey(entityType = CulturalOfferingPhoto.class, fieldName = "photo")
-    private long photoId;
+    private Long photoId;
 
     @Getter
     @Setter
-    private float overallRating;
+    private Float overallRating;
 
     @Getter
     @Setter
-    private int numReviews;
+    private Integer numReviews;
 
     @Getter
     @Setter
@@ -62,7 +62,7 @@ public class CulturalOfferingDto {
     @Getter
     @Setter
     @EntityKey(entityType = Subcategory.class, fieldName = "subcategory")
-    private long subcategoryId;
+    private Long subcategoryId;
 
     @Getter
     @Setter

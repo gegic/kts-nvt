@@ -44,28 +44,30 @@ public class CulturalOfferingService {
 
     @Transactional
     public CulturalOfferingDto create(CulturalOfferingDto c) {
-        if (culturalOfferingRepository.existsById(c.getId())) throw new EntityExistsException();
-        return this.save(c);
+        if (c.getId() != null &&
+                culturalOfferingRepository.existsById(c.getId())) throw new EntityExistsException();
+
+        CulturalOffering culturalOffering = modelMapper.fromDto(c, CulturalOffering.class);
+
+        culturalOffering = culturalOfferingRepository.save(culturalOffering);
+
+        return modelMapper.fromEntity(culturalOffering, CulturalOfferingDto.class);
     }
 
     @Transactional
     public CulturalOfferingDto update(CulturalOfferingDto c) {
-        if (!culturalOfferingRepository.existsById(c.getId())) throw new EntityNotFoundException();
+        if (c.getId() == null) throw new NullPointerException();
 
-        return this.save(c);
+        CulturalOffering toUpdate = culturalOfferingRepository.findById(c.getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        CulturalOffering updateWith = modelMapper.toExistingEntity(c, toUpdate);
+
+        toUpdate = culturalOfferingRepository.save(updateWith);
+
+        return modelMapper.fromEntity(toUpdate, CulturalOfferingDto.class);
     }
 
-    @Transactional
-    protected CulturalOfferingDto save(CulturalOfferingDto c) {
-        CulturalOffering culturalOffering = modelMapper.fromDto(c, CulturalOffering.class);
-        Subcategory s = subcategoryRepository.findById(c.getSubcategoryId()).orElseThrow(EntityNotFoundException::new);
-
-        culturalOffering.setSubcategory(s);
-        culturalOffering = culturalOfferingRepository.save(culturalOffering);
-        subcategoryRepository.save(s);
-
-        return modelMapper.fromEntity(culturalOffering, CulturalOfferingDto.class);
-    }
 
     public void delete(long id) {
         culturalOfferingRepository.deleteById(id);

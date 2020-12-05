@@ -19,9 +19,11 @@ public class User implements UserDetails {
     private long id;
     @Getter
     @Setter
+    @Column(unique = true)
     private String username;
     @Getter
     @Setter
+    @Column(unique = true)
     private String email;
     @Getter
     @Setter

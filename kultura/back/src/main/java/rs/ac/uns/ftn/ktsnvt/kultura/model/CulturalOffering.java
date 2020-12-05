@@ -65,7 +65,7 @@ public class CulturalOffering {
     @Setter
     private String additionalInfo;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
     private Subcategory subcategory;
@@ -92,5 +92,4 @@ public class CulturalOffering {
     @Getter
     @Setter
     private List<User> subscribedUsers;
-
 }

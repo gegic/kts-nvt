@@ -15,7 +15,7 @@ public class SubcategoryDto {
 
     @Getter
     @Setter
-    private long id;
+    private Long id;
 
     @Getter
     @Setter
@@ -24,6 +24,6 @@ public class SubcategoryDto {
     @Getter
     @Setter
     @EntityKey(entityType = Category.class, fieldName = "category")
-    private long categoryId;
+    private Long categoryId;
 
 }

@@ -13,17 +13,17 @@ import java.time.LocalDateTime;
 public class ReviewPhotoDto {
     @Getter
     @Setter
-    private long id;
+    private Long id;
     @Getter
     @Setter
-    private int width;
+    private Integer width;
     @Getter
     @Setter
-    private int height;
+    private Integer height;
     @Getter
     @Setter
     private LocalDateTime timeAdded;
     @Getter
     @Setter
-    private long reviewId;
+    private Long reviewId;
 }

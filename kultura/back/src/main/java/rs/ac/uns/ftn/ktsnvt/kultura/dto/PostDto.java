@@ -18,7 +18,7 @@ public class PostDto {
 
     @Getter
     @Setter
-    private long id;
+    private Long id;
     @Getter
     @Setter
     private String content;
@@ -30,6 +30,6 @@ public class PostDto {
     @Getter
     @Setter
     @EntityKey(entityType = CulturalOffering.class, fieldName = "culturalOffering")
-    private long culturalOfferingId;
+    private Long culturalOfferingId;
 
 }

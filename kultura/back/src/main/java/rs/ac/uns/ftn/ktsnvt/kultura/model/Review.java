@@ -7,7 +7,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"cultural_offering_id", "user_id"})
+)
 @Entity
 public class Review {
     @Id

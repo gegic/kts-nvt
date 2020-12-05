@@ -11,6 +11,6 @@ public class ReviewPhoto extends AbstractPhoto {
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JoinColumn(unique = true)
     private Review review;
 }

@@ -43,13 +43,13 @@ public class CategoriesController {
 
     @PostMapping
     ResponseEntity<CategoryDto> add(@RequestBody CategoryDto categoryDto){
-        CategoryDto saved = this.categoryService.save(categoryDto);
+        CategoryDto saved = this.categoryService.create(categoryDto);
         return ResponseEntity.created(URI.create("/api/category/" + saved.getId())).body(saved);
     }
 
     @PutMapping
     ResponseEntity<CategoryDto> update(@RequestBody CategoryDto categoryDto){
-        return ResponseEntity.ok(this.categoryService.save(categoryDto));
+        return ResponseEntity.ok(this.categoryService.update(categoryDto));
     }
 
     @DeleteMapping("/{id}")

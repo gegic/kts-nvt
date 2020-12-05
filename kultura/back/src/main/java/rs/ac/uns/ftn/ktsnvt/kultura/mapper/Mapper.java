@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 /*
 
@@ -171,19 +172,27 @@ public class Mapper {
                     continue;
                 }
 
-                try {
-                    if(invokeGetMethod(field, entity) != null && fieldValue == null) continue;
-                } catch (InvocationTargetException ignored) {
-                    System.err.printf("Entity %s doesn't have a get method for %s",
-                            entityClass.getName(), field.getName());
-                }
-
+                if (fieldValue == null) continue;
 
                 try {
                     m = entityClass.getMethod(setterName, field.getType());
                 } catch (NoSuchMethodException e) {
-                    System.err.printf("No setter %s in class %s%n", setterName, entityClass.getName());
-                    continue;
+                    Class<?> type;
+                    if(field.getType().isAssignableFrom(Integer.class)) {
+                        type = int.class;
+                    } else if(field.getType().isAssignableFrom(Float.class)) {
+                        type = float.class;
+                    } else if(field.getType().isAssignableFrom(Long.class)) {
+                        type = long.class;
+                    } else {
+                        type = boolean.class;
+                    }
+                    try {
+                        m = entityClass.getMethod(setterName, type);
+                    } catch (NoSuchMethodException noSuchMethodException) {
+                        System.err.printf("No setter %s in class %s%n", setterName, entityClass.getName());
+                        continue;
+                    }
                 }
             }
 
@@ -304,9 +313,7 @@ public class Mapper {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         if (key == null) return null;
-        Object found = entityManager.find(entityFieldClass, key);
-        if (found != null) entityManager.detach(found);
-        return found;
+        return entityManager.find(entityFieldClass, key);
     }
 
     private Object invokeGetMethod(String fieldName, Object o) throws NoSuchFieldException, InvocationTargetException {

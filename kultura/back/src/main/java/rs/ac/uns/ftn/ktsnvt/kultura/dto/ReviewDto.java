@@ -20,11 +20,11 @@ public class ReviewDto {
 
     @Getter
     @Setter
-    private long id;
+    private Long id;
 
     @Getter
     @Setter
-    private int rating;
+    private Integer rating;
 
     @Getter
     @Setter
@@ -37,12 +37,12 @@ public class ReviewDto {
     @Getter
     @Setter
     @EntityKey(entityType = CulturalOffering.class, fieldName = "culturalOffering")
-    private long culturalOfferingId;
+    private Long culturalOfferingId;
 
     @Getter
     @Setter
     @EntityKey(entityType = User.class, fieldName = "user")
-    private long userId;
+    private Long userId;
 
     @Getter
     @Setter

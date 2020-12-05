@@ -26,5 +26,6 @@ public class Category {
 
     @Getter
     @Setter
+    @Column(unique = true)
     private String name;
 }
