@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 
@@ -49,13 +50,13 @@ public class UsersController {
     }
 
     @PostMapping
-    ResponseEntity<UserDto> add(@RequestBody UserDto userDto) throws Exception {
+    ResponseEntity<UserDto> add(@Valid @RequestBody UserDto userDto) throws Exception {
         UserDto saved = this.userService.create(userDto);
         return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
 
     @PutMapping
-    ResponseEntity<UserDto> update(@RequestBody UserDto userDto) throws Exception {
+    ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto) throws Exception {
         return ResponseEntity.ok(this.userService.update(userDto));
     }
 

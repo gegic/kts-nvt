@@ -1,47 +1,38 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Ignore;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.IgnoreType;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
 
-    @Getter
-    @Setter
     private Long id;
-    @Getter
-    @Setter
+    @Size(min=8, max=50, message = "A username should be between 8 and 50 characters long.")
     private String username;
-    @Getter
-    @Setter
+    @Email(message = "You entered an invalid email address.")
     private String email;
-    @Getter
-    @Setter
+
     @Ignore(ignoreType = IgnoreType.ENTITY_TO_DTO)
+    @Size(min=8, max=50, message = "A password should be between 8 and 50 characters long.")
     private String password;
-    @Getter
-    @Setter
+
     private String firstName;
-    @Getter
-    @Setter
+
     private String lastName;
-    @Getter
-    @Setter
+
     private LocalDateTime lastPasswordChange;
-    @Getter
-    @Setter
+
     @Ignore(ignoreType = IgnoreType.DTO_TO_ENTITY)
     private boolean verified;
-    @Getter
-    @Setter
+
     @Ignore(ignoreType = IgnoreType.DTO_TO_ENTITY)
     private Set<String> authorities;
 }

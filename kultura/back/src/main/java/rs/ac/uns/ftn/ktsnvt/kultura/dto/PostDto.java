@@ -1,34 +1,27 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
-
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostDto {
 
-    @Getter
-    @Setter
     private Long id;
-    @Getter
-    @Setter
+
+    @NotBlank(message = "Your post cannot be blank.")
     private String content;
-    @Getter
-    @Setter
+
     private LocalDateTime timeAdded;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Getter
-    @Setter
     @EntityKey(entityType = CulturalOffering.class, fieldName = "culturalOffering")
     private Long culturalOfferingId;
 

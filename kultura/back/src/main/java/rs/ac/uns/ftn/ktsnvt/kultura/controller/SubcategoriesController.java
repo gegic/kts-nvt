@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -35,7 +36,7 @@ public class SubcategoriesController {
     }
 
     @PostMapping
-    ResponseEntity<SubcategoryDto> create(@RequestBody SubcategoryDto subcategoryDto) {
+    ResponseEntity<SubcategoryDto> create(@Valid @RequestBody SubcategoryDto subcategoryDto) {
         try {
             SubcategoryDto saved = subcategoryService.create(subcategoryDto);
             return ResponseEntity.created(URI.create(String.format("/%d", saved.getId()))).body(saved);
@@ -45,7 +46,7 @@ public class SubcategoriesController {
     }
 
     @PutMapping
-    ResponseEntity<SubcategoryDto> update(@RequestBody SubcategoryDto subcategoryDto) {
+    ResponseEntity<SubcategoryDto> update(@Valid @RequestBody SubcategoryDto subcategoryDto) {
         try {
             SubcategoryDto updated = subcategoryService.update(subcategoryDto);
             return ResponseEntity.ok(updated);

@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.CategoryService;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.SubcategoryService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 
@@ -42,13 +43,13 @@ public class CategoriesController {
     }
 
     @PostMapping
-    ResponseEntity<CategoryDto> add(@RequestBody CategoryDto categoryDto){
+    ResponseEntity<CategoryDto> add(@Valid @RequestBody CategoryDto categoryDto){
         CategoryDto saved = this.categoryService.create(categoryDto);
         return ResponseEntity.created(URI.create("/api/category/" + saved.getId())).body(saved);
     }
 
     @PutMapping
-    ResponseEntity<CategoryDto> update(@RequestBody CategoryDto categoryDto){
+    ResponseEntity<CategoryDto> update(@Valid @RequestBody CategoryDto categoryDto){
         return ResponseEntity.ok(this.categoryService.update(categoryDto));
     }
 
