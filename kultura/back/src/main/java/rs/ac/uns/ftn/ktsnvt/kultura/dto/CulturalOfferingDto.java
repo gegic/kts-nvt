@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityField;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingPhoto;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingProfilePhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 
 import java.time.LocalDateTime;
@@ -40,7 +40,7 @@ public class CulturalOfferingDto {
 
     @Getter
     @Setter
-    @EntityKey(entityType = CulturalOfferingPhoto.class, fieldName = "photo")
+    @EntityKey(entityType = CulturalOfferingProfilePhoto.class, fieldName = "photo")
     private Long photoId;
 
     @Getter

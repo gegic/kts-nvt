@@ -7,7 +7,7 @@ import lombok.Setter;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityField;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.Photo;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 
 import java.time.LocalDateTime;
@@ -61,6 +61,6 @@ public class ReviewDto {
 
     @Getter
     @Setter
-    @EntityKey(fieldName = "photos", entityType = Photo.class)
+    @EntityKey(fieldName = "photos", entityType = CulturalOfferingPhoto.class)
     private Set<Long> photos;
 }

@@ -45,7 +45,7 @@ public class CulturalOffering {
     @Getter
     @Setter
     @OneToOne
-    private CulturalOfferingPhoto photo;
+    private CulturalOfferingProfilePhoto photo;
 
     @Getter
     @Setter
@@ -78,7 +78,7 @@ public class CulturalOffering {
     @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private Set<Photo> photos;
+    private Set<CulturalOfferingPhoto> culturalOfferingPhotos;
 
     @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter

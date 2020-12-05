@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Id;
@@ -9,17 +11,25 @@ import java.time.LocalDateTime;
 
 
 @MappedSuperclass
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class AbstractPhoto {
     @Id
     @Getter
-    private long id;
+    @Setter
+    protected long id;
     @Getter
     @Setter
-    private int width;
+    protected int width;
     @Getter
     @Setter
-    private int height;
+    protected int height;
     @Getter
     @Setter
-    private LocalDateTime timeAdded;
+    protected LocalDateTime timeAdded = LocalDateTime.now();
+
+    public AbstractPhoto(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
 }

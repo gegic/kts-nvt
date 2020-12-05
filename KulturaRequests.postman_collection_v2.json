@@ -1,16 +1,20 @@
 {
+	"variables": [],
 	"info": {
-		"_postman_id": "211f5f9e-5449-428f-9f16-917afecabdc3",
 		"name": "KulturaRequests",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"_postman_id": "f2983bfc-c2ff-f1f2-e7b1-364d8cb1e918",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Category",
+			"description": "",
 			"item": [
 				{
 					"name": "Get all categories",
 					"request": {
+						"url": "http://localhost:8080/api/categories",
 						"method": "GET",
 						"header": [
 							{
@@ -18,45 +22,32 @@
 								"value": "application/json"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/categories",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"categories"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Get by id 1",
 					"request": {
+						"url": "http://localhost:8080/api/categories/1",
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/categories/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"categories",
-								"1"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Add a category",
 					"request": {
+						"url": "http://localhost:8080/api/categories",
 						"method": "POST",
 						"header": [
 							{
@@ -68,24 +59,14 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\": \"kategorija\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/categories",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"categories"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Modify a category",
 					"request": {
+						"url": "localhost:8080/api/categories",
 						"method": "PUT",
 						"header": [
 							{
@@ -97,75 +78,45 @@
 							"mode": "raw",
 							"raw": "{\n\t\"id\": \"1\",\n\t\"name\": \"novoIme\"\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/categories",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"categories"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Delete a category",
 					"request": {
+						"url": "http://localhost:8080/api/categories/2",
 						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/categories/2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"categories",
-								"2"
-							]
-						}
+						"body": {},
+						"description": ""
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Subcategory",
+			"description": "",
 			"item": [
 				{
 					"name": "Get all subcategories for category 1",
 					"request": {
+						"url": "localhost:8080/api/subcategories/category/1",
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/subcategories/category/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"subcategories",
-								"category",
-								"1"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Add a subcategory",
 					"request": {
+						"url": "localhost:8080/api/subcategories/",
 						"method": "POST",
 						"header": [
 							{
@@ -177,24 +128,14 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\": \"potkategorija\",\n\t\"categoryId\": \"2\"\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/subcategories/",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"subcategories",
-								""
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Update a subcategory",
 					"request": {
+						"url": "localhost:8080/api/subcategories",
 						"method": "PUT",
 						"header": [
 							{
@@ -206,92 +147,59 @@
 							"mode": "raw",
 							"raw": "{\n\t\"id\": \"1\",\n\t\"name\": \"novo ime\",\n\t\"categoryId\": \"2\"\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/subcategories",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"subcategories"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Delete a subcategory",
 					"request": {
+						"url": "localhost:8080/api/subcategories/2",
 						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "localhost:8080/api/subcategories/2",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"subcategories",
-								"2"
-							]
-						}
+						"body": {},
+						"description": ""
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Cultural offering",
+			"description": "",
 			"item": [
 				{
 					"name": "Get all cultural offerings",
 					"request": {
+						"url": "localhost:8080/api/cultural-offerings",
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/cultural-offerings",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"cultural-offerings"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Get by id 1",
 					"request": {
+						"url": "localhost:8080/api/cultural-offerings/1",
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/cultural-offerings/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"cultural-offerings",
-								"1"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Add a cultural offering",
 					"request": {
+						"url": "localhost:8080/api/cultural-offerings",
 						"method": "POST",
 						"header": [
 							{
@@ -303,23 +211,14 @@
 							"mode": "raw",
 							"raw": "{\n\t\"name\": \"Galerija matice srpske\",\n\t\"latitude\": \"10\",\n\t\"longitude\": \"10\",\n\t\"address\": \"Novi Sad\",\n\t\"briefInfo\": \"briefInfo\",\n\t\"subcategoryId\": \"2\"\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/cultural-offerings",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"cultural-offerings"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Modify a cultural offering",
 					"request": {
+						"url": "localhost:8080/api/cultural-offerings",
 						"method": "PUT",
 						"header": [
 							{
@@ -331,68 +230,48 @@
 							"mode": "raw",
 							"raw": "{\n\t\"id\": \"1\",\n\t\"name\": \"Galerija matice srpske\",\n\t\"latitude\": \"10\",\n\t\"longitude\": \"10\",\n\t\"address\": \"Novi Sad\",\n\t\"briefInfo\": \"briefInfo\",\n\t\"subcategoryId\": \"2\"\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/cultural-offerings",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"cultural-offerings"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "User",
+			"description": "",
 			"item": [
 				{
 					"name": "Get all users",
 					"request": {
+						"url": "localhost:8080/api/users",
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/users",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Get by id 1",
 					"request": {
+						"url": "localhost:8080/api/users/1",
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/users/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users",
-								"1"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Add a new user",
 					"request": {
+						"url": "localhost:8080/api/users",
 						"method": "POST",
 						"header": [
 							{
@@ -404,23 +283,14 @@
 							"mode": "raw",
 							"raw": "{\n\t\"username\": \"noviUser\",\n\t\"email\": \"email@email.email\",\n\t\"password\": \"sifra1234\",\n\t\"firstName\": \"Novi\",\n\t\"lastName\": \"Korisnik\"\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/users",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Update a user",
 					"request": {
+						"url": "localhost:8080/api/users",
 						"method": "PUT",
 						"header": [
 							{
@@ -432,92 +302,59 @@
 							"mode": "raw",
 							"raw": "{\n\t\"id\": \"1\",\n\t\"username\": \"noviUser\",\n\t\"email\": \"email@email.email\",\n\t\"password\": \"sifra1234\",\n\t\"firstName\": \"Novi\",\n\t\"lastName\": \"Korisnik\"\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/users",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Delete a user",
 					"request": {
+						"url": "localhost:8080/api/users/2",
 						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "localhost:8080/api/users/2",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"users",
-								"2"
-							]
-						}
+						"body": {},
+						"description": ""
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Review",
+			"description": "",
 			"item": [
 				{
 					"name": "Get all reviews for cultural offering with id 2",
 					"request": {
+						"url": "localhost:8080/api/reviews",
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/reviews",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"reviews"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Get by id 1",
 					"request": {
+						"url": "localhost:8080/api/reviews/1",
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/reviews/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"reviews",
-								"1"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Create a review",
 					"request": {
+						"url": "localhost:8080/api/reviews",
 						"method": "POST",
 						"header": [
 							{
@@ -529,23 +366,14 @@
 							"mode": "raw",
 							"raw": "{\n\t\"rating\": \"4\",\n\t\"comment\": \"Sve najj\",\n\t\"culturalOfferingId\": \"1\",\n\t\"userId\": \"3\"\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/reviews",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"reviews"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Update a review",
 					"request": {
+						"url": "localhost:8080/api/reviews",
 						"method": "PUT",
 						"header": [
 							{
@@ -557,146 +385,87 @@
 							"mode": "raw",
 							"raw": "{\n\t\"id\": \"1\",\n\t\"rating\": \"5\",\n\t\"comment\": \"Sve najj\"\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/reviews",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"reviews"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "Posts",
+			"description": "",
 			"item": [
 				{
 					"name": "Posts in cultural offering with id 1",
 					"request": {
+						"url": "localhost:8080/api/posts/culturalOffering/1",
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/posts/culturalOffering/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"posts",
-								"culturalOffering",
-								"1"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Get by id 1",
 					"request": {
+						"url": "localhost:8080/api/posts/1",
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/posts/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"posts",
-								"1"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Add a post to cultural offering with id 1",
 					"request": {
+						"url": "localhost:8080/api/posts",
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\t\"content\": \"Hari Mata Hari legenda\",\r\n    \"culturalOfferingId\": 1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"raw": "{\r\n\t\"content\": \"Hari Mata Hari legenda\",\r\n    \"culturalOfferingId\": 1\r\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/posts",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"posts"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Modify a post",
 					"request": {
+						"url": "localhost:8080/api/posts",
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\t\"content\": \"Hari Mata Hari legenda\",\r\n    \"culturalOfferingId\": 1,\r\n    \"id\": 1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"raw": "{\r\n\t\"content\": \"Hari Mata Hari legenda\",\r\n    \"culturalOfferingId\": 1,\r\n    \"id\": 1\r\n}"
 						},
-						"url": {
-							"raw": "localhost:8080/api/posts",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"posts"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Delete a post",
 					"request": {
+						"url": "localhost:8080/api/posts/1",
 						"method": "DELETE",
 						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/posts/1",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"posts",
-								"1"
-							]
-						}
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
 					},
 					"response": []
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

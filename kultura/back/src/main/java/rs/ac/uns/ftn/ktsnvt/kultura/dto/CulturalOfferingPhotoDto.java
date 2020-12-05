@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class PhotoDto {
+public class CulturalOfferingPhotoDto {
     @Getter
     @Setter
     private Long id;
