@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.PostDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.PostService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 
@@ -42,14 +43,14 @@ public class PostsController {
     }
 
     @PostMapping
-    ResponseEntity<PostDto> add(@RequestBody PostDto postDto){
+    ResponseEntity<PostDto> add(@Valid @RequestBody PostDto postDto){
         PostDto saved = this.postService.save(postDto);
         return ResponseEntity.created(URI.create(String.format("/api/post/%s", saved.getId())))
                 .body(saved);
     }
 
     @PutMapping
-    ResponseEntity<PostDto> update(@RequestBody PostDto postDto){
+    ResponseEntity<PostDto> update(@Valid @RequestBody PostDto postDto){
         return ResponseEntity.ok(this.postService.save(postDto));
     }
 

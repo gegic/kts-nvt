@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 
@@ -39,13 +40,13 @@ public class CulturalOfferingsController {
     }
 
     @PostMapping
-    ResponseEntity<CulturalOfferingDto> add(@RequestBody CulturalOfferingDto culturalOfferingDto){
+    ResponseEntity<CulturalOfferingDto> add(@Valid @RequestBody CulturalOfferingDto culturalOfferingDto){
         CulturalOfferingDto saved = this.culturalOfferingService.create(culturalOfferingDto);
         return ResponseEntity.created(URI.create("/api/cultural-offering/" + saved.getId())).body(saved);
     }
 
     @PutMapping
-    ResponseEntity<CulturalOfferingDto> update(@RequestBody CulturalOfferingDto culturalOfferingDto){
+    ResponseEntity<CulturalOfferingDto> update(@Valid @RequestBody CulturalOfferingDto culturalOfferingDto){
         return ResponseEntity.ok(this.culturalOfferingService.update(culturalOfferingDto));
     }
 

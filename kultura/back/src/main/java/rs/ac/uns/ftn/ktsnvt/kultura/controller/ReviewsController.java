@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.ReviewService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 
@@ -42,14 +43,14 @@ public class ReviewsController {
     }
 
     @PostMapping
-    ResponseEntity<ReviewDto> add(@RequestBody ReviewDto reviewDto){
+    ResponseEntity<ReviewDto> add(@Valid @RequestBody ReviewDto reviewDto){
         ReviewDto saved = this.reviewService.save(reviewDto);
         return ResponseEntity.created(URI.create(String.format("/api/review/%s", saved.getId())))
                 .body(saved);
     }
 
     @PutMapping
-    ResponseEntity<ReviewDto> update(@RequestBody ReviewDto reviewDto){
+    ResponseEntity<ReviewDto> update(@Valid @RequestBody ReviewDto reviewDto){
         return ResponseEntity.ok(this.reviewService.save(reviewDto));
     }
 

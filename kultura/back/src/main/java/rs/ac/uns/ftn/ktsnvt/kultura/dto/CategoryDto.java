@@ -1,19 +1,20 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class CategoryDto {
-    @Getter
-    @Setter
+
     private Long id;
 
-    @Getter
-    @Setter
+//    @Size(min = 2, message
+//            = "Category name must have at least 2 characters")
+    @NotBlank( message = "Category name cannot be blank.")
     private String name;
 }

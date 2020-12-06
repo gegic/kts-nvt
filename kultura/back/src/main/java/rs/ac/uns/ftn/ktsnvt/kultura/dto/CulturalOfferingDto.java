@@ -1,71 +1,47 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityField;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingProfilePhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CulturalOfferingDto {
-    @Getter
-    @Setter
+
     private Long id;
 
-    @Getter
-    @Setter
+    @NotBlank(message = "The name of the cultural offering cannot be blank.")
     private String name;
 
-    @Getter
-    @Setter
     private String briefInfo;
 
-    @Getter
-    @Setter
+    //dodati posle min/max za ovo kad skontamo na osnovu mape koje su te vrednosti koje omogucujemo
     private Float latitude;
 
-    @Getter
-    @Setter
     private Float longitude;
 
-    @Getter
-    @Setter
     private String address;
 
-    @Getter
-    @Setter
     @EntityKey(entityType = CulturalOfferingProfilePhoto.class, fieldName = "photo")
     private Long photoId;
 
-    @Getter
-    @Setter
     private Float overallRating;
 
-    @Getter
-    @Setter
     private Integer numReviews;
 
-    @Getter
-    @Setter
     private LocalDateTime lastChange;
 
-    @Getter
-    @Setter
     private String additionalInfo;
 
-    @Getter
-    @Setter
     @EntityKey(entityType = Subcategory.class, fieldName = "subcategory")
     private Long subcategoryId;
 
-    @Getter
-    @Setter
     @EntityField
     private String subcategoryName;
 }
