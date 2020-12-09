@@ -24,16 +24,18 @@ public class UserService implements UserDetailsService {
     private final Mapper mapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityService authorityService;
+    private final SMTPServer smtpServer;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        Mapper mapper,
                        PasswordEncoder passwordEncoder,
-                       AuthorityService authorityService) {
+                       AuthorityService authorityService, SMTPServer smtpServer) {
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
         this.authorityService = authorityService;
+        this.smtpServer = smtpServer;
     }
 
     public Page<UserDto> readAll(Pageable p) {
@@ -61,7 +63,7 @@ public class UserService implements UserDetailsService {
 
         Set<Authority> auth = authorityService.findByName("ROLE_USER");
         u.setAuthorities(auth);
-
+        sendMail(u);
         u = this.userRepository.save(u);
         return mapper.fromEntity(u, UserDto.class);
     }
@@ -86,5 +88,14 @@ public class UserService implements UserDetailsService {
     @Override
     public User loadUserByUsername(String s) throws UsernameNotFoundException {
         return userRepository.findByEmailUsername(s).orElseThrow(() -> new UsernameNotFoundException(s));
+    }
+
+    public void sendMail(User user){
+    String body = "Pozdrav " + user.getFirstName() + "/e, uspešno ste kreiriali nalog.";
+        try {
+      this.smtpServer.sendEmail(user.getEmail(), "Usprešno kreiran nalog"   , body);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
