@@ -15,87 +15,105 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
 import java.util.Optional;
 import java.util.Set;
-
+import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
-    private final Mapper mapper;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthorityService authorityService;
-    private final SMTPServer smtpServer;
+  private final UserRepository userRepository;
+  private final Mapper mapper;
+  private final PasswordEncoder passwordEncoder;
+  private final AuthorityService authorityService;
+  private final SMTPServer smtpServer;
 
-    @Autowired
-    public UserService(UserRepository userRepository,
-                       Mapper mapper,
-                       PasswordEncoder passwordEncoder,
-                       AuthorityService authorityService, SMTPServer smtpServer) {
-        this.userRepository = userRepository;
-        this.mapper = mapper;
-        this.passwordEncoder = passwordEncoder;
-        this.authorityService = authorityService;
-        this.smtpServer = smtpServer;
+  @Autowired
+  public UserService(
+      UserRepository userRepository,
+      Mapper mapper,
+      PasswordEncoder passwordEncoder,
+      AuthorityService authorityService,
+      SMTPServer smtpServer) {
+    this.userRepository = userRepository;
+    this.mapper = mapper;
+    this.passwordEncoder = passwordEncoder;
+    this.authorityService = authorityService;
+    this.smtpServer = smtpServer;
+  }
+
+  public Page<UserDto> readAll(Pageable p) {
+    return userRepository.findAll(p).map(u -> mapper.fromEntity(u, UserDto.class));
+  }
+
+  public Page<UserDto> readByAuthority(Pageable p, String authority) {
+    return userRepository
+        .findByAuthority(authority, p)
+        .map(u -> mapper.fromEntity(u, UserDto.class));
+  }
+
+  public Optional<UserDto> readById(String id) {
+    return userRepository.findById(id).map(u -> mapper.fromEntity(u, UserDto.class));
+  }
+
+  public UserDto create(UserDto dto) throws Exception {
+    if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+      throw new Exception("User with given email address already exists");
     }
+    User u = new User();
+    System.out.println(UUID.randomUUID().hashCode());
+    u.setId(UUID.randomUUID().toString());
+    u.setUsername(dto.getUsername());
+    u.setPassword(passwordEncoder.encode(dto.getPassword()));
+    u.setFirstName(dto.getFirstName());
+    u.setLastName(dto.getLastName());
+    u.setEmail(dto.getEmail());
 
-    public Page<UserDto> readAll(Pageable p) {
-        return userRepository.findAll(p).map(u -> mapper.fromEntity(u, UserDto.class));
+    Set<Authority> auth = authorityService.findByName("ROLE_USER");
+    u.setAuthorities(auth);
+    sendMail(u);
+    u = this.userRepository.save(u);
+    return mapper.fromEntity(u, UserDto.class);
+  }
+
+  public UserDto update(UserDto userDto) throws Exception {
+    User existingUser = userRepository.findById(userDto.getId()).orElse(null);
+    if (existingUser == null) {
+      throw new Exception("User with given id doesn't exist");
     }
+    existingUser.setPassword(userDto.getPassword());
+    return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
+  }
 
-    public Page<UserDto> readByAuthority(Pageable p, String authority) {
-        return userRepository.findByAuthority(authority, p).map(u -> mapper.fromEntity(u, UserDto.class));
+  public void delete(String id) throws Exception {
+    User existingUser = userRepository.findById(id).orElse(null);
+    if (existingUser == null) {
+      throw new Exception("User with given id doesn't exist");
     }
+    userRepository.delete(existingUser);
+  }
 
-    public Optional<UserDto> readById(long id) {
-        return userRepository.findById(id).map(u -> mapper.fromEntity(u, UserDto.class));
+  @Override
+  public User loadUserByUsername(String s) throws UsernameNotFoundException {
+    return userRepository
+        .findByEmailUsername(s)
+        .orElseThrow(() -> new UsernameNotFoundException(s));
+  }
+
+  public void sendMail(User user) {
+    String link = "Klikni <a href=\"http:/localhost:8080/api/users/activated/"+user.getId()+"\">ovde</a> da biste aktivirali nalog";
+    String body = "Pozdrav " + user.getFirstName() + "/e, uspešno ste kreirali nalog. " + link;
+    try {
+      this.smtpServer.sendEmail(user.getEmail(), "Usprešno kreiran nalog", body);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
-    public UserDto create(UserDto dto) throws Exception {
-        if(userRepository.findByEmail(dto.getEmail()).isPresent()){
-            throw new Exception("User with given email address already exists");
-        }
-        User u = new User();
-        u.setUsername(dto.getUsername());
-        u.setPassword(passwordEncoder.encode(dto.getPassword()));
-        u.setFirstName(dto.getFirstName());
-        u.setLastName(dto.getLastName());
-        u.setEmail(dto.getEmail());
-
-        Set<Authority> auth = authorityService.findByName("ROLE_USER");
-        u.setAuthorities(auth);
-        sendMail(u);
-        u = this.userRepository.save(u);
-        return mapper.fromEntity(u, UserDto.class);
+  public UserDto activated(String id) throws Exception {
+    User existingUser = userRepository.findById(id).orElse(null);
+    if (existingUser == null) {
+      throw new Exception("User with given id doesn't exist");
     }
-
-    public UserDto update(UserDto userDto) throws Exception {
-        User existingUser =  userRepository.findById(userDto.getId()).orElse(null);
-        if(existingUser == null){
-            throw new Exception("User with given id doesn't exist");
-        }
-        existingUser.setPassword(userDto.getPassword());
-        return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
-    }
-
-    public void delete(long id) throws Exception {
-        User existingUser = userRepository.findById(id).orElse(null);
-        if(existingUser == null){
-            throw new Exception("User with given id doesn't exist");
-        }
-        userRepository.delete(existingUser);
-    }
-
-    @Override
-    public User loadUserByUsername(String s) throws UsernameNotFoundException {
-        return userRepository.findByEmailUsername(s).orElseThrow(() -> new UsernameNotFoundException(s));
-    }
-
-    public void sendMail(User user){
-    String body = "Pozdrav " + user.getFirstName() + "/e, uspešno ste kreiriali nalog.";
-        try {
-      this.smtpServer.sendEmail(user.getEmail(), "Usprešno kreiran nalog"   , body);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    existingUser.setVerified(true);
+    return  mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
+  }
 }

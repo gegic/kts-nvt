@@ -27,7 +27,7 @@ public class DefaultSMTPServer implements SMTPServer {
         msg.setFrom(new InternetAddress("no-replay@kultura.rs", "NoReply-JD"));
         msg.setReplyTo(InternetAddress.parse("no-replay@kultura.rs", false));
         msg.setSubject(subject, "UTF-8");
-        msg.setText(body, "UTF-8");
+        msg.setText(body, "UTF-8", "html");
         msg.setSentDate(new Date());
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
 

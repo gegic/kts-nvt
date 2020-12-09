@@ -10,23 +10,12 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.DefaultSMTPServer;
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackages = "rs.ac.uns.ftn.ktsnvt.kultura")
 public class AppConfig {
 
-    @Value("${spring.datasource.url}")
-    private String DB_URL;
-    @Value("${spring.datasource.username}")
-    private String USER;
-    @Value("${spring.datasource.password}")
-    private String PASS;
-    @Value("${spring.datasource.driver-class-name}")
-    private String DATASOURCE_DRIVER;
     @Value("${mail.smtp.host}")
     private String SMTP_HOST;
     @Value("${mail.smtp.socketFactory.port}")
@@ -39,12 +28,6 @@ public class AppConfig {
     private String MAIL_ADDRESS;
     @Value("${mail.password}")
     private String MAIL_PASSWORD;
-
-    @Bean(name = "namedFile")
-    public Connection creatDBConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(DATASOURCE_DRIVER);
-        return DriverManager.getConnection(DB_URL, USER, PASS);
-    }
 
     @Bean
     public SMTPServer createSMTPServer() {
