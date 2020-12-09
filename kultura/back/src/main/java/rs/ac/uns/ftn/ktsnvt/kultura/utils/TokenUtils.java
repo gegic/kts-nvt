@@ -2,13 +2,27 @@ package rs.ac.uns.ftn.ktsnvt.kultura.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TokenUtils {
+
+
+    @Value("dJe $i $ta cXini$")
+    private static String secret;
+
+    @Value("18000")
+    private static Long expiration;
+
+
     public static String getToken(HttpServletRequest request) {
 
         String authHeader = request.getHeader("Authorization");
@@ -37,7 +51,7 @@ public class TokenUtils {
         Claims claims;
         try {
             claims = Jwts.parser()
-                    .setSigningKey("dJe $i $ta cXini$")
+                    .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
@@ -68,4 +82,14 @@ public class TokenUtils {
         }
         return issueAt;
     }
+
+    public static String generateToken(User user) {
+        Map<String, Object> claims = new HashMap<String, Object>();
+        claims.put("email", user.getEmail());
+        claims.put("created", new Date(System.currentTimeMillis()));
+        return Jwts.builder().setClaims(claims)
+                .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
+    }
+
 }
