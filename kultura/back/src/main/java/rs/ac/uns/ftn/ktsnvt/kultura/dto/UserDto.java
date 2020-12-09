@@ -14,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserDto {
 
-    private Long id;
+    private String id;
     @Size(min=8, max=50, message = "A username should be between 8 and 50 characters long.")
     private String username;
     @Email(message = "You entered an invalid email address.")

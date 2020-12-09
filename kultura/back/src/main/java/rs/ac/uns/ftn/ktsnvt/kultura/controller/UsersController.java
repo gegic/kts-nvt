@@ -44,8 +44,14 @@ public class UsersController {
         return ResponseEntity.ok(moderatorsDto);
     }
 
+    @GetMapping(path = "/activated/{id}")
+    public ResponseEntity<UserDto> activatedUser(@PathVariable String id) throws Exception {
+        UserDto activateUser = this.userService.activated(id);
+        return ResponseEntity.ok(activateUser);
+    }
+
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> get(@PathVariable long id){
+    public ResponseEntity<UserDto> get(@PathVariable String id){
         return ResponseEntity.of(this.userService.readById(id));
     }
 
@@ -62,7 +68,7 @@ public class UsersController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id) throws Exception {
-        this.userService.delete(Long.parseLong(id));
+        this.userService.delete(id);
         return ResponseEntity.ok().build();
     }
 
