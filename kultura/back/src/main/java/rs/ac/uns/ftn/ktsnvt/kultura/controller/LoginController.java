@@ -34,6 +34,7 @@ public class LoginController {
             UsernamePasswordAuthenticationToken token =
                     new UsernamePasswordAuthenticationToken(
                             loginInfo.getEmail(), loginInfo.getPassword());
+
             Authentication authentication = authenticationManager.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = userService.loadUserByUsername(loginInfo.getEmail());
