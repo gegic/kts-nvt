@@ -8,15 +8,13 @@ import org.springframework.stereotype.Repository;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByEmail(String email);
-
-    @Query("select u from User u where u.email = :username or u.username = :username")
-    Optional<User> findByEmailUsername(String username);
 
     @Query("select u from User u join u.authorities auth where auth.authority = :authority")
     Page<User> findByAuthority(String authority, Pageable p);

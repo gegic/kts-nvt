@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -50,24 +51,27 @@ public class UserService implements UserDetailsService {
         .map(u -> mapper.fromEntity(u, UserDto.class));
   }
 
-  public Optional<UserDto> readById(String id) {
+  public Optional<UserDto> readById(UUID id) {
     return userRepository.findById(id).map(u -> mapper.fromEntity(u, UserDto.class));
   }
 
   public UserDto create(UserDto dto) throws Exception {
+    return this.create(dto, "ROLE_USER");
+  }
+
+  @Transactional
+  public UserDto create(UserDto dto, String role) throws Exception {
     if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
       throw new Exception("User with given email address already exists");
     }
     User u = new User();
     System.out.println(UUID.randomUUID().hashCode());
-    u.setId(UUID.randomUUID().toString());
-    u.setUsername(dto.getUsername());
     u.setPassword(passwordEncoder.encode(dto.getPassword()));
     u.setFirstName(dto.getFirstName());
     u.setLastName(dto.getLastName());
     u.setEmail(dto.getEmail());
 
-    Set<Authority> auth = authorityService.findByName("ROLE_USER");
+    Set<Authority> auth = authorityService.findByName(role);
     u.setAuthorities(auth);
     sendMail(u);
     u = this.userRepository.save(u);
@@ -83,7 +87,7 @@ public class UserService implements UserDetailsService {
     return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
   }
 
-  public void delete(String id) throws Exception {
+  public void delete(UUID id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
       throw new Exception("User with given id doesn't exist");
@@ -94,8 +98,12 @@ public class UserService implements UserDetailsService {
   @Override
   public User loadUserByUsername(String s) throws UsernameNotFoundException {
     return userRepository
-        .findByEmailUsername(s)
+        .findByEmail(s)
         .orElseThrow(() -> new UsernameNotFoundException(s));
+  }
+
+  public Optional<UserDto> findByEmail(String email) {
+    return userRepository.findByEmail(email).map(e -> mapper.fromEntity(e, UserDto.class));
   }
 
   public void sendMail(User user) {
@@ -108,7 +116,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  public UserDto activated(String id) throws Exception {
+  public UserDto activated(UUID id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
       throw new Exception("User with given id doesn't exist");

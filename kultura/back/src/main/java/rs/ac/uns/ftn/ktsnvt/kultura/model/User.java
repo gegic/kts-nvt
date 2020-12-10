@@ -2,11 +2,14 @@ package rs.ac.uns.ftn.ktsnvt.kultura.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 
 @Entity
@@ -15,11 +18,11 @@ public class User implements UserDetails {
     @Id
     @Getter
     @Setter
-    private String id;
-    @Getter
-    @Setter
-    @Column(unique = true)
-    private String username;
+    @GeneratedValue(generator = "uuid4")
+    @GenericGenerator(name = "UUID", strategy = "uuid4")
+    @Type(type = "org.hibernate.type.UUIDCharType")
+    @Column(columnDefinition = "CHAR(36)")
+    private UUID id;
     @Getter
     @Setter
     @Column(unique = true)
@@ -69,5 +72,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getEmail();
     }
 }

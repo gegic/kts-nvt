@@ -1,5 +1,6 @@
 {
   "extends": "tslint:recommended",
+  "defaultSeverity": "error",
   "rulesDirectory": [
     "codelyzer"
   ],
@@ -14,7 +15,7 @@
     "arrow-return-shorthand": true,
     "curly": true,
     "deprecation": {
-      "severity": "warning"
+      "severity": "error"
     },
     "eofline": true,
     "import-blacklist": [

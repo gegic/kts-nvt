@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.UUID;
 
 
 @RestController
@@ -45,13 +46,13 @@ public class UsersController {
     }
 
     @GetMapping(path = "/activated/{id}")
-    public ResponseEntity<UserDto> activatedUser(@PathVariable String id) throws Exception {
+    public ResponseEntity<UserDto> activatedUser(@PathVariable UUID id) throws Exception {
         UserDto activateUser = this.userService.activated(id);
         return ResponseEntity.ok(activateUser);
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> get(@PathVariable String id){
+    public ResponseEntity<UserDto> get(@PathVariable UUID id){
         return ResponseEntity.of(this.userService.readById(id));
     }
 
@@ -61,13 +62,19 @@ public class UsersController {
         return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
 
+    @PostMapping("/moderator")
+    ResponseEntity<UserDto> addModerator(@RequestBody UserDto userDto) throws Exception {
+        UserDto saved = this.userService.create(userDto, "ROLE_MODERATOR");
+        return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
+    }
+
     @PutMapping
     ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto) throws Exception {
         return ResponseEntity.ok(this.userService.update(userDto));
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable String id) throws Exception {
+    ResponseEntity<Void> delete(@PathVariable UUID id) throws Exception {
         this.userService.delete(id);
         return ResponseEntity.ok().build();
     }

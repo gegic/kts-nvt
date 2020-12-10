@@ -3,7 +3,9 @@ package rs.ac.uns.ftn.ktsnvt.kultura.mapper;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Fetch;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.support.ReflectionHelper;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -99,7 +101,6 @@ public class Mapper {
                     e.printStackTrace();
                     continue;
                 }
-
             } else if (field.isAnnotationPresent(EntityField.class)) {
                 try {
                     fieldValue = entityToEntityField(field, entity);
@@ -172,7 +173,6 @@ public class Mapper {
                     continue;
                 }
 
-                if (fieldValue == null) continue;
 
                 try {
                     m = entityClass.getMethod(setterName, field.getType());
@@ -196,7 +196,7 @@ public class Mapper {
                 }
             }
 
-
+            if (fieldValue == null) continue;
 
             try {
                 m.invoke(entity, fieldValue);
@@ -230,21 +230,21 @@ public class Mapper {
         return getOrigin(entity, origins);
     }
 
-    private Object getOrigin(Object currentOrigin, String[] origins) throws NoSuchFieldException, InvocationTargetException {
-        EntityManager entityManager = null;
+    @Transactional
+    protected Object getOrigin(Object currentOrigin, String[] origins) throws NoSuchFieldException, InvocationTargetException {
         for (String originName : origins) {
             if (currentOrigin == null) throw new NullEntityFieldException();
             Field previousField = currentOrigin.getClass().getDeclaredField(originName);
-
             currentOrigin = invokeGetMethod(originName, currentOrigin);
 
             if((previousField.isAnnotationPresent(ManyToOne.class) && previousField.getAnnotation(ManyToOne.class).fetch().equals(FetchType.LAZY)) ||
-                    (previousField.isAnnotationPresent(OneToOne.class) && previousField.getAnnotation(OneToOne.class).fetch().equals(FetchType.LAZY)) ||
-                    (previousField.isAnnotationPresent(OneToMany.class) && previousField.getAnnotation(ManyToOne.class).fetch().equals(FetchType.LAZY)) ||
-                    (previousField.isAnnotationPresent(ManyToMany.class) && previousField.getAnnotation(ManyToMany.class).fetch().equals(FetchType.LAZY))) {
-                Hibernate.initialize(currentOrigin);
-                // TODO resolve this sutra tako ti svega
+                (previousField.isAnnotationPresent(OneToOne.class) && previousField.getAnnotation(OneToOne.class).fetch().equals(FetchType.LAZY)) ||
+                (previousField.isAnnotationPresent(OneToMany.class) && previousField.getAnnotation(OneToMany.class).fetch().equals(FetchType.LAZY)) ||
+                (previousField.isAnnotationPresent(ManyToMany.class) && previousField.getAnnotation(ManyToMany.class).fetch().equals(FetchType.LAZY))) {
+
+                currentOrigin = initializeAndUnproxy(currentOrigin);
             }
+
         }
         return currentOrigin;
     }
@@ -253,8 +253,15 @@ public class Mapper {
         EntityKey annotatedField = field.getAnnotation(EntityKey.class);
         Class<?> entityFieldClass = annotatedField.entityType();
         String entityFieldName = annotatedField.fieldName();
-
+        Field previousField = entity.getClass().getDeclaredField(entityFieldName);
         Object entityFieldObject = invokeGetMethod(entityFieldName, entity);
+
+        if((previousField.isAnnotationPresent(ManyToOne.class) && previousField.getAnnotation(ManyToOne.class).fetch().equals(FetchType.LAZY)) ||
+                (previousField.isAnnotationPresent(OneToOne.class) && previousField.getAnnotation(OneToOne.class).fetch().equals(FetchType.LAZY)) ||
+                (previousField.isAnnotationPresent(OneToMany.class) && previousField.getAnnotation(OneToMany.class).fetch().equals(FetchType.LAZY)) ||
+                (previousField.isAnnotationPresent(ManyToMany.class) && previousField.getAnnotation(ManyToMany.class).fetch().equals(FetchType.LAZY))) {
+            entityFieldObject = initializeAndUnproxy(entityFieldObject);
+        }
 
         Field idField;
         Object key;
@@ -313,7 +320,9 @@ public class Mapper {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         if (key == null) return null;
-        return entityManager.find(entityFieldClass, key);
+        Object found = entityManager.find(entityFieldClass, key);
+        entityManager.close();
+        return found;
     }
 
     private Object invokeGetMethod(String fieldName, Object o) throws NoSuchFieldException, InvocationTargetException {
@@ -348,5 +357,18 @@ public class Mapper {
         } catch (NoSuchMethodException e) {
             throw new GetterException(c, fieldName);
         }
+    }
+
+    private <T> T initializeAndUnproxy(T entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        Hibernate.initialize(entity);
+        if (entity instanceof HibernateProxy) {
+            entity = (T) ((HibernateProxy) entity).getHibernateLazyInitializer()
+                    .getImplementation();
+        }
+        return entity;
     }
 }

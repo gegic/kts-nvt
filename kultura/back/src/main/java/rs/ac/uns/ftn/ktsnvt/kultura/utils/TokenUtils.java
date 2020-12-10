@@ -15,12 +15,9 @@ import java.util.Map;
 
 public class TokenUtils {
 
+    private static String secret = "dJe $i $ta cXini$";
 
-    @Value("dJe $i $ta cXini$")
-    private static String secret;
-
-    @Value("18000")
-    private static Long expiration;
+    private static Long expiration = 18000l;
 
 
     public static String getToken(HttpServletRequest request) {

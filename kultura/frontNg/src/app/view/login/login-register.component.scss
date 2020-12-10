@@ -1,0 +1,16 @@
+
+
+.centered-grid {
+  margin-top: 12rem;
+}
+
+:host {
+  ::ng-deep .p-card {
+    box-shadow: none !important;
+    background-color: #FCF7F8 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 1em;
+    min-height: 370px;
+  }
+
+}

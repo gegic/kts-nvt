@@ -8,15 +8,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
 
-    private String id;
-    @Size(min=8, max=50, message = "A username should be between 8 and 50 characters long.")
-    private String username;
+    private UUID id;
     @Email(message = "You entered an invalid email address.")
     private String email;
 

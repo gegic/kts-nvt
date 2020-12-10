@@ -48,4 +48,11 @@ public class CulturalOfferingPhoto extends AbstractPhoto {
         this.height = height;
     }
 
+    public LocalDateTime getTimeAdded() {
+        return this.timeAdded;
+    }
+
+    public void setTimeAdded(LocalDateTime timeAdded) {
+        this.timeAdded = timeAdded;
+    }
 }

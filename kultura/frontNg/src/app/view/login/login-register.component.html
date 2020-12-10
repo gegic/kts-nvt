@@ -1,0 +1,9 @@
+<div class="p-grid p-justify-center centered-grid">
+  <div class="p-col p-sm-9 p-md-6 p-lg-4">
+    <p-card class="flat-card">
+      <div [@routeAnimations]="prepareRoute(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </div>
+    </p-card>
+  </div>
+</div>
