@@ -1,0 +1,42 @@
+<div>
+  <div class="p-card-header">
+    <div class="p-grid p-justify-center">
+      <p class="logo p-mt-5 p-mb-0">kultura</p>
+    </div>
+    <div class="p-grid p-justify-center">
+      <h2 class="p-mt-1 p-mb-3 p-text-light">Sign In</h2>
+    </div>
+  </div>
+  <div class="p-card-content">
+    <form (ngSubmit)="onClickProceed()">
+      <div class="p-grid p-px-5">
+        <div class="p-col-12">
+            <span class="p-float-label">
+              <input type="text" id="email" name="email" autocomplete="off" [formControl]="emailControl" pInputText>
+              <label for="email">Email</label>
+            </span>
+        </div>
+        <div class="p-col-12 p-mt-0">
+          <small class="p-text-light">Contact an admin to reset your password.</small>
+        </div>
+      </div>
+      <div class="p-grid p-px-5 p-justify-end p-mt-5">
+        <div class="p-col">
+          <button type="button"
+                  class="p-button-text"
+                  label="New account"
+                  (click)="onClickNewAccount()"
+                  pButton></button>
+        </div>
+        <div class="p-col p-text-right">
+          <button type="submit"
+                  class="p-button"
+                  label="Proceed"
+                  [disabled]="!emailControl.value"
+                  pButton
+          ></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

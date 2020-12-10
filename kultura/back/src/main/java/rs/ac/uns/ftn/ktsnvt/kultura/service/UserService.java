@@ -65,16 +65,16 @@ public class UserService implements UserDetailsService {
       throw new Exception("User with given email address already exists");
     }
     User u = new User();
-    System.out.println(UUID.randomUUID().hashCode());
+
     u.setPassword(passwordEncoder.encode(dto.getPassword()));
     u.setFirstName(dto.getFirstName());
     u.setLastName(dto.getLastName());
     u.setEmail(dto.getEmail());
-
+    u.setVerified(false);
     Set<Authority> auth = authorityService.findByName(role);
     u.setAuthorities(auth);
-    sendMail(u);
     u = this.userRepository.save(u);
+    sendMail(u);
     return mapper.fromEntity(u, UserDto.class);
   }
 
@@ -107,8 +107,10 @@ public class UserService implements UserDetailsService {
   }
 
   public void sendMail(User user) {
-    String link = "Klikni <a href=\"http:/localhost:8080/api/users/activated/"+user.getId()+"\">ovde</a> da biste aktivirali nalog";
-    String body = "Pozdrav " + user.getFirstName() + "/e, uspešno ste kreirali nalog. " + link;
+    String link = String
+            .format("<br>Nalog je potrebno verifikovati klikom na " +
+                    "<a href=\"http:/localhost:8080/api/users/activated/%s\">ovaj link</a>.", user.getId());
+    String body = String.format("Pozdrav,<br>%s, uspešno ste kreirali nalog.", user.getFirstName()) + link;
     try {
       this.smtpServer.sendEmail(user.getEmail(), "Usprešno kreiran nalog", body);
     } catch (Exception e) {
@@ -119,7 +121,7 @@ public class UserService implements UserDetailsService {
   public UserDto activated(UUID id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
-      throw new Exception("User with given id doesn't exist");
+      throw new Exception("User with the given id doesn't exist");
     }
     existingUser.setVerified(true);
     return  mapper.fromEntity(userRepository.save(existingUser), UserDto.class);

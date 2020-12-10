@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {LoginService} from '../../../core/services/login/login.service';
+import {LoginService} from '../../../../core/services/login/login.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {relativeFrom} from '@angular/compiler-cli/src/ngtsc/file_system';
-import {AuthService} from '../../../core/services/auth/auth.service';
+import {AuthService} from '../../../../core/services/auth/auth.service';
 import {MessageService} from 'primeng/api';
-import {User} from '../../../core/models/user';
+import {User} from '../../../../core/models/user';
 import {tokenize} from '@angular/compiler/src/ml_parser/lexer';
 import {useAnimation} from '@angular/animations';
 
@@ -16,25 +16,28 @@ import {useAnimation} from '@angular/animations';
 })
 export class EnterPasswordComponent implements OnInit {
 
-  passwordForm: FormControl;
+  passwordControl: FormControl;
 
   constructor(private loginService: LoginService,
               private router: Router,
               private activatedRoute: ActivatedRoute,
               private authService: AuthService,
               private messageService: MessageService) {
-    this.passwordForm = new FormControl(null, [Validators.minLength(8)]);
+    this.passwordControl = new FormControl(null, [Validators.minLength(8)]);
   }
 
   ngOnInit(): void {
+    if (!this.loginService.email) {
+      this.router.navigate(['..'], {relativeTo: this.activatedRoute});
+    }
   }
 
   onClickLogin(): void {
-    if (!this.passwordForm.valid) {
+    if (!this.passwordControl.valid) {
       this.messageService.add({severity: 'error', detail: 'Passwords are at least eight characters long.'});
       return;
     }
-    this.loginService.password = this.passwordForm.value;
+    this.loginService.password = this.passwordControl.value;
     this.loginService.login()
       .subscribe(
         (data: {token: string, user: User}) => {
