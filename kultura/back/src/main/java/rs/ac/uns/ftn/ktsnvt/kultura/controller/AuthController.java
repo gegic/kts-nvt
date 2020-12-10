@@ -67,9 +67,6 @@ public class AuthController {
         }
     }
 
-//    @GetMapping(path = "logout", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<String> logout(){
-//        return new ResponseEntity<String>("Wow", HttpStatus.OK);
-//    }
+    
 
 }
