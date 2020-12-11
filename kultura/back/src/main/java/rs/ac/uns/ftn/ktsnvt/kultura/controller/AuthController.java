@@ -67,6 +67,14 @@ public class AuthController {
         }
     }
 
-    
+    @PostMapping(path="/register")
+    public ResponseEntity<Void> register(@RequestBody UserDto userDto) {
+        try {
+            userService.create(userDto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 }

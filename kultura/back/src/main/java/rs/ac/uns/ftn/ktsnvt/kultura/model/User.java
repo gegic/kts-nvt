@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,18 +39,18 @@ public class User implements UserDetails {
     private String lastName;
     @Getter
     @Setter
-    private LocalDateTime lastPasswordChange;
+    private LocalDateTime lastPasswordChange = LocalDateTime.now();
     @Getter
     @Setter
     private boolean verified;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     @Getter
     @Setter
-    private Set<Authority> authorities;
+    private Set<Authority> authorities = new HashSet<>();
 
     @ManyToMany(mappedBy = "subscribedUsers")
     private Set<CulturalOffering> subscriptions;
@@ -77,5 +78,9 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return this.getEmail();
+    }
+
+    public void addAuthority(Authority a) {
+        this.authorities.add(a);
     }
 }

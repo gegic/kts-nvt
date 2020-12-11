@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.AuthorityRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
 import javax.transaction.Transactional;
@@ -24,7 +25,7 @@ public class UserService implements UserDetailsService {
   private final UserRepository userRepository;
   private final Mapper mapper;
   private final PasswordEncoder passwordEncoder;
-  private final AuthorityService authorityService;
+  private final AuthorityRepository authorityRepository;
   private final SMTPServer smtpServer;
 
   @Autowired
@@ -32,12 +33,12 @@ public class UserService implements UserDetailsService {
       UserRepository userRepository,
       Mapper mapper,
       PasswordEncoder passwordEncoder,
-      AuthorityService authorityService,
+      AuthorityRepository authorityRepository,
       SMTPServer smtpServer) {
     this.userRepository = userRepository;
     this.mapper = mapper;
     this.passwordEncoder = passwordEncoder;
-    this.authorityService = authorityService;
+    this.authorityRepository = authorityRepository;
     this.smtpServer = smtpServer;
   }
 
@@ -65,16 +66,16 @@ public class UserService implements UserDetailsService {
       throw new Exception("User with given email address already exists");
     }
     User u = new User();
-    System.out.println(UUID.randomUUID().hashCode());
+
     u.setPassword(passwordEncoder.encode(dto.getPassword()));
     u.setFirstName(dto.getFirstName());
     u.setLastName(dto.getLastName());
     u.setEmail(dto.getEmail());
-
-    Set<Authority> auth = authorityService.findByName(role);
-    u.setAuthorities(auth);
-    sendMail(u);
+    u.setVerified(false);
+    Authority a = authorityRepository.findByAuthority(role);
+    u.addAuthority(a);
     u = this.userRepository.save(u);
+    sendMail(u);
     return mapper.fromEntity(u, UserDto.class);
   }
 
@@ -107,8 +108,10 @@ public class UserService implements UserDetailsService {
   }
 
   public void sendMail(User user) {
-    String link = "Klikni <a href=\"http:/localhost:8080/api/users/activated/"+user.getId()+"\">ovde</a> da biste aktivirali nalog";
-    String body = "Pozdrav " + user.getFirstName() + "/e, uspešno ste kreirali nalog. " + link;
+    String link = String
+            .format("<br>Nalog je potrebno verifikovati klikom na " +
+                    "<a href=\"http:/localhost:8080/api/users/activated/%s\">ovaj link</a>.", user.getId());
+    String body = String.format("Pozdrav,<br>%s, uspešno ste kreirali nalog.", user.getFirstName()) + link;
     try {
       this.smtpServer.sendEmail(user.getEmail(), "Usprešno kreiran nalog", body);
     } catch (Exception e) {
@@ -119,7 +122,7 @@ public class UserService implements UserDetailsService {
   public UserDto activated(UUID id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
-      throw new Exception("User with given id doesn't exist");
+      throw new Exception("User with the given id doesn't exist");
     }
     existingUser.setVerified(true);
     return  mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
