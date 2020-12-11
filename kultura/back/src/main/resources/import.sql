@@ -5,7 +5,7 @@ SET @Id3 = uuid();
 
 INSERT INTO authority (authority) VALUES ('ROLE_ADMIN');
 INSERT INTO authority (authority) VALUES ('ROLE_MODERATOR');
-INSERT INTO authority (authority) VALUES ('ROLE');
+INSERT INTO authority (authority) VALUES ('ROLE_USER');
 
 INSERT INTO category (id, name) VALUES (1, 'Institucija');
 INSERT INTO category (id, name) VALUES (2, 'Manifestacija');

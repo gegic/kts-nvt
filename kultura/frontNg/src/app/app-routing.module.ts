@@ -7,6 +7,8 @@ import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {AuthGuard} from './core/guards/auth/auth.guard';
 import {RegisterEmailComponent} from './view/login-registration/registration/register-email/register-email.component';
 import {RegisterNameComponent} from './view/login-registration/registration/register-name/register-name.component';
+import {RegisterPasswordComponent} from './view/login-registration/registration/register-password/register-password.component';
+import {RegisterSuccessComponent} from './view/login-registration/registration/register-success/register-success.component';
 
 const routes: Routes = [
   { path: '', component: AdminViewComponent, canActivate: [AuthGuard]},
@@ -19,7 +21,9 @@ const routes: Routes = [
   { path: 'register', component: LoginRegisterComponent, canActivate: [AuthGuard],
     children: [
       { path: '', component: RegisterEmailComponent, data: { animation: 'RegisterEmail' }},
-      { path: 'name', component: RegisterNameComponent, data: { animation: 'RegisterName' }}
+      { path: 'name', component: RegisterNameComponent, data: { animation: 'RegisterName' }},
+      { path: 'password', component: RegisterPasswordComponent, data: { animation: 'RegisterPassword' }},
+      { path: 'success', component: RegisterSuccessComponent, data: { animation: 'RegisterSuccess' }}
     ]
   }
 ];

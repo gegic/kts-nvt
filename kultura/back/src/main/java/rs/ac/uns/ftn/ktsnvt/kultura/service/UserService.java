@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.AuthorityRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
 import javax.transaction.Transactional;
@@ -24,7 +25,7 @@ public class UserService implements UserDetailsService {
   private final UserRepository userRepository;
   private final Mapper mapper;
   private final PasswordEncoder passwordEncoder;
-  private final AuthorityService authorityService;
+  private final AuthorityRepository authorityRepository;
   private final SMTPServer smtpServer;
 
   @Autowired
@@ -32,12 +33,12 @@ public class UserService implements UserDetailsService {
       UserRepository userRepository,
       Mapper mapper,
       PasswordEncoder passwordEncoder,
-      AuthorityService authorityService,
+      AuthorityRepository authorityRepository,
       SMTPServer smtpServer) {
     this.userRepository = userRepository;
     this.mapper = mapper;
     this.passwordEncoder = passwordEncoder;
-    this.authorityService = authorityService;
+    this.authorityRepository = authorityRepository;
     this.smtpServer = smtpServer;
   }
 
@@ -71,8 +72,8 @@ public class UserService implements UserDetailsService {
     u.setLastName(dto.getLastName());
     u.setEmail(dto.getEmail());
     u.setVerified(false);
-    Set<Authority> auth = authorityService.findByName(role);
-    u.setAuthorities(auth);
+    Authority a = authorityRepository.findByAuthority(role);
+    u.addAuthority(a);
     u = this.userRepository.save(u);
     sendMail(u);
     return mapper.fromEntity(u, UserDto.class);

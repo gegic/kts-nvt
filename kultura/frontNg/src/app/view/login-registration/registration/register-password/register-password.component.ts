@@ -47,6 +47,18 @@ export class RegisterPasswordComponent implements OnInit {
         detail: 'Repeated password has to match the original password.'});
       return;
     }
+
+    this.registerService.register()
+      .subscribe(
+        () => {
+          this.router.navigate(['../success'], {relativeTo: this.activatedRoute});
+        },
+        () => {
+          this.messageService.add({severity: 'error', summary: 'Unexpected error', detail: 'An unexpected error occurred.'});
+          this.router.navigate(['/register']);
+        }
+      );
+
   }
 
   onClickBack(): void {

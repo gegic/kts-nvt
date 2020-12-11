@@ -22,6 +22,10 @@ export class RegisterService {
     return this.httpClient.get(`/auth/exists/${email}`);
   }
 
+  register(): Observable<any> {
+    return this.httpClient.post('/auth/register', this.user);
+  }
+
   get email(): string {
     return this.user.email;
   }

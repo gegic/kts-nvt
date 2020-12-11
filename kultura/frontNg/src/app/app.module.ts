@@ -20,6 +20,7 @@ import {JwtInterceptor} from './core/interceptors/jwt.interceptor';
 import { RegisterEmailComponent } from './view/login-registration/registration/register-email/register-email.component';
 import { RegisterNameComponent } from './view/login-registration/registration/register-name/register-name.component';
 import { RegisterPasswordComponent } from './view/login-registration/registration/register-password/register-password.component';
+import { RegisterSuccessComponent } from './view/login-registration/registration/register-success/register-success.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { RegisterPasswordComponent } from './view/login-registration/registratio
     EnterPasswordComponent,
     RegisterEmailComponent,
     RegisterNameComponent,
-    RegisterPasswordComponent
+    RegisterPasswordComponent,
+    RegisterSuccessComponent
   ],
   imports: [
     BrowserModule,

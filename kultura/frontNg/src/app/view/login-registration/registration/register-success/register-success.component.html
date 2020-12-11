@@ -1,0 +1,30 @@
+<div>
+  <div class="p-card-header">
+    <div class="p-grid p-justify-center">
+      <p class="logo p-mt-5 p-mb-0">kultura</p>
+    </div>
+    <div class="p-grid p-justify-center">
+      <h2 class="p-mt-1 p-mb-3 p-text-light">Success</h2>
+    </div>
+  </div>
+  <div class="p-card-content">
+    <div class="p-px-6">
+      <h3 class="p-text-normal">Hey, {{ name }}</h3>
+      <p class="p-text-normal">
+        Your account has been created successfully. You should have already received an email
+        with the verification link. After the verification, you'll be able
+        to use the application.
+      </p>
+    </div>
+    <div class="p-grid p-px-5 p-justify-end p-mt-5">
+      <div class="p-col"></div>
+      <div class="p-col p-text-right">
+        <button type="button"
+                class="p-button"
+                label="Sign in"
+                (click)="onClickSignIn()"
+                pButton></button>
+      </div>
+    </div>
+  </div>
+</div>

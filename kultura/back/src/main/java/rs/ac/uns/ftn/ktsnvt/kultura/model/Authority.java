@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.Set;
 
 
 @Entity
@@ -21,4 +22,7 @@ public class Authority implements GrantedAuthority {
     @Setter
     @Column
     private String authority; // name of the authority
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "authorities")
+    private Set<User> users;
 }
