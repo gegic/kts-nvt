@@ -110,7 +110,7 @@ public class UserService implements UserDetailsService {
   public void sendMail(User user) {
     String link = String
             .format("<br>Nalog je potrebno verifikovati klikom na " +
-                    "<a href=\"http:/localhost:8080/api/users/activated/%s\">ovaj link</a>.", user.getId());
+                    "<a href=\"http:/localhost:8080/api/auth/verify/%s\">ovaj link</a>.", user.getId());
     String body = String.format("Pozdrav,<br>%s, uspešno ste kreirali nalog.", user.getFirstName()) + link;
     try {
       this.smtpServer.sendEmail(user.getEmail(), "Usprešno kreiran nalog", body);

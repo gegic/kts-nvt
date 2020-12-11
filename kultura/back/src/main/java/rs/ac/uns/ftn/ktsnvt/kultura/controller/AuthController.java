@@ -23,7 +23,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping(path = "/auth")
+@RequestMapping(path = "/api/auth")
 public class AuthController {
 
 
