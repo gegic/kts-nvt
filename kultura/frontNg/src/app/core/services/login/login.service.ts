@@ -28,7 +28,7 @@ export class LoginService {
   }
 
   checkExistence(email: string): Observable<any> {
-    return this.httpClient.get(`/auth/exists/email/${email}`);
+    return this.httpClient.get(`/api/auth/exists/email/${email}`);
   }
 
   reset(): void {

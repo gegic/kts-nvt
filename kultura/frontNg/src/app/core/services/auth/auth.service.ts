@@ -31,6 +31,6 @@ export class AuthService {
     localStorage.removeItem('token');
     this.user.next(null);
     this.token.next(null);
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/api/login');
   }
 }

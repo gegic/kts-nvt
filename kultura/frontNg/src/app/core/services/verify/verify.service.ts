@@ -13,10 +13,10 @@ export class VerifyService {
   }
 
   checkExistence(id: string): Observable<any> {
-    return this.httpClient.get(`/auth/exists/verify/id/${id}`);
+    return this.httpClient.get(`/api/auth/exists/verify/id/${id}`);
   }
 
   verify(id: string): Observable<any> {
-    return this.httpClient.get(`/auth/verify/${id}`);
+    return this.httpClient.get(`/api/auth/verify/${id}`);
   }
 }
