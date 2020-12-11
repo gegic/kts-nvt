@@ -20,13 +20,15 @@ export class LoginService {
   login(): Observable<any> {
     return this.httpClient.post('/auth/login', {email: this.email, password: this.password})
       .pipe(map(user => {
-        localStorage.setItem('user', JSON.stringify(user));
+        if ((user as User).verified) {
+          localStorage.setItem('user', JSON.stringify(user));
+        }
         return user;
       }));
   }
 
   checkExistence(email: string): Observable<any> {
-    return this.httpClient.get(`/auth/exists/${email}`);
+    return this.httpClient.get(`/auth/exists/email/${email}`);
   }
 
   reset(): void {

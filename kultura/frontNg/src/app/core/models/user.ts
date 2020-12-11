@@ -6,7 +6,7 @@ export class User {
   lastName = '';
   lastPasswordChange: Date = new Date();
   authorities: [] = [];
-  logged = false;
+  verified = false;
 
   constructor() {}
 }

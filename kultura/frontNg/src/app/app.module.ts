@@ -21,6 +21,7 @@ import { RegisterEmailComponent } from './view/login-registration/registration/r
 import { RegisterNameComponent } from './view/login-registration/registration/register-name/register-name.component';
 import { RegisterPasswordComponent } from './view/login-registration/registration/register-password/register-password.component';
 import { RegisterSuccessComponent } from './view/login-registration/registration/register-success/register-success.component';
+import { RegisterVerifyComponent } from './view/login-registration/registration/register-verify/register-verify.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { RegisterSuccessComponent } from './view/login-registration/registration
     RegisterEmailComponent,
     RegisterNameComponent,
     RegisterPasswordComponent,
-    RegisterSuccessComponent
+    RegisterSuccessComponent,
+    RegisterVerifyComponent
   ],
   imports: [
     BrowserModule,

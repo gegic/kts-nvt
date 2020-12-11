@@ -45,15 +45,9 @@ public class UsersController {
         return ResponseEntity.ok(moderatorsDto);
     }
 
-    @GetMapping(path = "/activated/{id}")
-    public ResponseEntity<UserDto> activatedUser(@PathVariable UUID id) throws Exception {
-        UserDto activateUser = this.userService.activated(id);
-        return ResponseEntity.ok(activateUser);
-    }
-
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> get(@PathVariable UUID id){
-        return ResponseEntity.of(this.userService.readById(id));
+        return ResponseEntity.of(this.userService.findById(id));
     }
 
     @PostMapping

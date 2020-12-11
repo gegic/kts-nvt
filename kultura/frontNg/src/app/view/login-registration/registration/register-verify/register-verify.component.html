@@ -1,0 +1,40 @@
+<div>
+  <div class="p-card-header">
+    <div class="p-grid p-justify-center">
+      <p class="logo p-mt-5 p-mb-0">kultura</p>
+    </div>
+    <div class="p-grid p-justify-center">
+      <h2 class="p-mt-1 p-mb-3 p-text-light">Verify</h2>
+    </div>
+  </div>
+  <div class="p-card-content">
+    <div class="p-px-6">
+      <h3 class="p-text-normal">Hey, {{ name }}</h3>
+      <p class="p-text-normal" *ngIf="!verified; else pElse">
+        You can verify your account by clicking on the verify button.
+      </p>
+      <ng-template #pElse>
+        <p>
+          Your account has been verified. Head to the login page in order to sign into the application.
+        </p>
+      </ng-template>
+    </div>
+    <div class="p-grid p-px-5 p-justify-end p-mt-5">
+      <div class="p-col">
+        <button type="button"
+                class="p-button-outlined"
+                label="Sign in"
+                routerLink="/login"
+                pButton></button>
+      </div>
+      <div class="p-col p-text-right">
+        <button type="button"
+                class="p-button"
+                (click)="onClickVerify()"
+                [disabled]="verified"
+                [label]="verified ? 'Verified' : 'Verify'"
+                pButton></button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -34,19 +34,22 @@ export class RegisterPasswordComponent implements OnInit {
   }
 
   onClickSignUp(): void {
+    let password: string;
     if (this.passwordGroup.invalid) {
       this.messageService.add({severity: 'error',
         detail: 'Password has to contain at least one uppercase, one lowercase letter and one digit. ' +
           'It has to be at least 8 characters long'});
       return;
     }
-    const password: string = this.passwordGroup.get('password')?.value;
+    password = this.passwordGroup.get('password')?.value;
     const repeatPassword: string = this.passwordGroup.get('repeatPassword')?.value;
     if (password !== repeatPassword) {
       this.messageService.add({severity: 'error',
         detail: 'Repeated password has to match the original password.'});
       return;
     }
+
+    this.registerService.password = password;
 
     this.registerService.register()
       .subscribe(

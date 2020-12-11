@@ -2,15 +2,12 @@ package rs.ac.uns.ftn.ktsnvt.kultura.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.StringDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.TokenResponse;
@@ -22,6 +19,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.TokenUtils;
 
 import java.util.Optional;
+import java.util.UUID;
 
 
 @RestController
@@ -55,10 +53,22 @@ public class AuthController {
         }
     }
 
-    @GetMapping(path="/exists/{email}")
+    @GetMapping(path="/exists/email/{email}")
     public ResponseEntity<StringDto> existsByEmail(@PathVariable String email) {
         Optional<UserDto> userDto = userService.findByEmail(email);
         if(userDto.isPresent()) {
+            UserDto userDto1 = userDto.get();
+            return ResponseEntity.ok(new StringDto(
+                    String.format("%s %s", userDto1.getFirstName(), userDto1.getLastName())));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(path="/exists/verify/id/{id}")
+    public ResponseEntity<StringDto> existsById(@PathVariable UUID id) {
+        Optional<UserDto> userDto = userService.findById(id);
+        if(userDto.isPresent() && !userDto.get().isVerified()) {
             UserDto userDto1 = userDto.get();
             return ResponseEntity.ok(new StringDto(
                     String.format("%s %s", userDto1.getFirstName(), userDto1.getLastName())));
@@ -75,6 +85,12 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping(path = "/verify/{id}")
+    public ResponseEntity<UserDto> activatedUser(@PathVariable UUID id) throws Exception {
+        UserDto activateUser = this.userService.verify(id);
+        return ResponseEntity.ok(activateUser);
     }
 
 }

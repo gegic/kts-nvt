@@ -19,7 +19,7 @@ export class RegisterService {
   }
 
   checkExistence(email: string): Observable<any> {
-    return this.httpClient.get(`/auth/exists/${email}`);
+    return this.httpClient.get(`/auth/exists/email/${email}`);
   }
 
   register(): Observable<any> {

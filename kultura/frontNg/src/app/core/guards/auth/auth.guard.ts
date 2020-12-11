@@ -17,7 +17,8 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const isAuthRoute: boolean = route.url.filter(us => us.path.includes('login') || us.path.includes('register')).length === 0;
+    const isAuthRoute: boolean = route.url.filter(
+      us => us.path.includes('login') || us.path.includes('register') || us.path.includes('verify')).length === 0;
     const isAuthenticated: boolean = !!this.authService.user.getValue();
     const token: string | null = this.authService.token.getValue();
     const isTokenExpired: boolean = !!token ? this.jwtHelper.isTokenExpired(token) : true;

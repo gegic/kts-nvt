@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
         .map(u -> mapper.fromEntity(u, UserDto.class));
   }
 
-  public Optional<UserDto> readById(UUID id) {
+  public Optional<UserDto> findById(UUID id) {
     return userRepository.findById(id).map(u -> mapper.fromEntity(u, UserDto.class));
   }
 
@@ -119,7 +119,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  public UserDto activated(UUID id) throws Exception {
+  public UserDto verify(UUID id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
       throw new Exception("User with the given id doesn't exist");

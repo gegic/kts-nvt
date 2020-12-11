@@ -9,6 +9,7 @@ import {RegisterEmailComponent} from './view/login-registration/registration/reg
 import {RegisterNameComponent} from './view/login-registration/registration/register-name/register-name.component';
 import {RegisterPasswordComponent} from './view/login-registration/registration/register-password/register-password.component';
 import {RegisterSuccessComponent} from './view/login-registration/registration/register-success/register-success.component';
+import {RegisterVerifyComponent} from './view/login-registration/registration/register-verify/register-verify.component';
 
 const routes: Routes = [
   { path: '', component: AdminViewComponent, canActivate: [AuthGuard]},
@@ -25,7 +26,11 @@ const routes: Routes = [
       { path: 'password', component: RegisterPasswordComponent, data: { animation: 'RegisterPassword' }},
       { path: 'success', component: RegisterSuccessComponent, data: { animation: 'RegisterSuccess' }}
     ]
-  }
+  },
+  { path: 'verify', component: LoginRegisterComponent, canActivate: [AuthGuard],
+    children: [
+      { path: ':id', component: RegisterVerifyComponent}
+    ]},
 ];
 
 @NgModule({

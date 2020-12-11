@@ -41,6 +41,10 @@ export class EnterPasswordComponent implements OnInit {
     this.loginService.login()
       .subscribe(
         (data: {token: string, user: User}) => {
+          if (!data.user.verified) {
+            this.messageService.add({severity: 'error', detail: 'Your account is not verified.'});
+            return;
+          }
           this.authService.login(data.token, data.user);
           this.router.navigateByUrl('/');
         }
