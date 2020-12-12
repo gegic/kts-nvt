@@ -9,6 +9,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +40,7 @@ public class TokenUtils {
         String username;
         try {
             final Claims claims = getAllClaimsFromToken(token);
-            username = claims.getSubject();
+            username = claims.get("username").toString();
         } catch (Exception e) {
             username = null;
         }
@@ -60,13 +63,11 @@ public class TokenUtils {
     public static boolean validateToken(String token, User user) {
         final String username = getUsernameFromToken(token);
         final Date created = getIssuedAtDateFromToken(token);
-
+        LocalDateTime localCreated = created.toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDateTime();
         if (username == null || !username.equals(user.getUsername()))
             return false;
-        else if (user.getLastPasswordChange() != null && created.before(Timestamp.valueOf(user.getLastPasswordChange())))
-            return false;
-
-        return true;
+        else return user.getLastPasswordChange() == null || localCreated.isAfter(user.getLastPasswordChange());
     }
 
     public static Date getIssuedAtDateFromToken(String token) {
@@ -82,9 +83,9 @@ public class TokenUtils {
 
     public static String generateToken(User user) {
         Map<String, Object> claims = new HashMap<String, Object>();
-        claims.put("email", user.getEmail());
-        claims.put("created", new Date(System.currentTimeMillis()));
+        claims.put("username", user.getEmail());
         return Jwts.builder().setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }

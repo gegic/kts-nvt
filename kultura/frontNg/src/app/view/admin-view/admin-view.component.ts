@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../core/services/auth/auth.service';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-admin-view',
@@ -8,7 +9,11 @@ import {AuthService} from '../../core/services/auth/auth.service';
 })
 export class AdminViewComponent implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  url = '';
+  res = '';
+
+  constructor(private authService: AuthService,
+              private httpClient: HttpClient) { }
 
   ngOnInit(): void {
   }
@@ -16,5 +21,15 @@ export class AdminViewComponent implements OnInit {
   onLogout(): void {
     this.authService.logout();
   }
+
+  onSendRequest(): void {
+    this.httpClient.get(this.url).subscribe(
+      data => {
+        this.res = JSON.stringify(data);
+      }
+    );
+  }
+
+  sendRequest()
 
 }

@@ -1,4 +1,8 @@
 <div>
   <p>admin-view works!</p>
   <button type="button" (click)="onLogout()" label="Logout" pButton></button>
+  <input type="text" id="url" name="url" [(ngModel)]="url">
+  <label for="url">Url</label>
+  <button type="button" (click)="onSendRequest()" label="Send request" pButton></button>
+  <p>{{ res }}</p>
 </div>

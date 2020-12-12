@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.ReviewService;
@@ -13,7 +14,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 import javax.validation.Valid;
 import java.net.URI;
 
-
+@PreAuthorize("hasRole('MODERATOR') || hasRole('USER')")
 @RestController
 @RequestMapping(path = "/api/reviews", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ReviewsController {
@@ -42,6 +43,7 @@ public class ReviewsController {
         return ResponseEntity.of(this.reviewService.readById(id));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     ResponseEntity<ReviewDto> add(@Valid @RequestBody ReviewDto reviewDto){
         ReviewDto saved = this.reviewService.save(reviewDto);

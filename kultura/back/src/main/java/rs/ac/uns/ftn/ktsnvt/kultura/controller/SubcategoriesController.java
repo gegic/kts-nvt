@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.SubcategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.SubcategoryService;
@@ -16,6 +17,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.net.URI;
 
+@PreAuthorize("hasRole('MODERATOR') || hasRole('ADMIN')")
 @RestController
 @RequestMapping(path = "/api/subcategories", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SubcategoriesController {
@@ -26,6 +28,7 @@ public class SubcategoriesController {
         this.subcategoryService = subcategoryService;
     }
 
+    @PreAuthorize("hasRole('MODERATOR') || hasRole('ADMIN')")
     @GetMapping("/category/{categoryId}")
     ResponseEntity<Page<SubcategoryDto>> getSubcategoriesByCategoryId(@PathVariable long categoryId,
                                                                       @RequestParam(defaultValue = "0") int page,
@@ -35,6 +38,7 @@ public class SubcategoriesController {
         return ResponseEntity.ok(this.subcategoryService.findAllByCategoryId(categoryId, p));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     ResponseEntity<SubcategoryDto> create(@Valid @RequestBody SubcategoryDto subcategoryDto) {
         try {
@@ -45,6 +49,7 @@ public class SubcategoriesController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping
     ResponseEntity<SubcategoryDto> update(@Valid @RequestBody SubcategoryDto subcategoryDto) {
         try {
@@ -55,6 +60,7 @@ public class SubcategoriesController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable long id) {
         subcategoryService.delete(id);

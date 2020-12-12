@@ -47,6 +47,10 @@ export class EnterPasswordComponent implements OnInit {
           }
           this.authService.login(data.token, data.user);
           this.router.navigateByUrl('/');
+        },
+        () => {
+          this.messageService.add({severity: 'error', detail: 'Your password is incorrect'});
+          this.passwordControl.reset();
         }
       );
   }

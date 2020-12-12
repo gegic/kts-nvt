@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.PostDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.PostService;
@@ -13,7 +14,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 import javax.validation.Valid;
 import java.net.URI;
 
-
+@PreAuthorize("hasRole('MODERATOR') || hasRole('USER')")
 @RestController
 @RequestMapping(path = "/api/posts", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostsController {
@@ -25,7 +26,7 @@ public class PostsController {
         this.postService = postService;
     }
 
-    @GetMapping(path = "/culturalOffering/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/cultural-offering/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<PostDto>> get(@PathVariable long culturalOfferingId,
                                              @RequestParam(defaultValue = "0") int page,
                                              @RequestParam(defaultValue = "3") int size,
@@ -42,18 +43,19 @@ public class PostsController {
         return ResponseEntity.of(this.postService.readById(id));
     }
 
+    @PreAuthorize("hasRole('MODERATOR')")
     @PostMapping
     ResponseEntity<PostDto> add(@Valid @RequestBody PostDto postDto){
         PostDto saved = this.postService.save(postDto);
         return ResponseEntity.created(URI.create(String.format("/api/post/%s", saved.getId())))
                 .body(saved);
     }
-
+    @PreAuthorize("hasRole('MODERATOR')")
     @PutMapping
     ResponseEntity<PostDto> update(@Valid @RequestBody PostDto postDto){
         return ResponseEntity.ok(this.postService.save(postDto));
     }
-
+    @PreAuthorize("hasRole('MODERATOR')")
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id){
         this.postService.delete(Long.parseLong(id));

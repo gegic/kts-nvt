@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
@@ -14,7 +15,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.UUID;
 
-
+@PreAuthorize("hasRole('ADMIN')")
 @RestController
 @RequestMapping(path = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UsersController {
@@ -22,7 +23,7 @@ public class UsersController {
     private final UserService userService;
 
     @Autowired
-    private UsersController(UserService userService) {
+    public UsersController(UserService userService) {
         this.userService = userService;
     }
 
@@ -35,7 +36,6 @@ public class UsersController {
         return ResponseEntity.ok(moderatorsDto);
     }
 
-
     @GetMapping(path = "/moderators")
     public ResponseEntity<Page<UserDto>> getModerators(@RequestParam(defaultValue = "0") int page,
                                                        @RequestParam(defaultValue = "3") int size,
@@ -46,7 +46,7 @@ public class UsersController {
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> get(@PathVariable UUID id){
+    public ResponseEntity<UserDto> get(@PathVariable UUID id) {
         return ResponseEntity.of(this.userService.findById(id));
     }
 

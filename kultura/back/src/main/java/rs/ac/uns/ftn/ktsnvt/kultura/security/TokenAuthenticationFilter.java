@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.security;
 
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
@@ -26,19 +27,26 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String username;
         String authToken = TokenUtils.getToken(httpServletRequest);
+        if (authToken != null) {
+            // uzmi username iz tokena
+            username = TokenUtils.getUsernameFromToken(authToken);
 
-        if (authToken == null) return;
+            if (username != null) {
+                // uzmi user-a na osnovu username-a
+                User user = userService.loadUserByUsername(username);
 
-        username = TokenUtils.getUsernameFromToken(authToken);
+                // proveri da li je prosledjeni token validan
+                if (TokenUtils.validateToken(authToken, user)) {
+                    // kreiraj autentifikaciju
+                    Token authentication = new Token(user);
+                    authentication.setCredentials(authToken);
+                    authentication.setAuthenticated(true);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
+        }
 
-        if (username == null) return;
-
-        User user = userService.loadUserByUsername(username);
-
-        if (! TokenUtils.validateToken(authToken, user)) return;
-
-        Token token = new Token(user);
-        token.setCredentials(authToken);
-        SecurityContextHolder.getContext().setAuthentication(token);
+        // prosledi request dalje u sledeci filter
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }
