@@ -78,10 +78,32 @@
           <h3 class="p-text-light p-mb-2">Enter an address or specify the location on the map</h3>
           <div class="p-grid p-mx-0 p-px-0">
             <div class="p-col-9 p-pl-0">
-              <input type="text" id="address" placeholder="Address" pInputText>
+              <p-autoComplete id="address"
+                              placeholder="Address"
+                              formControlName="address"
+                              field="display_name"
+                              [minLength]="3"
+                              [suggestions]="recommendations"
+                              (completeMethod)="getAddress($event)"
+                              (onSelect)="addressSelected($event)"
+                              (onBlur)="addressLostFocus()"
+                              pInputText
+              >
+                <ng-template let-recommendation pTemplate="item.display_name">
+                  <div style="width: 4vw">{{ recommendation.display_name }}</div>
+                </ng-template>
+              </p-autoComplete>
             </div>
             <div class="p-col-3 p-pr-0">
-              <button type="button" class="primary map-button p-button-icon" icon="pi pi-map" label="Map" pButton></button>
+                <button type="button"
+                        class="p-button primary map-button p-button-icon"
+                        [ngClass]="mapSet ? 'p-button-success' : ''"
+
+                        [icon]="mapSet ? 'pi pi-check-circle' : 'pi pi-map'"
+                        label="Map"
+                        (click)="showMapDialog()"
+                        pButton>
+                </button>
             </div>
           </div>
         </div>

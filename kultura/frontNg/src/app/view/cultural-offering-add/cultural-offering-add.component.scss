@@ -86,3 +86,20 @@ input {
   min-height: 200px;
   max-height: 400px;
 }
+
+.success-badge i {
+  vertical-align: middle;
+  font-size: 10px;
+}
+
+:host {
+  ::ng-deep {
+    p-autoComplete {
+      padding: 0;
+    }
+    p-autoComplete .p-autocomplete,
+    p-autoComplete .p-autocomplete-input {
+      width: 100%;
+    }
+  }
+}

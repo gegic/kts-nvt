@@ -32,6 +32,8 @@ import {MenuModule} from 'primeng/menu';
 import { CulturalOfferingAddComponent } from './view/cultural-offering-add/cultural-offering-add.component';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {InputTextareaModule} from 'primeng/inputtextarea';
+import { CulturalOfferingPlaceComponent } from './view/cultural-offering-place/cultural-offering-place.component';
+import {DialogService, DynamicDialogModule} from 'primeng/dynamicdialog';
 
 
 @NgModule({
@@ -51,7 +53,8 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
     HomeViewComponent,
     MapViewComponent,
     NavbarComponent,
-    CulturalOfferingAddComponent
+    CulturalOfferingAddComponent,
+    CulturalOfferingPlaceComponent
   ],
   imports: [
     BrowserModule,
@@ -69,11 +72,13 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
     AvatarModule,
     MenuModule,
     AutoCompleteModule,
-    InputTextareaModule
+    InputTextareaModule,
+    DynamicDialogModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    MessageService
+    MessageService,
+    DialogService
   ],
   bootstrap: [AppComponent]
 })
