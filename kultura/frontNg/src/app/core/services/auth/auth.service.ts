@@ -18,19 +18,20 @@ export class AuthService {
     this.token = new BehaviorSubject<string | null>(localStorage.getItem('token') as string);
   }
 
-  login(token: string, user: User): void {
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('token', token);
+  login(token: string, userData: User): void {
+    const user: User = Object.assign(new User(), userData);
     this.user.next(user);
     this.token.next(token);
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('token', token);
   }
 
   logout(): void {
     // remove user from local storage and set current user to null
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
     this.user.next(null);
     this.token.next(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     this.router.navigateByUrl('/login');
   }
 }

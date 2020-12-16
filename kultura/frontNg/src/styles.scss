@@ -1,9 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+
 html,
 body {
   height: 100%;
   background-color: #FCF7F8;
-  overflow: hidden;
+  font-family: 'Roboto';
+  color: #584F51;
+}
+
+body {
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .logo {

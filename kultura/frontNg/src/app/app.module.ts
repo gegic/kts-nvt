@@ -22,6 +22,17 @@ import { RegisterNameComponent } from './view/login-registration/registration/re
 import { RegisterPasswordComponent } from './view/login-registration/registration/register-password/register-password.component';
 import { RegisterSuccessComponent } from './view/login-registration/registration/register-success/register-success.component';
 import { RegisterVerifyComponent } from './view/login-registration/registration/register-verify/register-verify.component';
+import { UserViewComponent } from './view/user-view/user-view.component';
+import { MainViewComponent } from './view/main-view/main-view.component';
+import { HomeViewComponent } from './view/home-view/home-view.component';
+import { MapViewComponent } from './view/map-view/map-view.component';
+import { NavbarComponent } from './view/navbar/navbar.component';
+import {AvatarModule} from 'ngx-avatar';
+import {MenuModule} from 'primeng/menu';
+import { CulturalOfferingAddComponent } from './view/cultural-offering-add/cultural-offering-add.component';
+import {AutoCompleteModule} from 'primeng/autocomplete';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+
 
 @NgModule({
   declarations: [
@@ -34,7 +45,13 @@ import { RegisterVerifyComponent } from './view/login-registration/registration/
     RegisterNameComponent,
     RegisterPasswordComponent,
     RegisterSuccessComponent,
-    RegisterVerifyComponent
+    RegisterVerifyComponent,
+    UserViewComponent,
+    MainViewComponent,
+    HomeViewComponent,
+    MapViewComponent,
+    NavbarComponent,
+    CulturalOfferingAddComponent
   ],
   imports: [
     BrowserModule,
@@ -49,6 +66,10 @@ import { RegisterVerifyComponent } from './view/login-registration/registration/
     HttpClientModule,
     BrowserAnimationsModule,
     ToastModule,
+    AvatarModule,
+    MenuModule,
+    AutoCompleteModule,
+    InputTextareaModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
