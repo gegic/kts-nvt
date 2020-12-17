@@ -6,6 +6,12 @@ import {NominatimPlace, PlaceOfferingService} from '../../core/services/place-of
 import {Place} from '../../core/models/place';
 import {BehaviorSubject} from 'rxjs';
 import {AutoComplete} from 'primeng/autocomplete';
+import {HttpClient} from '@angular/common/http';
+import {AddOfferingService} from '../../core/services/add-offering/add-offering.service';
+import {Category} from '../../core/models/category';
+import {Subcategory} from '../../core/models/subcategory';
+import {MessageService} from 'primeng/api';
+import {CulturalOfferingPhoto} from '../../core/models/culturalOfferingPhoto';
 
 @Component({
   selector: 'app-cultural-offering-add',
@@ -17,20 +23,30 @@ export class CulturalOfferingAddComponent implements OnInit {
   formGroup: FormGroup = new FormGroup(
     {
       name: new FormControl(''),
-      categoryName: new FormControl(''),
-      subcategoryName: new FormControl({ value: '', disabled: true }),
       briefInfo: new FormControl('', Validators.maxLength(200)),
       additionalInfo: new FormControl('', Validators.maxLength(1000)),
-      address: new FormControl('')
+      address: new FormControl(''),
+      selectedSubcategory: new FormControl(),
+      selectedCategory: new FormControl()
     }
   );
 
-  coordinates: BehaviorSubject<number[] | null> = new BehaviorSubject<number[] | null>(null);
   mapSet = false;
+  categoriesLoading = false;
+  subcategoriesLoading = false;
   recommendations: NominatimPlace[] = [];
+  lastLoadedPage = {categories: -1, subcategories: -1};
+  totalPages = {categories: 0, subcategories: 0};
+  fileLoading = false;
+  photo: CulturalOfferingPhoto | null = null;
 
   constructor(private dialogService: DialogService,
-              private placeOfferingService: PlaceOfferingService) {
+              private placeOfferingService: PlaceOfferingService,
+              private addOfferingService: AddOfferingService,
+              private messageService: MessageService) {
+  }
+
+  ngOnInit(): void {
     this.formGroup.get('address')?.valueChanges.subscribe(val => {
         if (val !== this.placeOfferingService.place.getValue().address) {
           this.placeOfferingService.reset();
@@ -38,19 +54,16 @@ export class CulturalOfferingAddComponent implements OnInit {
         }
       }
     );
-  }
-
-  ngOnInit(): void {
-  }
-
-  searchCategories(event: Event): void {
-  }
-
-  searchSubcategories(event: Event): void {
+    this.formGroup.get('selectedCategory')?.valueChanges.subscribe((val: Category) => {
+      if (!val || !val.id) {
+        return;
+      }
+      this.categoryChosen(val.id);
+    });
+    this.getCategories();
   }
 
   showMapDialog(): void {
-
     this.dialogService.open(CulturalOfferingPlaceComponent, {
       header: 'Choose on map',
       width: '80%',
@@ -69,7 +82,7 @@ export class CulturalOfferingAddComponent implements OnInit {
         {
           emitEvent: false
         });
-      this.coordinates.next(coordinates);
+      this.addOfferingService.coordinates = coordinates;
     });
   }
 
@@ -97,25 +110,78 @@ export class CulturalOfferingAddComponent implements OnInit {
     }
   }
 
-  get selectedCategory(): any {
-    return '';
+  getCategories(): void {
+    if (this.lastLoadedPage.categories >= this.totalPages.categories) {
+      return;
+    }
+    this.categoriesLoading = true;
+    this.addOfferingService.getCategories(this.lastLoadedPage.categories + 1).subscribe(
+      data => {
+        this.addOfferingService.categories = this.addOfferingService.categories?.concat(data.content as Category[]);
+        this.lastLoadedPage.categories = data.pageable.pageNumber;
+        this.totalPages.categories = data.totalPages;
+        this.categoriesLoading = false;
+      }
+    );
   }
 
-  get categorySuggestions(): string[] {
-    return ['dsa', 'dsa', 'dsa'];
+  categoryChosen(id: number): void {
+    this.resetSubcategories();
+    this.getSubcategories(id);
   }
 
-
-  get selectedSubcategory(): any {
-    return '';
+  resetSubcategories(): void {
+    this.formGroup.get('selectedSubcategory')?.reset();
+    this.addOfferingService.subcategories = [];
+    this.totalPages.subcategories = 0;
+    this.lastLoadedPage.subcategories = -1;
   }
 
-  get subcategorySuggestions(): string[] {
-    return ['dsa', 'dsa', 'dsa'];
+  getSubcategories(passedId?: number): void {
+    if (this.lastLoadedPage.subcategories >= this.totalPages.subcategories) {
+      return;
+    }
+    this.subcategoriesLoading = true;
+    let id: number;
+    if (!passedId) {
+      id = (this.formGroup.get('selectedCategory') as Category).id ?? 0;
+    } else {
+      id = passedId;
+    }
+    this.addOfferingService.getSubcategories(id, this.lastLoadedPage.subcategories + 1).subscribe(
+      data => {
+        this.addOfferingService.subcategories = this.addOfferingService.subcategories?.concat(data.content as Subcategory[]);
+        this.lastLoadedPage.subcategories = data.pageable.pageNumber;
+        this.totalPages.subcategories = data.totalPages;
+        this.subcategoriesLoading = false;
+      }
+    );
   }
 
-  get recommendationStrings(): string[] {
-    return this.recommendations.map(r => r.display_name);
+  fileChosen(event: any): void {
+    const file = event.target.files[0];
+    this.fileLoading = true;
+    this.addOfferingService.addPhoto(file).subscribe(
+      (data: CulturalOfferingPhoto) => {
+        this.fileLoading = false;
+        this.photo = data;
+      },
+      err => {
+        this.fileLoading = false;
+        this.messageService.add({severity: 'error', detail: 'Photo couldn\'t be uploaded due to an unknown reason.'});
+      }
+    );
   }
 
+  get subcategories(): Subcategory[] {
+    return this.addOfferingService.subcategories ?? [];
+  }
+
+  get categories(): Category[] {
+    return this.addOfferingService.categories ?? [];
+  }
+
+  get thumbnailPhoto(): string {
+    return `/photos/main/thumbnail/${this.photo?.id}.png`;
+  }
 }

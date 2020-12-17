@@ -15,23 +15,27 @@
         <h3 class="p-text-light p-mb-2">Now specify category and subcategory</h3>
         <div class="p-grid">
           <div class="p-col-6">
-            <p-autoComplete formControlName="categoryName"
-                            [suggestions]="categorySuggestions"
-                            (completeMethod)="searchCategories($event)"
-                            [dropdown]="true"
-                            placeholder="Category"
-            >
-            </p-autoComplete>
+            <ng-select class="custom"
+                       bindLabel="name"
+                       formControlName="selectedCategory"
+                       [items]="categories"
+                       [searchable]="false"
+                       [virtualScroll]="true"
+                       [loading]="categoriesLoading"
+                       (clear)="resetSubcategories()"
+                       (scrollToEnd)="getCategories()"
+            ></ng-select>
           </div>
           <div class="p-col-6">
-            <p-autoComplete formControlName="subcategoryName"
-                            [suggestions]="subcategorySuggestions"
-                            (completeMethod)="searchSubcategories($event)"
-                            [dropdown]="true"
-                            placeholder="Subcategory"
-                            [disabled]="!selectedCategory"
-            >
-            </p-autoComplete>
+            <ng-select class="custom"
+                       bindLabel="name"
+                       formControlName="selectedSubcategory"
+                       [items]="subcategories"
+                       [searchable]="false"
+                       [virtualScroll]="true"
+                       [loading]="subcategoriesLoading"
+                       (scrollToEnd)="getSubcategories()"
+            ></ng-select>
           </div>
         </div>
         <small class="p-text-light">Start typing in order for suggestions to appear.</small>
@@ -50,10 +54,27 @@
         <div class="p-grid p-mt-5 p-mx-0">
           <h3 class="p-text-light p-mt-0 p-mb-2">Let's see how the offering looks like</h3>
           <div class="p-col">
-            <input type="file" id="file-upload" accept=".jpg, .png" hidden>
-            <label for="file-upload" class="p-flex-column file-upload">
-              <i class="download-icon pi pi-download"></i>
-              <small class="upload-text p-text-light">Upload a photo...</small>
+            <input type="file"
+                   id="file-upload"
+                   accept=".jpg, .png"
+                   (input)="fileChosen($event)"
+                   hidden>
+            <label for="file-upload">
+              <span class="p-flex-column file-upload">
+                <ng-template [ngIf]="!photo" [ngIfElse]="image">
+                  <ng-template [ngIf]="!fileLoading" [ngIfElse]="spinner">
+                    <i class="download-icon pi pi-download"></i>
+                    <small class="upload-text p-text-light">Upload a photo...</small>
+                  </ng-template>
+                  <ng-template #spinner>
+                    <p-progressSpinner>
+                    </p-progressSpinner>
+                  </ng-template>
+                </ng-template>
+                <ng-template #image>
+                  <img class="thumbnail" [src]="thumbnailPhoto" alt="thumbnail">
+                </ng-template>
+              </span>
             </label>
           </div>
           <div class="p-col">

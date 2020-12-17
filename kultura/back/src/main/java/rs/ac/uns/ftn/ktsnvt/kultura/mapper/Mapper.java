@@ -337,6 +337,7 @@ public class Mapper {
 
     private Object invokeGetMethod(Field f, Object o) throws InvocationTargetException {
         try {
+            if (o == null) return null;
             return getGetMethod(o.getClass(), f).invoke(o);
         } catch (IllegalAccessException e) {
             throw new GetterException(o.getClass(), f);

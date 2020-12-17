@@ -9,7 +9,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingPhoto;
 
 
 @Repository
-public interface PhotoRepository extends JpaRepository<CulturalOfferingPhoto, Long> {
+public interface CulturalOfferingPhotoRepository extends JpaRepository<CulturalOfferingPhoto, Long> {
     Page<CulturalOfferingPhoto> findAllByCulturalOfferingId(long culturalOfferingId, Pageable p);
 
 }

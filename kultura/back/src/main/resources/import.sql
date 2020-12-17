@@ -9,6 +9,16 @@ INSERT INTO authority (authority) VALUES ('ROLE_USER');
 
 INSERT INTO category (id, name) VALUES (1, 'Institucija');
 INSERT INTO category (id, name) VALUES (2, 'Manifestacija');
+INSERT INTO category (id, name) VALUES (3, 'Kategorija3');
+INSERT INTO category (id, name) VALUES (4, 'Kategorija4');
+INSERT INTO category (id, name) VALUES (5, 'Kategorija5');
+INSERT INTO category (id, name) VALUES (6, 'Kategorija6');
+INSERT INTO category (id, name) VALUES (7, 'Kategorija7');
+INSERT INTO category (id, name) VALUES (8, 'Kategorija8');
+INSERT INTO category (id, name) VALUES (9, 'Kategorija9');
+INSERT INTO category (id, name) VALUES (10, 'Kategorija10');
+INSERT INTO category (id, name) VALUES (11, 'Kategorija11');
+INSERT INTO category (id, name) VALUES (12, 'Kategorija12');
 
 INSERT INTO subcategory (name, category_id) VALUES ('Muzej', 1);
 INSERT INTO subcategory (name, category_id) VALUES ('Galerija', 1);

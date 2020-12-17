@@ -22,7 +22,9 @@ public class CulturalOfferingService {
 
     private final CulturalOfferingRepository culturalOfferingRepository;
     private final SubcategoryRepository subcategoryRepository;
+
     private final Mapper modelMapper;
+
 
     @Autowired
     public CulturalOfferingService(CulturalOfferingRepository culturalOfferingRepository,

@@ -34,6 +34,11 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import { CulturalOfferingPlaceComponent } from './view/cultural-offering-place/cultural-offering-place.component';
 import {DialogService, DynamicDialogModule} from 'primeng/dynamicdialog';
+import {DropdownModule} from 'primeng/dropdown';
+import {VirtualScrollerModule} from 'primeng/virtualscroller';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
+import {NgSelectModule} from '@ng-select/ng-select';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 
 
 @NgModule({
@@ -73,7 +78,12 @@ import {DialogService, DynamicDialogModule} from 'primeng/dynamicdialog';
     MenuModule,
     AutoCompleteModule,
     InputTextareaModule,
-    DynamicDialogModule
+    DynamicDialogModule,
+    VirtualScrollerModule,
+    ScrollPanelModule,
+    DropdownModule,
+    NgSelectModule,
+    ProgressSpinnerModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

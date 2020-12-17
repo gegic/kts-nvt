@@ -7,10 +7,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingPhoto;
+import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingMainPhotoService;
+import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingPhotoService;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -20,16 +27,19 @@ import java.net.URI;
 public class CulturalOfferingsController {
 
     private CulturalOfferingService culturalOfferingService;
+    private CulturalOfferingMainPhotoService photoService;
 
     @Autowired
-    public CulturalOfferingsController(CulturalOfferingService culturalOfferingService) {
+    public CulturalOfferingsController(CulturalOfferingService culturalOfferingService,
+                                       CulturalOfferingMainPhotoService photoService) {
         this.culturalOfferingService = culturalOfferingService;
+        this.photoService = photoService;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CulturalOfferingDto>> getAll(@RequestParam(defaultValue = "0") int page,
                                                             @RequestParam(defaultValue = "3") int size,
-                                                            @RequestParam(defaultValue = "id,desc") String[] sort) {
+                                                            @RequestParam(defaultValue = "id,asc") String[] sort) {
 
         Pageable p = PageableExtractor.extract(page, size, sort);
         return ResponseEntity.ok(this.culturalOfferingService.readAll(p));
@@ -45,6 +55,15 @@ public class CulturalOfferingsController {
     ResponseEntity<CulturalOfferingDto> add(@Valid @RequestBody CulturalOfferingDto culturalOfferingDto){
         CulturalOfferingDto saved = this.culturalOfferingService.create(culturalOfferingDto);
         return ResponseEntity.created(URI.create("/api/cultural-offering/" + saved.getId())).body(saved);
+    }
+
+    @PreAuthorize("hasRole('MODERATOR')")
+    @PostMapping(path="add-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<?> setPhoto(@RequestParam("photo") MultipartFile photoFile,
+                               HttpServletRequest request){
+        System.out.println(request.getServletContext().getRealPath("/"));
+        CulturalOfferingPhotoDto saved = this.photoService.addPhoto(photoFile);
+        return ResponseEntity.created(URI.create(saved.getId().toString())).body(saved);
     }
 
     @PreAuthorize("hasRole('MODERATOR')")

@@ -45,7 +45,7 @@ public class CulturalOffering {
     @Getter
     @Setter
     @OneToOne
-    private CulturalOfferingProfilePhoto photo;
+    private CulturalOfferingMainPhoto photo;
 
     @Getter
     @Setter

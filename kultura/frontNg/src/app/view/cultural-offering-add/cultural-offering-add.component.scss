@@ -101,5 +101,25 @@ input {
     p-autoComplete .p-autocomplete-input {
       width: 100%;
     }
+    .ng-select .ng-select-container .ng-value-container .ng-input>input {
+      cursor: pointer;
+    }
   }
+}
+
+.ng-select.custom ::ng-deep .ng-select-container {
+  cursor: pointer;
+}
+
+.ng-select.custom ::ng-deep .ng-value {
+  font-size: .8em;
+}
+
+.ng-select.custom ::ng-deep .ng-option-label {
+  font-size: .8em;
+}
+
+.thumbnail {
+  width: 100%;
+  height: auto;
 }
