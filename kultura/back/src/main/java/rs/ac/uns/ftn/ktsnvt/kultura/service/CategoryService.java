@@ -18,8 +18,8 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
-    private final Mapper mapper;
+    private CategoryRepository categoryRepository;
+    private Mapper mapper;
 
     @Autowired
     public CategoryService(CategoryRepository categoryRepository, Mapper mapper) {
@@ -36,7 +36,8 @@ public class CategoryService {
     }
 
     public CategoryDto create(CategoryDto c) {
-        if(c.getId() != null && categoryRepository.existsById(c.getId())) throw new EntityExistsException();
+        if(c.getId() != null && categoryRepository.existsById(c.getId()))
+            throw new EntityExistsException("A category with this ID already exists");
         Category toAdd = mapper.fromDto(c, Category.class);
 
         return mapper.fromEntity(categoryRepository.save(toAdd), CategoryDto.class);
