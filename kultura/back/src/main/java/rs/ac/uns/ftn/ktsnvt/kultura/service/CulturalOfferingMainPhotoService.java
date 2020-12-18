@@ -7,12 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +73,7 @@ public class CulturalOfferingMainPhotoService {
     }
 
     public void clearPhotos() {
-        repository.deleteAllByCulturalOfferingIsNull();
+        repository.deleteNullOffering();
     }
     
 }

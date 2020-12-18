@@ -40,58 +40,58 @@
         </div>
         <small class="p-text-light">Start typing in order for suggestions to appear.</small>
       </div>
-        <div class="p-mt-5">
-          <h3 class="p-text-light p-mb-2">Briefly tell us about the offering</h3>
-          <textarea formControlName="briefInfo"
-                    class="brief-info"
-                    pInputTextarea
-                    placeholder="Brief info"
-                    [autoResize]="false"
-                    [maxLength]="200"
-          ></textarea>
-          <small class="p-text-light">Please, use less than 200 characters.</small>
-        </div>
-        <div class="p-grid p-mt-5 p-mx-0">
-          <h3 class="p-text-light p-mt-0 p-mb-2">Let's see how the offering looks like</h3>
-          <div class="p-col">
-            <input type="file"
-                   id="file-upload"
-                   accept=".jpg, .png"
-                   (input)="fileChosen($event)"
-                   hidden>
-            <label for="file-upload">
-              <span class="p-flex-column file-upload">
+      <div class="p-mt-5">
+        <h3 class="p-text-light p-mb-2">Briefly tell us about the offering</h3>
+        <textarea formControlName="briefInfo"
+                  class="brief-info"
+                  pInputTextarea
+                  placeholder="Brief info"
+                  [autoResize]="false"
+                  [maxLength]="200"
+        ></textarea>
+        <small class="p-text-light">Please, use less than 200 characters.</small>
+      </div>
+      <div class="p-grid p-mt-5 p-mx-0">
+        <div class="p-col">
+          <input type="file"
+                 id="file-upload"
+                 accept=".jpg, .png"
+                 (input)="fileChosen($event)"
+                 hidden>
+          <label for="file-upload">
+            <span class="p-flex-column file-upload">
+              <ng-template [ngIf]="!fileLoading" [ngIfElse]="spinner">
                 <ng-template [ngIf]="!photo" [ngIfElse]="image">
-                  <ng-template [ngIf]="!fileLoading" [ngIfElse]="spinner">
-                    <i class="download-icon pi pi-download"></i>
-                    <small class="upload-text p-text-light">Upload a photo...</small>
-                  </ng-template>
-                  <ng-template #spinner>
-                    <p-progressSpinner>
-                    </p-progressSpinner>
-                  </ng-template>
+                  <i class="download-icon pi pi-download"></i>
+                  <small class="upload-text p-text-light">Upload a photo...</small>
                 </ng-template>
                 <ng-template #image>
                   <img class="thumbnail" [src]="thumbnailPhoto" alt="thumbnail">
                 </ng-template>
-              </span>
-            </label>
-          </div>
-          <div class="p-col">
-            <div class="p-flex-column">
-              <div class="p-flex-row">
-                <small class="p-text-light">
-                  Additional information is optional. You can add it now, or while editing the cultural offering.
-                </small>
-              </div>
-              <div class="p-flex-row p-pt-5">
-                <small class="p-mt-2 p-text-light">
-                  max 4GB jpg, png
-                </small>
-              </div>
+              </ng-template>
+              <ng-template #spinner>
+                <p-progressSpinner>
+                </p-progressSpinner>
+              </ng-template>
+
+            </span>
+          </label>
+        </div>
+        <div class="p-col">
+          <div class="p-flex-column">
+            <div class="p-flex-row">
+              <small class="p-text-light">
+                Additional information is optional. You can add it now, or while editing the cultural offering.
+              </small>
+            </div>
+            <div class="p-flex-row p-pt-5">
+              <small class="p-mt-2 p-text-light">
+                max 4MB jpg, png
+              </small>
             </div>
           </div>
         </div>
+      </div>
     </div>
     <div class="p-d-flex p-col-12 p-sm-7 p-md-8 p-lg-9 p-ai-center p-justify-center right-view">
       <div class="right-side-info">

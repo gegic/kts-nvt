@@ -25,6 +25,10 @@ export class AddOfferingService {
     return this.httpClient.get(`/api/subcategories/category/${categoryId}?page=${lastLoadedPage}`);
   }
 
+  clearPhotos(): void {
+    this.httpClient.delete('/api/cultural-offerings/clear-photos').subscribe();
+  }
+
   addPhoto(file: File): Observable<any>{
     const formData = new FormData();
     formData.append('photo', file);

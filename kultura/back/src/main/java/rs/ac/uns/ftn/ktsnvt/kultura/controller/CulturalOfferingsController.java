@@ -59,9 +59,8 @@ public class CulturalOfferingsController {
 
     @PreAuthorize("hasRole('MODERATOR')")
     @PostMapping(path="add-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<?> setPhoto(@RequestParam("photo") MultipartFile photoFile,
+    ResponseEntity<CulturalOfferingPhotoDto> setPhoto(@RequestParam("photo") MultipartFile photoFile,
                                HttpServletRequest request){
-        System.out.println(request.getServletContext().getRealPath("/"));
         CulturalOfferingPhotoDto saved = this.photoService.addPhoto(photoFile);
         return ResponseEntity.created(URI.create(saved.getId().toString())).body(saved);
     }
@@ -73,9 +72,16 @@ public class CulturalOfferingsController {
     }
 
     @PreAuthorize("hasRole('MODERATOR')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/id/{id}")
     ResponseEntity<Void> delete(@PathVariable String id){
         this.culturalOfferingService.delete(Long.parseLong(id));
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasRole('MODERATOR')")
+    @DeleteMapping("/clear-photos")
+    ResponseEntity<Void> delete(){
+        this.photoService.clearPhotos();
         return ResponseEntity.ok().build();
     }
 

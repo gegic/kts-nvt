@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {DialogService} from 'primeng/dynamicdialog';
 import {CulturalOfferingPlaceComponent} from '../cultural-offering-place/cultural-offering-place.component';
@@ -18,7 +18,7 @@ import {CulturalOfferingPhoto} from '../../core/models/culturalOfferingPhoto';
   templateUrl: './cultural-offering-add.component.html',
   styleUrls: ['./cultural-offering-add.component.scss']
 })
-export class CulturalOfferingAddComponent implements OnInit {
+export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
 
   formGroup: FormGroup = new FormGroup(
     {
@@ -183,5 +183,10 @@ export class CulturalOfferingAddComponent implements OnInit {
 
   get thumbnailPhoto(): string {
     return `/photos/main/thumbnail/${this.photo?.id}.png`;
+  }
+
+  ngOnDestroy(): void {
+    console.log('Des');
+    this.addOfferingService.clearPhotos();
   }
 }
