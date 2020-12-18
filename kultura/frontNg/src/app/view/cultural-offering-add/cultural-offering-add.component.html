@@ -1,4 +1,4 @@
- <form [formGroup]="formGroup">
+ <form [formGroup]="formGroup" (submit)="saveOffering()">
   <div class="p-grid p-m-0 add-view">
     <div class="p-col-12 p-sm-5 p-md-4 p-lg-3 p-px-4 p-ai-stretch left-view">
       <h2 class="p-text-light">Create an offering</h2>
@@ -56,6 +56,7 @@
           <input type="file"
                  id="file-upload"
                  accept=".jpg, .png"
+                 [disabled]="fileLoading"
                  (input)="fileChosen($event)"
                  hidden>
           <label for="file-upload">

@@ -12,9 +12,7 @@ import java.util.List;
 @Repository
 public interface CulturalOfferingMainPhotoRepository extends JpaRepository<CulturalOfferingMainPhoto, Long> {
 
-    @Transactional
-    @Modifying
-    @Query("delete from CulturalOfferingMainPhoto p where p.culturalOffering is null")
-    void deleteNullOffering();
+    @Query("select p from CulturalOfferingMainPhoto p where p.culturalOffering is null and p.token = :token")
+    List<CulturalOfferingMainPhoto> getNullOffering(String token);
 
 }

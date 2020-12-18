@@ -16,4 +16,8 @@ export class AdminViewComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  onClickLogout(): void {
+    this.authService.logout();
+  }
 }

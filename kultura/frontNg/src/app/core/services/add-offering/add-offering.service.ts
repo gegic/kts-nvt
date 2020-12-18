@@ -4,6 +4,7 @@ import {Subcategory} from '../../models/subcategory';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {CulturalOffering} from '../../models/cultural-offering';
+import {CulturalOfferingPhoto} from '../../models/culturalOfferingPhoto';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,6 @@ import {CulturalOffering} from '../../models/cultural-offering';
 export class AddOfferingService {
 
   private culturalOffering: CulturalOffering = new CulturalOffering();
-
   categories?: Category[] = [];
   subcategories?: Subcategory[] = [];
 
@@ -29,10 +29,15 @@ export class AddOfferingService {
     this.httpClient.delete('/api/cultural-offerings/clear-photos').subscribe();
   }
 
-  addPhoto(file: File): Observable<any>{
+  addPhoto(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('photo', file);
     return this.httpClient.post('/api/cultural-offerings/add-photo', formData);
+  }
+
+  addOffering(): Observable<any> {
+    console.log(this.culturalOffering);
+    return this.httpClient.post('/api/cultural-offerings', this.culturalOffering);
   }
 
   set coordinates(latLng: [number, number]) {
@@ -44,4 +49,27 @@ export class AddOfferingService {
     return [this.culturalOffering.latitude ?? 0, this.culturalOffering.longitude ?? 0];
   }
 
+  set name(val: string) {
+    this.culturalOffering.name = val;
+  }
+
+  set address(val: {display_name: string}) {
+    this.culturalOffering.address = val.display_name;
+  }
+
+  set briefInfo(val: string) {
+    this.culturalOffering.briefInfo = val;
+  }
+
+  set subcategory(val: Subcategory) {
+    this.culturalOffering.subcategoryId = val.id;
+  }
+
+  set additionalInfo(val: string) {
+    this.culturalOffering.additionalInfo = val;
+  }
+
+  set photo(val: CulturalOfferingPhoto) {
+    this.culturalOffering.photoId = val.id;
+  }
 }

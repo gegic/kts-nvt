@@ -3,16 +3,18 @@ package rs.ac.uns.ftn.ktsnvt.kultura.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 public class CulturalOfferingMainPhoto extends AbstractPhoto{
     @Getter
     @Setter
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private CulturalOffering culturalOffering;
+    @Getter
+    @Setter
+    String token;
 
     public long getId() {
         return this.id;

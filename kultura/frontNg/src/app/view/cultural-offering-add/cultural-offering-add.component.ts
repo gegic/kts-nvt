@@ -12,6 +12,21 @@ import {Category} from '../../core/models/category';
 import {Subcategory} from '../../core/models/subcategory';
 import {MessageService} from 'primeng/api';
 import {CulturalOfferingPhoto} from '../../core/models/culturalOfferingPhoto';
+import validate = WebAssembly.validate;
+import {ActivatedRoute, Router} from '@angular/router';
+
+interface IErrorDict {
+  [key: string]: string
+}
+
+const errorDict: IErrorDict = {
+  name: 'Name is required and can contain only letters, digits and spaces',
+  briefInfo: 'Brief info is required and it can contain a maximum of 200 characters.',
+  additionalInfo: 'Additional info can contain 1000 characters at most.',
+  address: 'Address is required',
+  selectedCategory: 'Category is required.',
+  selectedSubcategory: 'Subcategory is required'
+};
 
 @Component({
   selector: 'app-cultural-offering-add',
@@ -22,12 +37,12 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
 
   formGroup: FormGroup = new FormGroup(
     {
-      name: new FormControl(''),
-      briefInfo: new FormControl('', Validators.maxLength(200)),
-      additionalInfo: new FormControl('', Validators.maxLength(1000)),
-      address: new FormControl(''),
-      selectedSubcategory: new FormControl(),
-      selectedCategory: new FormControl()
+      name: new FormControl(undefined, [Validators.required, Validators.pattern(/[\p{L} \d]+/u)]),
+      briefInfo: new FormControl(undefined, [Validators.required, Validators.maxLength(200)]),
+      additionalInfo: new FormControl(undefined, Validators.maxLength(1000)),
+      address: new FormControl(undefined, Validators.required),
+      selectedSubcategory: new FormControl(undefined, Validators.required),
+      selectedCategory: new FormControl(undefined, Validators.required)
     }
   );
 
@@ -43,7 +58,9 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
   constructor(private dialogService: DialogService,
               private placeOfferingService: PlaceOfferingService,
               private addOfferingService: AddOfferingService,
-              private messageService: MessageService) {
+              private messageService: MessageService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -173,6 +190,50 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
     );
   }
 
+  saveOffering(): void {
+    if (!this.photo) {
+      this.messageService.add(
+        {
+          severity: 'error',
+          summary: 'Photo is missing',
+          detail: 'A cultural offering has to have a main photo.'
+        }
+      );
+      return;
+    }
+    if (this.formGroup.invalid) {
+      for (const c in this.formGroup.controls) {
+        if (this.formGroup.controls.hasOwnProperty(c) && this.formGroup.get(c)?.invalid) {
+          this.messageService.add(
+            {
+              severity: 'error',
+              detail: errorDict[c]
+            }
+          );
+          return;
+        }
+      }
+    }
+
+    this.addOfferingService.name = this.formGroup.get('name')?.value;
+    this.addOfferingService.address = this.formGroup.get('address')?.value;
+    this.addOfferingService.subcategory = this.formGroup.get('selectedSubcategory')?.value as Subcategory;
+    this.addOfferingService.briefInfo = this.formGroup.get('briefInfo')?.value;
+    this.addOfferingService.additionalInfo = this.formGroup.get('additionalInfo')?.value;
+    this.addOfferingService.photo = this.photo;
+
+    this.addOfferingService.addOffering().subscribe(
+      data => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Successfully added',
+          detail: 'The cultural offering was added successfully'
+        });
+        this.router.navigate(['..'], {relativeTo: this.activatedRoute});
+      }
+    );
+  }
+
   get subcategories(): Subcategory[] {
     return this.addOfferingService.subcategories ?? [];
   }
@@ -186,7 +247,6 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('Des');
     this.addOfferingService.clearPhotos();
   }
 }
