@@ -5,8 +5,13 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.expression.spel.support.ReflectionHelper;
 import org.springframework.stereotype.Component;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -29,11 +34,16 @@ public class Mapper {
 
     public static final String INFER_ORIGIN = "@infer";
 
-    private final EntityManagerFactory entityManagerFactory;
-
+    private EntityManagerFactory entityManagerFactory;
+    private EntityManager entityManager;
+    private ApplicationContext applicationContext;
+    private Repositories repos;
     @Autowired
-    public Mapper(EntityManagerFactory entityManagerFactory) {
+    public Mapper(EntityManagerFactory entityManagerFactory,
+                  ApplicationContext applicationContext) {
         this.entityManagerFactory = entityManagerFactory;
+        this.applicationContext = applicationContext;
+        this.repos = new Repositories(applicationContext);
     }
 
     public <TEntity, TDto> TEntity toEntity(Class<TEntity> entityClass, TDto dto) {
@@ -47,6 +57,7 @@ public class Mapper {
     public <TEntity, TDto> TEntity fromDto(TDto dto, Class<TEntity> entityClass) {
         Class<?> dtoClass = dto.getClass();
         TEntity entity;
+
 
         try {
             entity = entityClass.getDeclaredConstructor().newInstance();
@@ -69,6 +80,8 @@ public class Mapper {
     }
 
     public <TEntity, TDto> TDto fromEntity(TEntity entity, Class<TDto> dtoClass) {
+
+        entityManager = entityManagerFactory.createEntityManager();
         TDto dto;
         try {
             dto = dtoClass.getDeclaredConstructor().newInstance();
@@ -128,6 +141,9 @@ public class Mapper {
             } catch (InvocationTargetException ignored) {
             }
         }
+
+        entityManager.close();
+
         return dto;
     }
 
@@ -135,6 +151,9 @@ public class Mapper {
                                                      TEntity entity,
                                                      Class<?> dtoClass,
                                                      Class<?> entityClass) {
+
+        entityManager = entityManagerFactory.createEntityManager();
+
         Field[] fields = dtoClass.getDeclaredFields();
         String setterName;
         Method m;
@@ -206,6 +225,7 @@ public class Mapper {
             }
 
         }
+        entityManager.close();
         return entity;
     }
 
@@ -272,7 +292,18 @@ public class Mapper {
                     .filter(f -> f.isAnnotationPresent(Id.class)).findFirst().orElse(null);
         }
 
-        if (idField == null) throw new IdNotFoundException();
+        if (idField == null) {
+            try{
+                idField = entityFieldClass.getSuperclass().getDeclaredField("id");
+            } catch (NoSuchFieldException e) {
+                idField = Arrays.stream(entityFieldClass.getSuperclass().getDeclaredFields())
+                        .filter(f -> f.isAnnotationPresent(Id.class)).findFirst().orElse(null);
+            }
+        }
+
+        if (idField == null) {
+            throw new IdNotFoundException();
+        }
 
         Class<?> fieldClass = field.getType();
         boolean isCollection = fieldClass.isAssignableFrom(Collection.class);
@@ -316,13 +347,11 @@ public class Mapper {
     }
 
     @Transactional
-    protected Object getOneEntity(Class<?> entityFieldClass, Object key) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
+    protected <T, D> T getOneEntity(Class<T> entityFieldClass, D key) {
         if (key == null) return null;
-        Object found = entityManager.find(entityFieldClass, key);
-        entityManager.close();
-        return found;
+        JpaRepository<T, D> repository =
+                (JpaRepository<T, D>) repos.getRepositoryFor(entityFieldClass).orElse(null);
+        return repository.findById(key).orElse(null);
     }
 
     private Object invokeGetMethod(String fieldName, Object o) throws NoSuchFieldException, InvocationTargetException {
@@ -337,6 +366,7 @@ public class Mapper {
 
     private Object invokeGetMethod(Field f, Object o) throws InvocationTargetException {
         try {
+            if (o == null) return null;
             return getGetMethod(o.getClass(), f).invoke(o);
         } catch (IllegalAccessException e) {
             throw new GetterException(o.getClass(), f);

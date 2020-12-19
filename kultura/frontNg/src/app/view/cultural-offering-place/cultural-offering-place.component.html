@@ -1,0 +1,12 @@
+<div class="dialog-content">
+  <div class="map" #map></div>
+  <div class="p-d-flex p-mt-3 p-ai-center">
+    <p class="p-my-0 p-text-light p-tag-danger">{{ quickAddress }}</p>
+    <button type="button"
+            class="p-button p-ml-auto"
+            label="Place"
+            (click)="onClickPlace()"
+            pButton
+    ></button>
+  </div>
+</div>

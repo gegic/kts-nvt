@@ -35,7 +35,15 @@ public class ReviewService {
     }
 
     public ReviewDto save(ReviewDto p) {
-        return mapper.fromEntity(reviewRepository.save(mapper.fromDto(p, Review.class)), ReviewDto.class);
+        Review r = mapper.fromDto(p, Review.class);
+        float overallRating = r.getCulturalOffering().getOverallRating();
+        int numReviews = r.getCulturalOffering().getNumReviews();
+        float ratingSum = overallRating * numReviews;
+        overallRating = (ratingSum + p.getRating()) / ++numReviews;
+        r.getCulturalOffering().setOverallRating(overallRating);
+        r.getCulturalOffering().setNumReviews(numReviews);
+
+        return mapper.fromEntity(reviewRepository.save(r), ReviewDto.class);
     }
 
     public void delete(long id) {

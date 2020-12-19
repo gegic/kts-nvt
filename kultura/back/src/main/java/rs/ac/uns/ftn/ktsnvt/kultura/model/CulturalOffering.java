@@ -43,9 +43,8 @@ public class CulturalOffering {
     private String address;
 
     @Getter
-    @Setter
-    @OneToOne
-    private CulturalOfferingProfilePhoto photo;
+    @OneToOne(cascade = CascadeType.ALL)
+    private CulturalOfferingMainPhoto photo;
 
     @Getter
     @Setter
@@ -92,4 +91,16 @@ public class CulturalOffering {
     @Getter
     @Setter
     private List<User> subscribedUsers;
+
+    public void setPhoto(CulturalOfferingMainPhoto photo) {
+        if (photo == null) {
+            if (this.photo != null) {
+                this.photo.setCulturalOffering(null);
+            }
+        }
+        else {
+            photo.setCulturalOffering(this);
+        }
+        this.photo = photo;
+    }
 }

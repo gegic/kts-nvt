@@ -1,3 +1,5 @@
+import {Authority} from './authority';
+
 export class User {
   id = '';
   email = '';
@@ -5,8 +7,14 @@ export class User {
   firstName = '';
   lastName = '';
   lastPasswordChange: Date = new Date();
-  authorities: [] = [];
+  authorities: Authority[] = [];
   verified = false;
 
-  constructor() {}
+  getRole(): string {
+    return this.authorities.find(a => a.authority.startsWith('ROLE'))?.authority.slice(5) ?? '';
+  }
+
+  authorize(accessRoles: string[]): boolean {
+    return accessRoles.includes(this.getRole());
+  }
 }
