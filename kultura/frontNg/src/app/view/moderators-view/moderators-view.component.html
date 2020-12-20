@@ -1,0 +1,14 @@
+<div>
+  <ul *ngFor="let moderator of moderatorsList">
+    <li>
+      <span>{{moderator['email']}}</span>
+    </li>
+  </ul>
+</div>
+<button type="button" (click)="onClickLogout()" label="Log out" pButton></button>
+<button type="button"
+        class="primary add-button p-button-rounded p-button-raised p-button-icon p-ripple"
+        icon="pi pi-plus"
+        routerLink="/moderator-add"
+        pButton
+></button>

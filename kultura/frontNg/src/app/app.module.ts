@@ -39,6 +39,8 @@ import {VirtualScrollerModule} from 'primeng/virtualscroller';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import { ModeratorAddComponent } from './view/moderator-add/moderator-add.component';
+import { ModeratorsViewComponent } from './view/moderators-view/moderators-view.component';
 
 
 @NgModule({
@@ -59,7 +61,9 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
     MapViewComponent,
     NavbarComponent,
     CulturalOfferingAddComponent,
-    CulturalOfferingPlaceComponent
+    CulturalOfferingPlaceComponent,
+    ModeratorAddComponent,
+    ModeratorsViewComponent
   ],
   imports: [
     BrowserModule,

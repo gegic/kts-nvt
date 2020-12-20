@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import {AuthService} from '../../core/services/auth/auth.service';
-import {HttpClient} from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-admin-view',
@@ -9,15 +7,9 @@ import {HttpClient} from '@angular/common/http';
 })
 export class AdminViewComponent implements OnInit {
 
-  url = '';
-  res = '';
-
-  constructor(private authService: AuthService) { }
-
-  ngOnInit(): void {
+  constructor() {
   }
 
-  onClickLogout(): void {
-    this.authService.logout();
+  ngOnInit(): void {
   }
 }
