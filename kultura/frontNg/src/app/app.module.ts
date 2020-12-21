@@ -41,6 +41,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { ModeratorAddComponent } from './view/moderator-add/moderator-add.component';
 import { ModeratorsViewComponent } from './view/moderators-view/moderators-view.component';
+import {RippleModule} from 'primeng/ripple';
 
 
 @NgModule({
@@ -87,7 +88,8 @@ import { ModeratorsViewComponent } from './view/moderators-view/moderators-view.
     ScrollPanelModule,
     DropdownModule,
     NgSelectModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    RippleModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

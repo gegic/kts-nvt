@@ -1,42 +1,90 @@
-
-<div class="p-grid">
+<div class="p-grid panel" >
   <div class="p-col-3">
-    <p>Odje ce bude ono da se klikce </p>
-  </div>
-  <div class="p-col">
-    <div class="card">
-      <h5>Vertical</h5>
-      <div class="p-fluid">
-        <div class="p-field">
-          <label for="firstname1">Firstname</label>
-          <input id="firstname1" type="text" pInputText
-                 [(ngModel)]="moderator.firstName">
-        </div>
-        <div class="p-field">
-          <label for="lastname1">Lastname</label>
-          <input id="lastname1" type="text" pInputText>
-        </div>
-      </div>
-    </div>
+    <div class="menu">
 
-    <div class="card">
-      <h5>Vertical and Grid</h5>
-      <div class="p-fluid p-formgrid p-grid">
-        <div class="p-field p-col">
-          <label for="firstname2">Firstname</label>
-          <input id="firstname2" type="text" pInputText>
-        </div>
-        <div class="p-field p-col">
-          <label for="lastname2">Lastname</label>
-          <input id="lastname2" type="text" pInputText>
-        </div>
-      </div>
-    </div>
-    <div class="p-field p-col">
-      <button pButton type="button" label="Submit" (click)="onSubmit()"></button>
+      <button pButton pRipple type="button" label="Plain" class=" p-button-text p-button-plain">
+        <span class="iconify" data-icon="mdi:account-group" data-inline="false"></span>
+      </button>
     </div>
   </div>
+  <div class="p-col add-panel">
 
+    <form [formGroup]="formGroup" (submit)="onSubmit()">
+      <p-card class="flat-card">
+        <div class="p-col">
+          <h2>Create a moderator</h2>
+          <small class="p-text-light">A moderator can work on cultural activities and maps...</small>
+          <div class="card p-grid">
+            <div class="p-fluid p-col">
+              <div class="p-field p-col">
+              <span class="p-float-label">
+                 <input type="text"
+                        formControlName="email"
+                        id="email"
+                        autocomplete="off"
+                        pInputText>
+                <label for="email">Email</label>
+              </span>
+              </div>
+              <div class="p-field p-col">
+              <span class="p-float-label">
+                <input autocomplete="off"
+                       id="firstName"
+                       formControlName="firstName"
+                       type="text"
+                       pInputText>
+                <label for="firstName">First name</label>
+              </span>
+              </div>
+
+              <div class="p-field p-col">
+              <span class="p-float-label">
+                 <input type="text"
+                        formControlName="lastName"
+                        id="lastName"
+                        autocomplete="off"
+                        pInputText>
+                <label for="lastName">Last name</label>
+              </span>
+
+              </div>
+
+            </div>
+            <div class="card p-col">
+              <p>&nbsp;</p>
+              <div class="p-fluid ">
+                <div class="p-field p-col">
+                <span class="p-float-label">
+                  <input type="password"
+                         id="password"
+                         formControlName="password"
+                         autocomplete="off"
+                         pInputText>
+                  <label for="password">Password</label>
+                </span>
+
+                </div>
+                <div class="p-field p-col">
+                <span class="p-float-label">
+                  <input type="password"
+                         formControlName="repeatPassword"
+                         id="repeatPassword"
+                         autocomplete="off"
+                         pInputText>
+                  <label for="repeatPassword">Repeat Password</label>
+                </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="p-text-right">
+            <button type="submit" class="p-button p-button-lg primary" label="Create" pButton></button>
+          </div>
+
+        </div>
+      </p-card>
+    </form>
+  </div>
   <div class="p-col-1"></div>
 </div>
 
