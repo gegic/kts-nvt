@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import * as L from 'leaflet';
-import {BehaviorSubject, Observable, PartialObserver} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Place} from '../../models/place';
 

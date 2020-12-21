@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, UrlSegment} from '@angular/router';
-import {Observable, throwError} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {Observable} from 'rxjs';
 import {AuthService} from '../../services/auth/auth.service';
 import {JwtHelperService} from '@auth0/angular-jwt';
-import {User} from '../../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +14,7 @@ export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService,
               private router: Router) {
   }
+
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
@@ -37,7 +37,7 @@ export class AuthGuard implements CanActivate {
       if (!route.children || route.children.length < 1) {
         return true;
       }
-      if (route.data.hasOwnProperty('roles')){
+      if (route.data.hasOwnProperty('roles')) {
         accessRoles = route.data.roles as string[];
       } else {
         return true;

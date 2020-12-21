@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {LoginRegisterComponent} from './view/login-registration/login-register.component';
 import {EnterEmailComponent} from './view/login-registration/login/enter-email/enter-email.component';
 import {EnterPasswordComponent} from './view/login-registration/login/enter-password/enter-password.component';
@@ -15,39 +15,49 @@ import {CulturalOfferingAddComponent} from './view/cultural-offering-add/cultura
 import {ModeratorAddComponent} from './view/moderator-add/moderator-add.component';
 import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
+import {HomeViewComponent} from './view/home-view/home-view.component';
 
 const routes: Routes = [
-  { path: '', component: AdminViewComponent, canActivate: [AuthGuard], children: [
-      { path: '', component: ModeratorsViewComponent },
-      { path: 'moderator-add', component: ModeratorAddComponent }
-    ]},
-  { path: '', component: MainViewComponent, canActivate: [AuthGuard], children: [
-      { path: '', component: MapViewComponent },
-      { path: 'create-offering', component: CulturalOfferingAddComponent }
-    ]},
+  {
+    path: '', component: AdminViewComponent, canActivate: [AuthGuard], children: [
+      {path: '', component: ModeratorsViewComponent},
+      {path: 'moderator-add', component: ModeratorAddComponent}
+    ]
+  },
+  {
+    path: '', component: HomeViewComponent, canActivate: [AuthGuard], children: [
+      {path: '', component: MapViewComponent},
+      {path: 'create-offering', component: CulturalOfferingAddComponent}
+    ]
+  },
 
-  { path: 'login', component: LoginRegisterComponent, canActivate: [AuthGuard],
+  {
+    path: 'login', component: LoginRegisterComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: EnterEmailComponent, data: { animation: 'EnterEmail'}},
-      { path: 'password', component: EnterPasswordComponent, data: { animation: 'EnterPassword' }}
+      {path: '', component: EnterEmailComponent, data: {animation: 'EnterEmail'}},
+      {path: 'password', component: EnterPasswordComponent, data: {animation: 'EnterPassword'}}
     ]
   },
-  { path: 'register', component: LoginRegisterComponent, canActivate: [AuthGuard],
+  {
+    path: 'register', component: LoginRegisterComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: RegisterEmailComponent, data: { animation: 'RegisterEmail' }},
-      { path: 'name', component: RegisterNameComponent, data: { animation: 'RegisterName' }},
-      { path: 'password', component: RegisterPasswordComponent, data: { animation: 'RegisterPassword' }},
-      { path: 'success', component: RegisterSuccessComponent, data: { animation: 'RegisterSuccess' }}
+      {path: '', component: RegisterEmailComponent, data: {animation: 'RegisterEmail'}},
+      {path: 'name', component: RegisterNameComponent, data: {animation: 'RegisterName'}},
+      {path: 'password', component: RegisterPasswordComponent, data: {animation: 'RegisterPassword'}},
+      {path: 'success', component: RegisterSuccessComponent, data: {animation: 'RegisterSuccess'}}
     ]
   },
-  { path: 'verify', component: LoginRegisterComponent, canActivate: [AuthGuard],
+  {
+    path: 'verify', component: LoginRegisterComponent, canActivate: [AuthGuard],
     children: [
-      { path: ':id', component: RegisterVerifyComponent}
-    ]},
+      {path: ':id', component: RegisterVerifyComponent}
+    ]
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

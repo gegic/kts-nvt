@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ModeratorService} from '../../core/services/moderator/moderator.service';
 
 @Component({
@@ -10,7 +10,8 @@ export class ModeratorsViewComponent implements OnInit {
 
   moderatorsList: [] | undefined = [];
 
-  constructor(private moderatorService: ModeratorService) { }
+  constructor(private moderatorService: ModeratorService) {
+  }
 
   ngOnInit(): void {
     this.moderatorService.getModerators().subscribe(moderators => {
@@ -19,7 +20,6 @@ export class ModeratorsViewComponent implements OnInit {
   }
 
   onClickLogout(): void {
-    this.moderatorService.info();
     console.log(this.moderatorService.getModerators());
   }
 

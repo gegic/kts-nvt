@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Category} from '../../models/category';
 import {Subcategory} from '../../models/subcategory';
 import {HttpClient} from '@angular/common/http';
@@ -11,11 +11,45 @@ import {CulturalOfferingPhoto} from '../../models/culturalOfferingPhoto';
 })
 export class AddOfferingService {
 
-  private culturalOffering: CulturalOffering = new CulturalOffering();
   categories?: Category[] = [];
   subcategories?: Subcategory[] = [];
+  private culturalOffering: CulturalOffering = new CulturalOffering();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
+
+  get coordinates(): [number, number] {
+    return [this.culturalOffering.latitude ?? 0, this.culturalOffering.longitude ?? 0];
+  }
+
+  set coordinates(latLng: [number, number]) {
+    this.culturalOffering.latitude = latLng[0];
+    this.culturalOffering.longitude = latLng[1];
+  }
+
+  set name(val: string) {
+    this.culturalOffering.name = val;
+  }
+
+  set address(val: { display_name: string }) {
+    this.culturalOffering.address = val.display_name;
+  }
+
+  set briefInfo(val: string) {
+    this.culturalOffering.briefInfo = val;
+  }
+
+  set subcategory(val: Subcategory) {
+    this.culturalOffering.subcategoryId = val.id;
+  }
+
+  set additionalInfo(val: string) {
+    this.culturalOffering.additionalInfo = val;
+  }
+
+  set photo(val: CulturalOfferingPhoto) {
+    this.culturalOffering.photoId = val.id;
+  }
 
   getCategories(lastLoadedPage: number): Observable<any> {
     return this.httpClient.get(`/api/categories?page=${lastLoadedPage}`);
@@ -38,38 +72,5 @@ export class AddOfferingService {
   addOffering(): Observable<any> {
     console.log(this.culturalOffering);
     return this.httpClient.post('/api/cultural-offerings', this.culturalOffering);
-  }
-
-  set coordinates(latLng: [number, number]) {
-    this.culturalOffering.latitude = latLng[0];
-    this.culturalOffering.longitude = latLng[1];
-  }
-
-  get coordinates(): [number, number] {
-    return [this.culturalOffering.latitude ?? 0, this.culturalOffering.longitude ?? 0];
-  }
-
-  set name(val: string) {
-    this.culturalOffering.name = val;
-  }
-
-  set address(val: {display_name: string}) {
-    this.culturalOffering.address = val.display_name;
-  }
-
-  set briefInfo(val: string) {
-    this.culturalOffering.briefInfo = val;
-  }
-
-  set subcategory(val: Subcategory) {
-    this.culturalOffering.subcategoryId = val.id;
-  }
-
-  set additionalInfo(val: string) {
-    this.culturalOffering.additionalInfo = val;
-  }
-
-  set photo(val: CulturalOfferingPhoto) {
-    this.culturalOffering.photoId = val.id;
   }
 }

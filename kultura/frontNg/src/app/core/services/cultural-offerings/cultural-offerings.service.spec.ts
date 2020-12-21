@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { CulturalOfferingsService } from './cultural-offerings.service';
+import {CulturalOfferingsService} from './cultural-offerings.service';
 
 describe('CulturalOfferingsService', () => {
   let service: CulturalOfferingsService;

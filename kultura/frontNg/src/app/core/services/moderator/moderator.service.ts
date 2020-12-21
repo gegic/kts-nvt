@@ -1,23 +1,22 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {User} from '../../models/user';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import { ModeratorsPage} from '../../models/moderatorsPage';
+import {ModeratorsPage} from '../../models/moderatorsPage';
+import {Moderator} from '../../models/moderator';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModeratorService {
-  moderators: any;
+
   constructor(private httpClient: HttpClient) {
   }
 
-  public getModerators(): Observable<ModeratorsPage>{
-    return this.httpClient.get('/api/users');
+  public getModerators(): Observable<ModeratorsPage> {
+    return this.httpClient.get('/api/users/moderators');
   }
 
-  info(): void {
-    console.log('DJES PEROOOOOO');
-    return ;
+  public createModerator(moderator: Moderator): Observable<any>{
+    return  this.httpClient.post('/api/users/moderator', moderator);
   }
 }

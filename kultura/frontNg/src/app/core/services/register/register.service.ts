@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {User} from '../../models/user';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -12,18 +12,6 @@ export class RegisterService {
 
   constructor(private httpClient: HttpClient) {
     this.user = new User();
-  }
-
-  reset(): void {
-    this.user = new User();
-  }
-
-  checkExistence(email: string): Observable<any> {
-    return this.httpClient.get(`/auth/exists/email/${email}`);
-  }
-
-  register(): Observable<any> {
-    return this.httpClient.post('/auth/register', this.user);
   }
 
   get email(): string {
@@ -56,5 +44,17 @@ export class RegisterService {
 
   set password(value: string) {
     this.user.password = value;
+  }
+
+  reset(): void {
+    this.user = new User();
+  }
+
+  checkExistence(email: string): Observable<any> {
+    return this.httpClient.get(`/auth/exists/email/${email}`);
+  }
+
+  register(): Observable<any> {
+    return this.httpClient.post('/auth/register', this.user);
   }
 }
