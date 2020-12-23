@@ -5,25 +5,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingPhoto;
-import rs.ac.uns.ftn.ktsnvt.kultura.repository.PhotoRepository;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingPhotoRepository;
 
 import javax.imageio.ImageIO;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
 
@@ -31,22 +25,22 @@ import java.util.Optional;
 public class CulturalOfferingPhotoService {
 
 
-    private final PhotoRepository photoRepository;
+    private final CulturalOfferingPhotoRepository culturalOfferingPhotoRepository;
     private final Mapper mapper;
 
     @Autowired
-    public CulturalOfferingPhotoService(PhotoRepository photoRepository, Mapper mapper) {
-        this.photoRepository = photoRepository;
+    public CulturalOfferingPhotoService(CulturalOfferingPhotoRepository culturalOfferingPhotoRepository, Mapper mapper) {
+        this.culturalOfferingPhotoRepository = culturalOfferingPhotoRepository;
         this.mapper = mapper;
     }
 
     public Page<CulturalOfferingPhotoDto> readAllByCulturalOfferingId(long culturalOfferingId, Pageable p) {
-        return photoRepository.findAllByCulturalOfferingId(culturalOfferingId, p)
+        return culturalOfferingPhotoRepository.findAllByCulturalOfferingId(culturalOfferingId, p)
                 .map(culturalOfferingPhoto -> mapper.fromEntity(culturalOfferingPhoto, CulturalOfferingPhotoDto.class));
     }
 
     public Optional<CulturalOfferingPhotoDto> readById(long id) {
-        return photoRepository.findById(id).map(culturalOfferingPhoto -> mapper.fromEntity(culturalOfferingPhoto, CulturalOfferingPhotoDto.class));
+        return culturalOfferingPhotoRepository.findById(id).map(culturalOfferingPhoto -> mapper.fromEntity(culturalOfferingPhoto, CulturalOfferingPhotoDto.class));
     }
 
     @Transactional
@@ -58,7 +52,7 @@ public class CulturalOfferingPhotoService {
 
     @Transactional
     public CulturalOfferingPhotoDto update(MultipartFile photoFile, long id) {
-        CulturalOfferingPhoto p = photoRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        CulturalOfferingPhoto p = culturalOfferingPhotoRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
         return save(photoFile, p);
     }
@@ -82,15 +76,13 @@ public class CulturalOfferingPhotoService {
         p.setWidth(width);
         p.setHeight(height);
 
-        p = photoRepository.save(p);
-
-
+        p = culturalOfferingPhotoRepository.save(p);
 
         try {
-            savePhoto(".\\cultural_offering_photos", bufferedImage, p);
+            savePhoto("photos", bufferedImage, p);
 //            savePhoto(".\\cultural_offering_photos\\thumbnails", thumbnail, p);
         } catch (Exception ex) {
-            photoRepository.delete(p);
+            culturalOfferingPhotoRepository.delete(p);
             System.out.println("Exception:" + ex);
         }
 
@@ -106,6 +98,6 @@ public class CulturalOfferingPhotoService {
     }
 
     public void delete(long id) {
-        photoRepository.deleteById(id);
+        culturalOfferingPhotoRepository.deleteById(id);
     }
 }

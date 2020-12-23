@@ -5,8 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.servlet.ServletContext;
 import java.time.LocalDateTime;
 
 
@@ -17,6 +20,7 @@ public abstract class AbstractPhoto {
     @Id
     @Getter
     @Setter
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     protected long id;
     @Getter
     @Setter

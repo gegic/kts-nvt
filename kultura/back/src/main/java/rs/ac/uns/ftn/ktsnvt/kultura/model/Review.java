@@ -30,7 +30,7 @@ public class Review {
     @Setter
     private LocalDateTime timeAdded = LocalDateTime.now();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
     private CulturalOffering culturalOffering;

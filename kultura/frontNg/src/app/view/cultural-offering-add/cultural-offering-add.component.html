@@ -1,0 +1,147 @@
+ <form [formGroup]="formGroup" (submit)="saveOffering()">
+  <div class="p-grid p-m-0 add-view">
+    <div class="p-col-12 p-sm-5 p-md-4 p-lg-3 p-px-4 p-ai-stretch left-view">
+      <h2 class="p-text-light">Create an offering</h2>
+      <div>
+        <h3 class="p-text-light p-mb-2">Firstly, we need you to enter the name</h3>
+        <input type="text"
+               formControlName="name"
+               id="name"
+               autocomplete="off"
+               placeholder="Name"
+               pInputText>
+      </div>
+      <div class="p-mt-5">
+        <h3 class="p-text-light p-mb-2">Now specify category and subcategory</h3>
+        <div class="p-grid">
+          <div class="p-col-6">
+            <ng-select class="custom"
+                       bindLabel="name"
+                       formControlName="selectedCategory"
+                       [items]="categories"
+                       [searchable]="false"
+                       [virtualScroll]="true"
+                       [loading]="categoriesLoading"
+                       (clear)="resetSubcategories()"
+                       (scrollToEnd)="getCategories()"
+            ></ng-select>
+          </div>
+          <div class="p-col-6">
+            <ng-select class="custom"
+                       bindLabel="name"
+                       formControlName="selectedSubcategory"
+                       [items]="subcategories"
+                       [searchable]="false"
+                       [virtualScroll]="true"
+                       [loading]="subcategoriesLoading"
+                       (scrollToEnd)="getSubcategories()"
+            ></ng-select>
+          </div>
+        </div>
+        <small class="p-text-light">Start typing in order for suggestions to appear.</small>
+      </div>
+      <div class="p-mt-5">
+        <h3 class="p-text-light p-mb-2">Briefly tell us about the offering</h3>
+        <textarea formControlName="briefInfo"
+                  class="brief-info"
+                  pInputTextarea
+                  placeholder="Brief info"
+                  [autoResize]="false"
+                  [maxLength]="200"
+        ></textarea>
+        <small class="p-text-light">Please, use less than 200 characters.</small>
+      </div>
+      <div class="p-grid p-mt-5 p-mx-0">
+        <div class="p-col">
+          <input type="file"
+                 id="file-upload"
+                 accept=".jpg, .png"
+                 [disabled]="fileLoading"
+                 (input)="fileChosen($event)"
+                 hidden>
+          <label for="file-upload">
+            <span class="p-flex-column file-upload">
+              <ng-template [ngIf]="!fileLoading" [ngIfElse]="spinner">
+                <ng-template [ngIf]="!photo" [ngIfElse]="image">
+                  <i class="download-icon pi pi-download"></i>
+                  <small class="upload-text p-text-light">Upload a photo...</small>
+                </ng-template>
+                <ng-template #image>
+                  <img class="thumbnail" [src]="thumbnailPhoto" alt="thumbnail">
+                </ng-template>
+              </ng-template>
+              <ng-template #spinner>
+                <p-progressSpinner>
+                </p-progressSpinner>
+              </ng-template>
+
+            </span>
+          </label>
+        </div>
+        <div class="p-col">
+          <div class="p-flex-column">
+            <div class="p-flex-row">
+              <small class="p-text-light">
+                Additional information is optional. You can add it now, or while editing the cultural offering.
+              </small>
+            </div>
+            <div class="p-flex-row p-pt-5">
+              <small class="p-mt-2 p-text-light">
+                max 4MB jpg, png
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="p-d-flex p-col-12 p-sm-7 p-md-8 p-lg-9 p-ai-center p-justify-center right-view">
+      <div class="right-side-info">
+        <div>
+          <h3 class="p-text-light p-mb-2">Enter an address or specify the location on the map</h3>
+          <div class="p-grid p-mx-0 p-px-0">
+            <div class="p-col-9 p-pl-0">
+              <p-autoComplete id="address"
+                              placeholder="Address"
+                              formControlName="address"
+                              field="display_name"
+                              [minLength]="3"
+                              [suggestions]="recommendations"
+                              (completeMethod)="getAddress($event)"
+                              (onSelect)="addressSelected($event)"
+                              (onBlur)="addressLostFocus()"
+                              pInputText
+              >
+                <ng-template let-recommendation pTemplate="item.display_name">
+                  <div style="width: 4vw">{{ recommendation.display_name }}</div>
+                </ng-template>
+              </p-autoComplete>
+            </div>
+            <div class="p-col-3 p-pr-0">
+                <button type="button"
+                        class="p-button primary map-button p-button-icon"
+                        [ngClass]="mapSet ? 'p-button-success' : ''"
+
+                        [icon]="mapSet ? 'pi pi-check-circle' : 'pi pi-map'"
+                        label="Map"
+                        (click)="showMapDialog()"
+                        pButton>
+                </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 class="p-text-light">Tell us any additional information you have about the offering</h3>
+          <textarea formControlName="additionalInfo"
+                    class="additional-info"
+                    [maxLength]="1000"
+                    placeholder="Additional info"
+                    pInputTextarea
+          ></textarea>
+        </div>
+        <div class="p-text-right p-mt-3">
+          <button type="submit" class="p-button p-button-lg primary" label="Create" pButton></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

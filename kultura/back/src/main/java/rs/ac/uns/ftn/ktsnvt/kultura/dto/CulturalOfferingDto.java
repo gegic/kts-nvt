@@ -3,7 +3,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 import lombok.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityField;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingProfilePhoto;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 
 import javax.validation.constraints.NotBlank;
@@ -28,7 +28,7 @@ public class CulturalOfferingDto {
 
     private String address;
 
-    @EntityKey(entityType = CulturalOfferingProfilePhoto.class, fieldName = "photo")
+    @EntityKey(entityType = CulturalOfferingMainPhoto.class, fieldName = "photo")
     private Long photoId;
 
     private Float overallRating;
