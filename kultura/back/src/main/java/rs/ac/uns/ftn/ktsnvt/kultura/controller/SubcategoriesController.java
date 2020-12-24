@@ -32,8 +32,8 @@ public class SubcategoriesController {
     @GetMapping("/category/{categoryId}")
     ResponseEntity<Page<SubcategoryDto>> getSubcategoriesByCategoryId(@PathVariable long categoryId,
                                                                       @RequestParam(defaultValue = "0") int page,
-                                                                      @RequestParam(defaultValue = "3") int size,
-                                                                      @RequestParam(defaultValue = "id,desc") String[] sort) {
+                                                                      @RequestParam(defaultValue = "10") int size,
+                                                                      @RequestParam(defaultValue = "id,asc") String[] sort) {
         Pageable p = PageableExtractor.extract(page, size, sort);
         return ResponseEntity.ok(this.subcategoryService.findAllByCategoryId(categoryId, p));
     }

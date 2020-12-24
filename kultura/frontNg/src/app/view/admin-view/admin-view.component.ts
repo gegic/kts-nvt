@@ -12,24 +12,12 @@ export class AdminViewComponent implements OnInit {
   url = '';
   res = '';
 
-  constructor(private authService: AuthService,
-              private httpClient: HttpClient) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
   }
 
-  onLogout(): void {
+  onClickLogout(): void {
     this.authService.logout();
   }
-
-  onSendRequest(): void {
-    this.httpClient.get(this.url).subscribe(
-      data => {
-        this.res = JSON.stringify(data);
-      }
-    );
-  }
-
-  sendRequest()
-
 }

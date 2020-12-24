@@ -1,0 +1,128 @@
+.left-view {
+  background-color: #FCF7F8;
+  z-index: 2;
+  border-right: 1px solid rgba(0, 0, 0, .2);
+
+}
+
+.right-view {
+  background-color: #E5E5E5;
+  z-index: 1;
+}
+input {
+  width: 100%;
+}
+
+.brief-info {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100px;
+  max-height: 200px;
+}
+
+.add-view {
+  min-height: 92vh;
+}
+
+.file-upload {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 1em;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-left: -7px;
+}
+
+.download-icon {
+  margin: 1em auto;
+  color: rgba(0, 0, 0, 0.25);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.upload-text {
+  margin-left: 1em;
+  margin-right: 1em;
+  color: rgba(0, 0, 0, 0.25);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.file-upload:hover {
+  border: 1px solid rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+}
+
+.file-upload:hover .download-icon,
+.file-upload:hover .upload-text {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.right-side-info {
+  background-color: #FCF7F8;
+  border-radius: 30px;
+  border: 1px solid rgba(0, 0, 0, .2);
+  padding: 4vh;
+}
+
+.map-button {
+  width: 100%;
+}
+
+.additional-info {
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 200px;
+  max-height: 400px;
+}
+
+.success-badge i {
+  vertical-align: middle;
+  font-size: 10px;
+}
+
+:host {
+  ::ng-deep {
+    p-autoComplete {
+      padding: 0;
+    }
+    p-autoComplete .p-autocomplete,
+    p-autoComplete .p-autocomplete-input {
+      width: 100%;
+    }
+    .ng-select .ng-select-container .ng-value-container .ng-input>input {
+      cursor: pointer;
+    }
+  }
+}
+
+.ng-select.custom ::ng-deep .ng-select-container {
+  cursor: pointer;
+}
+
+.ng-select.custom ::ng-deep .ng-value {
+  font-size: .8em;
+}
+
+.ng-select.custom ::ng-deep .ng-option-label {
+  font-size: .8em;
+}
+
+.thumbnail {
+  margin: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 150px;
+  border-radius: 1em;
+}

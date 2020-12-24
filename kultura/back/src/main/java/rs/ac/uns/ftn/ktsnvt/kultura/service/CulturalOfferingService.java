@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +9,10 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingPhotoRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
@@ -22,16 +26,18 @@ import java.util.Optional;
 public class CulturalOfferingService {
 
     private final CulturalOfferingRepository culturalOfferingRepository;
-    private final SubcategoryRepository subcategoryRepository;
+    private final CulturalOfferingMainPhotoRepository photoRepository;
+
     private final Mapper modelMapper;
+
 
     @Autowired
     public CulturalOfferingService(CulturalOfferingRepository culturalOfferingRepository,
-                                   SubcategoryRepository subcategoryRepository,
-                                   Mapper modelMapper) {
+                                   Mapper modelMapper,
+                                   CulturalOfferingMainPhotoRepository photoRepository) {
         this.culturalOfferingRepository = culturalOfferingRepository;
-        this.subcategoryRepository = subcategoryRepository;
         this.modelMapper = modelMapper;
+        this.photoRepository = photoRepository;
     }
 
 
@@ -45,11 +51,13 @@ public class CulturalOfferingService {
 
     @Transactional
     public CulturalOfferingDto create(CulturalOfferingDto c) {
+        CulturalOffering culturalOffering = modelMapper.fromDto(c, CulturalOffering.class);
+
         if (c.getId() != null &&
                 culturalOfferingRepository.existsById(c.getId())) throw new ResourceExistsException("The cultural offering you are trying to create already exists!");
 
-        CulturalOffering culturalOffering = modelMapper.fromDto(c, CulturalOffering.class);
-
+//        CulturalOfferingMainPhoto photo = photoRepository.getOne(c.getPhotoId());
+//        culturalOffering.setPhoto(photo);
         culturalOffering = culturalOfferingRepository.save(culturalOffering);
 
         return modelMapper.fromEntity(culturalOffering, CulturalOfferingDto.class);

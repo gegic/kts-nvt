@@ -1,0 +1,18 @@
+<div class="navbar p-grid p-justify-between p-px-3 p-mx-0">
+  <div class="p-col-4">
+    <a routerLink="/" class="logo p-my-0">kultura</a>
+  </div>
+  <div class="p-col-4">
+  </div>
+  <div class="p-col-4 p-justify-end p-col-align-center">
+      <p-menu [model]="menuItems" [popup]="true" #menu></p-menu>
+      <ngx-avatar class="ng-avatar"
+                  bgColor="#275DAD"
+                  [name]="name"
+                  [size]="35"
+                  [textSizeRatio]="1.9"
+                  (click)="menu.toggle($event)"
+      >
+      </ngx-avatar>
+  </div>
+</div>
