@@ -37,8 +37,6 @@ export class MapService {
     Object.keys(this.markers).forEach(key => this.markers[key].setVisible(false));
   }
 
-  constructor() {
-  }
   removeOutOfBounds(latitudeStart: number,
                     latitudeEnd: number,
                     longitudeStart: number,
