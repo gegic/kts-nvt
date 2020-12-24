@@ -5,3 +5,22 @@
         routerLink="/create-offering"
         pButton
 ></button>
+<p-card class="view-offerings p-p-0"
+        *ngIf="showRegularOfferings"
+        [ngClass]="{'view-offerings-open': viewOfferings, 'view-offerings-closed': !viewOfferings}"
+        @inOutAnimation>
+  <button type="button"
+          class="p-my-0 view-offering-button p-button-raised p-button p-button-text p-button-plain"
+          icon="pi pi-list"
+          label="View offerings"
+          *ngIf="!viewOfferings; else offeringsPanel"
+          (click)="onClickViewOfferings()"
+          pButton
+  ></button>
+  <ng-template #offeringsPanel>
+    <div>
+      <app-offerings-list (clickCollapse)="onClickCollapse()"></app-offerings-list>
+    </div>
+  </ng-template>
+  <app-map-popup></app-map-popup>
+</p-card>

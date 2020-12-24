@@ -43,6 +43,10 @@ import {ModeratorAddComponent} from './view/moderator-add/moderator-add.componen
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {RippleModule} from 'primeng/ripple';
 import {AdminPanelComponent} from './view/admin-panel/admin-panel.component';
+import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sidebar.component';
+import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
+import { OfferingItemComponent } from './view/offering-item/offering-item.component';
+import { MapPopupComponent } from './view/map-popup/map-popup.component';
 
 
 @NgModule({
@@ -67,6 +71,10 @@ import {AdminPanelComponent} from './view/admin-panel/admin-panel.component';
     ModeratorAddComponent,
     ModeratorsViewComponent,
     AdminPanelComponent
+    OfferingSidebarComponent,
+    OfferingsListComponent,
+    OfferingItemComponent,
+    MapPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -92,6 +100,7 @@ import {AdminPanelComponent} from './view/admin-panel/admin-panel.component';
     NgSelectModule,
     ProgressSpinnerModule,
     RippleModule
+    ScrollPanelModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

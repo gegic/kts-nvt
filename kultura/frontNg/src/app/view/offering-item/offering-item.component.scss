@@ -1,0 +1,21 @@
+.main-photo {
+  float: right;
+  object-fit: cover;
+  width: 100px;
+  height: 100px;
+}
+
+::ng-deep .colored-card .p-card-body {
+  background-color: #FCF7F8;
+}
+
+::ng-deep .colored-card .p-card-body:hover {
+  cursor: pointer;
+  background: rgb(198,210,227);
+  background: linear-gradient(90deg, rgba(198,210,227,1) 0%, rgba(252,247,248,1) 100%);
+}
+
+::ng-deep .hovering-card .p-card-body {
+  background: rgb(198,210,227);
+  background: linear-gradient(90deg, rgba(198,210,227,1) 0%, rgba(252,247,248,1) 100%);
+}

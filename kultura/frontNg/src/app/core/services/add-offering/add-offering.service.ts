@@ -23,7 +23,9 @@ export class AddOfferingService {
   }
 
   set coordinates(latLng: [number, number]) {
+    console.log(latLng);
     this.culturalOffering.latitude = latLng[0];
+    console.log(this.culturalOffering);
     this.culturalOffering.longitude = latLng[1];
   }
 

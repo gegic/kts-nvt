@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,17 +7,15 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
-import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingPhotoRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
-import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -76,6 +73,15 @@ public class CulturalOfferingService {
         return modelMapper.fromEntity(toUpdate, CulturalOfferingDto.class);
     }
 
+
+    @Transactional
+    public List<CulturalOfferingDto> findByBounds(float latitudeStart,
+                                                  float latitudeEnd,
+                                                  float longitudeStart,
+                                                  float longitudeEnd) {
+        return this.culturalOfferingRepository.findByBounds(latitudeStart, latitudeEnd, longitudeStart, longitudeEnd)
+                .stream().map(co -> modelMapper.fromEntity(co, CulturalOfferingDto.class)).collect(Collectors.toList());
+    }
 
     public void delete(long id) {
         culturalOfferingRepository.deleteById(id);
