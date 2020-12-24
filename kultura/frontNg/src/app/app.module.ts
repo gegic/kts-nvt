@@ -70,7 +70,7 @@ import { MapPopupComponent } from './view/map-popup/map-popup.component';
     CulturalOfferingPlaceComponent,
     ModeratorAddComponent,
     ModeratorsViewComponent,
-    AdminPanelComponent
+    AdminPanelComponent,
     OfferingSidebarComponent,
     OfferingsListComponent,
     OfferingItemComponent,
