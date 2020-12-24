@@ -99,7 +99,7 @@ import { MapPopupComponent } from './view/map-popup/map-popup.component';
     DropdownModule,
     NgSelectModule,
     ProgressSpinnerModule,
-    RippleModule
+    RippleModule,
     ScrollPanelModule
   ],
   providers: [
