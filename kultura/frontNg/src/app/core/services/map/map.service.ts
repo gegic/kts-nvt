@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CulturalOfferingMarker} from '../../models/culturalOfferingMarker';
@@ -36,6 +37,8 @@ export class MapService {
     Object.keys(this.markers).forEach(key => this.markers[key].setVisible(false));
   }
 
+  constructor() {
+  }
   removeOutOfBounds(latitudeStart: number,
                     latitudeEnd: number,
                     longitudeStart: number,
