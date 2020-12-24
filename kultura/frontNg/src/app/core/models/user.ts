@@ -14,7 +14,4 @@ export class User {
     return this.authorities.find(a => a.authority.startsWith('ROLE'))?.authority.slice(5) ?? '';
   }
 
-  authorize(accessRoles: string[]): boolean {
-    return accessRoles.includes(this.getRole());
-  }
 }

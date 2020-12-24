@@ -16,21 +16,17 @@ import {ModeratorAddComponent} from './view/moderator-add/moderator-add.componen
 import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {HomeViewComponent} from './view/home-view/home-view.component';
+import {AdminPanelComponent} from './view/admin-panel/admin-panel.component';
 
 const routes: Routes = [
   {
-    path: '', component: AdminViewComponent, canActivate: [AuthGuard], children: [
-      {path: '', component: ModeratorsViewComponent},
-      {path: 'moderator-add', component: ModeratorAddComponent}
+    path: '', component: MainViewComponent, children: [
+      { path: '', component: MapViewComponent, data: {roles: ['MODERATOR', 'USER']}, canActivate: [AuthGuard] },
+      { path: 'create-offering', component: CulturalOfferingAddComponent, data: {roles: ['MODERATOR']}, canActivate: [AuthGuard] },
+      { path: 'admin-panel', component: ModeratorsViewComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
+      { path: 'add-moderator', component: ModeratorAddComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] }
     ]
   },
-  {
-    path: '', component: HomeViewComponent, canActivate: [AuthGuard], children: [
-      {path: '', component: MapViewComponent},
-      {path: 'create-offering', component: CulturalOfferingAddComponent}
-    ]
-  },
-
   {
     path: 'login', component: LoginRegisterComponent, canActivate: [AuthGuard],
     children: [
