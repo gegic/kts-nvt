@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
@@ -45,7 +46,7 @@ public class CulturalOfferingService {
     @Transactional
     public CulturalOfferingDto create(CulturalOfferingDto c) {
         if (c.getId() != null &&
-                culturalOfferingRepository.existsById(c.getId())) throw new EntityExistsException();
+                culturalOfferingRepository.existsById(c.getId())) throw new ResourceExistsException("The cultural offering you are trying to create already exists!");
 
         CulturalOffering culturalOffering = modelMapper.fromDto(c, CulturalOffering.class);
 

@@ -21,11 +21,8 @@ public class User implements UserDetails {
     @Id
     @Getter
     @Setter
-    @GeneratedValue(generator = "uuid4")
-    @GenericGenerator(name = "UUID", strategy = "uuid4")
-    @Type(type = "org.hibernate.type.UUIDCharType")
-    @Column(columnDefinition = "CHAR(36)")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Getter
     @Setter
     @Column(unique = true)

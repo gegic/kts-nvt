@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserDto {
 
-    private UUID id;
+    private Long id;
     @Email(message = "You entered an invalid email address.")
     private String email;
 

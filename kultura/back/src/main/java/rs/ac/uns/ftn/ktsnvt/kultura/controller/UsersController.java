@@ -46,7 +46,7 @@ public class UsersController {
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> get(@PathVariable UUID id) {
+    public ResponseEntity<UserDto> get(@PathVariable Long id) {
         return ResponseEntity.of(this.userService.findById(id));
     }
 
@@ -68,7 +68,7 @@ public class UsersController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable UUID id) throws Exception {
+    ResponseEntity<Void> delete(@PathVariable Long id) throws Exception {
         this.userService.delete(id);
         return ResponseEntity.ok().build();
     }

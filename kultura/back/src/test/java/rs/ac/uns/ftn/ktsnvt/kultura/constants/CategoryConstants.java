@@ -3,7 +3,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.constants;
 public class CategoryConstants{
     public static final int DB_COUNT = 2;
 
-    public static final int PAGE_SIZE = 5;
+    public static final int PAGE_SIZE = 3;
 
     public static final Long EXISTING_ID1 = 1L;
     public static final String EXISTING_NAME1 = "Institucija";
