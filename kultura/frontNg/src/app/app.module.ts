@@ -39,6 +39,10 @@ import {VirtualScrollerModule} from 'primeng/virtualscroller';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sidebar.component';
+import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
+import { OfferingItemComponent } from './view/offering-item/offering-item.component';
+import { MapPopupComponent } from './view/map-popup/map-popup.component';
 
 
 @NgModule({
@@ -59,7 +63,11 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
     MapViewComponent,
     NavbarComponent,
     CulturalOfferingAddComponent,
-    CulturalOfferingPlaceComponent
+    CulturalOfferingPlaceComponent,
+    OfferingSidebarComponent,
+    OfferingsListComponent,
+    OfferingItemComponent,
+    MapPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -83,7 +91,8 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
     ScrollPanelModule,
     DropdownModule,
     NgSelectModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ScrollPanelModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import {MapOptions} from '../../core/models/mapOptions';
 import {PlaceOfferingService} from '../../core/services/place-offering/place-offering.service';
 import {DynamicDialogRef} from 'primeng/dynamicdialog';
+import {MessageService} from 'primeng/api';
 
 declare function require(name: string): any;
 
@@ -21,7 +22,8 @@ export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, On
   mapElement: ElementRef<HTMLElement> | null = null;
 
   constructor(private placeOfferingService: PlaceOfferingService,
-              private ref: DynamicDialogRef) {
+              private ref: DynamicDialogRef,
+              private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -41,6 +43,8 @@ export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, On
       return;
     }
     this.map = new L.Map(this.mapElement.nativeElement, mapOptions).setView([0, 0], 2);
+    this.map.locate();
+    this.onLocate();
     const options = {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -72,10 +76,6 @@ export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, On
     this.setCoordinates(latLng);
   }
 
-  private checkMarkerPlacement(): void {
-  }
-
-
   private setCoordinates(latLng: L.LatLng): void {
     this.placeOfferingService.setPlace(latLng);
     this.currentMarker = new L.Marker(latLng);
@@ -83,9 +83,19 @@ export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, On
   }
 
   onClickPlace(): void {
+
+    if (!this.address) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Invalid address',
+        detail: 'Please select a valid location.'
+      });
+      return;
+    }
+
     this.ref.close({
       address: this.address,
-      coordinates: this.latLng
+      coordinates: [this.latLng?.lat, this.latLng?.lng]
     });
   }
 
@@ -94,11 +104,17 @@ export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, On
   }
 
   get quickAddress(): string {
-    return this.placeOfferingService.place.getValue().address ?? 'Ocean';
+    return this.placeOfferingService.place.getValue().address ?? 'Invalid address';
   }
 
   get latLng(): L.LatLng | null {
     return this.placeOfferingService.latLng.getValue();
+  }
+
+  private onLocate(): void {
+    this.map?.on('locationfound', ev => {
+      this.map?.setView(ev.latlng, 8, {animate: false});
+    });
   }
 
   ngOnDestroy(): void {
@@ -106,5 +122,4 @@ export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, On
     this.map?.remove();
     this.tileLayer?.remove();
   }
-
 }

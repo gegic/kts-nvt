@@ -20,6 +20,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @PreAuthorize("hasRole('MODERATOR') || hasRole('USER')")
 @RestController
@@ -43,6 +44,17 @@ public class CulturalOfferingsController {
 
         Pageable p = PageableExtractor.extract(page, size, sort);
         return ResponseEntity.ok(this.culturalOfferingService.readAll(p));
+    }
+
+    @GetMapping(path = "/bounds")
+    public ResponseEntity<List<CulturalOfferingDto>> getByBounds (
+            @RequestParam(name = "lng-start") float longitudeStart,
+            @RequestParam(name = "lng-end") float longitudeEnd,
+            @RequestParam(name = "lat-start") float latitudeStart,
+            @RequestParam(name = "lat-end") float latitudeEnd) {
+
+        return ResponseEntity.ok(this.culturalOfferingService
+                .findByBounds(latitudeStart, latitudeEnd, longitudeStart, longitudeEnd));
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
@@ -84,5 +96,4 @@ public class CulturalOfferingsController {
         this.photoService.clearPhotos();
         return ResponseEntity.ok().build();
     }
-
 }

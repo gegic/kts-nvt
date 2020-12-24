@@ -12,4 +12,6 @@ export class CulturalOffering {
   additionalInfo?: string;
   subcategoryId?: number;
   subcategoryName?: string;
+  numSubscribers?: number;
+  numPhotos?: number;
 }
