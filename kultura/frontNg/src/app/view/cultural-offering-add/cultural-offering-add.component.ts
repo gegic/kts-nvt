@@ -86,6 +86,7 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
       width: '80%',
     }).onClose.subscribe(value => {
       if (!value) {
+        this.placeOfferingService.reset();
         return;
       }
       const { address, coordinates } = value;
@@ -116,6 +117,7 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
   addressSelected(place: NominatimPlace): void {
     this.placeOfferingService.recommendationSelected(place.display_name,
       [place.lat, place.lon]);
+    this.addOfferingService.coordinates = [place.lat, place.lon];
     this.mapSet = true;
   }
 

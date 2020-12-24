@@ -11,3 +11,63 @@
   min-width: 55px;
   min-height: 55px;
 }
+
+@media only screen and (max-width: 600px) {
+  .view-offerings {
+    display: none;
+  }
+}
+
+.view-offerings {
+  position: absolute;
+  z-index: 1000;
+  transition: top 0.7s, left 0.7s, width 0.7s, height 0.7s;
+}
+
+.view-offerings-closed {
+  top: 10vh;
+  left: 3vh;
+  width: 10em;
+  height: 3em;
+}
+
+.view-offerings-open {
+  top: 8vh;
+  left: 0;
+  height: 92vh;
+  width: 30vw;
+}
+
+::ng-deep .view-offerings-closed .p-card {
+  background: #FCF7F8;
+  border-radius: 1em;
+  height: 2.5em;
+  transition: height 0.7s, background-color 0.7s, border-radius 0.7s;
+}
+
+::ng-deep .view-offerings-open .p-card {
+  background: #EFE4E6;
+  border-radius: 0;
+  height: 100%;
+  transition: height 0.7s, background-color 0.7s, border-radius 0.7s;
+}
+
+::ng-deep .view-offerings .p-card-body,
+::ng-deep .view-offerings .p-card-content {
+  padding: 0;
+}
+
+::ng-deep .view-offerings button {
+  background-color: transparent;
+  border-radius: 1em;
+  color: #584F51 !important;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+::ng-deep .view-offerings .p-button-raised {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
