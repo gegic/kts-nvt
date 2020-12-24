@@ -1,6 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
+import {FileUploadModule} from 'primeng/fileupload';
 import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppRoutingModule} from './app-routing.module';
@@ -47,6 +48,9 @@ import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sideb
 import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
 import { OfferingItemComponent } from './view/offering-item/offering-item.component';
 import { MapPopupComponent } from './view/map-popup/map-popup.component';
+import { OfferingRatingComponent } from './view/offering-rating/offering-rating.component';
+import { OfferingAllRatingsComponent } from './view/offering-all-ratings/offering-all-ratings.component';
+import { OfferingRatingsListComponent } from './view/offering-ratings-list/offering-ratings-list.component';
 
 
 @NgModule({
@@ -74,7 +78,10 @@ import { MapPopupComponent } from './view/map-popup/map-popup.component';
     OfferingSidebarComponent,
     OfferingsListComponent,
     OfferingItemComponent,
-    MapPopupComponent
+    MapPopupComponent,
+    OfferingRatingComponent,
+    OfferingAllRatingsComponent,
+    OfferingRatingsListComponent
   ],
   imports: [
     BrowserModule,
@@ -99,8 +106,9 @@ import { MapPopupComponent } from './view/map-popup/map-popup.component';
     DropdownModule,
     NgSelectModule,
     ProgressSpinnerModule,
-    RippleModule
-    ScrollPanelModule
+    RippleModule,
+    ScrollPanelModule,
+    FileUploadModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

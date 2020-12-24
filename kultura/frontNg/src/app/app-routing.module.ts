@@ -9,13 +9,13 @@ import {RegisterNameComponent} from './view/login-registration/registration/regi
 import {RegisterPasswordComponent} from './view/login-registration/registration/register-password/register-password.component';
 import {RegisterSuccessComponent} from './view/login-registration/registration/register-success/register-success.component';
 import {RegisterVerifyComponent} from './view/login-registration/registration/register-verify/register-verify.component';
-import {MainViewComponent} from './view/main-view/main-view.component';
 import {MapViewComponent} from './view/map-view/map-view.component';
 import {CulturalOfferingAddComponent} from './view/cultural-offering-add/cultural-offering-add.component';
 import {ModeratorAddComponent} from './view/moderator-add/moderator-add.component';
 import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {HomeViewComponent} from './view/home-view/home-view.component';
+import {OfferingRatingComponent} from './view/offering-rating/offering-rating.component';
 
 const routes: Routes = [
   {
@@ -52,6 +52,13 @@ const routes: Routes = [
     children: [
       {path: ':id', component: RegisterVerifyComponent}
     ]
+  },
+  {
+    // path: 'rate', component: OfferingRatingComponent, canActivate: [AuthGuard],
+    
+    //dev
+    path: 'rate', component: OfferingRatingComponent, canActivate: [],
+    
   },
 ];
 
