@@ -4,10 +4,18 @@
       <div class="p-grid p-m-0 p-p-0">
         <div class="p-col-8 p-px-0 p-pb-0 p-pt-3 p-m-0">
           <h5 class="p-my-0 p-mt-3 p-text-bold">
-            {{ culturalOfferingMarker?.culturalOffering?.name }}
+            {{
+              nameLength > 13 ?
+              (culturalOfferingMarker?.culturalOffering?.name | slice:0:13) + '...' :
+              culturalOfferingMarker?.culturalOffering?.name
+            }}
           </h5>
           <h5 class="p-mt-1 p-mb-2 p-text-normal">
-            {{ culturalOfferingMarker?.culturalOffering?.address }}
+            {{
+              addressLength > 25 ?
+              (culturalOfferingMarker?.culturalOffering?.address | slice:0:25) + '...' :
+              culturalOfferingMarker?.culturalOffering?.address
+            }}
           </h5>
           <div class="h-100 p-grid p-p-0 p-m-0 p-ai-end">
             <div class="p-grid p-p-0 p-m-0">
@@ -34,7 +42,11 @@
           <i class="pi pi-user"></i>
         </div>
         <div><small class="p-text-normal">
-          {{ culturalOfferingMarker?.culturalOffering?.subcategoryName }}
+          {{
+            subcategoryNameLength > 13 ?
+            (culturalOfferingMarker?.culturalOffering?.subcategoryName | slice:0:13) + '...' :
+            culturalOfferingMarker?.culturalOffering?.subcategoryName
+          }}
         </small></div>
       </div>
       </div>

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
 import {MapOptions} from '../../core/models/mapOptions';
 import {MapService, ZOOM_IMPORTANT, ZOOM_REGULAR} from '../../core/services/map/map.service';
@@ -15,7 +15,7 @@ import {MapPopupService} from '../../core/services/map-popup.service';
   styleUrls: ['./map-view.component.scss'],
   animations: [inOutAnimation]
 })
-export class MapViewComponent implements OnInit, AfterViewInit {
+export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   viewOfferings = false;
   private map: L.Map | null = null;
@@ -62,6 +62,8 @@ export class MapViewComponent implements OnInit, AfterViewInit {
       }, 0);
     });
 
+    this.loadRegular(this.map);
+
     this.onZoomLoad();
     this.onMove();
 
@@ -80,6 +82,9 @@ export class MapViewComponent implements OnInit, AfterViewInit {
 
   private loadRegular(map: L.Map | null): void {
     if (!map){
+      return;
+    }
+    if (map.getZoom() < ZOOM_REGULAR) {
       return;
     }
     const bounds = map.getBounds();
@@ -108,6 +113,9 @@ export class MapViewComponent implements OnInit, AfterViewInit {
           m.bindPopup(m.culturalOffering.name ?? '');
           // @ts-ignore
           m.on('mouseover', ev => {
+            if (!ev.target.isVisible()) {
+              return;
+            }
             ev.target.hovering.next(true);
             ev.target.openPopup();
           });
@@ -152,5 +160,9 @@ export class MapViewComponent implements OnInit, AfterViewInit {
 
   get showRegularOfferings(): boolean {
     return this.mapService.zoom.getValue() >= ZOOM_REGULAR;
+  }
+
+  ngOnDestroy(): void {
+    this.mapService.clearMarkers();
   }
 }

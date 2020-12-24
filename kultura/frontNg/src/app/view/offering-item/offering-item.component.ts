@@ -38,4 +38,16 @@ export class OfferingItemComponent implements OnInit {
   get hovering(): boolean {
     return this.culturalOfferingMarker?.hovering.getValue() ?? false;
   }
+
+  get nameLength(): number {
+    return this.culturalOfferingMarker?.culturalOffering.name?.length ?? 0;
+  }
+
+  get addressLength(): number {
+    return this.culturalOfferingMarker?.culturalOffering.address?.length ?? 0;
+  }
+
+  get subcategoryNameLength(): number {
+    return this.culturalOfferingMarker?.culturalOffering.subcategoryName?.length ?? 0;
+  }
 }

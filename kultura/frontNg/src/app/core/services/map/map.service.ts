@@ -48,6 +48,10 @@ export class MapService {
         longitude < longitudeStart || longitude > longitudeEnd) {
         this.markers[key].setVisible(false);
       }
-    })
+    });
+  }
+
+  clearMarkers(): void {
+    this.markers = {};
   }
 }
