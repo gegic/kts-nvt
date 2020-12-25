@@ -51,6 +51,9 @@ import { MapPopupComponent } from './view/map-popup/map-popup.component';
 import { OfferingRatingComponent } from './view/offering-rating/offering-rating.component';
 import { OfferingAllRatingsComponent } from './view/offering-all-ratings/offering-all-ratings.component';
 import { OfferingRatingsListComponent } from './view/offering-ratings-list/offering-ratings-list.component';
+import { RatingItemComponent } from './view/offering-ratings-list/rating-item/rating-item.component';
+import {ChartModule} from 'primeng/chart';
+import { StarComponent } from './components/star-component/star-component.component';
 
 
 @NgModule({
@@ -81,7 +84,9 @@ import { OfferingRatingsListComponent } from './view/offering-ratings-list/offer
     MapPopupComponent,
     OfferingRatingComponent,
     OfferingAllRatingsComponent,
-    OfferingRatingsListComponent
+    OfferingRatingsListComponent,
+    RatingItemComponent,
+    StarComponent,
   ],
   imports: [
     BrowserModule,
@@ -108,7 +113,8 @@ import { OfferingRatingsListComponent } from './view/offering-ratings-list/offer
     ProgressSpinnerModule,
     RippleModule,
     ScrollPanelModule,
-    FileUploadModule
+    FileUploadModule,
+    ChartModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

@@ -1,0 +1,5 @@
+<div class=" p-d-flex">
+    <div *ngFor="let _ of ratingSize; let i = index" >
+        <i [style.fontSize.px]="size" [class]="['pi', i<value?'pi-star':'pi-star-o']"></i>
+    </div>
+</div>

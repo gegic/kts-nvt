@@ -1,28 +1,39 @@
-<div class="p-card p-p-6">
-    <div class="p-grid">
-        <div class="p-col-8">
+<div class="p-grid">
+    <div class="p-md-2 p-lg-2 p-xl-2">
 
-        </div>
-        <div class="p-col p-d-flex p-flex-column">
-            <div class="p-d-flex p-jc-between p-mb-3">
-                <div class="p-text-center" style="font-size: 24px;">
-                    Add a review
-                </div>
-                <div class=" p-d-flex pointer"  (mouseleave)="hovered = 0">
-                    <div *ngFor="let _ of ratingSize; let i = index" >
-                        <i style="font-size: 20px;" [class]="['pi', i<hovered||i<rating?'pi-star':'pi-star-o']" (mouseover)="hovered = i + 1" (click)="rating = i+1"></i>
+    </div>
+    <div class="p-card p-mt-5 p-col-12 p-sm-12 p-md-8 p-lg-8 p-xl-8 p-p-6">
+        <div class="p-grid">
+            <div class="p-sm-12 p-md-12 p-lg-8 p-xl-8">
+                <app-offering-all-ratings></app-offering-all-ratings>
+            </div>
+            <div class="p-card p-sm-12 p-md-12 p-lg-4 p-xl-4 p-d-flex p-p-3 p-flex-column p-jc-between">
+                <div class="p-d-flex p-jc-between p-mb-3">
+                    <div class="p-text-center" style="font-size: 32px;">
+                        Add a review
+                    </div>
+                    <div class=" p-d-flex pointer"  (mouseleave)="hovered = 0">
+                        <div *ngFor="let _ of ratingSize; let i = index" >
+                            <i style="font-size: 32px;" [class]="['pi', i<hovered||i<rating?'pi-star':'pi-star-o']" (mouseover)="hovered = i + 1" (click)="rating = i+1"></i>
+                        </div>
                     </div>
                 </div>
+                <textarea [autoResize]="true" style="flex: 1;" class="rounded p-mb-3" pInputTextarea placeholder="Start typing a comment"></textarea>
+                <div class="p-d-flex p-jc-between">
+                    <p-fileUpload chooseLabel="Add photos" mode="basic" name="demo[]" url="./upload.php" accept="image/*"></p-fileUpload>
+                    <button pButton type="button" label="Send review" ></button>
+                </div>
             </div>
-            <textarea class="rounded p-mb-3" pInputTextarea placeholder="Start typing a comment"></textarea>
-            <div class="p-d-flex p-jc-between">
-                <p-fileUpload chooseLabel="Add photos" mode="basic" name="demo[]" url="./upload.php" accept="image/*"></p-fileUpload>
-                <button pButton type="button" label="Send review" ></button>
-            </div>
+            
         </div>
-        
+        <hr class="p-mb-6">
+        <div>
+            <app-offering-ratings-list [ratings] = "ratings"></app-offering-ratings-list>
+        </div>
     </div>
-    <div>
-        <app-offering-ratings-list></app-offering-ratings-list>
+    <div class="p-md-2 p-lg-2 p-xl-2">
+
     </div>
 </div>
+
+

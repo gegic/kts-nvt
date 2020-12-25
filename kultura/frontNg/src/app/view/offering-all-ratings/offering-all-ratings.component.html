@@ -1,1 +1,27 @@
-<p>offering-all-ratings works!</p>
+
+<div class="p-grid">
+    <div class="p-col-12 p-sm-12 p-md-4 p-lg-4 p-xl-4 p-d-flex p-flex-column p-ai-center p-jc-between">
+        <div>
+            <h2>
+                All reviews
+            </h2>
+        </div>
+        <div style="font-size: 30px;">
+            <i style="font-size: 30px;" class="pi pi-user"></i>{{numRating}}
+        </div>
+        <div class="p-card p-p-2" style="font-size: 84px; color: white;" [style.backgroundColor]="resolveColor()">
+            {{rating}}
+        </div>
+        <div>
+            <app-star-component [value]="rating" [size]="24"></app-star-component>
+        </div>
+        <!-- <div class=" p-d-flex">
+            <div *ngFor="let _ of ratingSize; let i = index" >
+                <i style="font-size: 24px;" [class]="['pi', i+1<rating?'pi-star':'pi-star-o']"></i>
+            </div>
+        </div> -->
+    </div>
+    <div class="p-col-12 p-sm-12 p-md-8 p-lg-8 p-xl-8">
+        <p-chart type="doughnut" [data]="data"></p-chart>
+    </div>
+</div>

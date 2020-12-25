@@ -1,0 +1,16 @@
+<div class="p-d-flex p-flex-column">
+    <div>
+        <div style="font-size: 24px;" class="p-mb-1">
+            {{rating.userFirstName}}
+        </div>
+        <div class="p-mb-1">
+            <app-star-component [value]="rating.rating" [size]="24"></app-star-component>
+        </div>
+        <div class="p-text-light p-mb-3">
+            {{rating.timeAdded}}
+        </div>
+    </div>
+    <div>
+        {{rating.comment}}
+    </div>
+</div>

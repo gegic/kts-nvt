@@ -1,1 +1,4 @@
-<p>offering-ratings-list works!</p>
+<div *ngFor="let rating of ratings; let i = index">
+    <app-rating-item [rating]="rating"></app-rating-item>
+    <hr *ngIf="i<ratings.length-1" class="p-my-3">
+</div>

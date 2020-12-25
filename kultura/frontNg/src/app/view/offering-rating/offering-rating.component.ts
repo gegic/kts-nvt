@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ReviewService } from 'src/app/core/services/review/review.service';
 @Component({
   selector: 'app-offering-rating',
   templateUrl: './offering-rating.component.html',
@@ -14,8 +15,14 @@ export class OfferingRatingComponent implements OnInit {
 
   ratingSize:Number[] = new Array(5);
 
-  constructor() { }
+  ratings:Object[] = [];
 
+  reviewService:ReviewService;
+
+  constructor(rService:ReviewService) {
+    this.reviewService = rService;
+    this.ratings = this.reviewService.getReviews(this.offering_id);
+   }
   ngOnInit(): void {
   }
 

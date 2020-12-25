@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
+import { ReviewService } from 'src/app/core/services/review/review.service';
 
 @Component({
   selector: 'app-offering-ratings-list',
@@ -6,8 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./offering-ratings-list.component.css']
 })
 export class OfferingRatingsListComponent implements OnInit {
+  @Input() ratings:Object[] = [];
 
-  constructor() { }
+  constructor(){
+    
+  }
 
   ngOnInit(): void {
   }
