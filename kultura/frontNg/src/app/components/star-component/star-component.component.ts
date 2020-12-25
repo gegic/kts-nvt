@@ -7,8 +7,8 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class StarComponent implements OnInit {
 
-  @Input() size:Number;
-  @Input() value:Number;
+  @Input() size:number;
+  @Input() value:number;
   ratingSize:Number[] = new Array(5);
 
 
@@ -20,5 +20,7 @@ export class StarComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  isMarked(i:Number){
+    return i<Math.round(this.value);
+  }
 }

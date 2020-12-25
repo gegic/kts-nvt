@@ -4,9 +4,22 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ReviewService {
-
+  
   constructor() { }
-
+  
+  getSummary(id: Number) {
+    return {
+      ratings:{
+        1:140,
+        2:120,
+        3:200,
+        4:230,
+        5:150
+      },
+      ratingsSize:333,
+      rating:3.1
+    };
+  }
 
   getReviews(offering_id:Number){
     return [

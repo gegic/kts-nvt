@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import { ReviewService } from 'src/app/core/services/review/review.service';
 
 @Component({
   selector: 'app-offering-all-ratings',
@@ -6,19 +7,35 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./offering-all-ratings.component.css']
 })
 export class OfferingAllRatingsComponent implements OnInit {
+
+  @Input() id:Number = NaN;
+
+  reviewService:ReviewService;
+
+
   data: any;
   ratingSize:Number[] = new Array(5);
 
-  rating:Number = 3.1;
+  summary:any;
 
-  numRating:Number = 333;
+  constructor(reviewService:ReviewService) {
 
-  constructor() {
+    this.summary = reviewService.getSummary(this.id);
+
+    let labels = [];
+    let data = [];
+    for(let group in this.summary.ratings){
+      labels.push(group);
+    }
+    labels.sort((a, b)=>b-a);
+    for(let l of labels){
+      data.push(this.summary.ratings[l]);
+    }
     this.data = {
-      labels: ['5', '4', '3', '2', '1'],
+      labels: labels,
       datasets: [
         {
-          data: [300, 150, 100, 120, 140],
+          data: data,
           backgroundColor: [
             "#2f964a",
             "#4eca1c",
@@ -43,19 +60,19 @@ export class OfferingAllRatingsComponent implements OnInit {
 
 
   resolveColor(){
-      if(this.rating<1.5){
+      if(this.summary.rating<1.5){
         return "#2f964a";
       }
-      if(this.rating<2.5){
+      if(this.summary.rating<2.5){
         return "#dd780c";
       }
-      if(this.rating<3.5){
+      if(this.summary.rating<3.5){
         return "#d8dd0c";
       }
-      if(this.rating<4.5){
+      if(this.summary.rating<4.5){
         return "#4eca1c";
       }
-      if(this.rating<=5){
+      if(this.summary.rating<=5){
         return "#2f964a";
       }
       return ""

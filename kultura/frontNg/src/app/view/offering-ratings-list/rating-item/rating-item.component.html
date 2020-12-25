@@ -4,10 +4,10 @@
             {{rating.userFirstName}}
         </div>
         <div class="p-mb-1">
-            <app-star-component [value]="rating.rating" [size]="24"></app-star-component>
+            <app-star-component [value]="rating.rating" [size]="18"></app-star-component>
         </div>
         <div class="p-text-light p-mb-3">
-            {{rating.timeAdded}}
+            {{date()}} at {{time()}}
         </div>
     </div>
     <div>

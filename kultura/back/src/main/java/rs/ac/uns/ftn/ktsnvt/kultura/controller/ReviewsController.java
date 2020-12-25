@@ -3,11 +3,13 @@ package rs.ac.uns.ftn.ktsnvt.kultura.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewSummaryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.ReviewService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
@@ -36,6 +38,11 @@ public class ReviewsController {
         Page<ReviewDto> reviewDtos = this.reviewService
                 .readAllByCulturalOfferingId(culturalOfferingId, p);
         return ResponseEntity.ok(reviewDtos);
+    }
+
+    @GetMapping(path = "/cultural-offering/summary/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<ReviewSummaryDto> getSummary(@PathVariable long culturalOfferingId){
+        return new ResponseEntity<>(reviewService.getSummary(culturalOfferingId), HttpStatus.OK);
     }
 
     @GetMapping(path="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

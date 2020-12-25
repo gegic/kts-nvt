@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-
+import moment from "moment";
 @Component({
   selector: 'app-rating-item',
   templateUrl: './rating-item.component.html',
@@ -14,4 +14,11 @@ export class RatingItemComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  date(){
+    return moment(this.rating.timeAdded).format("D/M/yy")
+  }
+
+  time(){
+    return moment(this.rating.timeAdded).format("HH:mm")
+  }
 }
