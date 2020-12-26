@@ -45,4 +45,11 @@ public class Review {
     @Setter
     private Set<ReviewPhoto> photos;
 
+    public Set<ReviewPhoto> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(Set<ReviewPhoto> photos) {
+        this.photos = photos;
+    }
 }
