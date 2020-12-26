@@ -8,14 +8,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
 
-    private UUID id;
+    private Long id;
     @Email(message = "You entered an invalid email address.")
     private String email;
 

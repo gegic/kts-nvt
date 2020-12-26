@@ -17,7 +17,6 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -52,7 +51,7 @@ public class UserService implements UserDetailsService {
         .map(u -> mapper.fromEntity(u, UserDto.class));
   }
 
-  public Optional<UserDto> findById(UUID id) {
+  public Optional<UserDto> findById(long id) {
     return userRepository.findById(id).map(u -> mapper.fromEntity(u, UserDto.class));
   }
 
@@ -88,7 +87,7 @@ public class UserService implements UserDetailsService {
     return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
   }
 
-  public void delete(UUID id) throws Exception {
+  public void delete(long id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
       throw new Exception("User with given id doesn't exist");
@@ -119,7 +118,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  public UserDto verify(UUID id) throws Exception {
+  public UserDto verify(long id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
       throw new Exception("User with the given id doesn't exist");

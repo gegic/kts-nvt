@@ -1,7 +1,7 @@
 import {Authority} from './authority';
 
 export class User {
-  id = '';
+  id = 0;
   email = '';
   password = '';
   firstName = '';

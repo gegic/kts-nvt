@@ -8,11 +8,9 @@ import org.springframework.stereotype.Repository;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 
 import java.util.Optional;
-import java.util.UUID;
-
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
