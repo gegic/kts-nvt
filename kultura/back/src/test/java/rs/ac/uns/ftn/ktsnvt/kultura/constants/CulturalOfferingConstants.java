@@ -13,6 +13,8 @@ public class CulturalOfferingConstants {
     public static final Long EXISTING_SUBCATEGORY_ID1 = 2L;
     public static final Long EXISTING_ID1 = 1L;
 
+    public static final Long EXISTING_ID2 = 2L;
+
     public static final String TEST_ADDRESS1 = "Lenjinova 1, Fudbalski teren, Pacir";
     public static final String TEST_BRIEF_INFO1 = "Dan sela Pacir";
     public static final Float TEST_LATITUDE1 = 11F;

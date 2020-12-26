@@ -23,12 +23,15 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.StringDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.TokenResponse;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.auth.LoginDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CategoryService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
 
 import javax.persistence.EntityExistsException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -96,6 +99,40 @@ public class CategoriesControllerIntegrationTest {
     }
 
     @Test
+    public void whenCreateReturnResourceExists(){
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName(CategoryConstants.EXISTING_NAME1);
+        categoryDto.setId(CategoryConstants.EXISTING_ID1);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(categoryDto, headers);
+
+        ResponseEntity<CategoryDto> response = restTemplate.exchange(
+                "/api/categories", HttpMethod.POST, httpEntity, CategoryDto.class);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    }
+
+    @Test
+    public void whenUpdateReturnResourceNotFoundException(){
+        CategoryDto cat = new CategoryDto();
+        cat.setId(CategoryConstants.NON_EXISTING_ID);
+        cat.setName(CategoryConstants.NON_EXISTING_NAME);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(cat, headers);
+
+        ResponseEntity<CategoryDto> response = restTemplate.exchange(
+                "/api/categories", HttpMethod.PUT, httpEntity, CategoryDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+
+
+    @Test
     public void whenUpdateCategory() {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(CategoryConstants.TEST_CATEGORY_NAME1);
@@ -117,43 +154,41 @@ public class CategoriesControllerIntegrationTest {
 
 
 
-//    @Test
-//    public void whenCreateCategoryCategoryExists(){
-//        CategoryDto categoryDto = new CategoryDto();
-//        categoryDto.setName(CategoryConstants.EXISTING_NAME1);
-//        categoryDto.setId(CategoryConstants.EXISTING_ID1);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Authorization", "Bearer " + this.accessToken);
-//        HttpEntity<Object> httpEntity = new HttpEntity<>(categoryDto, headers);
-//
-//        ResponseEntity<EntityExistsException> response = restTemplate.exchange(
-//                "/api/categories", HttpMethod.POST, httpEntity, EntityExistsException.class);
-//
-//        //assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-//        assertEquals("A category with this ID already exists", response.getBody().getMessage());
-//    }
+    @Test
+    public void whenCreateCategoryCategoryExists(){
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName(CategoryConstants.EXISTING_NAME1);
+        categoryDto.setId(CategoryConstants.EXISTING_ID1);
 
-//    @Test
-//    public void testGetAll() {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Authorization", "Bearer " + this.accessToken);
-//        //kreiramo objekat koji saljemo u sklopu zahteva
-//        // objekat nema telo, vec samo zaglavlje, jer je rec o GET zahtevu
-//        HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
-//        //mora ovako jer ne moze se pozvati .class
-//        ParameterizedTypeReference<HelperPage<CategoryDto>> responseType = new ParameterizedTypeReference<HelperPage<CategoryDto>>() {};
-//        // posaljemo zahtev koji ima i zaglavlje u kojem je JWT token
-//        ResponseEntity<HelperPage<CategoryDto>> responseEntity =
-//                restTemplate.exchange("/api/categories?page=0&size=3", HttpMethod.GET, null, responseType);
-//
-////        List<CategoryDto> categories = responseEntity.getBody().getContent();
-//
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-////        assertEquals(CategoryConstants.DB_COUNT, categories.size());
-////        assertEquals(CategoryConstants.EXISTING_ID1, categories.get(0).getId());
-////        assertEquals(CategoryConstants.EXISTING_ID2, categories.get(1).getId());
-//    }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(categoryDto, headers);
+
+        ResponseEntity<ResourceExistsException> response = restTemplate.exchange(
+                "/api/categories/", HttpMethod.POST, httpEntity, ResourceExistsException.class);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetAll() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        //mora ovako jer ne moze se pozvati .class nad generickim ovim djavolom od Pagea, tugica
+        ParameterizedTypeReference<HelperPage<CategoryDto>> responseType = new ParameterizedTypeReference<HelperPage<CategoryDto>>() {};
+        // posaljemo zahtev koji ima i zaglavlje u kojem je JWT token
+        ResponseEntity<HelperPage<CategoryDto>> responseEntity =
+                restTemplate.exchange("/api/categories?page=0&size=3", HttpMethod.GET, httpEntity, responseType);
+
+        List<CategoryDto> categories = responseEntity.getBody().getContent();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(CategoryConstants.DB_COUNT, categories.size());
+        assertEquals(CategoryConstants.EXISTING_ID1, categories.get(0).getId());
+        assertEquals(CategoryConstants.EXISTING_ID2, categories.get(1).getId());
+    }
 
 
 

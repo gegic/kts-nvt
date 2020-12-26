@@ -33,4 +33,11 @@ public class RestExceptionHandler {
 
         return new ResponseEntity<>(errorMessage, status);
     }
+    @ExceptionHandler(value = {ResourceNotFoundException.class})
+    public ResponseEntity<ErrorMessage> handleResourceNotFoundException(ResourceNotFoundException e) {
+        HttpStatus notFound = HttpStatus.NOT_FOUND;
+        ErrorMessage errorMessage = new ErrorMessage(notFound.value(), "Not found", e.getMessage());
+        return new ResponseEntity<>(errorMessage, notFound);
+    }
+
 }

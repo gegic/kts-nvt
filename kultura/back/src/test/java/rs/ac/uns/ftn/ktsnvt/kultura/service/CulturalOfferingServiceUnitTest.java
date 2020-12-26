@@ -16,6 +16,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
@@ -36,6 +37,8 @@ public class CulturalOfferingServiceUnitTest {
     private SubcategoryRepository subcategoryRepository;
     @Autowired
     private Mapper modelMapper;
+    @Autowired
+    private CulturalOfferingMainPhotoRepository photoRepository;
 
     @Before
     public void setUp() {

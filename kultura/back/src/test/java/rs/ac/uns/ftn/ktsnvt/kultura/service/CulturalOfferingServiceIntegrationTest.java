@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
+import org.hibernate.dialect.DB2Dialect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
@@ -54,6 +56,43 @@ public class CulturalOfferingServiceIntegrationTest {
 
         assertEquals(CulturalOfferingConstants.DB_COUNT, returnedCulturalOfferings.getContent().size());
 
+    }
+
+    @Test
+    @Transactional
+    public void testUpdate(){
+        CulturalOfferingDto dbCulturalOffering = culturalOfferingService.readById
+                (CulturalOfferingConstants.EXISTING_ID1).get();
+
+        dbCulturalOffering.setName(CulturalOfferingConstants.TEST_NAME1);
+
+        dbCulturalOffering = culturalOfferingService.update(dbCulturalOffering);
+        assertThat(dbCulturalOffering).isNotNull();
+
+        //verify that database contains updated data
+        dbCulturalOffering = culturalOfferingService.readById(CulturalOfferingConstants.EXISTING_ID1).get();
+        assertThat(dbCulturalOffering.getName()).isEqualTo(CulturalOfferingConstants.TEST_NAME1);
+
+    }
+
+    @Test
+    @Transactional
+    public void testCreate(){
+        CulturalOfferingDto newCulturalOffering = getTestCulturalOfferingDto();
+
+    }
+
+    CulturalOfferingDto getTestCulturalOfferingDto(){
+        CulturalOfferingDto culturalOfferingDto= new CulturalOfferingDto();
+        culturalOfferingDto.setAddress(CulturalOfferingConstants.TEST_ADDRESS1);
+        culturalOfferingDto.setBriefInfo(CulturalOfferingConstants.TEST_BRIEF_INFO1);
+        culturalOfferingDto.setLatitude(CulturalOfferingConstants.TEST_LATITUDE1);
+        culturalOfferingDto.setLongitude(CulturalOfferingConstants.TEST_LONGITUDE1);
+        culturalOfferingDto.setSubcategoryId(CulturalOfferingConstants.TEST_SUBCATEGORY_ID1);
+        culturalOfferingDto.setName(CulturalOfferingConstants.TEST_NAME1);
+        culturalOfferingDto.setId(CulturalOfferingConstants.TEST_ID1);
+
+        return culturalOfferingDto;
     }
 
 }

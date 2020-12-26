@@ -30,6 +30,7 @@ import static rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants.PAGE_SIZE
 @TestPropertySource("classpath:test.properties")
 public class ReviewServiceIntegrationTest {
 
+
     @Autowired
     private ReviewRepository reviewRepository;
     @Autowired
@@ -52,11 +53,11 @@ public class ReviewServiceIntegrationTest {
     @Test
     @Transactional
     public void testReadById(){
-        Optional<ReviewDto> review = reviewService.readById(ReviewConstants.EXISTING_ID);
+        ReviewDto review = reviewService.readById(ReviewConstants.EXISTING_ID).get();
 
-        assertEquals(ReviewConstants.EXISTING_ID, review.get().getId());
-        assertEquals(ReviewConstants.EXISTING_COMMENT, review.get().getComment());
-        assertEquals(ReviewConstants.EXISTING_RATING, review.get().getRating());
+        assertEquals(ReviewConstants.EXISTING_ID, review.getId());
+        assertEquals(ReviewConstants.EXISTING_COMMENT, review.getComment());
+        assertEquals(ReviewConstants.EXISTING_RATING, review.getRating());
     }
 
     @Test

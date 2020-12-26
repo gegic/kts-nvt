@@ -15,11 +15,15 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +63,32 @@ public class CategoryServiceIntegrationTest {
         assertEquals(CategoryConstants.EXISTING_ID1, cat.get().getId());
         assertEquals(CategoryConstants.EXISTING_NAME1, cat.get().getName());
 
+    }
+
+    @Test(expected = EntityExistsException.class)
+    public void whenCreateThrowEntityExistsException(){
+        CategoryDto cat = new CategoryDto();
+        cat.setId(CategoryConstants.EXISTING_ID1);
+        cat.setName(CategoryConstants.EXISTING_NAME1);
+
+        categoryService.create(cat);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void whenUpdateThrowNullPointerException(){
+        CategoryDto cat = new CategoryDto();
+        cat.setId(null);
+
+        categoryService.update(cat);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void whenUpdateResourceNotFoundException(){
+        CategoryDto cat = new CategoryDto();
+        cat.setId(CategoryConstants.NON_EXISTING_ID);
+        cat.setName(CategoryConstants.NON_EXISTING_NAME);
+
+        categoryService.update(cat);
     }
 
     @Test

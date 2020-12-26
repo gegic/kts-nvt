@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
@@ -12,6 +14,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -37,7 +40,7 @@ public class CategoryService {
 
     public CategoryDto create(CategoryDto c) {
         if(c.getId() != null && categoryRepository.existsById(c.getId()))
-            throw new EntityExistsException("A category with this ID already exists");
+            throw new ResourceExistsException("A category with this ID(" + c.getId() + ") already exists!" );
         Category toAdd = mapper.fromDto(c, Category.class);
 
         return mapper.fromEntity(categoryRepository.save(toAdd), CategoryDto.class);
@@ -47,7 +50,9 @@ public class CategoryService {
     public CategoryDto update(CategoryDto c) {
         if(c.getId() == null) throw new NullPointerException();
 
-        Category toUpdate = categoryRepository.findById(c.getId()).orElseThrow(EntityNotFoundException::new);
+        ResourceNotFoundException exc = new ResourceNotFoundException("A category with ID " + c.getId() + " doesn't exist!");
+
+        Category toUpdate = categoryRepository.findById(c.getId()).orElseThrow(() -> exc );
         mapper.toExistingEntity(c, toUpdate);
 
         toUpdate = categoryRepository.save(toUpdate);
