@@ -66,7 +66,7 @@ public class AuthController {
     }
 
     @GetMapping(path="/exists/verify/id/{id}")
-    public ResponseEntity<StringDto> existsById(@PathVariable UUID id) {
+    public ResponseEntity<StringDto> existsById(@PathVariable Long id) {
         Optional<UserDto> userDto = userService.findById(id);
         if(userDto.isPresent() && !userDto.get().isVerified()) {
             UserDto userDto1 = userDto.get();
@@ -88,7 +88,7 @@ public class AuthController {
     }
 
     @GetMapping(path = "/verify/{id}")
-    public ResponseEntity<UserDto> activatedUser(@PathVariable UUID id) throws Exception {
+    public ResponseEntity<UserDto> activatedUser(@PathVariable Long id) throws Exception {
         UserDto activateUser = this.userService.verify(id);
         return ResponseEntity.ok(activateUser);
     }

@@ -28,4 +28,5 @@ public class Category {
     @Setter
     @Column(unique = true)
     private String name;
+
 }

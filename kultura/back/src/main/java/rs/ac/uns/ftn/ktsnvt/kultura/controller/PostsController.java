@@ -53,7 +53,7 @@ public class PostsController {
     @PreAuthorize("hasRole('MODERATOR')")
     @PutMapping
     ResponseEntity<PostDto> update(@Valid @RequestBody PostDto postDto){
-        return ResponseEntity.ok(this.postService.save(postDto));
+        return ResponseEntity.ok(this.postService.update(postDto));
     }
     @PreAuthorize("hasRole('MODERATOR')")
     @DeleteMapping("/{id}")

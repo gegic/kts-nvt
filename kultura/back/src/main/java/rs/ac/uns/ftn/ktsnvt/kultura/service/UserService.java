@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
         .map(u -> mapper.fromEntity(u, UserDto.class));
   }
 
-  public Optional<UserDto> findById(UUID id) {
+  public Optional<UserDto> findById(Long id) {
     return userRepository.findById(id).map(u -> mapper.fromEntity(u, UserDto.class));
   }
 
@@ -88,7 +88,7 @@ public class UserService implements UserDetailsService {
     return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
   }
 
-  public void delete(UUID id) throws Exception {
+  public void delete(Long id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
       throw new Exception("User with given id doesn't exist");
@@ -119,7 +119,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  public UserDto verify(UUID id) throws Exception {
+  public UserDto verify(Long id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
       throw new Exception("User with the given id doesn't exist");
