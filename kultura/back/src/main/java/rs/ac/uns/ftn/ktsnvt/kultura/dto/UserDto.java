@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 import lombok.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Ignore;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.IgnoreType;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
@@ -32,5 +33,5 @@ public class UserDto {
     private boolean verified;
 
     @Ignore(ignoreType = IgnoreType.DTO_TO_ENTITY)
-    private Set<String> authorities;
+    private Set<Authority> authorities;
 }

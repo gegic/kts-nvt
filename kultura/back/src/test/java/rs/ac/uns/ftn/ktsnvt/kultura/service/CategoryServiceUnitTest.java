@@ -11,12 +11,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
@@ -33,7 +36,10 @@ import static rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants.PAGE_SIZE
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants.TEST_CATEGORY_ID1;
 
 @RunWith(SpringRunner.class)
+@Rollback(false)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource("classpath:test.properties")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CategoryServiceUnitTest {
 
     @Autowired
@@ -52,7 +58,7 @@ public class CategoryServiceUnitTest {
         categoryService.update(null);
     }
 
-    @Test(expected = EntityNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void whenUpdateEntityNotFoundException(){
         CategoryDto category = new CategoryDto();
         category.setId(555L);
@@ -81,7 +87,7 @@ public class CategoryServiceUnitTest {
 
     }
 
-    @Test(expected = EntityExistsException.class)
+    @Test(expected = ResourceExistsException.class)
     public void whenCreateThrowEntityExists() {
 //        Exception exception = assertThrows(EntityExistsException.class, () -> {
 //            CategoryDto category = new CategoryDto();

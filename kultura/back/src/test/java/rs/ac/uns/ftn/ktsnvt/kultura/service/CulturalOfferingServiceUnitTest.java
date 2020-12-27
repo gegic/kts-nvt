@@ -3,10 +3,14 @@ package rs.ac.uns.ftn.ktsnvt.kultura.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CulturalOfferingConstants;
@@ -21,12 +25,20 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
 import javax.persistence.EntityExistsException;
+import javax.transaction.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
+@Rollback(false)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource("classpath:test.properties")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CulturalOfferingServiceUnitTest {
 
     @Autowired
@@ -35,29 +47,13 @@ public class CulturalOfferingServiceUnitTest {
     private CulturalOfferingRepository culturalOfferingRepository;
     @MockBean
     private SubcategoryRepository subcategoryRepository;
-    @Autowired
+    @MockBean
     private Mapper modelMapper;
     @Autowired
     private CulturalOfferingMainPhotoRepository photoRepository;
 
-    @Before
+//    @Before
     public void setUp() {
-        Mockito.when(culturalOfferingRepository.findById(null)).thenReturn(null);
-
-        Mockito.when(culturalOfferingRepository.existsById(CulturalOfferingConstants.TEST_ID1))
-                .thenReturn(false);
-
-        Mockito.when(culturalOfferingRepository.existsById(CulturalOfferingConstants.EXISTING_ID1))
-                .thenReturn(true);
-
-        Mockito.when(culturalOfferingRepository.findById(CulturalOfferingConstants.EXISTING_ID1))
-                .thenReturn(java.util.Optional.of(getExistingCulturalOffering()));
-
-        Mockito.when(culturalOfferingRepository.save(getExistingCulturalOffering()))
-                .thenReturn(getExistingCulturalOffering());
-
-        Mockito.when(culturalOfferingRepository.save(getTestCulturalOffering()))
-                .thenReturn(getTestCulturalOffering());
     }
 
     CulturalOffering getTestCulturalOffering(){
@@ -116,41 +112,67 @@ public class CulturalOfferingServiceUnitTest {
         return culturalOfferingDto;
     }
 
-    @Test
-    public void whenUpdate() {
-        CulturalOfferingDto existingCulturalOffering = getExistingCulturalOfferingDto();
-        existingCulturalOffering.setName(CulturalOfferingConstants.TEST_NAME1);
-
-        CulturalOfferingDto returnedCulturalOffering = culturalOfferingService.update(existingCulturalOffering);
-
-        assertNotNull(returnedCulturalOffering);
-        assertEquals(existingCulturalOffering.getId(), returnedCulturalOffering.getId());
-        assertNotEquals(existingCulturalOffering.getName(), returnedCulturalOffering.getName());
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void whenUpdateNullPointerException(){
-        culturalOfferingService.update(null);
-    }
-
-
-
     @Test(expected = ResourceExistsException.class)
     public void whenCreateThrowEntityExists() {
+        CulturalOfferingDto existingDto = getExistingCulturalOfferingDto();
+        CulturalOffering existing = getExistingCulturalOffering();
+        Mockito.when(modelMapper.fromDto(existingDto, CulturalOffering.class))
+                .thenReturn(existing);
 
-        CulturalOfferingDto existing = getExistingCulturalOfferingDto();
-        culturalOfferingService.create(existing);
+        Mockito.when(culturalOfferingRepository.existsById(CulturalOfferingConstants.EXISTING_ID1))
+                .thenReturn(true);
+
+        Mockito.when(culturalOfferingRepository.existsById(CulturalOfferingConstants.EXISTING_ID1))
+                .thenReturn(true);
+
+        culturalOfferingService.create(existingDto);
     }
 
     @Test
-    public void testCreate(){
-        CulturalOfferingDto testCulturalOfferingDto = getTestCulturalOfferingDto();
+    public void testFindByBounds() {
+        Mockito.when(culturalOfferingRepository.findByBounds(Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat())).thenAnswer(
+                in -> {
+                    float latitudeStart = in.getArgument(0);
+                    float latitudeEnd = in.getArgument(1);
+                    float longitudeStart = in.getArgument(2);
+                    float longitudeEnd = in.getArgument(3);
+                    CulturalOffering ex = getExistingCulturalOffering();
+                    List<CulturalOffering> list = new ArrayList<>();
+                    if (ex.getLatitude() > latitudeStart && ex.getLatitude() < latitudeEnd &&
+                            ex.getLongitude() > longitudeStart && ex.getLongitude() < longitudeEnd) {
+                        list.add(ex);
+                    }
+                    return list;
+                }
+        );
 
-        CulturalOfferingDto returnedCulturalOffering = culturalOfferingService.create(testCulturalOfferingDto);
+        List<CulturalOfferingDto> list = culturalOfferingService.findByBounds(9, 14, -4, 17);
 
-        assertEquals(testCulturalOfferingDto.getId(), returnedCulturalOffering.getId());
-        assertEquals(testCulturalOfferingDto.getName(), returnedCulturalOffering.getName());
-        assertEquals(testCulturalOfferingDto.getAddress(), returnedCulturalOffering.getAddress());
+        assertEquals(1, list.size());
+        assertEquals(CulturalOfferingConstants.EXISTING_ID1, list.get(0).getId());
+    }
+
+    @Test
+    public void testFindByBoundsEmpty() {
+        Mockito.when(culturalOfferingRepository.findByBounds(Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat(), Mockito.anyFloat())).thenAnswer(
+                in -> {
+                    float latitudeStart = in.getArgument(0);
+                    float latitudeEnd = in.getArgument(1);
+                    float longitudeStart = in.getArgument(2);
+                    float longitudeEnd = in.getArgument(3);
+                    CulturalOffering ex = getExistingCulturalOffering();
+                    List<CulturalOffering> list = new ArrayList<>();
+                    if (ex.getLatitude() > latitudeStart && ex.getLatitude() < latitudeEnd &&
+                            ex.getLongitude() > longitudeStart && ex.getLongitude() < longitudeEnd) {
+                        list.add(ex);
+                    }
+                    return list;
+                }
+        );
+
+        List<CulturalOfferingDto> list = culturalOfferingService.findByBounds(30, 46, 50, 60);
+
+        assertTrue(list.isEmpty());
     }
 
 }

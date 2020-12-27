@@ -50,19 +50,19 @@ public class UsersController {
     }
 
     @PostMapping
-    ResponseEntity<UserDto> add(@Valid @RequestBody UserDto userDto) throws Exception {
+    ResponseEntity<UserDto> add(@Valid @RequestBody UserDto userDto) {
         UserDto saved = this.userService.create(userDto);
         return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
 
     @PostMapping("/moderator")
-    ResponseEntity<UserDto> addModerator(@RequestBody UserDto userDto) throws Exception {
+    ResponseEntity<UserDto> addModerator(@RequestBody UserDto userDto) {
         UserDto saved = this.userService.create(userDto, "ROLE_MODERATOR");
         return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
 
     @PutMapping
-    ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto) throws Exception {
+    ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto) {
         return ResponseEntity.ok(this.userService.update(userDto));
     }
 

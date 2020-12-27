@@ -87,7 +87,7 @@ public class AuthController {
     }
 
     @GetMapping(path = "/verify/{id}")
-    public ResponseEntity<UserDto> activatedUser(@PathVariable long id) throws Exception {
+    public ResponseEntity<UserDto> verify(@PathVariable long id) throws Exception {
         UserDto activateUser = this.userService.verify(id);
         return ResponseEntity.ok(activateUser);
     }

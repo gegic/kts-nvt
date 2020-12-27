@@ -30,6 +30,7 @@ public class CategoryService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public Page<CategoryDto> readAll(Pageable p) {
         return categoryRepository.findAll(p).map(c -> mapper.fromEntity(c, CategoryDto.class));
     }

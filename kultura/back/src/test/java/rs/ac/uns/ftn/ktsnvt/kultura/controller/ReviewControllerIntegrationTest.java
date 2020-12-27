@@ -14,6 +14,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,16 +31,21 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.ReviewRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingService;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.ReviewService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
+import rs.ac.uns.ftn.ktsnvt.kultura.utils.LoginUtil;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.MODERATOR_EMAIL;
+import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.MODERATOR_PASSWORD;
 
 @RunWith(SpringRunner.class)
+@Rollback(false)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class ReviewControllerIntegrationTest {
 
     @Autowired
@@ -57,25 +64,9 @@ public class ReviewControllerIntegrationTest {
     // JWT token za pristup REST servisima. Bice dobijen pri logovanju
     private String accessToken;
 
-    @Before
-    public void login() {
-
-        ResponseEntity<String> responseEntity =
-                restTemplate.postForEntity("/auth/login",
-                        new LoginDto("moderator@mail.com", "admin123"),
-                        String.class);
-        JsonNode parent= null;
-        try {
-            parent = new ObjectMapper().readTree(responseEntity.getBody());
-            accessToken = parent.path("token").asText();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Test
     public void whenReadByCulturalOfferingId(){
-        Pageable pageRequest = PageRequest.of(0, 3);
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -95,18 +86,22 @@ public class ReviewControllerIntegrationTest {
 //        assertEquals(ReviewConstants.EXISTING_ID, reviews.getId());
 //        assertEquals(ReviewConstants.EXISTING_COMMENT, review.getComment());
 //        assertEquals(ReviewConstants.EXISTING_RATING, review.getRating());
+
+        this.accessToken = null;
     }
 
     @Test
     public void whenReadById(){
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Authorization", "Bearer " + this.accessToken);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<ReviewDto> response = restTemplate.exchange(
-                "/api/reviews/" + ReviewConstants.EXISTING_ID
-                , HttpMethod.GET, httpEntity, ReviewDto.class);
+                "/api/reviews/" + ReviewConstants.EXISTING_ID,
+                HttpMethod.GET, httpEntity, ReviewDto.class);
 
 //        List<ReviewDto> reviews = response.getBody().getContent();
 
@@ -114,6 +109,8 @@ public class ReviewControllerIntegrationTest {
 //        assertEquals(ReviewConstants.EXISTING_ID, reviews.getId());
 //        assertEquals(ReviewConstants.EXISTING_COMMENT, review.getComment());
 //        assertEquals(ReviewConstants.EXISTING_RATING, review.getRating());
+
+        this.accessToken = null;
     }
 
 

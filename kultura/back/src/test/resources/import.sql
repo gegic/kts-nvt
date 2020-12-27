@@ -1,8 +1,3 @@
--- SET @Id1 = uuid();
--- SET @Id2 = uuid();
--- SET @Id3 = uuid();
-
-
 INSERT INTO authority (authority) VALUES ('ROLE_ADMIN');
 INSERT INTO authority (authority) VALUES ('ROLE_MODERATOR');
 INSERT INTO authority (authority) VALUES ('ROLE_USER');
@@ -21,9 +16,11 @@ INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, s
 INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 10, 10, 'Sajam knjiga', 2);
 
 # admin123 je sifra
-INSERT INTO user (id, email, first_name, last_name, last_password_change, password, verified) VALUES (1, 'admin@mail.com', 'Admin', 'Prezime', NOW(),  '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', true);
-INSERT INTO user (id, email, first_name, last_name, last_password_change, password, verified) VALUES (2, 'moderator@mail.com', 'Moderator', 'Prezime', NOW(), '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', true);
-INSERT INTO user (id, email, first_name, last_name, last_password_change, password, verified) VALUES (3, 'user@mail.com', 'User', 'Prezime', NOW(), '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', true);
+INSERT INTO user (email, first_name, last_name, last_password_change, password, verified) VALUES ('admin@mail.com', 'Admin', 'Prezime', NOW(),  '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', true);
+INSERT INTO user (email, first_name, last_name, last_password_change, password, verified) VALUES ('moderator@mail.com', 'Moderator', 'Prezime', NOW(), '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', true);
+INSERT INTO user (email, first_name, last_name, last_password_change, password, verified) VALUES ('user@mail.com', 'User', 'Prezime', NOW(), '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', true);
+INSERT INTO user (email, first_name, last_name, last_password_change, password, verified) VALUES ('unverified@mail.com', 'User', 'Prezime', NOW(), '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', false);
+INSERT INTO user (email, first_name, last_name, last_password_change, password, verified) VALUES ('unverified2@mail.com', 'User', 'Prezime', NOW(), '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', false);
 
 INSERT INTO user_authority (user_id, authority_id) VALUES (1, 1);
 INSERT INTO user_authority (user_id, authority_id) VALUES (2, 2);

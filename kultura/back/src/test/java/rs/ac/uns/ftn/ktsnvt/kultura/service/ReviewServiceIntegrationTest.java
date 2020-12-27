@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,8 +27,10 @@ import static org.junit.Assert.assertEquals;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants.PAGE_SIZE;
 
 @RunWith(SpringRunner.class)
+@Rollback(false)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class ReviewServiceIntegrationTest {
 
 
@@ -74,7 +77,7 @@ public class ReviewServiceIntegrationTest {
 
     @Test
     @Transactional
-    @Rollback(true)
+    //@Rollback(true)
     public void testSave(){
         ReviewDto newReview = createTestReviewDto();
 
@@ -93,6 +96,7 @@ public class ReviewServiceIntegrationTest {
         assertEquals(createdReview.getCulturalOfferingId(), newReview.getCulturalOfferingId());
         assertEquals(createdReview.getRating(), newReview.getRating());
 
+        reviewService.delete(createdReview.getId());
     }
 
 

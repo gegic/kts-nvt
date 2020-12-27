@@ -306,7 +306,7 @@ public class Mapper {
         }
 
         Class<?> fieldClass = field.getType();
-        boolean isCollection = fieldClass.isAssignableFrom(Collection.class);
+        boolean isCollection = Collection.class.isAssignableFrom(fieldClass);
 
         if (isCollection) {
             if (!entityFieldClass.isAssignableFrom(Collection.class)) throw new EntityDtoIncompatibleException();
@@ -330,7 +330,7 @@ public class Mapper {
         Class<?> fieldClass = field.getType();
         Object found;
 
-        boolean isCollection = fieldClass.isAssignableFrom(Collection.class);
+        boolean isCollection = Collection.class.isAssignableFrom(fieldClass);
 
         if (isCollection) {
             Object[] keys = (Object[]) invokeGetMethod(field, dto);

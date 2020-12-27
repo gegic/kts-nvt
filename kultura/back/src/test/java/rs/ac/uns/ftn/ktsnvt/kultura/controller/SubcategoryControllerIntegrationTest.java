@@ -13,6 +13,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
@@ -28,15 +30,20 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.SubcategoryService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
+import rs.ac.uns.ftn.ktsnvt.kultura.utils.LoginUtil;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.*;
 
 @RunWith(SpringRunner.class)
+@Rollback(false)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class SubcategoryControllerIntegrationTest {
     @Autowired
     private SubcategoryRepository subcategoryRepository;
@@ -50,33 +57,9 @@ public class SubcategoryControllerIntegrationTest {
     // JWT token za pristup REST servisima. Bice dobijen pri logovanju
     private String accessToken;
 
-    @Before
-    public void login() {
-//        List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-//        messageConverters.add(new FormHttpMessageConverter());
-//        messageConverters.add(new StringHttpMessageConverter());
-//        messageConverters.add(new MappingJackson2HttpMessageConverter());
-//        restTemplate.setMessageConverters(messageConverters);
-
-        ResponseEntity<String> responseEntity =
-                restTemplate.postForEntity("/auth/login",
-                        new LoginDto("admin@mail.com", "admin123"),
-                        String.class);
-        JsonNode parent= null;
-        try {
-            parent = new ObjectMapper().readTree(responseEntity.getBody());
-            accessToken = parent.path("token").asText();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        //TokenResponse tr = mapper.fromEntity(responseEntity.getBody(), TokenResponse.class);
-
-    }
-
     @Test
     public void whenGetSubcategoriesByCategoriyId(){
-        Pageable pageRequest = PageRequest.of(0, 3);
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -95,11 +78,14 @@ public class SubcategoryControllerIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(subcategories.get(0).getCategoryId(), CategoryConstants.EXISTING_ID1);
+        this.accessToken = null;
     }
 
     @Test
     public void whenCreateSubcategory(){
         SubcategoryDto newSubcategory = createTestSubcategoryDto();
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -113,12 +99,19 @@ public class SubcategoryControllerIntegrationTest {
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(newSubcategory.getName(), createdSubcategory.getName());
+        this.accessToken = null;
+
+        this.subcategoryService.delete(createdSubcategory.getId());
     }
 
     @Test
-    public void whenUpdateSubcategory(){
+    public void whenUpdateSubcategory() throws Exception {
+        SubcategoryDto oldValues = subcategoryService.findById(SubcategoryConstants.EXISTING_ID1).orElseThrow(() -> new Exception("Test invalid!"));
+
         SubcategoryDto newSubcategory = createTestSubcategoryDto();
         newSubcategory.setId(SubcategoryConstants.EXISTING_ID1);
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -132,6 +125,10 @@ public class SubcategoryControllerIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(SubcategoryConstants.TEST_NAME, updatedSubcategory.getName());
+
+        this.accessToken = null;
+
+        subcategoryService.update(oldValues);
     }
 
     private SubcategoryDto createTestSubcategoryDto() {

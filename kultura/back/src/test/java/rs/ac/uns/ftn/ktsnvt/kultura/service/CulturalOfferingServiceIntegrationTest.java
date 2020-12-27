@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +26,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
+@Rollback(false)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CulturalOfferingServiceIntegrationTest {
 
     @Autowired
@@ -60,7 +64,10 @@ public class CulturalOfferingServiceIntegrationTest {
 
     @Test
     @Transactional
-    public void testUpdate(){
+    public void testUpdate() throws Exception {
+        CulturalOfferingDto oldValues = culturalOfferingService.readById
+                (CulturalOfferingConstants.EXISTING_ID1).orElseThrow(() -> new Exception("Test invalid!"));
+
         CulturalOfferingDto dbCulturalOffering = culturalOfferingService.readById
                 (CulturalOfferingConstants.EXISTING_ID1).get();
 
@@ -73,14 +80,16 @@ public class CulturalOfferingServiceIntegrationTest {
         dbCulturalOffering = culturalOfferingService.readById(CulturalOfferingConstants.EXISTING_ID1).get();
         assertThat(dbCulturalOffering.getName()).isEqualTo(CulturalOfferingConstants.TEST_NAME1);
 
-    }
-
-    @Test
-    @Transactional
-    public void testCreate(){
-        CulturalOfferingDto newCulturalOffering = getTestCulturalOfferingDto();
+        culturalOfferingService.update(oldValues);
 
     }
+
+//    @Test
+//    //@Transactional
+//    public void testCreate(){
+//        CulturalOfferingDto newCulturalOffering = getTestCulturalOfferingDto();
+//
+//    }
 
     CulturalOfferingDto getTestCulturalOfferingDto(){
         CulturalOfferingDto culturalOfferingDto= new CulturalOfferingDto();

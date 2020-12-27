@@ -17,5 +17,6 @@ public class CategoryConstants{
 
     public static final Long TEST_CATEGORY_ID1 = 3L;
     public static final String TEST_CATEGORY_NAME1 = "category1";
+    public static final String TEST_CATEGORY_NAME2 = "category2";
 
 }

@@ -1,12 +1,15 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.management.InstanceAlreadyExistsException;
+import javax.servlet.http.HttpServletRequest;
 import java.security.InvalidKeyException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @ControllerAdvice
 public class RestExceptionHandler {
@@ -38,6 +41,14 @@ public class RestExceptionHandler {
         HttpStatus notFound = HttpStatus.NOT_FOUND;
         ErrorMessage errorMessage = new ErrorMessage(notFound.value(), "Not found", e.getMessage());
         return new ResponseEntity<>(errorMessage, notFound);
+    }
+
+    @ExceptionHandler(value = {DataIntegrityViolationException.class})
+    public ResponseEntity<ErrorMessage> handleDateIntegrityViolationException(
+            DataIntegrityViolationException e) {
+        HttpStatus conflict = HttpStatus.CONFLICT;
+        ErrorMessage errorMessage = new ErrorMessage(conflict.value(), "Conflict", e.getMessage());
+        return new ResponseEntity<>(errorMessage, conflict);
     }
 
 }

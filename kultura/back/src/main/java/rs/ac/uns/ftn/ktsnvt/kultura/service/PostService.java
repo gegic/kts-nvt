@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.PostRepository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 
@@ -32,10 +33,12 @@ public class PostService {
                 .map(post -> mapper.fromEntity(post, PostDto.class));
     }
 
+    @Transactional
     public Optional<PostDto> readById(long id) {
         return postRepository.findById(id).map(post -> mapper.fromEntity(post, PostDto.class));
     }
 
+    @Transactional
     public PostDto update(PostDto p){
         ResourceNotFoundException exc = new ResourceNotFoundException("A post with ID " + p.getId() + " doesn't exist!");
 

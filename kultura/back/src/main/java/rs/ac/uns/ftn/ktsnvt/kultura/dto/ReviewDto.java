@@ -39,7 +39,7 @@ public class ReviewDto {
     private String userLastName;
 
     @EntityField
-    private String userUsername;
+    private String userEmail;
 
     @EntityKey(fieldName = "photos", entityType = CulturalOfferingPhoto.class)
     private Set<Long> photos;

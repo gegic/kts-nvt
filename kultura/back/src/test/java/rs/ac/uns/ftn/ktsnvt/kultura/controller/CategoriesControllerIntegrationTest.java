@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,8 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
@@ -28,17 +31,22 @@ import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CategoryService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
+import rs.ac.uns.ftn.ktsnvt.kultura.utils.LoginUtil;
 
 import javax.persistence.EntityExistsException;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.*;
 
 @RunWith(SpringRunner.class)
+@Rollback(false)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CategoriesControllerIntegrationTest {
 
     @Autowired
@@ -53,36 +61,12 @@ public class CategoriesControllerIntegrationTest {
     // JWT token za pristup REST servisima. Bice dobijen pri logovanju
     private String accessToken;
 
-    // pre izvrsavanja testa, prijava da bismo dobili token
-    @Before
-    public void login() {
-//        List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-//        messageConverters.add(new FormHttpMessageConverter());
-//        messageConverters.add(new StringHttpMessageConverter());
-//        messageConverters.add(new MappingJackson2HttpMessageConverter());
-//        restTemplate.setMessageConverters(messageConverters);
-
-        ResponseEntity<String> responseEntity =
-                restTemplate.postForEntity("/auth/login",
-                        new LoginDto("admin@mail.com", "admin123"),
-                        String.class);
-        JsonNode parent= null;
-        try {
-            parent = new ObjectMapper().readTree(responseEntity.getBody());
-            accessToken = parent.path("token").asText();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        //TokenResponse tr = mapper.fromEntity(responseEntity.getBody(), TokenResponse.class);
-
-    }
-
     @Test
     public void whenCreateCategory() {
         CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setName(CategoryConstants.TEST_CATEGORY_NAME1);
-        categoryDto.setId(CategoryConstants.TEST_CATEGORY_ID1);
+        categoryDto.setName(CategoryConstants.TEST_CATEGORY_NAME2);
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.accessToken);
@@ -94,8 +78,11 @@ public class CategoriesControllerIntegrationTest {
         CategoryDto newCategory = response.getBody();
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(newCategory.getId(), categoryDto.getId());
         assertEquals(newCategory.getName(), categoryDto.getName());
+
+        this.accessToken = null;
+
+        categoryService.delete(newCategory.getId());
     }
 
     @Test
@@ -103,6 +90,8 @@ public class CategoriesControllerIntegrationTest {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(CategoryConstants.EXISTING_NAME1);
         categoryDto.setId(CategoryConstants.EXISTING_ID1);
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.accessToken);
@@ -112,6 +101,8 @@ public class CategoriesControllerIntegrationTest {
                 "/api/categories", HttpMethod.POST, httpEntity, CategoryDto.class);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+
+        this.accessToken = null;
     }
 
     @Test
@@ -119,6 +110,8 @@ public class CategoriesControllerIntegrationTest {
         CategoryDto cat = new CategoryDto();
         cat.setId(CategoryConstants.NON_EXISTING_ID);
         cat.setName(CategoryConstants.NON_EXISTING_NAME);
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.accessToken);
@@ -128,15 +121,23 @@ public class CategoriesControllerIntegrationTest {
                 "/api/categories", HttpMethod.PUT, httpEntity, CategoryDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        this.accessToken = null;
     }
 
-
-
     @Test
-    public void whenUpdateCategory() {
+    public void whenUpdateCategory() throws Exception {
+        // oldValues
+        CategoryDto oldValues = categoryService.readById(CategoryConstants.EXISTING_ID1).orElse(null);
+        if (oldValues == null) {
+            throw new Exception("Test invalid");
+        }
+
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(CategoryConstants.TEST_CATEGORY_NAME1);
         categoryDto.setId(CategoryConstants.EXISTING_ID1);
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.accessToken);
@@ -150,6 +151,10 @@ public class CategoriesControllerIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(updatedCategory.getId(), CategoryConstants.EXISTING_ID1);
         assertEquals(updatedCategory.getName(), CategoryConstants.TEST_CATEGORY_NAME1);
+
+        this.accessToken = null;
+
+        this.categoryService.update(oldValues);
     }
 
 
@@ -160,6 +165,8 @@ public class CategoriesControllerIntegrationTest {
         categoryDto.setName(CategoryConstants.EXISTING_NAME1);
         categoryDto.setId(CategoryConstants.EXISTING_ID1);
 
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.accessToken);
         HttpEntity<Object> httpEntity = new HttpEntity<>(categoryDto, headers);
@@ -168,10 +175,14 @@ public class CategoriesControllerIntegrationTest {
                 "/api/categories/", HttpMethod.POST, httpEntity, ResourceExistsException.class);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+
+        this.accessToken = null;
     }
 
     @Test
     public void testGetAll() {
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Authorization", "Bearer " + this.accessToken);
@@ -188,6 +199,8 @@ public class CategoriesControllerIntegrationTest {
         assertEquals(CategoryConstants.DB_COUNT, categories.size());
         assertEquals(CategoryConstants.EXISTING_ID1, categories.get(0).getId());
         assertEquals(CategoryConstants.EXISTING_ID2, categories.get(1).getId());
+
+        this.accessToken = null;
     }
 
 
