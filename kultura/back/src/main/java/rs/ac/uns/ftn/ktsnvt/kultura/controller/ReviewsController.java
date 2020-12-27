@@ -15,6 +15,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Map;
 
 @PreAuthorize("hasRole('MODERATOR') || hasRole('USER')")
 @RestController
@@ -41,7 +42,7 @@ public class ReviewsController {
     }
 
     @GetMapping(path = "/cultural-offering/summary/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<ReviewSummaryDto> getSummary(@PathVariable long culturalOfferingId){
+    ResponseEntity<Map<Integer, Long>> getSummary(@PathVariable long culturalOfferingId){
         return new ResponseEntity<>(reviewService.getSummary(culturalOfferingId), HttpStatus.OK);
     }
 

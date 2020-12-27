@@ -15,7 +15,7 @@ import {ModeratorAddComponent} from './view/moderator-add/moderator-add.componen
 import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {HomeViewComponent} from './view/home-view/home-view.component';
-import {OfferingRatingComponent} from './view/offering-rating/offering-rating.component';
+import {OfferingPageComponent} from './view/offering-page/offering-page.component';
 
 const routes: Routes = [
   {
@@ -54,11 +54,8 @@ const routes: Routes = [
     ]
   },
   {
-    // path: 'rate', component: OfferingRatingComponent, canActivate: [AuthGuard],
-    
     //dev
-    path: 'rate', component: OfferingRatingComponent, canActivate: [],
-    
+    path: 'offering', component: OfferingPageComponent, canActivate: [],
   },
 ];
 

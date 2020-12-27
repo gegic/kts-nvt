@@ -28,6 +28,7 @@ INSERT INTO subcategory (name, category_id) VALUES ('Sajam', 2);
 
 INSERT INTO cultural_offering_main_photo (id, height, time_added, width, token) VALUES (1, 288, NOW(), 512, '');
 
+
 INSERT INTO cultural_offering (id, address, brief_info, latitude, longitude, name, subcategory_id, photo_id) VALUES (1, 'Delimedje bb Tutin', 'Godisnji vasar u Delimedje', 42.991436, 20.337982, 'Vasar u Delimedje', 2, 1);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 1 WHERE id = 1;
@@ -46,8 +47,11 @@ INSERT INTO user_authority (user_id, authority_id) VALUES (@Id1, 1);
 INSERT INTO user_authority (user_id, authority_id) VALUES (@Id2, 2);
 INSERT INTO user_authority (user_id, authority_id) VALUES (@Id3, 3);
 
-INSERT INTO review (comment, rating, time_added, cultural_offering_id, user_id) VALUES ('Komentar', '3', NOW(), 2, @Id3);
+INSERT INTO review (id, comment, rating, time_added, cultural_offering_id, user_id) VALUES (1, 'Komentar', 3, NOW(), 1, @Id3);
+INSERT INTO review (id, comment, rating, time_added, cultural_offering_id, user_id) VALUES (2, 'Komentar', 4, NOW(), 1, @Id2);
+INSERT INTO review (id, comment, rating, time_added, cultural_offering_id, user_id) VALUES (3, 'Komentar', 5, NOW(), 1, @Id1);
 
 INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('vrlo zanimljiv post', NOW(), 1);
 
 INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('vrlo zanimljiv post broj dva', NOW(), 1);
+

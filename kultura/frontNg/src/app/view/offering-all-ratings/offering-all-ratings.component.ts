@@ -8,7 +8,7 @@ import { ReviewService } from 'src/app/core/services/review/review.service';
 })
 export class OfferingAllRatingsComponent implements OnInit {
 
-  @Input() id:Number = NaN;
+  @Input() cultural_offering:any;
 
   reviewService:ReviewService;
 
@@ -19,9 +19,11 @@ export class OfferingAllRatingsComponent implements OnInit {
   summary:any;
 
   constructor(reviewService:ReviewService) {
+    this.reviewService = reviewService;
+  }
 
-    this.summary = reviewService.getSummary(this.id);
-
+  ngOnInit(): void {
+    this.summary = this.reviewService.getSummary(this.cultural_offering.id);
     let labels = [];
     let data = [];
     for(let group in this.summary.ratings){
@@ -55,24 +57,21 @@ export class OfferingAllRatingsComponent implements OnInit {
     };
   }
 
-  ngOnInit(): void {
-  }
-
 
   resolveColor(){
-      if(this.summary.rating<1.5){
+      if(this.cultural_offering.overallRating<1.5){
         return "#2f964a";
       }
-      if(this.summary.rating<2.5){
+      if(this.cultural_offering.overallRating<2.5){
         return "#dd780c";
       }
-      if(this.summary.rating<3.5){
+      if(this.cultural_offering.overallRating<3.5){
         return "#d8dd0c";
       }
-      if(this.summary.rating<4.5){
+      if(this.cultural_offering.overallRating<4.5){
         return "#4eca1c";
       }
-      if(this.summary.rating<=5){
+      if(this.cultural_offering.overallRating<=5){
         return "#2f964a";
       }
       return ""

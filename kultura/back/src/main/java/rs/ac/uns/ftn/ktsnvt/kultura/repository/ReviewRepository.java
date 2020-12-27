@@ -11,8 +11,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.Review;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
+    @Query("select r from Review r where r.culturalOffering.id=?1")
     Page<Review> findAllByCulturalOfferingId(long culturalOfferingId, Pageable p);
 
-    @Query("select count(r) from Review r where r.rating=?1")
-    long getReviewsSize(int rating);
+    @Query("select count(r) from Review r where r.rating=?1 and r.culturalOffering.id=?2")
+    long getReviewsSize(int rating, long culturalOfferingId);
 }

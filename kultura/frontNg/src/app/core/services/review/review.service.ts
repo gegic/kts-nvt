@@ -1,13 +1,20 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
-  
-  constructor() { }
+  httpClient:HttpClient;
+  constructor(httpClient:HttpClient) {
+    this.httpClient = httpClient;
+  }
   
   getSummary(id: Number) {
+
+    // return this.httpClient.get("/api/reviews/cultural-offering/summary/"+id);
+
     return {
       ratings:{
         1:140,
@@ -15,9 +22,7 @@ export class ReviewService {
         3:200,
         4:230,
         5:150
-      },
-      ratingsSize:333,
-      rating:3.1
+      }
     };
   }
 

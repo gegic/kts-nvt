@@ -48,13 +48,16 @@ import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sideb
 import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
 import { OfferingItemComponent } from './view/offering-item/offering-item.component';
 import { MapPopupComponent } from './view/map-popup/map-popup.component';
-import { OfferingRatingComponent } from './view/offering-rating/offering-rating.component';
+import { OfferingReviewComponent } from './view/offering-page/offering-review/offering-review.component';
 import { OfferingAllRatingsComponent } from './view/offering-all-ratings/offering-all-ratings.component';
-import { OfferingRatingsListComponent } from './view/offering-ratings-list/offering-ratings-list.component';
-import { RatingItemComponent } from './view/offering-ratings-list/rating-item/rating-item.component';
+import { OfferingRatingsListComponent } from './view/offering-page/offering-review/offering-ratings-list/offering-ratings-list.component';
+import { RatingItemComponent } from './view/offering-page/offering-review/offering-ratings-list/rating-item/rating-item.component';
 import {ChartModule} from 'primeng/chart';
 import { StarComponent } from './components/star-component/star-component.component';
-
+import { OfferingPageComponent } from './view/offering-page/offering-page.component';
+import {TabMenuModule} from 'primeng/tabmenu';
+import {MenuItem} from 'primeng/api';
+import { OfferingPhotosComponent } from './view/offering-page/offering-photos/offering-photos.component';
 
 @NgModule({
   declarations: [
@@ -82,11 +85,13 @@ import { StarComponent } from './components/star-component/star-component.compon
     OfferingsListComponent,
     OfferingItemComponent,
     MapPopupComponent,
-    OfferingRatingComponent,
+    OfferingReviewComponent,
     OfferingAllRatingsComponent,
     OfferingRatingsListComponent,
     RatingItemComponent,
     StarComponent,
+    OfferingPageComponent,
+    OfferingPhotosComponent,
   ],
   imports: [
     BrowserModule,
@@ -114,7 +119,8 @@ import { StarComponent } from './components/star-component/star-component.compon
     RippleModule,
     ScrollPanelModule,
     FileUploadModule,
-    ChartModule
+    ChartModule,
+    TabMenuModule,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

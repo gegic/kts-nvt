@@ -34,22 +34,13 @@ public class ReviewService {
                 .map(review -> mapper.fromEntity(review, ReviewDto.class));
     }
 
-    public ReviewSummaryDto getSummary(long culturalOfferingId){
+    public Map<Integer, Long> getSummary(long culturalOfferingId){
         Map<Integer, Long> ratings = new TreeMap<>();
-        long size = 0L;
-        float avg = 0F;
         for(int i = 1;i<6;i++){
-            long count = reviewRepository.getReviewsSize(i);
-            size += count;
-            if(i>1){
-                avg += count*i;
-            }else{
-                avg+=count;
-            }
+            long count = reviewRepository.getReviewsSize(i, culturalOfferingId);
             ratings.put(i, count);
         }
-        avg /= size;
-        return new ReviewSummaryDto(ratings, size, avg);
+        return ratings;
     }
 
 
