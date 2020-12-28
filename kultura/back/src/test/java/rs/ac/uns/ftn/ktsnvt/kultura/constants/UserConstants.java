@@ -34,4 +34,10 @@ public class UserConstants {
     public static final long UNVERIFIED_ID = 4L;
     public static final long UNVERIFIED_ID2 = 4L;
 
+    public static final long EXISTING_USER_ID = 1;
+    public static final String EXISTING_USER_EMAIL = "existing.user@mail.com";
+    public static final String EXISTING_USER_FIRST_NAME = "Korisnik";
+    public static final String EXISTING_USER_LAST_NAME = "Prezime";
+    public static final String EXISTING_USER_PASSWORD = "hashed password";
+    public static final String USER_AUTHORITY = "ROLE_USER";
 }

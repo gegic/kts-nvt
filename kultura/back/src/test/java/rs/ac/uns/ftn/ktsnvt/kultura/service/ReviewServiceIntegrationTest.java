@@ -17,6 +17,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.constants.ReviewConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Review;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.ReviewRepository;
 
 import java.util.List;
@@ -76,7 +77,6 @@ public class ReviewServiceIntegrationTest {
     }
 
     @Test
-    @Transactional
     //@Rollback(true)
     public void testSave(){
         ReviewDto newReview = createTestReviewDto();
@@ -88,8 +88,7 @@ public class ReviewServiceIntegrationTest {
         assertThat(createdReview).isNotNull();
 
         // Validate that new category is in the database
-        List<ReviewDto> reviews = reviewService
-                .readAllByCulturalOfferingId(ReviewConstants.EXISTING_CULTURAL_OFFERING_ID,pageRequest).getContent();
+        List<Review> reviews = reviewRepository.findAll();
         assertThat(reviews).hasSize(ReviewConstants.DB_COUNT + 1);
         assertEquals(createdReview.getId(), ReviewConstants.TEST_ID);
         assertEquals(createdReview.getComment(), newReview.getComment());

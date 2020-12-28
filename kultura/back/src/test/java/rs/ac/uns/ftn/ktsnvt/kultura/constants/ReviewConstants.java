@@ -22,9 +22,9 @@ public class ReviewConstants {
 
     public static final Integer TEST_RATING = 4;
 
-    public static final Long TEST_CULTURAL_OFFERING_ID = 2L;
+    public static final Long TEST_CULTURAL_OFFERING_ID = 1L;
 
-    public static final Long TEST_USER_ID = 2L;
+    public static final Long TEST_USER_ID = 3L;
 
 
 }

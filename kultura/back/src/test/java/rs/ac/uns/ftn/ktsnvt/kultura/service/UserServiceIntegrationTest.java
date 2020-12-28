@@ -78,11 +78,15 @@ public class UserServiceIntegrationTest {
     @Transactional
     //@Rollback
     public void testCreateUser() throws Exception {
-        UserDto u = createUserDto();
 
+        long sizeBefore = userRepository.count();
+        UserDto u = createUserDto();
 
         UserDto createdUser = userService.create(u);
 
+        long sizeAfter = userRepository.count();
+
+        assertEquals(sizeBefore + 1, sizeAfter);
         assertEquals(u.getEmail(), createdUser.getEmail());
         assertEquals(u.getFirstName(), createdUser.getFirstName());
         assertEquals(u.getLastName(), createdUser.getLastName());

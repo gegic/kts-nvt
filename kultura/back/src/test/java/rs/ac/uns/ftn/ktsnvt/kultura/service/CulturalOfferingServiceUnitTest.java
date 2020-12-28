@@ -146,6 +146,25 @@ public class CulturalOfferingServiceUnitTest {
                 }
         );
 
+        Mockito.when(modelMapper.fromEntity(Mockito.any(CulturalOffering.class), Mockito.eq(CulturalOfferingDto.class)))
+                .thenAnswer(i -> {
+                    CulturalOffering c = i.getArgument(0);
+                    return new CulturalOfferingDto(
+                            c.getId(),
+                            c.getName(),
+                            c.getBriefInfo(),
+                            c.getLatitude(),
+                            c.getLongitude(),
+                            c.getAddress(),
+                            null,
+                            c.getOverallRating(),
+                            c.getNumReviews(),
+                            c.getLastChange(),
+                            c.getAdditionalInfo(),
+                            c.getSubcategory().getId(),
+                            c.getSubcategory().getName()
+                    );
+                });
         List<CulturalOfferingDto> list = culturalOfferingService.findByBounds(9, 14, -4, 17);
 
         assertEquals(1, list.size());

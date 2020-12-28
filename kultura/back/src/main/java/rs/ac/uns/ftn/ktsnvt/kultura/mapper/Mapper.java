@@ -335,6 +335,9 @@ public class Mapper {
         if (isCollection) {
             Object[] keys = (Object[]) invokeGetMethod(field, dto);
             Collection<Object> objects = new ArrayList<>();
+            if (keys == null) {
+                return null;
+            }
             for (Object key : keys) {
                 objects.add(getOneEntity(entityFieldClass, key));
             }

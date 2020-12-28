@@ -118,7 +118,7 @@ public class UserService implements UserDetailsService {
                     "<a href=\"http:/localhost:4200/verify/%s\">ovaj link</a>.", user.getId());
     String body = String.format("Pozdrav,<br>%s, uspešno ste kreirali nalog.", user.getFirstName()) + link;
     try {
-      this.smtpServer.sendEmail(user.getEmail(), "Usprešno kreiran nalog", body);
+      this.smtpServer.sendEmail(user.getEmail(), "Uspešno kreiran nalog", body);
     } catch (Exception e) {
       e.printStackTrace();
     }
