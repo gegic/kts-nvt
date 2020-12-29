@@ -8,6 +8,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ public class ReviewDto {
     @NotBlank(message = "Review comment cannot be blank. You must explain your review.")
     private String comment;
 
+    @NotNull
     private LocalDateTime timeAdded;
 
     @EntityKey(entityType = CulturalOffering.class, fieldName = "culturalOffering")
