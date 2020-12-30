@@ -35,10 +35,8 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {CulturalOfferingPlaceComponent} from './view/cultural-offering-place/cultural-offering-place.component';
 import {DialogService, DynamicDialogModule} from 'primeng/dynamicdialog';
 import {DropdownModule} from 'primeng/dropdown';
-import {VirtualScrollerModule} from 'primeng/virtualscroller';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {NgSelectModule} from '@ng-select/ng-select';
-import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ModeratorAddComponent} from './view/moderator-add/moderator-add.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {RippleModule} from 'primeng/ripple';
@@ -47,7 +45,17 @@ import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sideb
 import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
 import { OfferingItemComponent } from './view/offering-item/offering-item.component';
 import { MapPopupComponent } from './view/map-popup/map-popup.component';
-
+import { CulturalOfferingDetailsComponent } from './view/cultural-offering-details/cultural-offering-details.component';
+import { DetailsNavigationComponent } from './view/details-navigation/details-navigation.component';
+import { PostsComponent } from './view/posts/posts.component';
+import { PhotosComponent } from './view/photos/photos.component';
+import { ReviewsComponent } from './view/reviews/reviews.component';
+import { CulturalOfferingAboutComponent } from './view/cultural-offering-about/cultural-offering-about.component';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {VirtualScrollerModule} from 'primeng/virtualscroller';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {SkeletonModule} from 'primeng/skeleton';
+import {ScrollTop, ScrollTopModule} from 'primeng/scrolltop';
 
 @NgModule({
   declarations: [
@@ -74,7 +82,13 @@ import { MapPopupComponent } from './view/map-popup/map-popup.component';
     OfferingSidebarComponent,
     OfferingsListComponent,
     OfferingItemComponent,
-    MapPopupComponent
+    MapPopupComponent,
+    CulturalOfferingDetailsComponent,
+    DetailsNavigationComponent,
+    PostsComponent,
+    PhotosComponent,
+    ReviewsComponent,
+    CulturalOfferingAboutComponent
   ],
   imports: [
     BrowserModule,
@@ -100,7 +114,10 @@ import { MapPopupComponent } from './view/map-popup/map-popup.component';
     NgSelectModule,
     ProgressSpinnerModule,
     RippleModule,
-    ScrollPanelModule
+    ScrollPanelModule,
+    InfiniteScrollModule,
+    SkeletonModule,
+    ScrollTopModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

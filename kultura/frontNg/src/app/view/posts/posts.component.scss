@@ -1,0 +1,51 @@
+.posts {
+  padding-left: 15vw;
+  padding-right: 15vw;
+}
+
+.post-header {
+  width: 100%;
+}
+
+.absolute-info {
+  position: sticky;
+  top: 75px
+}
+
+::ng-deep .p-inputtextarea {
+  width: 100%;
+}
+
+.relative-info {
+  position: relative;
+}
+
+::ng-deep .p-card {
+  border-radius: 1em;
+}
+
+::ng-deep .post-card .p-card {
+  margin-top: 2vh;
+}
+
+::ng-deep .post-card .p-card-body,
+::ng-deep .new-post-card .p-card-body{
+  padding: .4em 1.5em;
+}
+
+::ng-deep .post-card .p-card-content {
+  padding: 0;
+}
+
+::ng-deep .time {
+  color: #584F51;
+  font-size: .7rem;
+}
+
+::ng-deep .options-button {
+  border-radius: 100%;
+}
+
+::ng-deep .options-button .pi {
+  color: #584F51;
+}

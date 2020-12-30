@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.mapper.IgnoreType;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -23,8 +24,10 @@ public class UserDto {
     @Size(min=8, max=50, message = "A password should be between 8 and 50 characters long.")
     private String password;
 
+    @NotBlank
     private String firstName;
 
+    @NotBlank
     private String lastName;
 
     private LocalDateTime lastPasswordChange;

@@ -1,4 +1,8 @@
-<p-card class="colored-card" (mouseenter)="hoverStarted()" (mouseleave)="hoverEnded()" [styleClass]="hovering ? 'hovering-card' : ''">
+<p-card class="colored-card"
+        (mouseenter)="hoverStarted()"
+        (mouseleave)="hoverEnded()"
+        [styleClass]="hovering ? 'hovering-card' : ''"
+        (click)="onClickCard()">
   <div class="p-grid p-m-0 p-p-0">
     <div class="p-col p-m-0 p-pl-3 p-py-0 p-pr-0">
       <div class="p-grid p-m-0 p-p-0">

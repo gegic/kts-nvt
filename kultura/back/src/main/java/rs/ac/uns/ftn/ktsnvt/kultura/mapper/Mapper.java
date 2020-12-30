@@ -58,7 +58,6 @@ public class Mapper {
         Class<?> dtoClass = dto.getClass();
         TEntity entity;
 
-
         try {
             entity = entityClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException |
@@ -120,6 +119,12 @@ public class Mapper {
                 } catch (NoSuchFieldException | InvocationTargetException | NullEntityFieldException e) {
                     continue;
                 }
+            } else if (field.isAnnotationPresent(Computed.class)) {
+                try {
+                    fieldValue = compute(field, entity);
+                } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                    continue;
+                }
             } else {
                 try {
                     fieldValue = invokeGetMethod(field, entity);
@@ -179,7 +184,7 @@ public class Mapper {
                     continue;
                 }
 
-            } else if (field.isAnnotationPresent(EntityField.class)) {
+            } else if (field.isAnnotationPresent(EntityField.class) || field.isAnnotationPresent(Computed.class)) {
                 // ignore
                 continue;
             }
@@ -227,6 +232,23 @@ public class Mapper {
         }
         entityManager.close();
         return entity;
+    }
+
+    private <TEntity> Object compute(Field field, TEntity entity) throws NoSuchFieldException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        Computed annotation = field.getAnnotation(Computed.class);
+        String entityFieldName = annotation.element();
+
+        Object fieldObject = invokeGetMethod(entityFieldName, entity);
+
+        fieldObject = initializeAndUnproxy(fieldObject);
+
+        if (fieldObject == null) {
+            return null;
+        }
+
+        String functionName = annotation.functionName();
+
+        return fieldObject.getClass().getDeclaredMethod(functionName).invoke(fieldObject);
     }
 
     private <TEntity> Object entityToEntityField(Field field, TEntity entity) throws NoSuchFieldException, InvocationTargetException {

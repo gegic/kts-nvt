@@ -54,7 +54,6 @@ public class AuthControllerIntegrationTest {
 
     @Test
     public void testLogin() {
-
         ResponseEntity<String> responseEntity =
                 restTemplate.postForEntity("/auth/login",
                         new LoginDto(ADMIN_EMAIL, ADMIN_PASSWORD),
