@@ -156,8 +156,8 @@ export class PostsComponent implements OnInit, AfterViewInit {
         summary: 'Success',
         detail: 'Now, everyone will be able to read the post you added.'
       });
+      this.resetPosts();
     });
-    this.resetPosts();
   }
 
   resetPosts(): void {
