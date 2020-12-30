@@ -15,7 +15,7 @@ import {EnterEmailComponent} from './view/login-registration/login/enter-email/e
 import {EnterPasswordComponent} from './view/login-registration/login/enter-password/enter-password.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastModule} from 'primeng/toast';
-import {MessageService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {JwtInterceptor} from './core/interceptors/jwt.interceptor';
 import {RegisterEmailComponent} from './view/login-registration/registration/register-email/register-email.component';
 import {RegisterNameComponent} from './view/login-registration/registration/register-name/register-name.component';
@@ -56,6 +56,8 @@ import {VirtualScrollerModule} from 'primeng/virtualscroller';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {SkeletonModule} from 'primeng/skeleton';
 import {ScrollTop, ScrollTopModule} from 'primeng/scrolltop';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {DialogModule} from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -117,12 +119,15 @@ import {ScrollTop, ScrollTopModule} from 'primeng/scrolltop';
     ScrollPanelModule,
     InfiniteScrollModule,
     SkeletonModule,
-    ScrollTopModule
+    ScrollTopModule,
+    ConfirmDialogModule,
+    DialogModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     MessageService,
-    DialogService
+    DialogService,
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })

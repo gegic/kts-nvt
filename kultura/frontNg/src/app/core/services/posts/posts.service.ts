@@ -24,4 +24,12 @@ export class PostsService {
     post.timeAdded = moment();
     return this.httpClient.post('/api/posts', post);
   }
+
+  deletePost(postId: number): Observable<any> {
+    return this.httpClient.delete(`/api/posts/${postId}`);
+  }
+
+  updatePost(post: Post): Observable<any> {
+    return this.httpClient.put('/api/posts', post);
+  }
 }

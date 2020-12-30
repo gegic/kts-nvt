@@ -63,7 +63,7 @@
         <p-card class="post-card p-pt-0" *ngFor="let post of posts">
           <div class="p-text-light time p-d-flex post-header">
             <p class="p-mb-0">{{ relativeTimeAdded(post.timeAdded) }}</p>
-            <p-menu [model]="menuItems" [popup]="true" #menu></p-menu>
+            <p-menu [model]="getMenuItems(post)" [popup]="true" #menu></p-menu>
             <button class="p-ml-auto options-button p-button p-button-icon p-button-text"
                     icon="pi pi-ellipsis-h"
                     (click)="menu.toggle($event)"
@@ -76,4 +76,22 @@
     </div>
   </div>
   <p-scrollTop [threshold]="300"></p-scrollTop>
+  <p-confirmDialog [baseZIndex]="1012" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+  <p-dialog header="Edit"
+            [resizable]="false"
+            [(visible)]="isEditDialogOpen"
+            [blockScroll]="true"
+            [modal]="true"
+  >
+    <textarea style="width: 500px" [maxLength]="1000" [rows]="5" [(ngModel)]="editContent" [autoResize]="true" pInputTextarea>
+        </textarea>
+    <div class="p-text-right">
+      <button class="p-button p-button-text p-button-plain"
+              icon="pi pi-caret-right"
+              label="Edit"
+              (click)="onClickEdit()"
+              pButton>
+      </button>
+    </div>
+  </p-dialog>
 </div>

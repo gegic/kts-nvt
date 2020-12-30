@@ -5,10 +5,11 @@ import {PostsService} from '../../core/services/posts/posts.service';
 import {Post} from '../../core/models/post';
 import {BehaviorSubject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {MenuItem, MessageService} from 'primeng/api';
+import {ConfirmationService, MenuItem, MessageService} from 'primeng/api';
 import {Router} from '@angular/router';
 import {Moment} from 'moment-timezone';
 import * as moment from 'moment-timezone';
+import {DialogService} from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-posts',
@@ -16,12 +17,6 @@ import * as moment from 'moment-timezone';
   styleUrls: ['./posts.component.scss']
 })
 export class PostsComponent implements OnInit, AfterViewInit {
-
-  menuItems: MenuItem[] = [
-    {label: 'Edit', icon: 'pi pi-pencil', command: e => console.log('EDIT')},
-    {label: 'Delete', icon: 'pi pi-trash', command: e => console.log('DELETE')},
-
-  ];
 
   page = -1;
   totalPages = 0;
@@ -31,11 +26,16 @@ export class PostsComponent implements OnInit, AfterViewInit {
   briefInfo!: ElementRef;
   briefInfoTop?: number;
   newPostContent = '';
+  isEditDialogOpen = false;
+  editContent = '';
+  editingPost?: Post;
 
   constructor(private detailsService: CulturalOfferingDetailsService,
               private postsService: PostsService,
               private messageService: MessageService,
-              private router: Router) { }
+              private router: Router,
+              private confirmationService: ConfirmationService,
+              private dialogService: DialogService) { }
 
   ngOnInit(): void {
     this.detailsService.culturalOffering.subscribe(val => {
@@ -149,14 +149,90 @@ export class PostsComponent implements OnInit, AfterViewInit {
     if (!this.culturalOffering) {
       return;
     }
-    this.postsService.createPost(this.newPostContent, this.culturalOffering?.id ?? 0).subscribe(val => {
-      this.postsService.posts = [];
-      this.page = -1;
-      this.totalPages = 0;
-      this.newPostContent = '';
-      this.getPosts();
+    this.postsService.createPost(this.newPostContent, this.culturalOffering?.id ?? 0)
+      .subscribe(val => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Now, everyone will be able to read the post you added.'
+      });
+    });
+    this.resetPosts();
+  }
+
+  resetPosts(): void {
+    this.postsService.posts = [];
+    this.page = -1;
+    this.totalPages = 0;
+    this.newPostContent = '';
+    this.getPosts();
+  }
+
+  getMenuItems(post: Post): MenuItem[] {
+    return [
+      {label: 'Edit', icon: 'pi pi-pencil', command: () => this.editPost(post)},
+      {label: 'Delete', icon: 'pi pi-trash', command: () => this.deletePost(post)},
+    ];
+  }
+
+  editPost(post: Post): void {
+    if (!post.content) {
+      return;
+    }
+    this.isEditDialogOpen = true;
+    this.editContent = post.content;
+    this.editingPost = post;
+  }
+
+  onClickEdit(): void {
+    if (!this.editingPost) {
+      return;
+    }
+    const postToUpdate = new Post();
+    postToUpdate.id = this.editingPost.id;
+    postToUpdate.content = this.editContent;
+    postToUpdate.timeAdded = this.editingPost.timeAdded;
+    postToUpdate.culturalOfferingId = this.editingPost.culturalOfferingId;
+    this.postsService.updatePost(postToUpdate).subscribe(val => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Post updated',
+        detail: 'The post was updated successfully.'
+      });
+      this.editContent = '';
+      this.isEditDialogOpen = false;
+      this.resetPosts();
     });
   }
+
+  deletePost(post: Post): void {
+    this.confirmationService.confirm(
+      {
+        message: 'Are you sure that you want to delete this post?',
+        acceptLabel: 'Delete',
+        rejectLabel: 'Close',
+        header: 'Deletion',
+        icon: 'pi pi-trash',
+        accept: () => this.postDeletionConfirmed(post)
+      });
+  }
+
+  postDeletionConfirmed(post: Post): void {
+    if (!post.id) {
+      return;
+    }
+    this.postsService.deletePost(post.id).subscribe(
+      () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Post deleted',
+          detail: 'The post was deleted successfully.'
+        });
+        this.resetPosts();
+      }
+    );
+  }
+
 
   get culturalOffering(): CulturalOffering | undefined {
     return this.detailsService.culturalOffering.getValue();
