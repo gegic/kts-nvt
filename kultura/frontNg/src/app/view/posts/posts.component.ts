@@ -1,4 +1,4 @@
-import {AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CulturalOffering} from '../../core/models/cultural-offering';
 import {CulturalOfferingDetailsService} from '../../core/services/cultural-offering-details/cultural-offering-details.service';
 import {PostsService} from '../../core/services/posts/posts.service';
@@ -16,7 +16,7 @@ import {DialogService} from 'primeng/dynamicdialog';
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.scss']
 })
-export class PostsComponent implements OnInit, AfterViewInit {
+export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   page = -1;
   totalPages = 0;
@@ -40,6 +40,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.detailsService.culturalOffering.subscribe(val => {
       if (!!val) {
+        this.postsService.posts = [];
         this.getPosts();
       }
     });
@@ -233,6 +234,9 @@ export class PostsComponent implements OnInit, AfterViewInit {
     );
   }
 
+  ngOnDestroy(): void {
+    this.postsService.posts = [];
+  }
 
   get culturalOffering(): CulturalOffering | undefined {
     return this.detailsService.culturalOffering.getValue();
