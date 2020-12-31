@@ -62,6 +62,10 @@ public class CategoryService {
     }
 
     public void delete(long id) {
-        categoryRepository.deleteById(id);
+        Category c = categoryRepository.findById(id).orElse(null);
+        if(c == null){
+            throw new ResourceNotFoundException("Category with id: "+ id + " doesnt't exist.");
+        }
+        categoryRepository.delete(c);
     }
 }

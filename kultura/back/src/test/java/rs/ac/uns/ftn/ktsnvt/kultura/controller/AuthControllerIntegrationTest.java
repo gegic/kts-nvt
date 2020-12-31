@@ -61,6 +61,7 @@ public class AuthControllerIntegrationTest {
                         String.class);
         JsonNode parent= null;
         String token = "";
+        assertNotNull(responseEntity.getBody());
         try {
             parent = new ObjectMapper().readTree(responseEntity.getBody());
             token = parent.path("token").asText();

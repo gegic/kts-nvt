@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.*;
 
 @RunWith(SpringRunner.class)
@@ -77,6 +78,7 @@ public class CategoriesControllerIntegrationTest {
 
         CategoryDto newCategory = response.getBody();
 
+        assertNotNull(newCategory);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(newCategory.getName(), categoryDto.getName());
 

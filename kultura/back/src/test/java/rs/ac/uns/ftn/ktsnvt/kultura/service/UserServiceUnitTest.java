@@ -14,6 +14,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
@@ -83,6 +85,28 @@ public class UserServiceUnitTest {
                 true,
                 authorities
         );
+    }
+    private UserDto getNewUserDto() {
+        Authority a = getUserAuthority();
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(a);
+        return new UserDto(
+                null,
+                NEW_USER_EMAIL,
+                NEW_USER_PASSWORD,
+                NEW_USER_FIRST_NAME,
+                NEW_USER_LAST_NAME,
+                LocalDateTime.of(2020,7,23,0,0),
+                false,
+                authorities
+        );
+    }
+
+
+    private UserDto getUpdateUserDto(){
+        UserDto u = getNewUserDto();
+        u.setId(1L);
+        return u;
     }
 
     @Test
@@ -184,5 +208,87 @@ public class UserServiceUnitTest {
 
         assertTrue(modified.isVerified());
         assertEquals(EXISTING_USER_ID, modified.getId().longValue());
+    }
+
+    @Test
+    public void testCreateUser(){
+
+        UserDto newUser = getNewUserDto();
+
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenAnswer(i -> i.getArgument(0));
+
+        Mockito.when(mapper.fromEntity(Mockito.any(User.class), Mockito.eq(UserDto.class))).thenAnswer(i -> {
+            User u = i.getArgument(0);
+            return new UserDto(
+                    u.getId(),
+                    u.getEmail(),
+                    null,
+                    u.getFirstName(),
+                    u.getLastName(),
+                    u.getLastPasswordChange(),
+                    u.isVerified(),
+                    (Set<Authority>) u.getAuthorities()
+            );
+        });
+
+        UserDto createdUser = userService.create(newUser);
+
+        assertEquals(createdUser.getEmail(), newUser.getEmail());
+        assertEquals(createdUser.getFirstName(), newUser.getFirstName());
+        assertEquals(createdUser.getLastName(), newUser.getLastName());
+    }
+
+    @Test(expected = ResourceExistsException.class)
+    public void testCreateExists(){
+        UserDto newUser = getUpdateUserDto();
+
+        Mockito.when(userRepository.existsById(Mockito.anyLong())).thenReturn(true);
+
+        userService.create(newUser);
+    }
+
+    @Test
+    public void testUpdateUser(){
+
+        UserDto newUserDto = getUpdateUserDto();
+
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenAnswer(i -> Optional.of(getFirstUser()));
+
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenAnswer(i -> i.getArgument(0));
+
+        Mockito.when(mapper.fromEntity(Mockito.any(User.class), Mockito.eq(UserDto.class))).thenAnswer(i -> {
+            User u = i.getArgument(0);
+            return new UserDto(
+                    u.getId(),
+                    u.getEmail(),
+                    null,
+                    u.getFirstName(),
+                    u.getLastName(),
+                    u.getLastPasswordChange(),
+                    u.isVerified(),
+                    (Set<Authority>) u.getAuthorities()
+            );
+        });
+
+        UserDto updated = userService.update(newUserDto);
+        assertEquals(updated.getEmail(), newUserDto.getEmail());
+        assertEquals(updated.getFirstName(), newUserDto.getFirstName());
+        assertEquals(updated.getLastName(), newUserDto.getLastName());
+        assertEquals(updated.isVerified(), newUserDto.isVerified());
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void testUpdateNotFound(){
+        UserDto newUserDto = getNewUserDto();
+        userService.update(newUserDto);
+    }
+
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void testDeleteNotExists(){
+
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        Mockito.doNothing().when(userRepository).delete(Mockito.any());
+        userService.delete(Mockito.anyLong());
     }
 }

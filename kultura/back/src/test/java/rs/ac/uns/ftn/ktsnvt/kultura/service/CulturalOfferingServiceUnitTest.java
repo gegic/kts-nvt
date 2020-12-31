@@ -194,4 +194,16 @@ public class CulturalOfferingServiceUnitTest {
         assertTrue(list.isEmpty());
     }
 
+
+    @Test
+    public void whenUpdate(){
+        //TODO dovrsiti
+        CulturalOfferingDto newDto = getTestCulturalOfferingDto();
+        newDto.setId(CulturalOfferingConstants.EXISTING_ID1);
+
+        CulturalOfferingDto updatedDto = culturalOfferingService.update(newDto);
+        assertEquals(updatedDto.getAddress(), newDto.getAddress());
+        assertEquals(updatedDto.getAdditionalInfo(), newDto.getAdditionalInfo());
+        assertEquals(updatedDto.getBriefInfo(), newDto.getBriefInfo());
+    }
 }
