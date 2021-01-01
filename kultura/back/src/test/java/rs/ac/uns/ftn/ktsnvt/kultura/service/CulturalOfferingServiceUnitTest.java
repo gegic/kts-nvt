@@ -18,6 +18,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
@@ -90,7 +91,11 @@ public class CulturalOfferingServiceUnitTest {
         culturalOffering.setBriefInfo(CulturalOfferingConstants.EXISTING_BRIEF_INFO1);
         culturalOffering.setLatitude(CulturalOfferingConstants.EXISTING_LATITUDE1);
         culturalOffering.setLongitude(CulturalOfferingConstants.EXISTING_LONGITUDE1);
+        Category c = new Category();
+        c.setId(1);
+        c.setName("Cat");
         Subcategory subcategory = new Subcategory();
+        subcategory.setCategory(c);
         subcategory.setId(CulturalOfferingConstants.EXISTING_SUBCATEGORY_ID1);
         culturalOffering.setSubcategory(subcategory);
         culturalOffering.setName(CulturalOfferingConstants.EXISTING_NAME1);
@@ -162,7 +167,9 @@ public class CulturalOfferingServiceUnitTest {
                             c.getLastChange(),
                             c.getAdditionalInfo(),
                             c.getSubcategory().getId(),
-                            c.getSubcategory().getName()
+                            c.getSubcategory().getName(),
+                            c.getSubcategory().getCategory().getName(),
+                            0
                     );
                 });
         List<CulturalOfferingDto> list = culturalOfferingService.findByBounds(9, 14, -4, 17);

@@ -8,6 +8,7 @@ import {CulturalOffering} from '../../core/models/cultural-offering';
 import {CulturalOfferingMarker} from '../../core/models/culturalOfferingMarker';
 import {inOutAnimation} from './view-offering-button-animation';
 import {MapPopupService} from '../../core/services/map-popup.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-map-view',
@@ -25,7 +26,8 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   mapElement: ElementRef<HTMLElement> | null = null;
 
   constructor(private mapService: MapService,
-              private popupService: MapPopupService) {
+              private popupService: MapPopupService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -122,6 +124,9 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
           m.on('mouseout', ev => {
             ev.target.hovering.next(false);
             ev.target.closePopup();
+          });
+          m.on('click', ev => {
+            this.router.navigate([`/cultural-offering/${ev.target?.culturalOffering.id}`]);
           });
           this.mapService.markers[m.culturalOffering.id ?? 0] = m;
           m.addTo(map);

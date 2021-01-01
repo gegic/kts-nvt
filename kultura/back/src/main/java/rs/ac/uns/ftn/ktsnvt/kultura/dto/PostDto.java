@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;

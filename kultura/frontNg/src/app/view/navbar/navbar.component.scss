@@ -1,6 +1,24 @@
 .navbar {
   height: 8vh;
   border-bottom: 1px solid rgba(0, 0, 0, .2);
+  background-color: #FCF7F8;
+  z-index: 1010;
+}
+
+::ng-deep .user-menu .p-menu {
+  position: absolute !important;
+  right: 30px !important;
+  top: 50px !important;
+}
+
+::ng-deep .navbar {
+  position: sticky;
+  top: 0;
+}
+
+::ng-deep .navbar {
+  position: sticky;
+  top: 0;
 }
 
 .logo {

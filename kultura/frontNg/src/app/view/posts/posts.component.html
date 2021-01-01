@@ -1,0 +1,97 @@
+<div class="posts">
+  <div class="p-grid p-px-0 p-m-0 p-py-3">
+    <div class="p-d-none p-d-lg-block p-col p-lg-3">
+      <div #briefInfoCard [ngClass]="{'absolute-info': stickBriefInfoValue, 'relative-info': !stickBriefInfoValue}">
+        <p-card styleClass="card">
+          <h3 class="p-text-bold p-mb-0 p-mt-0">
+            Brief info
+          </h3>
+          <div class="p-d-inline-flex p-mt-2 p-mb-0">
+            <i class="pi pi-info-circle" style="font-size: 2rem"></i>
+            <div class="p-ml-2 p-flex-wrap">
+              <p class="p-text-normal p-my-0"
+                 *ngIf="!!culturalOffering; else briefInfoSkeleton"
+              >{{culturalOffering?.briefInfo}}</p>
+              <ng-template #briefInfoSkeleton>
+                <p-skeleton shape="rectangle"></p-skeleton>
+              </ng-template>
+            </div>
+          </div>
+          <div class="p-d-inline-flex p-mt-3 p-mb-0">
+            <i class="pi pi-map-marker" style="font-size: 2rem"></i>
+            <div class="p-ml-2 p-flex-wrap">
+              <p class="p-text-normal p-my-0"
+                 *ngIf="!!culturalOffering; else addressSkeleton"
+              >{{culturalOffering?.address}}</p>
+            </div>
+            <ng-template #addressSkeleton>
+              <p-skeleton shape="rectangle"></p-skeleton>
+            </ng-template>
+          </div>
+          <div class="p-d-inline-flex p-mt-3 p-mb-0">
+            <i class="pi pi-clock" style="font-size: 2rem"></i>
+            <div class="p-ml-2 p-flex-wrap">
+              <p class="p-text-normal p-my-0"
+                 *ngIf="!!culturalOffering; else reviewTimeSkeleton"
+              >{{culturalOffering?.briefInfo}}</p>
+              <ng-template #reviewTimeSkeleton>
+                <p-skeleton shape="rectangle"></p-skeleton>
+              </ng-template>
+            </div>
+          </div>
+        </p-card>
+      </div>
+    </div>
+    <div class="p-col-12 p-lg-9">
+      <p-card class="new-post-card">
+        <h3 class="p-mt-0 p-text-normal">
+          Announce some news...
+        </h3>
+        <textarea [maxLength]="1000" [rows]="5" [(ngModel)]="newPostContent" [autoResize]="true" placeholder="Start typing..." pInputTextarea>
+        </textarea>
+        <div class="p-text-right">
+          <button class="p-button p-button-text p-button-plain"
+                  icon="pi pi-caret-right"
+                  label="Announce"
+                  (click)="onClickAnnounce()"
+                  pButton>
+          </button>
+        </div>
+      </p-card>
+      <div infinite-scroll
+           (scrolled)="onScrollDown()">
+        <p-card class="post-card p-pt-0" *ngFor="let post of posts">
+          <div class="p-text-light time p-d-flex post-header">
+            <p class="p-mb-0">{{ relativeTimeAdded(post.timeAdded) }}</p>
+            <p-menu [model]="getMenuItems(post)" [popup]="true" #menu></p-menu>
+            <button class="p-ml-auto options-button p-button p-button-icon p-button-text"
+                    icon="pi pi-ellipsis-h"
+                    (click)="menu.toggle($event)"
+                    pButton
+            ></button>
+          </div>
+          <p class="p-mt-0 p-mb-2">{{ post.content }}</p>
+        </p-card>
+      </div>
+    </div>
+  </div>
+  <p-scrollTop [threshold]="300"></p-scrollTop>
+  <p-confirmDialog [baseZIndex]="1012" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+  <p-dialog header="Edit"
+            [resizable]="false"
+            [(visible)]="isEditDialogOpen"
+            [blockScroll]="true"
+            [modal]="true"
+  >
+    <textarea style="width: 500px" [maxLength]="1000" [rows]="5" [(ngModel)]="editContent" [autoResize]="true" pInputTextarea>
+        </textarea>
+    <div class="p-text-right">
+      <button class="p-button p-button-text p-button-plain"
+              icon="pi pi-caret-right"
+              label="Edit"
+              (click)="onClickEdit()"
+              pButton>
+      </button>
+    </div>
+  </p-dialog>
+</div>

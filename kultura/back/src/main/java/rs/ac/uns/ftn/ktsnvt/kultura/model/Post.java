@@ -16,10 +16,11 @@ public class Post {
     private long id;
     @Getter
     @Setter
+    @Column(length = 1000)
     private String content;
     @Getter
     @Setter
-    private LocalDateTime timeAdded;
+    private LocalDateTime timeAdded = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
