@@ -26,12 +26,11 @@ public class CulturalOfferingPhotosController {
         this.culturalOfferingPhotoService = culturalOfferingPhotoService;
     }
 
-    @GetMapping(path = "/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/cultural-offering/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CulturalOfferingPhotoDto>> get(@PathVariable long culturalOfferingId,
                                                               @RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "3") int size,
-                                                              @RequestParam(defaultValue = "id,desc") String[] sort){
-
+                                                              @RequestParam(defaultValue = "10") int size,
+                                                              @RequestParam(defaultValue = "timeAdded,desc") String[] sort){
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<CulturalOfferingPhotoDto> photoDtos = this.culturalOfferingPhotoService
                 .readAllByCulturalOfferingId(culturalOfferingId, p);
@@ -44,24 +43,17 @@ public class CulturalOfferingPhotosController {
     }
 
     @PreAuthorize("hasRole('MODERATOR')")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<CulturalOfferingPhotoDto> add(@RequestParam("photo") MultipartFile photoFile){
-        CulturalOfferingPhotoDto saved = this.culturalOfferingPhotoService.create(photoFile);
-        return ResponseEntity.created(URI.create(String.format("/api/photo/%s", saved.getId())))
-                .body(saved);
-    }
-
-    @PreAuthorize("hasRole('MODERATOR')")
-    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<CulturalOfferingPhotoDto> update(@RequestParam("photo") MultipartFile photoFile,
-                                                    @PathVariable long id){
-        return ResponseEntity.ok(this.culturalOfferingPhotoService.update(photoFile, id));
+    @PostMapping(path="/cultural-offering/{culturalOfferingId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<CulturalOfferingPhotoDto> add(@RequestParam("photo") MultipartFile photoFile,
+                                                 @PathVariable long culturalOfferingId){
+        CulturalOfferingPhotoDto saved = this.culturalOfferingPhotoService.create(photoFile, culturalOfferingId);
+        return ResponseEntity.created(URI.create(saved.getId().toString())).body(saved);
     }
 
     @PreAuthorize("hasRole('MODERATOR')")
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable String id){
-        this.culturalOfferingPhotoService.delete(Long.parseLong(id));
+    ResponseEntity<Void> delete(@PathVariable long id){
+        this.culturalOfferingPhotoService.delete(id);
         return ResponseEntity.ok().build();
     }
 

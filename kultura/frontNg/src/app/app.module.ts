@@ -58,6 +58,9 @@ import {SkeletonModule} from 'primeng/skeleton';
 import {ScrollTop, ScrollTopModule} from 'primeng/scrolltop';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {DialogModule} from 'primeng/dialog';
+import {FileUpload, FileUploadModule} from 'primeng/fileupload';
+import {GalleriaModule} from 'primeng/galleria';
+import {ProgressBarModule} from 'primeng/progressbar';
 
 @NgModule({
   declarations: [
@@ -121,7 +124,10 @@ import {DialogModule} from 'primeng/dialog';
     SkeletonModule,
     ScrollTopModule,
     ConfirmDialogModule,
-    DialogModule
+    DialogModule,
+    FileUploadModule,
+    GalleriaModule,
+    ProgressBarModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

@@ -6,4 +6,5 @@ export class CulturalOfferingPhoto {
   height?: number;
   timeAdded?: Moment;
   culturalOfferingId?: number;
+  hovering = false;
 }

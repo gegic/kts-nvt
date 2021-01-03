@@ -42,8 +42,8 @@ public class CulturalOfferingMainPhotoService {
         BufferedImage thumbnail;
 
         try {
-            bufferedImage = ImageIO.read(photoFile.getInputStream());
-            thumbnail = Thumbnails.of(bufferedImage).size(150, 150).asBufferedImage();
+            bufferedImage = Thumbnails.of(photoFile.getInputStream()).size(1000, 1000).asBufferedImage();
+            thumbnail = Thumbnails.of(photoFile.getInputStream()).size(200, 200).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
@@ -91,11 +91,6 @@ public class CulturalOfferingMainPhotoService {
             token = "";
         }
         List<CulturalOfferingMainPhoto> photos = repository.getNullOffering(token);
-        photos.parallelStream().map(p -> new File("./photos/main/" + p.getId() + ".png"))
-                .forEach(f -> {
-                    System.out.println(f.delete());
-                    System.out.println(f.exists());
-                });
         photos.parallelStream().map(p -> new File("./photos/main/thumbnail/" + p.getId() + ".png"))
                 .forEach(File::delete);
         repository.deleteAll(photos);
