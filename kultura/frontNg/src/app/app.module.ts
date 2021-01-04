@@ -63,6 +63,8 @@ import {GalleriaModule} from 'primeng/galleria';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {RatingModule} from 'primeng/rating';
 import { ReviewElementComponent } from './view/review-element/review-element.component';
+import { ListViewComponent } from './view/list-view/list-view.component';
+import { ListElementComponent } from './view/list-element/list-element.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +98,9 @@ import { ReviewElementComponent } from './view/review-element/review-element.com
     PhotosComponent,
     ReviewsComponent,
     CulturalOfferingAboutComponent,
-    ReviewElementComponent
+    ReviewElementComponent,
+    ListViewComponent,
+    ListElementComponent
   ],
   imports: [
     BrowserModule,

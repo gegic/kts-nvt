@@ -1,0 +1,35 @@
+<p-card class="offering-card" (click)="onClickCard()">
+  <div class="p-grid p-m-0 p-p-0 ">
+    <div class="p-col-fixed" style="width: 100px; height: 100px">
+      <img class="thumbnail-img" [src]="getThumbnailUrl()" alt="thumbnail">
+    </div>
+    <div class="p-col p-ml-4">
+      <h5 class="p-text-normal p-m-0">
+        {{culturalOffering.categoryName}} > {{culturalOffering.subcategoryName}}
+      </h5>
+      <h2 class="p-text-bold p-m-0">
+        {{culturalOffering.name}}
+      </h2>
+      <p class="p-text-light p-m-0">
+        {{culturalOffering.numSubscribed}} people subscribed.
+      </p>
+      <small class="p-mt-1">{{culturalOffering.numPhotos}} photos.</small>
+    </div>
+    <div class="p-col p-text-right p-as-end">
+      <div class="p-d-block button-group p-mb-3">
+        <button class="p-button p-button-rounded p-button-icon p-button-danger"
+                icon="pi pi-trash"
+                (click)="onClickDelete()"
+                pButton></button>
+        <button class="p-button p-button-rounded p-button-icon p-ml-3"
+                icon="pi pi-pencil"
+                (click)="onClickEdit()"
+                pButton></button>
+      </div>
+      <div class="p-d-inline-flex p-ml-auto">
+        <i class="pi pi-star"></i>
+        <small class="p-ml-1 p-text-light">{{reviews}}</small>
+      </div>
+    </div>
+  </div>
+</p-card>
