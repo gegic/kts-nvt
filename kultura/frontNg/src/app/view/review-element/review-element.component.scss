@@ -1,0 +1,23 @@
+.review-img {
+  max-height: 3rem;
+}
+
+.review-img-wrapper {
+  border: .5px solid #584F51;
+  max-height: 3rem;
+  width: fit-content;
+}
+
+.review-img-wrapper:hover {
+  cursor: pointer;
+}
+
+.review-img-wrapper:hover img {
+  background-color: #38435d;
+  opacity:0.5 !important;
+}
+
+.review-images {
+  margin-left: auto;
+  width: fit-content;
+}

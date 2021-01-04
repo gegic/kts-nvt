@@ -61,6 +61,8 @@ import {DialogModule} from 'primeng/dialog';
 import {FileUpload, FileUploadModule} from 'primeng/fileupload';
 import {GalleriaModule} from 'primeng/galleria';
 import {ProgressBarModule} from 'primeng/progressbar';
+import {RatingModule} from 'primeng/rating';
+import { ReviewElementComponent } from './view/review-element/review-element.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +95,8 @@ import {ProgressBarModule} from 'primeng/progressbar';
     PostsComponent,
     PhotosComponent,
     ReviewsComponent,
-    CulturalOfferingAboutComponent
+    CulturalOfferingAboutComponent,
+    ReviewElementComponent
   ],
   imports: [
     BrowserModule,
@@ -127,7 +130,8 @@ import {ProgressBarModule} from 'primeng/progressbar';
     DialogModule,
     FileUploadModule,
     GalleriaModule,
-    ProgressBarModule
+    ProgressBarModule,
+    RatingModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

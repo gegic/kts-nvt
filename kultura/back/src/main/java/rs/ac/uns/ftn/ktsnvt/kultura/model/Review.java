@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Table(
@@ -30,7 +31,7 @@ public class Review {
     @Setter
     private LocalDateTime timeAdded = LocalDateTime.now();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @Getter
     @Setter
     private CulturalOffering culturalOffering;
@@ -43,13 +44,5 @@ public class Review {
     @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private Set<ReviewPhoto> photos;
-
-    public Set<ReviewPhoto> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(Set<ReviewPhoto> photos) {
-        this.photos = photos;
-    }
+    private Set<ReviewPhoto> photos = new HashSet<>();
 }

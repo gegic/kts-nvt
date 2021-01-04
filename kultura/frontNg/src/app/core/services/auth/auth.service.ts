@@ -34,4 +34,9 @@ export class AuthService {
     localStorage.removeItem('token');
     this.router.navigateByUrl('/login');
   }
+
+  getUserRole(): string {
+    const user = Object.assign(new User(), this.user.getValue());
+    return user.getRole();
+  }
 }

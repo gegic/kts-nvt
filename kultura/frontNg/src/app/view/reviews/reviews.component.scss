@@ -1,0 +1,33 @@
+.rating {
+  font-size: 5rem;
+}
+
+.reviews {
+  padding: 3vh 15vw 0 15vw;
+}
+
+.num-reviews {
+  font-size: 1.5rem;
+}
+
+::ng-deep .p-card {
+  border-radius: 1em;
+}
+
+.rating-number {
+  float: right;
+}
+
+.review-photo {
+  height: 70px;
+  max-height: 70px;
+}
+
+.review-photo-container {
+  border: .5px solid #584F51;
+  max-height: 70px;
+}
+
+.send-review {
+  float: right;
+}

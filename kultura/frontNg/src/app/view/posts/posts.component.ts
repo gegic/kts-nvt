@@ -10,6 +10,8 @@ import {Router} from '@angular/router';
 import {Moment} from 'moment-timezone';
 import * as moment from 'moment-timezone';
 import {DialogService} from 'primeng/dynamicdialog';
+import {TimeUtil} from '../../core/timeUtil';
+import {AuthService} from '../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-posts',
@@ -35,7 +37,8 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
               private messageService: MessageService,
               private router: Router,
               private confirmationService: ConfirmationService,
-              private dialogService: DialogService) { }
+              private dialogService: DialogService,
+              private authService: AuthService) { }
 
   ngOnInit(): void {
     this.detailsService.culturalOffering.subscribe(val => {
@@ -72,46 +75,16 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.postsService.getPosts(this.detailsService.culturalOffering.getValue()?.id ?? 0, this.page + 1).subscribe(
       val => {
-        this.postsService.posts = this.postsService.posts.concat(val.content);
+        for (const el of val.content) {
+          if (this.postsService.posts.some(post => post.id === el.id)) {
+            continue;
+          }
+          this.postsService.posts.push(el);
+        }
         this.page = val.pageable.pageNumber;
         this.totalPages = val.totalPages;
       }
     );
-  }
-
-  private timeDifference(current: number, previous: number): string {
-
-    const msPerMinute = 60 * 1000;
-    const msPerHour = msPerMinute * 60;
-    const msPerDay = msPerHour * 24;
-    const msPerMonth = msPerDay * 30;
-    const msPerYear = msPerDay * 365;
-
-    const elapsed = current - previous;
-
-    if (elapsed < msPerMinute) {
-      return 'few seconds ago';
-    }
-
-    else if (elapsed < msPerHour) {
-      return Math.round(elapsed / msPerMinute) + ' minutes ago';
-    }
-
-    else if (elapsed < msPerDay ) {
-      return Math.round(elapsed / msPerHour ) + ' hours ago';
-    }
-
-    else if (elapsed < msPerMonth) {
-      return 'approximately ' + Math.round(elapsed / msPerDay) + ' days ago';
-    }
-
-    else if (elapsed < msPerYear) {
-      return 'approximately ' + Math.round(elapsed / msPerMonth) + ' months ago';
-    }
-
-    else {
-      return 'approximately ' + Math.round(elapsed / msPerYear ) + ' years ago';
-    }
   }
 
   relativeTimeAdded(timeAdded: Moment | undefined): string {
@@ -120,7 +93,7 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const now = moment();
     const timeAddedMs = moment.utc(timeAdded);
-    return this.timeDifference(now.valueOf(), timeAddedMs.valueOf());
+    return TimeUtil.timeDifference(now.valueOf(), timeAddedMs.valueOf());
   }
 
   @HostListener('window:scroll', ['$event'])
@@ -234,8 +207,8 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
-    this.postsService.posts = [];
+  getUserRole(): string {
+    return this.authService.getUserRole();
   }
 
   get culturalOffering(): CulturalOffering | undefined {
@@ -245,4 +218,9 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
   get posts(): Post[] {
     return this.postsService.posts;
   }
+
+  ngOnDestroy(): void {
+    this.postsService.posts = [];
+  }
+
 }

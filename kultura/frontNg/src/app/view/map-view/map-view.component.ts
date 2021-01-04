@@ -9,6 +9,8 @@ import {CulturalOfferingMarker} from '../../core/models/culturalOfferingMarker';
 import {inOutAnimation} from './view-offering-button-animation';
 import {MapPopupService} from '../../core/services/map-popup.service';
 import {Router} from '@angular/router';
+import {AuthService} from '../../core/services/auth/auth.service';
+import {User} from '../../core/models/user';
 
 @Component({
   selector: 'app-map-view',
@@ -27,7 +29,8 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private mapService: MapService,
               private popupService: MapPopupService,
-              private router: Router) {
+              private router: Router,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -161,6 +164,10 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.map?.on('locationfound', ev => {
       this.map?.setView(ev.latlng, 8, {animate: false});
     });
+  }
+
+  getUserRole(): string {
+    return this.authService.getUserRole();
   }
 
   get showRegularOfferings(): boolean {
