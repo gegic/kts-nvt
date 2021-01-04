@@ -46,6 +46,9 @@ public class CulturalOfferingDto {
     @EntityField
     private String subcategoryName;
 
+    @EntityField(origin = "subcategory.category.id")
+    private long categoryId;
+
     @EntityField(origin = "subcategory.category.name")
     private String categoryName;
 

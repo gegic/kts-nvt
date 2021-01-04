@@ -168,6 +168,7 @@ public class CulturalOfferingServiceUnitTest {
                             c.getAdditionalInfo(),
                             c.getSubcategory().getId(),
                             c.getSubcategory().getName(),
+                            c.getSubcategory().getCategory().getId(),
                             c.getSubcategory().getCategory().getName(),
                             0
                     );

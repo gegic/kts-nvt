@@ -24,6 +24,7 @@
                        [loading]="categoriesLoading"
                        (clear)="resetSubcategories()"
                        (scrollToEnd)="getCategories()"
+                       [hideSelected]="mode === 'edit'"
             ></ng-select>
           </div>
           <div class="p-col-6">
@@ -35,6 +36,7 @@
                        [virtualScroll]="true"
                        [loading]="subcategoriesLoading"
                        (scrollToEnd)="getSubcategories()"
+                       [hideSelected]="mode === 'edit'"
             ></ng-select>
           </div>
         </div>
@@ -138,7 +140,7 @@
           ></textarea>
         </div>
         <div class="p-text-right p-mt-3">
-          <button type="submit" class="p-button p-button-lg primary" label="Create" pButton></button>
+          <button type="submit" class="p-button p-button-lg primary" [label]="this.mode === 'add' ? 'Create' : 'Edit'" pButton></button>
         </div>
       </div>
     </div>

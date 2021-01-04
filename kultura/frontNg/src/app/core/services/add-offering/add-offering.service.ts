@@ -13,7 +13,7 @@ export class AddOfferingService {
 
   categories?: Category[] = [];
   subcategories?: Subcategory[] = [];
-  private culturalOffering: CulturalOffering = new CulturalOffering();
+  culturalOffering: CulturalOffering = new CulturalOffering();
 
   constructor(private httpClient: HttpClient) {
   }
@@ -23,9 +23,7 @@ export class AddOfferingService {
   }
 
   set coordinates(latLng: [number, number]) {
-    console.log(latLng);
     this.culturalOffering.latitude = latLng[0];
-    console.log(this.culturalOffering);
     this.culturalOffering.longitude = latLng[1];
   }
 
@@ -65,6 +63,10 @@ export class AddOfferingService {
     this.httpClient.delete('/api/cultural-offerings/clear-photos').subscribe();
   }
 
+  deletePhotos(culturalOfferingId: number): Observable<any> {
+    return this.httpClient.delete(`/api/cultural-offering/photo/${culturalOfferingId}`);
+  }
+
   addPhoto(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('photo', file);
@@ -72,7 +74,14 @@ export class AddOfferingService {
   }
 
   addOffering(): Observable<any> {
-    console.log(this.culturalOffering);
     return this.httpClient.post('/api/cultural-offerings', this.culturalOffering);
+  }
+
+  editOffering(): Observable<any> {
+    return this.httpClient.put('/api/cultural-offerings', this.culturalOffering);
+  }
+
+  getOffering(id: number): Observable<any> {
+    return this.httpClient.get(`/api/cultural-offerings/${id}`);
   }
 }

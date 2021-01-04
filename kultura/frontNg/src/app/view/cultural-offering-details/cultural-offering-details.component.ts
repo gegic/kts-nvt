@@ -70,6 +70,10 @@ export class CulturalOfferingDetailsComponent implements OnInit {
       });
   }
 
+  onClickEdit(): void {
+    this.router.navigate([`/edit-offering/${this.culturalOffering?.id ?? 0}`]);
+  }
+
   deletionConfirmed(): void {
     this.culturalOfferingsService.delete(this.culturalOffering?.id ?? 0).subscribe(() => {
       this.router.navigate(['']);

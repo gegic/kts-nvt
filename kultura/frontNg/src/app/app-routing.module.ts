@@ -37,8 +37,8 @@ const routes: Routes = [
           { path: 'about', component: CulturalOfferingAboutComponent }
         ]
       },
-
-      { path: 'create-offering', component: CulturalOfferingAddComponent, data: {roles: ['MODERATOR']}, canActivate: [AuthGuard] },
+      { path: 'create-offering', component: CulturalOfferingAddComponent, data: {roles: ['MODERATOR'], mode: 'add'}, canActivate: [AuthGuard] },
+      { path: 'edit-offering/:id', component: CulturalOfferingAddComponent, data: {roles: ['MODERATOR'], mode: 'edit'}, canActivate: [AuthGuard] },
       { path: 'admin-panel', component: ModeratorsViewComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
       { path: 'add-moderator', component: ModeratorAddComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] }
     ]
