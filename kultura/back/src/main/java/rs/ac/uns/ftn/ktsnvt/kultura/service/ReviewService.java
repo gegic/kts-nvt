@@ -147,4 +147,21 @@ public class ReviewService {
         return this.reviewRepository.findByCulturalOfferingIdAndUserId(culturalOfferingId,
                 userId).map(review -> mapper.fromEntity(review, ReviewDto.class));
     }
+
+    @Transactional
+    public void deleteByCulturalOfferingId(long culturalOfferingId) {
+
+        List<Review> reviews = reviewRepository.findAllByCulturalOfferingId(culturalOfferingId);
+
+        for (Review r : reviews) {
+            Set<ReviewPhoto> photos = r.getPhotos();
+            for (ReviewPhoto photo : photos) {
+                new File("./photos/review/thumbnail/" + photo.getId() + ".png").delete();
+                new File("./photos/review/" + photo.getId() + ".png").delete();
+            }
+            photoRepository.deleteAll(photos);
+        }
+        reviewRepository.deleteAll(reviews);
+
+    }
 }

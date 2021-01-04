@@ -84,7 +84,7 @@ public class CulturalOfferingsController {
     }
 
     @PreAuthorize("hasRole('MODERATOR')")
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable String id){
         this.culturalOfferingService.delete(Long.parseLong(id));
         return ResponseEntity.ok().build();
