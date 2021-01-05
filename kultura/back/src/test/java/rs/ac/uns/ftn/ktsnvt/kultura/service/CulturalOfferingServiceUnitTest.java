@@ -1,21 +1,16 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CulturalOfferingConstants;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
@@ -25,18 +20,13 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoReposito
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
-import javax.validation.constraints.Null;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @Rollback(false)
