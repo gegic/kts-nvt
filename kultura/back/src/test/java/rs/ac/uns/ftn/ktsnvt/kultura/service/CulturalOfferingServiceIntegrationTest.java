@@ -56,7 +56,8 @@ public class CulturalOfferingServiceIntegrationTest {
     public void testReadAll() {
         Pageable pageRequest = PageRequest.of(0, CulturalOfferingConstants.PAGE_SIZE);
 
-        Page<CulturalOfferingDto> returnedCulturalOfferings = culturalOfferingService.readAll(pageRequest);
+        Page<CulturalOfferingDto> returnedCulturalOfferings = culturalOfferingService.readAll(pageRequest, "",
+                1, 5);
 
         assertEquals(CulturalOfferingConstants.DB_COUNT, returnedCulturalOfferings.getContent().size());
 

@@ -14,6 +14,20 @@
               [label]="sortType.label"
               (click)="menu.toggle($event)"
               pButton></button>
+
+      <div class="p-d-flex p-ml-auto p-ai-center filter">
+        <i class="pi pi-filter"></i>
+        <button class="p-button p-button-text p-button-secondary p-p-1 p-ml-1"
+                [label]="!!filter.rating ? filter.rating[0] + '-' + filter.rating[1] : 'RATING'"
+                (click)="isOpenRatingDialog = true"
+                pButton></button>
+        <button class="p-button p-button-text p-button-secondary p-p-1 p-ml-1"
+                [label]="'REVIEWS'"
+                pButton></button>
+        <button class="p-button p-button-text p-button-secondary p-p-1 p-ml-1"
+                [label]="'CATEGORY'"
+                pButton></button>
+      </div>
     </div>
     <app-list-element *ngFor="let culturalOffering of culturalOfferings"
                       [culturalOffering]="culturalOffering"
@@ -21,4 +35,9 @@
     >
     </app-list-element>
   </div>
+  <p-dialog [(visible)]="isOpenRatingDialog" (onHide)="resetRating()">
+    <h3 class="p-text-light">Rating range</h3>
+    <p-slider class="p-mt-5" [min]="0" [max]="5" [(ngModel)]="filter.rating" [range]="true"></p-slider>
+    <button class="p-button p-mt-2" label="Save" (click)="saveRating()" pButton></button>
+  </p-dialog>
 </div>

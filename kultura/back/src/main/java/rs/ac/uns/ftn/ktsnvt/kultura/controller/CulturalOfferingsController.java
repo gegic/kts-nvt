@@ -38,12 +38,17 @@ public class CulturalOfferingsController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<CulturalOfferingDto>> getAll(@RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "3") int size,
-                                                            @RequestParam(defaultValue = "id,asc") String[] sort) {
+    public ResponseEntity<Page<CulturalOfferingDto>> getAll
+            (@RequestParam(defaultValue = "0") int page,
+             @RequestParam(defaultValue = "3") int size,
+             @RequestParam(defaultValue = "id,asc") String[] sort,
+             @RequestParam(defaultValue = "", name = "search") String searchQuery,
+             @RequestParam(defaultValue = "0f", name = "rating-min") float ratingMin,
+             @RequestParam(defaultValue = "5f", name = "rating-max") float ratingMax) {
 
         Pageable p = PageableExtractor.extract(page, size, sort);
-        return ResponseEntity.ok(this.culturalOfferingService.readAll(p));
+        return ResponseEntity.ok(this.culturalOfferingService.readAll(p,
+                searchQuery, ratingMin, ratingMax));
     }
 
     @GetMapping(path = "/bounds")

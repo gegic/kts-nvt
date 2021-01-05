@@ -65,6 +65,8 @@ import {RatingModule} from 'primeng/rating';
 import { ReviewElementComponent } from './view/review-element/review-element.component';
 import { ListViewComponent } from './view/list-view/list-view.component';
 import { ListElementComponent } from './view/list-element/list-element.component';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {SliderModule} from 'primeng/slider';
 
 @NgModule({
   declarations: [
@@ -135,7 +137,9 @@ import { ListElementComponent } from './view/list-element/list-element.component
     FileUploadModule,
     GalleriaModule,
     ProgressBarModule,
-    RatingModule
+    RatingModule,
+    InputNumberModule,
+    SliderModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
