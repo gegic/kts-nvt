@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
@@ -279,6 +280,7 @@ public class UserServiceUnitTest {
 
     @Test(expected = ResourceNotFoundException.class)
     public void testUpdateNotFound(){
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenAnswer(i -> Optional.empty());
         UserDto newUserDto = getNewUserDto();
         userService.update(newUserDto);
     }

@@ -29,4 +29,5 @@ public class SubcategoryConstants {
 
     public static final String TEST_NAME = "Test subkategorija";
     public static final Long TEST_CATEGORY_ID = 1L;
+    public static final Long NON_EXISTING_ID = 10L;
 }

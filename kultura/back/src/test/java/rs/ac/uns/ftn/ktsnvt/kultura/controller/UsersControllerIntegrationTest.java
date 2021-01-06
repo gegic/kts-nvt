@@ -101,6 +101,23 @@ public class UsersControllerIntegrationTest {
     }
 
     @Test
+    public void testGetByIdNotFound() {
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users/" + NON_EXISTENT_ID, HttpMethod.GET,
+                httpEntity, UserDto.class);
+
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        this.accessToken = null;
+    }
+
+    @Test
     public void testPostNewUser() throws Exception {
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 

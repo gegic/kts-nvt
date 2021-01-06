@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -19,6 +20,7 @@ public class SubcategoryService {
 
     private SubcategoryRepository subcategoryRepository;
     private Mapper mapper;
+
 
     @Autowired
     public SubcategoryService(SubcategoryRepository categoryRepository, Mapper mapper) {
