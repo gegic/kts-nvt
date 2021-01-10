@@ -55,12 +55,12 @@ public class ReviewsController {
         return ResponseEntity.ok(reviewDtos);
     }
 
-
-    @GetMapping(path="/by-rating/cultural-offering/{culturalOfferingId}")
-    public ResponseEntity<List<ReviewNumbersDto>> groupByRating(@PathVariable long culturalOfferingId) {
-        List<ReviewNumbersDto> reviewNumbers = reviewService.findAndGroupByRating(culturalOfferingId);
-        return ResponseEntity.ok(reviewNumbers);
-
+  @GetMapping(path = "/by-rating/cultural-offering/{culturalOfferingId}")
+  public ResponseEntity<List<ReviewNumbersDto>> groupByRating(
+      @PathVariable long culturalOfferingId) {
+    List<ReviewNumbersDto> reviewNumbers = reviewService.findAndGroupByRating(culturalOfferingId);
+    return ResponseEntity.ok(reviewNumbers);
+}
     @GetMapping(path = "/cultural-offering/summary/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Map<Integer, Long>> getSummary(@PathVariable long culturalOfferingId){
         return new ResponseEntity<>(reviewService.getSummary(culturalOfferingId), HttpStatus.OK);
@@ -92,7 +92,6 @@ public class ReviewsController {
         return ResponseEntity.created(URI.create(String.format("/api/review/%s", saved.getId())))
                 .body(saved);
     }
-
     @PreAuthorize("hasRole('USER')")
     @PutMapping
     ResponseEntity<ReviewDto> update(@Valid @RequestBody ReviewDto reviewDto){

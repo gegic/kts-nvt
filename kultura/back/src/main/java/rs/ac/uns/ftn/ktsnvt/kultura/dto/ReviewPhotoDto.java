@@ -24,22 +24,6 @@ public class ReviewPhotoDto {
 
     @EntityKey(fieldName = "review", entityType = Review.class)
 
-
-    @Getter
-    @Setter
-    @Positive
-    private Integer width;
-
-    @Getter
-    @Setter
-    @Positive
-    private Integer height;
-
-    @Getter
-    @Setter
-    @NotNull
-    private LocalDateTime timeAdded;
-
     @Getter
     @Setter
     @NotNull
