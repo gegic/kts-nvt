@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,8 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewNumbersDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewPhotoDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.ReviewPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.ReviewPhotoService;
+
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewSummaryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.ReviewService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
@@ -21,6 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+
+import java.util.Map;
+
 
 @PreAuthorize("hasRole('MODERATOR') || hasRole('USER')")
 @RestController
@@ -49,10 +55,15 @@ public class ReviewsController {
         return ResponseEntity.ok(reviewDtos);
     }
 
+
     @GetMapping(path="/by-rating/cultural-offering/{culturalOfferingId}")
     public ResponseEntity<List<ReviewNumbersDto>> groupByRating(@PathVariable long culturalOfferingId) {
         List<ReviewNumbersDto> reviewNumbers = reviewService.findAndGroupByRating(culturalOfferingId);
         return ResponseEntity.ok(reviewNumbers);
+
+    @GetMapping(path = "/cultural-offering/summary/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Map<Integer, Long>> getSummary(@PathVariable long culturalOfferingId){
+        return new ResponseEntity<>(reviewService.getSummary(culturalOfferingId), HttpStatus.OK);
     }
 
     @GetMapping(path="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
