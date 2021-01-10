@@ -26,8 +26,9 @@ public class SubcategoryService {
         this.mapper = mapper;
     }
 
-    public Optional<Subcategory> findById(long id) {
-        return subcategoryRepository.findById(id);
+    @Transactional
+    public Optional<SubcategoryDto> findById(long id) {
+        return subcategoryRepository.findById(id).map(s -> mapper.fromEntity(s, SubcategoryDto.class));
     }
 
     @Transactional

@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
@@ -15,9 +17,10 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.AuthorityRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -52,19 +55,16 @@ public class UserService implements UserDetailsService {
         .map(u -> mapper.fromEntity(u, UserDto.class));
   }
 
-  public Optional<UserDto> findById(UUID id) {
+  public Optional<UserDto> findById(long id) {
     return userRepository.findById(id).map(u -> mapper.fromEntity(u, UserDto.class));
   }
 
-  public UserDto create(UserDto dto) throws Exception {
+  public UserDto create(UserDto dto) {
     return this.create(dto, "ROLE_USER");
   }
 
   @Transactional
-  public UserDto create(UserDto dto, String role) throws Exception {
-    if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
-      throw new Exception("User with given email address already exists");
-    }
+  public UserDto create(UserDto dto, String role) {
     User u = new User();
 
     u.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -79,16 +79,21 @@ public class UserService implements UserDetailsService {
     return mapper.fromEntity(u, UserDto.class);
   }
 
-  public UserDto update(UserDto userDto) throws Exception {
+  public UserDto update(UserDto userDto) {
     User existingUser = userRepository.findById(userDto.getId()).orElse(null);
     if (existingUser == null) {
-      throw new Exception("User with given id doesn't exist");
+      throw new ResourceNotFoundException("User with given id doesn't exist");
     }
+    existingUser.setEmail(userDto.getEmail());
+    existingUser.setFirstName(userDto.getFirstName());
+    existingUser.setLastName(userDto.getLastName());
+    existingUser.setVerified(userDto.isVerified());
     existingUser.setPassword(userDto.getPassword());
+    existingUser.setLastPasswordChange(LocalDateTime.now());
     return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
   }
 
-  public void delete(UUID id) throws Exception {
+  public void delete(long id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
       throw new Exception("User with given id doesn't exist");
@@ -113,16 +118,16 @@ public class UserService implements UserDetailsService {
                     "<a href=\"http:/localhost:4200/verify/%s\">ovaj link</a>.", user.getId());
     String body = String.format("Pozdrav,<br>%s, uspešno ste kreirali nalog.", user.getFirstName()) + link;
     try {
-      this.smtpServer.sendEmail(user.getEmail(), "Usprešno kreiran nalog", body);
+      this.smtpServer.sendEmail(user.getEmail(), "Uspešno kreiran nalog", body);
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  public UserDto verify(UUID id) throws Exception {
+  public UserDto verify(long id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
-      throw new Exception("User with the given id doesn't exist");
+      throw new ResourceNotFoundException("User with the given id doesn't exist");
     }
     existingUser.setVerified(true);
     return  mapper.fromEntity(userRepository.save(existingUser), UserDto.class);

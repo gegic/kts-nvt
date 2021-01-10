@@ -13,7 +13,6 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.UUID;
 
 @PreAuthorize("hasRole('ADMIN')")
 @RestController
@@ -46,29 +45,29 @@ public class UsersController {
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> get(@PathVariable UUID id) {
+    public ResponseEntity<UserDto> get(@PathVariable long id) {
         return ResponseEntity.of(this.userService.findById(id));
     }
 
     @PostMapping
-    ResponseEntity<UserDto> add(@Valid @RequestBody UserDto userDto) throws Exception {
+    ResponseEntity<UserDto> add(@Valid @RequestBody UserDto userDto) {
         UserDto saved = this.userService.create(userDto);
         return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
 
     @PostMapping("/moderator")
-    ResponseEntity<UserDto> addModerator(@RequestBody UserDto userDto) throws Exception {
+    ResponseEntity<UserDto> addModerator(@RequestBody UserDto userDto) {
         UserDto saved = this.userService.create(userDto, "ROLE_MODERATOR");
         return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
 
     @PutMapping
-    ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto) throws Exception {
+    ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto) {
         return ResponseEntity.ok(this.userService.update(userDto));
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable UUID id) throws Exception {
+    ResponseEntity<Void> delete(@PathVariable long id) throws Exception {
         this.userService.delete(id);
         return ResponseEntity.ok().build();
     }

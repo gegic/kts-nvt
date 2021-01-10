@@ -12,20 +12,15 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
-
 
 @Entity
 public class User implements UserDetails {
 
-    @Id
     @Getter
     @Setter
-    @GeneratedValue(generator = "uuid4")
-    @GenericGenerator(name = "UUID", strategy = "uuid4")
-    @Type(type = "org.hibernate.type.UUIDCharType")
-    @Column(columnDefinition = "CHAR(36)")
-    private UUID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Getter
     @Setter
     @Column(unique = true)

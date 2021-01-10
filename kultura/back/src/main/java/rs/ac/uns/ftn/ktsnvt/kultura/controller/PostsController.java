@@ -29,9 +29,8 @@ public class PostsController {
     @GetMapping(path = "/cultural-offering/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<PostDto>> get(@PathVariable long culturalOfferingId,
                                              @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "3") int size,
-                                             @RequestParam(defaultValue = "id,desc") String[] sort){
-
+                                             @RequestParam(defaultValue = "3") int size) {
+        String[] sort = {"timeAdded", "desc"};
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<PostDto> postDtos = this.postService
                 .readAllByCulturalOfferingId(culturalOfferingId, p);
@@ -53,7 +52,7 @@ public class PostsController {
     @PreAuthorize("hasRole('MODERATOR')")
     @PutMapping
     ResponseEntity<PostDto> update(@Valid @RequestBody PostDto postDto){
-        return ResponseEntity.ok(this.postService.save(postDto));
+        return ResponseEntity.ok(this.postService.update(postDto));
     }
     @PreAuthorize("hasRole('MODERATOR')")
     @DeleteMapping("/{id}")

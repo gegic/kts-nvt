@@ -16,7 +16,7 @@ import {EnterEmailComponent} from './view/login-registration/login/enter-email/e
 import {EnterPasswordComponent} from './view/login-registration/login/enter-password/enter-password.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastModule} from 'primeng/toast';
-import {MessageService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {JwtInterceptor} from './core/interceptors/jwt.interceptor';
 import {RegisterEmailComponent} from './view/login-registration/registration/register-email/register-email.component';
 import {RegisterNameComponent} from './view/login-registration/registration/register-name/register-name.component';
@@ -36,10 +36,8 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {CulturalOfferingPlaceComponent} from './view/cultural-offering-place/cultural-offering-place.component';
 import {DialogService, DynamicDialogModule} from 'primeng/dynamicdialog';
 import {DropdownModule} from 'primeng/dropdown';
-import {VirtualScrollerModule} from 'primeng/virtualscroller';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {NgSelectModule} from '@ng-select/ng-select';
-import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ModeratorAddComponent} from './view/moderator-add/moderator-add.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {RippleModule} from 'primeng/ripple';
@@ -58,6 +56,19 @@ import { OfferingPageComponent } from './view/offering-page/offering-page.compon
 import {TabMenuModule} from 'primeng/tabmenu';
 import {MenuItem} from 'primeng/api';
 import { OfferingPhotosComponent } from './view/offering-page/offering-photos/offering-photos.component';
+import { CulturalOfferingDetailsComponent } from './view/cultural-offering-details/cultural-offering-details.component';
+import { DetailsNavigationComponent } from './view/details-navigation/details-navigation.component';
+import { PostsComponent } from './view/posts/posts.component';
+import { PhotosComponent } from './view/photos/photos.component';
+import { ReviewsComponent } from './view/reviews/reviews.component';
+import { CulturalOfferingAboutComponent } from './view/cultural-offering-about/cultural-offering-about.component';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {VirtualScrollerModule} from 'primeng/virtualscroller';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {SkeletonModule} from 'primeng/skeleton';
+import {ScrollTop, ScrollTopModule} from 'primeng/scrolltop';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {DialogModule} from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -92,6 +103,13 @@ import { OfferingPhotosComponent } from './view/offering-page/offering-photos/of
     StarComponent,
     OfferingPageComponent,
     OfferingPhotosComponent,
+    CulturalOfferingDetailsComponent,
+    DetailsNavigationComponent,
+    PostsComponent,
+    PhotosComponent,
+    ReviewsComponent,
+    CulturalOfferingAboutComponent
+
   ],
   imports: [
     BrowserModule,
@@ -121,11 +139,17 @@ import { OfferingPhotosComponent } from './view/offering-page/offering-photos/of
     FileUploadModule,
     ChartModule,
     TabMenuModule,
+    InfiniteScrollModule,
+    SkeletonModule,
+    ScrollTopModule,
+    ConfirmDialogModule,
+    DialogModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     MessageService,
-    DialogService
+    DialogService,
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })

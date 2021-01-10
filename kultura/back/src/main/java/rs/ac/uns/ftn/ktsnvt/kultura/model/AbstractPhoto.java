@@ -20,7 +20,7 @@ public abstract class AbstractPhoto {
     @Id
     @Getter
     @Setter
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
     @Getter
     @Setter

@@ -1,4 +1,5 @@
 import {Authority} from './authority';
+import {Moment} from 'moment-timezone';
 
 export class Moderator{
   id ?: string;
@@ -6,7 +7,7 @@ export class Moderator{
   password ?: string;
   firstName ?: string;
   lastName ?: string;
-  lastPasswordChange?: Date;
+  lastPasswordChange?: Moment;
   authorities?: Authority[];
   verified ?: boolean;
 }

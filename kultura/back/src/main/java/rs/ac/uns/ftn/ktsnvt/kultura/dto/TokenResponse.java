@@ -1,13 +1,16 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TokenResponse {
+    @Getter
+    @Setter
     private String token;
+
+    @Getter
+    @Setter
     private UserDto user;
 }

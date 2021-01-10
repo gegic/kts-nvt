@@ -1,3 +1,5 @@
+import {Moment} from 'moment-timezone';
+
 export class CulturalOffering {
   id?: number;
   name?: string;
@@ -8,10 +10,11 @@ export class CulturalOffering {
   photoId?: number;
   overallRating?: number;
   numReviews?: number;
-  lastChange?: Date;
+  lastChange?: Moment;
   additionalInfo?: string;
   subcategoryId?: number;
   subcategoryName?: string;
-  numSubscribers?: number;
+  numSubscribed?: number;
   numPhotos?: number;
+  categoryName?: string;
 }

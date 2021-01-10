@@ -11,7 +11,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Review;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.ReviewRepository;
 
+
 import java.util.Map;
+import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.TreeMap;
 
@@ -29,6 +31,7 @@ public class ReviewService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public Page<ReviewDto> readAllByCulturalOfferingId(long culturalOfferingId, Pageable p) {
         return reviewRepository.findAllByCulturalOfferingId(culturalOfferingId, p)
                 .map(review -> mapper.fromEntity(review, ReviewDto.class));
@@ -48,6 +51,7 @@ public class ReviewService {
         return reviewRepository.findById(id).map(review -> mapper.fromEntity(review, ReviewDto.class));
     }
 
+    @Transactional
     public ReviewDto save(ReviewDto p) {
         Review r = mapper.fromDto(p, Review.class);
         float overallRating = r.getCulturalOffering().getOverallRating();

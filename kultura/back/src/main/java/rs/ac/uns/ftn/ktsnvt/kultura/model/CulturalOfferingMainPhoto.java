@@ -16,10 +16,11 @@ public class CulturalOfferingMainPhoto extends AbstractPhoto{
     @Setter
     String token;
 
+
     public long getId() {
         return this.id;
     }
-
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     public void setId(Long id) {
         this.id = id;
     }

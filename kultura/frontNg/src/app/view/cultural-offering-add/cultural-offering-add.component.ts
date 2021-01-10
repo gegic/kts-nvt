@@ -16,7 +16,7 @@ import validate = WebAssembly.validate;
 import {ActivatedRoute, Router} from '@angular/router';
 
 interface IErrorDict {
-  [key: string]: string
+  [key: string]: string;
 }
 
 const errorDict: IErrorDict = {

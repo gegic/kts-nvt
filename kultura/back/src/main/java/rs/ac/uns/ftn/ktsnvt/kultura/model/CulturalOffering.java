@@ -8,6 +8,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -72,17 +74,17 @@ public class CulturalOffering {
     @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private Set<Review> reviews;
+    private Set<Review> reviews = new HashSet<>();
 
     @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private Set<CulturalOfferingPhoto> culturalOfferingPhotos;
+    private Set<CulturalOfferingPhoto> culturalOfferingPhotos = new HashSet<>();
 
     @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private Set<Post> posts;
+    private Set<Post> posts = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "subscription",
@@ -90,7 +92,7 @@ public class CulturalOffering {
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     @Getter
     @Setter
-    private List<User> subscribedUsers;
+    private List<User> subscribedUsers = new ArrayList<>();
 
     public void setPhoto(CulturalOfferingMainPhoto photo) {
         if (photo == null) {
