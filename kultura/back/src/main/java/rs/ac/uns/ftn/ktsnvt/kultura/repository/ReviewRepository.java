@@ -17,6 +17,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("select r from Review r where r.culturalOffering.id=?1")
     Page<Review> findAllByCulturalOfferingId(long culturalOfferingId, Pageable p);
 
+    List<Review> findAllByCulturalOfferingId(long culturalOfferingId);
+
 
     @Query("select new rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewNumbersDto(r.rating, count(r)) from Review r where r.culturalOffering.id = :culturalOfferingId group by r.rating")
     List<ReviewNumbersDto> findAndGroupByRating(long culturalOfferingId);

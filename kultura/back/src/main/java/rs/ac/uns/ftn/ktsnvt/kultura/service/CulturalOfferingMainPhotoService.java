@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
@@ -96,6 +97,15 @@ public class CulturalOfferingMainPhotoService {
         photos.parallelStream().map(p -> new File("./photos/main/" + p.getId() + ".png"))
                 .forEach(File::delete);
         repository.deleteAll(photos);
+    }
+
+    @Transactional
+    public void deletePhoto(CulturalOfferingMainPhoto photo) {
+
+        new File("./photos/main/thumbnail/" + photo.getId() + ".png").delete();
+        new File("./photos/main/" + photo.getId() + ".png").delete();
+
+        repository.delete(photo);
     }
     
 }

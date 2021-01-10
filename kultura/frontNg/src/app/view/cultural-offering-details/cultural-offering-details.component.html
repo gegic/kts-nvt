@@ -31,11 +31,17 @@
         </ng-template>
       </div>
       <div class="p-col p-flex p-as-end p-text-right">
-        <button *ngIf="getUserRole() === 'MODERATOR'; else subscribeButton" class="p-button" icon="pi pi-pencil" label="Edit" pButton></button>
+        <div *ngIf="getUserRole() === 'MODERATOR'; else subscribeButton">
+          <button class="p-button p-button-danger p-mr-3"
+                  icon="pi pi-trash"
+                  label="Delete"
+                  pButton
+                  (click)="onClickDelete()"></button>
+          <button class="p-button" icon="pi pi-pencil" label="Edit" pButton></button>
+        </div>
         <ng-template #subscribeButton>
           <button class="p-button" icon="pi pi-bell" label="Subscribe" pButton></button>
         </ng-template>
-
         <p class="p-text-light" *ngIf="!!culturalOffering; else numSubscribedSkeleton">
           {{culturalOffering.numSubscribed}} people subscribed.
         </p>

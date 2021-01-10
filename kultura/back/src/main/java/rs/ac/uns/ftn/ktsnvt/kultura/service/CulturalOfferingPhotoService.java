@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -106,5 +107,15 @@ public class CulturalOfferingPhotoService {
         photo.delete();
         thumbnail.delete();
         culturalOfferingPhotoRepository.deleteById(id);
+    }
+
+    public void deleteByCulturalOffering(long culturalOfferingId) {
+        List<CulturalOfferingPhoto> photos = culturalOfferingPhotoRepository.findAllByCulturalOfferingId(culturalOfferingId);
+        for (CulturalOfferingPhoto photo : photos) {
+            new File("./photos/" + photo.getId() + ".png").delete();
+            new File("./photos/thumbnail" + photo.getId() + ".png").delete();
+        }
+
+        culturalOfferingPhotoRepository.deleteAll(photos);
     }
 }

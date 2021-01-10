@@ -6,14 +6,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,18 +26,23 @@ import java.util.stream.Collectors;
 public class CulturalOfferingService {
 
     private final CulturalOfferingRepository culturalOfferingRepository;
-    private final CulturalOfferingMainPhotoRepository photoRepository;
-
+    private final CulturalOfferingMainPhotoService mainPhotoService;
+    private final CulturalOfferingPhotoService culturalOfferingPhotoService;
+    private final ReviewService reviewService;
     private final Mapper modelMapper;
 
 
     @Autowired
     public CulturalOfferingService(CulturalOfferingRepository culturalOfferingRepository,
                                    Mapper modelMapper,
-                                   CulturalOfferingMainPhotoRepository photoRepository) {
+                                   CulturalOfferingMainPhotoService mainPhotoService,
+                                   CulturalOfferingPhotoService culturalOfferingPhotoService,
+                                   ReviewService reviewService) {
         this.culturalOfferingRepository = culturalOfferingRepository;
         this.modelMapper = modelMapper;
-        this.photoRepository = photoRepository;
+        this.mainPhotoService = mainPhotoService;
+        this.culturalOfferingPhotoService = culturalOfferingPhotoService;
+        this.reviewService = reviewService;
     }
 
 
@@ -85,6 +93,13 @@ public class CulturalOfferingService {
     }
 
     public void delete(long id) {
+        CulturalOffering co = culturalOfferingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cultural offering with given id not found."));
+
+        mainPhotoService.deletePhoto(co.getPhoto());
+        culturalOfferingPhotoService.deleteByCulturalOffering(co.getId());
+        reviewService.deleteByCulturalOfferingId(co.getId());
+
         culturalOfferingRepository.deleteById(id);
     }
 }
