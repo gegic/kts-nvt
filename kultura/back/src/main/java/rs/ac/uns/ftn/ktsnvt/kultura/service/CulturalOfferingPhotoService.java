@@ -1,14 +1,20 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingPhotoRepository;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 
 import javax.imageio.ImageIO;
 import javax.persistence.EntityNotFoundException;
@@ -26,11 +32,15 @@ public class CulturalOfferingPhotoService {
 
 
     private final CulturalOfferingPhotoRepository culturalOfferingPhotoRepository;
+    private final CulturalOfferingRepository culturalOfferingRepository;
     private final Mapper mapper;
 
     @Autowired
-    public CulturalOfferingPhotoService(CulturalOfferingPhotoRepository culturalOfferingPhotoRepository, Mapper mapper) {
+    public CulturalOfferingPhotoService(CulturalOfferingPhotoRepository culturalOfferingPhotoRepository,
+                                        Mapper mapper,
+                                        CulturalOfferingRepository culturalOfferingRepository) {
         this.culturalOfferingPhotoRepository = culturalOfferingPhotoRepository;
+        this.culturalOfferingRepository = culturalOfferingRepository;
         this.mapper = mapper;
     }
 
@@ -44,28 +54,18 @@ public class CulturalOfferingPhotoService {
     }
 
     @Transactional
-    public CulturalOfferingPhotoDto create(MultipartFile photoFile) {
-        CulturalOfferingPhoto p = new CulturalOfferingPhoto();
+    public CulturalOfferingPhotoDto create(MultipartFile photoFile, long culturalOfferingId) {
+        CulturalOfferingPhoto photo = new CulturalOfferingPhoto();
 
-        return save(photoFile, p);
-    }
+        CulturalOffering culturalOffering = culturalOfferingRepository.findById(culturalOfferingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cultural offering with given id doesn't exist"));
 
-    @Transactional
-    public CulturalOfferingPhotoDto update(MultipartFile photoFile, long id) {
-        CulturalOfferingPhoto p = culturalOfferingPhotoRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-
-        return save(photoFile, p);
-    }
-
-    @Transactional
-    public CulturalOfferingPhotoDto save(MultipartFile photoFile, CulturalOfferingPhoto p) {
         BufferedImage bufferedImage;
         BufferedImage thumbnail;
-        try {
-            bufferedImage = ImageIO.read(photoFile.getInputStream());
-//            thumbnail = (BufferedImage) ImageIO.read(photoFile.getInputStream())
-//                    .getScaledInstance(100, 100, BufferedImage.SCALE_SMOOTH);
 
+        try {
+            bufferedImage = Thumbnails.of(photoFile.getInputStream()).size(1000, 1000).asBufferedImage();
+            thumbnail = Thumbnails.of(photoFile.getInputStream()).size(200, 200).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
@@ -73,20 +73,20 @@ public class CulturalOfferingPhotoService {
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
 
-        p.setWidth(width);
-        p.setHeight(height);
+        photo.setWidth(width);
+        photo.setHeight(height);
+        photo.setCulturalOffering(culturalOffering);
 
-        p = culturalOfferingPhotoRepository.save(p);
+        photo = culturalOfferingPhotoRepository.save(photo);
 
         try {
-            savePhoto("photos", bufferedImage, p);
-//            savePhoto(".\\cultural_offering_photos\\thumbnails", thumbnail, p);
-        } catch (Exception ex) {
-            culturalOfferingPhotoRepository.delete(p);
-            System.out.println("Exception:" + ex);
+            savePhoto("./photos", bufferedImage, photo);
+            savePhoto("./photos/thumbnail", thumbnail, photo);
+        } catch (IOException e) {
+            culturalOfferingPhotoRepository.delete(photo);
+            System.out.println("Exception:" + e);
         }
-
-        return mapper.fromEntity(p, CulturalOfferingPhotoDto.class);
+        return mapper.fromEntity(photo, CulturalOfferingPhotoDto.class);
     }
 
     private void savePhoto(String path, BufferedImage bufferedImage, CulturalOfferingPhoto p) throws IOException {
@@ -98,6 +98,13 @@ public class CulturalOfferingPhotoService {
     }
 
     public void delete(long id) {
+        if (!culturalOfferingRepository.existsById(id)) {
+            throw new ResourceNotFoundException("A photo with the given id " + id + " was not found.");
+        }
+        File photo = new File("./photos/" + id + ".png");
+        File thumbnail = new File("./photos/thumbnail/" + id + ".png");
+        photo.delete();
+        thumbnail.delete();
         culturalOfferingPhotoRepository.deleteById(id);
     }
 }
