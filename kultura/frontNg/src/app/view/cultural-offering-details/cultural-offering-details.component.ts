@@ -96,7 +96,7 @@ export class CulturalOfferingDetailsComponent implements OnInit {
     if (this.culturalOffering?.numReviews === 0) {
       return 'No reviews so far.';
     } else {
-      return `${this.culturalOffering?.overallRating?.toPrecision(1)} rating out of ${this.culturalOffering?.numReviews} reviews.`;
+      return `${(Math.round((this.culturalOffering?.overallRating ?? 0) * 10) / 10).toFixed(1)} rating out of ${this.culturalOffering?.numReviews} reviews.`;
     }
   }
 }

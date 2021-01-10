@@ -22,12 +22,14 @@ import {PostsComponent} from './view/posts/posts.component';
 import {PhotosComponent} from './view/photos/photos.component';
 import {ReviewsComponent} from './view/reviews/reviews.component';
 import {CulturalOfferingAboutComponent} from './view/cultural-offering-about/cultural-offering-about.component';
+import {ListViewComponent} from './view/list-view/list-view.component';
 
 
 const routes: Routes = [
   {
     path: '', component: MainViewComponent, children: [
       { path: '', component: MapViewComponent, data: {roles: ['MODERATOR', 'USER']}, canActivate: [AuthGuard] },
+      { path: 'list-view', component: ListViewComponent, data: {roles: ['MODERATOR', 'USER']}, canActivate: [AuthGuard] },
       { path: 'cultural-offering/:id', redirectTo: 'cultural-offering/:id/posts'},
       { path: 'cultural-offering/:id', component: CulturalOfferingDetailsComponent, data: {roles: ['MODERATOR', 'USER']},
         canActivate: [AuthGuard],

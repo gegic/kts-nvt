@@ -1,0 +1,24 @@
+<div>
+  <div class="list-header p-d-flex p-ai-center">
+    <h2 class="p-text-light">Showing all offerings</h2>
+    <button class="p-button p-ml-auto new-offering" routerLink="/create-offering" label="NEW OFFERING" pButton></button>
+  </div>
+  <div class="list-content"
+       (scrolled)="onScrollDown()"
+       infinite-scroll
+  >
+    <div class="p-d-flex p-ai-center">
+      <h4 class="p-text-light">Sort by</h4>
+      <p-menu [model]="sortItems" [popup]="true" #menu></p-menu>
+      <button class="p-button p-button-text p-button-secondary p-p-1 sort-button"
+              [label]="sortType.label"
+              (click)="menu.toggle($event)"
+              pButton></button>
+    </div>
+    <app-list-element *ngFor="let culturalOffering of culturalOfferings"
+                      [culturalOffering]="culturalOffering"
+                      (offeringDeleted)="onOfferingDeleted()"
+    >
+    </app-list-element>
+  </div>
+</div>

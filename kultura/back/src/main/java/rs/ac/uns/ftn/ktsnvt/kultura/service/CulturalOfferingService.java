@@ -76,9 +76,7 @@ public class CulturalOfferingService {
                 .orElseThrow(EntityNotFoundException::new);
 
         CulturalOffering updateWith = modelMapper.toExistingEntity(c, toUpdate);
-
-
-
+        
         toUpdate.setName(updateWith.getName());
         toUpdate.setAddress(updateWith.getAddress());
         toUpdate.setLatitude(updateWith.getLatitude());

@@ -59,7 +59,6 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     this.briefInfoTop = this.briefInfo?.nativeElement.offsetTop;
-    console.log(this.briefInfoTop);
   }
 
   onScrollDown(): void {
