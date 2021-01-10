@@ -14,9 +14,10 @@ import {MessageService} from 'primeng/api';
 import {CulturalOfferingPhoto} from '../../core/models/culturalOfferingPhoto';
 import validate = WebAssembly.validate;
 import {ActivatedRoute, Router} from '@angular/router';
+import {CulturalOffering} from '../../core/models/cultural-offering';
 
 interface IErrorDict {
-  [key: string]: string
+  [key: string]: string;
 }
 
 const errorDict: IErrorDict = {
@@ -46,6 +47,7 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
     }
   );
 
+  mode = 'add';
   mapSet = false;
   categoriesLoading = false;
   subcategoriesLoading = false;
@@ -78,6 +80,25 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
       this.categoryChosen(val.id);
     });
     this.getCategories();
+    this.mode = this.activatedRoute.snapshot.data.mode;
+    if (this.mode === 'edit') {
+      const id = this.activatedRoute.snapshot.params.id;
+      this.addOfferingService.getOffering(id).subscribe((co: CulturalOffering) => {
+        this.addOfferingService.culturalOffering = co;
+        this.formGroup.patchValue({
+          name: co.name,
+          briefInfo: co.briefInfo,
+          additionalInfo: co.additionalInfo,
+          address: {display_name: co.address},
+          selectedCategory: {id: co.categoryId, name: co.categoryName},
+          selectedSubcategory: {id: co.subcategoryId, name: co.subcategoryName}
+        });
+        this.formGroup.get('selectedSubcategory')?.disable();
+        this.photo = new CulturalOfferingPhoto();
+        this.photo.id = co.photoId;
+        this.mapSet = true;
+      });
+    }
   }
 
   showMapDialog(): void {
@@ -169,6 +190,7 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
     }
     this.addOfferingService.getSubcategories(id, this.lastLoadedPage.subcategories + 1).subscribe(
       data => {
+        this.formGroup.get('selectedSubcategory')?.enable();
         this.addOfferingService.subcategories = this.addOfferingService.subcategories?.concat(data.content as Subcategory[]);
         this.lastLoadedPage.subcategories = data.pageable.pageNumber;
         this.totalPages.subcategories = data.totalPages;
@@ -224,16 +246,29 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
     this.addOfferingService.additionalInfo = this.formGroup.get('additionalInfo')?.value;
     this.addOfferingService.photo = this.photo;
 
-    this.addOfferingService.addOffering().subscribe(
-      data => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successfully added',
-          detail: 'The cultural offering was added successfully'
-        });
-        this.router.navigate(['..'], {relativeTo: this.activatedRoute});
-      }
-    );
+    if (this.mode === 'add') {
+      this.addOfferingService.addOffering().subscribe(
+        data => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Successfully added',
+            detail: 'The cultural offering was added successfully'
+          });
+          this.router.navigate([`/cultural-offering/${data.id}`]);
+        }
+      );
+    } else {
+      this.addOfferingService.editOffering().subscribe(
+        data => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Successfully edited',
+            detail: 'The cultural offering was edited successfully'
+          });
+          this.router.navigate([`/cultural-offering/${data.id}`]);
+        }
+      );
+    }
   }
 
   get subcategories(): Subcategory[] {

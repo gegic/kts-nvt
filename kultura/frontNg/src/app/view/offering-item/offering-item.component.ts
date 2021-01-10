@@ -1,5 +1,6 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {CulturalOfferingMarker} from '../../core/models/culturalOfferingMarker';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-offering-item',
@@ -14,7 +15,7 @@ export class OfferingItemComponent implements OnInit {
   @ViewChild('card')
   card?: ElementRef;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
   }
@@ -24,7 +25,7 @@ export class OfferingItemComponent implements OnInit {
   }
 
   get numSubscribers(): number {
-    return this.culturalOfferingMarker?.culturalOffering?.numSubscribers ?? 0;
+    return this.culturalOfferingMarker?.culturalOffering?.numSubscribed ?? 0;
   }
 
   hoverStarted(): void {
@@ -33,6 +34,10 @@ export class OfferingItemComponent implements OnInit {
 
   hoverEnded(): void {
     this.culturalOfferingMarker?.hovering.next(false);
+  }
+
+  onClickCard(): void {
+    this.router.navigate([`/cultural-offering/${this.culturalOfferingMarker?.culturalOffering.id}`]);
   }
 
   get hovering(): boolean {

@@ -1,0 +1,63 @@
+<div>
+  <div class="top-part">
+    <div class="p-grid p-px-0 p-m-0 p-py-3">
+      <div class="p-col-fixed p-as-center"
+           style="width: 150px"
+      >
+        <img [src]="photoUrl" alt="Main photo" class="main-photo" *ngIf="!!culturalOffering; else mainPhotoSkeleton">
+        <ng-template #mainPhotoSkeleton>
+          <p-skeleton width="150px" height="150px"></p-skeleton>
+        </ng-template>
+      </div>
+      <div class="p-col p-ml-4">
+        <h4 class="p-text-normal" *ngIf="!!culturalOffering; else categorySkeleton">
+          {{culturalOffering.categoryName}} > {{culturalOffering.subcategoryName}}
+        </h4>
+        <ng-template #categorySkeleton>
+          <p-skeleton></p-skeleton>
+        </ng-template>
+        <div class="p-d-inline-flex p-mt-4 p-mb-0">
+          <i class="pi pi-star"></i>
+          <small class="p-ml-1 p-text-light" *ngIf="!!culturalOffering; else reviewsSkeleton">{{reviews}}</small>
+          <ng-template #reviewsSkeleton>
+            <p-skeleton class="p-ml-1"></p-skeleton>
+          </ng-template>
+        </div>
+        <h2 class="p-text-bold p-mt-0" *ngIf="!!culturalOffering; else nameSkeleton">
+          {{culturalOffering.name}}
+        </h2>
+        <ng-template #nameSkeleton>
+          <p-skeleton width="50px" height="2rem"></p-skeleton>
+        </ng-template>
+      </div>
+      <div class="p-col p-flex p-as-end p-text-right">
+        <div *ngIf="getUserRole() === 'MODERATOR'; else subscribeButton">
+          <button class="p-button p-button-danger p-mr-3"
+                  icon="pi pi-trash"
+                  label="Delete"
+                  pButton
+                  (click)="onClickDelete()"></button>
+          <button class="p-button"
+                  icon="pi pi-pencil"
+                  label="Edit"
+                  (click)="onClickEdit()"
+                  pButton></button>
+        </div>
+        <ng-template #subscribeButton>
+          <button class="p-button" icon="pi pi-bell" label="Subscribe" pButton></button>
+        </ng-template>
+        <p class="p-text-light" *ngIf="!!culturalOffering; else numSubscribedSkeleton">
+          {{culturalOffering.numSubscribed}} people subscribed.
+        </p>
+        <ng-template #numSubscribedSkeleton>
+          <p-skeleton></p-skeleton>
+        </ng-template>
+      </div>
+    </div>
+    <hr class="p-mx-5 p-mb-0">
+    <app-details-navigation [navigationItems]="navigationItems"></app-details-navigation>
+  </div>
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

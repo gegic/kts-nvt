@@ -1,11 +1,24 @@
 <div class="navbar p-grid p-justify-between p-px-3 p-mx-0">
-  <div class="p-col-4">
+  <div class="p-col-4 p-p-0 p-col-align-center">
     <a routerLink="/" class="logo p-my-0">kultura</a>
   </div>
-  <div class="p-col-4">
+  <div class="p-col-4 p-text-center p-p-0">
+    <button class="p-button-text topnav-button p-px-4"
+            [routerLinkActiveOptions]="{exact: true}"
+            routerLinkActive="activated"
+            [routerLink]="''"
+            icon="pi pi-map"
+            pButton
+    ></button>
+    <button class="p-button-text topnav-button p-px-4"
+            routerLinkActive="activated"
+            [routerLink]="'list-view'"
+            icon="pi pi-th-large"
+            pButton
+    ></button>
   </div>
-  <div class="p-col-4 p-justify-end p-col-align-center">
-      <p-menu [model]="menuItems" [popup]="true" #menu></p-menu>
+  <div class="p-col-4 p-justify-end p-col-align-center p-p-0">
+      <p-menu class="user-menu" [model]="menuItems" [popup]="true" #menu></p-menu>
       <ngx-avatar class="ng-avatar"
                   bgColor="#275DAD"
                   [name]="name"

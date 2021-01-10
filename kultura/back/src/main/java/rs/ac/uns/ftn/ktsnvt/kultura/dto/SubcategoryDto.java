@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
 import lombok.*;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityField;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
@@ -20,5 +21,8 @@ public class SubcategoryDto {
 
     @EntityKey(entityType = Category.class, fieldName = "category")
     private Long categoryId;
+
+    @EntityField
+    private String categoryName;
 
 }

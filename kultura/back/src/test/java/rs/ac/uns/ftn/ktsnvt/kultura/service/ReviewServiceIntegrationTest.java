@@ -79,8 +79,9 @@ public class ReviewServiceIntegrationTest {
     //@Rollback(true)
     public void testSave(){
         ReviewDto newReview = createTestReviewDto();
+        Pageable pageRequest = PageRequest.of(0, PAGE_SIZE);
 
-        ReviewDto createdReview = reviewService.save(newReview);
+        ReviewDto createdReview = reviewService.create(newReview);
 
         assertThat(createdReview).isNotNull();
 

@@ -1,6 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
+import {FileUploadModule} from 'primeng/fileupload';
 import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppRoutingModule} from './app-routing.module';
@@ -15,7 +16,7 @@ import {EnterEmailComponent} from './view/login-registration/login/enter-email/e
 import {EnterPasswordComponent} from './view/login-registration/login/enter-password/enter-password.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastModule} from 'primeng/toast';
-import {MessageService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {JwtInterceptor} from './core/interceptors/jwt.interceptor';
 import {RegisterEmailComponent} from './view/login-registration/registration/register-email/register-email.component';
 import {RegisterNameComponent} from './view/login-registration/registration/register-name/register-name.component';
@@ -35,10 +36,8 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {CulturalOfferingPlaceComponent} from './view/cultural-offering-place/cultural-offering-place.component';
 import {DialogService, DynamicDialogModule} from 'primeng/dynamicdialog';
 import {DropdownModule} from 'primeng/dropdown';
-import {VirtualScrollerModule} from 'primeng/virtualscroller';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {NgSelectModule} from '@ng-select/ng-select';
-import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ModeratorAddComponent} from './view/moderator-add/moderator-add.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {RippleModule} from 'primeng/ripple';
@@ -47,7 +46,36 @@ import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sideb
 import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
 import { OfferingItemComponent } from './view/offering-item/offering-item.component';
 import { MapPopupComponent } from './view/map-popup/map-popup.component';
-
+import { OfferingReviewComponent } from './view/offering-page/offering-review/offering-review.component';
+import { OfferingAllRatingsComponent } from './view/offering-all-ratings/offering-all-ratings.component';
+import { OfferingRatingsListComponent } from './view/offering-page/offering-review/offering-ratings-list/offering-ratings-list.component';
+import { RatingItemComponent } from './view/offering-page/offering-review/offering-ratings-list/rating-item/rating-item.component';
+import {ChartModule} from 'primeng/chart';
+import { StarComponent } from './components/star-component/star-component.component';
+import { OfferingPageComponent } from './view/offering-page/offering-page.component';
+import {TabMenuModule} from 'primeng/tabmenu';
+import {MenuItem} from 'primeng/api';
+import { OfferingPhotosComponent } from './view/offering-page/offering-photos/offering-photos.component';
+import { CulturalOfferingDetailsComponent } from './view/cultural-offering-details/cultural-offering-details.component';
+import { DetailsNavigationComponent } from './view/details-navigation/details-navigation.component';
+import { PostsComponent } from './view/posts/posts.component';
+import { PhotosComponent } from './view/photos/photos.component';
+import { ReviewsComponent } from './view/reviews/reviews.component';
+import { CulturalOfferingAboutComponent } from './view/cultural-offering-about/cultural-offering-about.component';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {VirtualScrollerModule} from 'primeng/virtualscroller';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {SkeletonModule} from 'primeng/skeleton';
+import {ScrollTop, ScrollTopModule} from 'primeng/scrolltop';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {DialogModule} from 'primeng/dialog';
+import {FileUpload, FileUploadModule} from 'primeng/fileupload';
+import {GalleriaModule} from 'primeng/galleria';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {RatingModule} from 'primeng/rating';
+import { ReviewElementComponent } from './view/review-element/review-element.component';
+import { ListViewComponent } from './view/list-view/list-view.component';
+import { ListElementComponent } from './view/list-element/list-element.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +102,26 @@ import { MapPopupComponent } from './view/map-popup/map-popup.component';
     OfferingSidebarComponent,
     OfferingsListComponent,
     OfferingItemComponent,
-    MapPopupComponent
+    MapPopupComponent,
+    OfferingReviewComponent,
+    OfferingAllRatingsComponent,
+    OfferingRatingsListComponent,
+    RatingItemComponent,
+    StarComponent,
+    OfferingPageComponent,
+    OfferingPhotosComponent,
+    CulturalOfferingDetailsComponent,
+    DetailsNavigationComponent,
+    PostsComponent,
+    PhotosComponent,
+    ReviewsComponent,
+    CulturalOfferingAboutComponent,
+    ReviewElementComponent,
+    ListViewComponent,
+    ListElementComponent
+    ReviewElementComponent
+
+    CulturalOfferingAboutComponent
   ],
   imports: [
     BrowserModule,
@@ -100,12 +147,25 @@ import { MapPopupComponent } from './view/map-popup/map-popup.component';
     NgSelectModule,
     ProgressSpinnerModule,
     RippleModule,
-    ScrollPanelModule
+    ScrollPanelModule,
+    FileUploadModule,
+    ChartModule,
+    TabMenuModule,
+    InfiniteScrollModule,
+    SkeletonModule,
+    ScrollTopModule,
+    ConfirmDialogModule,
+    DialogModule,
+    FileUploadModule,
+    GalleriaModule,
+    ProgressBarModule,
+    RatingModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     MessageService,
-    DialogService
+    DialogService,
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })

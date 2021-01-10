@@ -1,0 +1,13 @@
+.list-header {
+  padding: 1vh 15vw;
+  border-bottom: 1px solid #584F51;
+  background-color: #EFE4E6;
+}
+
+.list-content {
+  padding: 1vh 15vw;
+}
+
+::ng-deep .sort-button {
+  margin-bottom: 3px;
+}

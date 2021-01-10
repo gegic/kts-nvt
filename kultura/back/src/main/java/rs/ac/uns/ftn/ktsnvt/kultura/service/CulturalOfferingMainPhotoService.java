@@ -2,21 +2,16 @@ package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
-import rs.ac.uns.ftn.ktsnvt.kultura.security.Token;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
 import javax.transaction.Transactional;
-import javax.validation.constraints.Null;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -42,8 +37,8 @@ public class CulturalOfferingMainPhotoService {
         BufferedImage thumbnail;
 
         try {
-            bufferedImage = ImageIO.read(photoFile.getInputStream());
-            thumbnail = Thumbnails.of(bufferedImage).size(150, 150).asBufferedImage();
+            bufferedImage = Thumbnails.of(photoFile.getInputStream()).size(1000, 1000).asBufferedImage();
+            thumbnail = Thumbnails.of(photoFile.getInputStream()).size(200, 200).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
@@ -91,14 +86,20 @@ public class CulturalOfferingMainPhotoService {
             token = "";
         }
         List<CulturalOfferingMainPhoto> photos = repository.getNullOffering(token);
-        photos.parallelStream().map(p -> new File("./photos/main/" + p.getId() + ".png"))
-                .forEach(f -> {
-                    System.out.println(f.delete());
-                    System.out.println(f.exists());
-                });
         photos.parallelStream().map(p -> new File("./photos/main/thumbnail/" + p.getId() + ".png"))
                 .forEach(File::delete);
+        photos.parallelStream().map(p -> new File("./photos/main/" + p.getId() + ".png"))
+                .forEach(File::delete);
         repository.deleteAll(photos);
+    }
+
+    @Transactional
+    public void deletePhoto(CulturalOfferingMainPhoto photo) {
+
+        new File("./photos/main/thumbnail/" + photo.getId() + ".png").delete();
+        new File("./photos/main/" + photo.getId() + ".png").delete();
+
+        repository.delete(photo);
     }
     
 }

@@ -1,0 +1,73 @@
+<div class="photos">
+  <div class="p-card p-p-5">
+    <div class="photos-header p-d-inline-flex p-mb-4">
+      <h2 class="p-text-bold p-my-0">
+        All photos
+      </h2>
+      <button *ngIf="getUserRole() === 'MODERATOR'"
+              class="p-button p-d-block p-ml-auto"
+              label="Add a photo"
+              (click)="isOpenAddDialog = true"
+              pButton></button>
+    </div>
+    <div *ngIf="photos.length > 0; else noPhotos">
+      <div (scrolled)="onScrollDown()"
+           class="p-grid p-p-0 p-m-0"
+           infinite-scroll>
+        <div *ngFor="let photo of photos; let index = index;"
+             class="p-col-12 p-sm-6 p-md-4 p-lg-3 p-justify-center p-text-center">
+          <div class="photo-click"
+               [ngStyle]="{'background-image': 'url(' + getThumbnailUrl(photo) + ')'}"
+               (mouseenter)="onPhotoHoverStart(photo)"
+               (mouseleave)="onPhotoHoverEnd(photo)"
+               (click)="imageClick(index)"
+          >
+            <div *ngIf="photo.hovering" class="maximize-wrap p-m-1 p-p-1">
+              <i class="pi pi-window-maximize img-maximize"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noPhotos>
+      <div class="p-text-center">
+        <h2 class="p-text-light">
+          There are no added photos for this cultural offering.
+        </h2>
+      </div>
+    </ng-template>
+  </div>
+  <p-dialog header="Write a review" [(visible)]="isOpenAddDialog" [modal]="true" (onHide)="clearFiles()">
+    <p-progressBar *ngIf="uploadLoading" mode="indeterminate"></p-progressBar>
+    <p-fileUpload name="photo[]"
+                  [customUpload]="true"
+                  (uploadHandler)="onClickUpload($event)"
+                  accept="image/*"
+                  #upload
+    ></p-fileUpload>
+  </p-dialog>
+
+  <p-galleria [value]="photos" [(visible)]="galleriaVisible" [(activeIndex)]="activeIndex"
+              [fullScreen]="true" [showItemNavigators]="true" [baseZIndex]="1013"
+              [showThumbnails]="false" (activeIndexChange)="imageClick($event)"
+  >
+
+    <ng-template pTemplate="item" let-item>
+      <img [src]="getPhotoUrl(item)" style="max-width: 80vw; max-height: 80vh; display: block; " alt="preview">
+    </ng-template>
+    <ng-template pTemplate="thumbnail" let-item>
+      <div class="p-grid p-nogutter p-justify-center">
+        <img [src]="getThumbnailUrl(item)" style="display: block;" alt="thumbnail">
+      </div>
+    </ng-template>
+
+  </p-galleria>
+
+  <button class="delete-button p-button-rounded p-button-text"
+          icon="pi pi-trash"
+          *ngIf="galleriaVisible"
+          (click)="onClickDelete()"
+          pRipple
+          pButton>
+  </button>
+</div>

@@ -1,0 +1,16 @@
+.top-part {
+  background-color: #EFE4E6;
+  padding-left: 15vw;
+  padding-right: 15vw;
+}
+
+::ng-deep .top-part * {
+  position: sticky;
+}
+
+.main-photo {
+  object-fit: cover;
+  border-radius: 2em;
+  width: 150px;
+  height: 150px;
+}

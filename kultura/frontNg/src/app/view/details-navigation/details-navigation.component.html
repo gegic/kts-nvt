@@ -1,0 +1,9 @@
+<div class="p-d-flex p-justify-center p-pt-0 p-mt-0">
+  <button *ngFor="let item of navigationItems"
+          class="p-button-text nav-button p-px-4"
+          routerLinkActive="activated"
+          [routerLink]="item.link"
+          [label]="item.label"
+          pButton
+  ></button>
+</div>

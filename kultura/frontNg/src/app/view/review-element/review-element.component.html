@@ -1,0 +1,41 @@
+<div>
+  <div class="p-grid p-py-0 p-pr-0 p-m-0 p-pl-4" *ngIf="review">
+    <div class="p-col-6">
+      <div *ngIf="review.userFirstName && review.userLastName">
+        <h4 class="p-text-normal p-mt-0 p-mb-1">{{review.userFirstName}} {{review.userLastName}}</h4>
+      </div>
+      <div *ngIf="review.rating">
+        <p-rating [ngModel]="review.rating"
+                  [readonly]="true"
+                  [cancel]="false"
+        ></p-rating>
+      </div>
+      <div>
+        <small class="p-text-light">{{getAddedAgoString()}}</small>
+      </div>
+    </div>
+    <div class="p-col-4 p-text-right">
+      <div *ngIf="photos.length > 0" class="review-images">
+        <div class="review-img-wrapper p-mr-1"
+             *ngFor="let photoId of photos; let index = index"
+             (click)="onClickReviewImg(index)">
+          <img class="review-img" [src]="getThumbnailUrl(photoId)" alt="review image">
+        </div>
+      </div>
+    </div>
+    <div class="p-col-1 p-text-right">
+      <p-menu [model]="getMenuItems()" [popup]="true" #menu></p-menu>
+      <button *ngIf="getUserRole() === 'MODERATOR'"
+              class="p-button-lg p-button-text p-button-rounded" icon="pi pi-ellipsis-h"
+              (click)="menu.toggle($event)"
+              pRipple
+              pButton
+      ></button>
+    </div>
+    <div *ngIf="review.comment" class="p-col-12">
+      <p class="p-mt-2">
+        {{review.comment}}
+      </p>
+    </div>
+  </div>
+</div>

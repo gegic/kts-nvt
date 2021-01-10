@@ -20,7 +20,7 @@ public class CulturalOfferingMainPhoto extends AbstractPhoto{
     public long getId() {
         return this.id;
     }
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public void setId(Long id) {
         this.id = id;
     }

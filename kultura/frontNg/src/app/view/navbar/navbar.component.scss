@@ -1,6 +1,24 @@
 .navbar {
   height: 8vh;
   border-bottom: 1px solid rgba(0, 0, 0, .2);
+  background-color: #FCF7F8;
+  z-index: 1010;
+}
+
+::ng-deep .user-menu .p-menu {
+  position: absolute !important;
+  right: 30px !important;
+  top: 50px !important;
+}
+
+::ng-deep .navbar {
+  position: sticky;
+  top: 0;
+}
+
+::ng-deep .navbar {
+  position: sticky;
+  top: 0;
 }
 
 .logo {
@@ -24,4 +42,27 @@ ngx-avatar {
     -ms-user-select: none;
     user-select: none;
   }
+}
+
+::ng-deep .topnav-button {
+  color: #584F51 !important;
+  height: 8vh;
+  max-height: 8vh;
+  width: 10vh !important;
+  border-bottom: 3.5px solid transparent !important;
+}
+
+::ng-deep .topnav-button span {
+  font-size: 1.5em !important;
+}
+
+::ng-deep .topnav-button:hover {
+  color: #38435d !important;
+  border-bottom: 3.5px solid rgba(39, 93, 173, .2) !important;
+}
+
+::ng-deep .activated,
+::ng-deep .activated:hover {
+  color: #275dad !important;
+  border-bottom: 3.5px solid #275dad !important;
 }
