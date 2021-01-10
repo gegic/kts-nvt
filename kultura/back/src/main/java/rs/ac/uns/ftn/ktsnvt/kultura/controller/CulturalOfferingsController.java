@@ -92,7 +92,7 @@ public class CulturalOfferingsController {
 
     @PreAuthorize("hasRole('MODERATOR')")
     @DeleteMapping("/clear-photos")
-    ResponseEntity<Void> delete(){
+    ResponseEntity<Void> deletePhotos(){
         this.photoService.clearPhotos();
         return ResponseEntity.ok().build();
     }

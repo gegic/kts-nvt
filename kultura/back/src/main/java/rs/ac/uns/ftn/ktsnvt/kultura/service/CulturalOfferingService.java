@@ -77,7 +77,22 @@ public class CulturalOfferingService {
 
         CulturalOffering updateWith = modelMapper.toExistingEntity(c, toUpdate);
 
-        toUpdate = culturalOfferingRepository.save(updateWith);
+
+
+        toUpdate.setName(updateWith.getName());
+        toUpdate.setAddress(updateWith.getAddress());
+        toUpdate.setLatitude(updateWith.getLatitude());
+        toUpdate.setLongitude(updateWith.getLongitude());
+        toUpdate.setBriefInfo(updateWith.getBriefInfo());
+        toUpdate.setAdditionalInfo(updateWith.getAdditionalInfo());
+        toUpdate.setSubcategory(toUpdate.getSubcategory());
+        CulturalOfferingMainPhoto p = updateWith.getPhoto();
+        CulturalOfferingMainPhoto photo = toUpdate.getPhoto();
+        if (p.getId() != photo.getId()) {
+            mainPhotoService.deletePhoto(photo);
+            p.setCulturalOffering(toUpdate);
+        }
+        toUpdate = culturalOfferingRepository.save(toUpdate);
 
         return modelMapper.fromEntity(toUpdate, CulturalOfferingDto.class);
     }
