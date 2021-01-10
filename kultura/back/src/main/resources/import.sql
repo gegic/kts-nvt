@@ -25,6 +25,7 @@ INSERT INTO subcategory (name, category_id) VALUES ('Sajam', 2);
 
 INSERT INTO cultural_offering_main_photo (height, time_added, width, token) VALUES (288, UTC_TIMESTAMP(), 512, '');
 
+
 INSERT INTO cultural_offering (id, address, brief_info, latitude, longitude, name, subcategory_id, photo_id) VALUES (1, 'Delimedje bb Tutin', 'Godisnji vasar u Delimedje', 42.991436, 20.337982, 'Vasar u Delimedje', 2, 1);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 1 WHERE id = 1;
@@ -43,11 +44,18 @@ INSERT INTO user_authority (user_id, authority_id) VALUES (1, 1);
 INSERT INTO user_authority (user_id, authority_id) VALUES (2, 2);
 INSERT INTO user_authority (user_id, authority_id) VALUES (3, 3);
 
+INSERT INTO review (id, comment, rating, time_added, cultural_offering_id, user_id) VALUES (1, 'Komentar', 3, NOW(), 1, @Id3);
+INSERT INTO review (id, comment, rating, time_added, cultural_offering_id, user_id) VALUES (2, 'Komentar', 4, NOW(), 1, @Id2);
+INSERT INTO review (id, comment, rating, time_added, cultural_offering_id, user_id) VALUES (3, 'Komentar', 5, NOW(), 1, @Id1);
+
 INSERT INTO review (comment, rating, time_added, cultural_offering_id, user_id) VALUES ('Komentar', '3', UTC_TIMESTAMP(), 2, 3);
+
 
 INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('vrlo zanimljiv post', UTC_TIMESTAMP(), 1);
 INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed lobortis neque. Mauris et mauris vehicula, eleifend risus eu, ornare metus. Phasellus porta orci quis lectus sodales, quis vulputate mi eleifend. Donec vitae tortor neque. Donec justo justo, bibendum sed interdum nec, molestie faucibus augue. Donec in libero sed nulla commodo porttitor. Sed ut iaculis lorem, eu vehicula libero. Pellentesque eget placerat mi, non ornare odio.', UTC_TIMESTAMP(), 1);
 
+INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('vrlo zanimljiv post broj dva', NOW(), 1);
+
 INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed lobortis neque. Mauris et mauris vehicula, eleifend risus eu, ornare metus. Phasellus porta orci quis lectus sodales, quis vulputate mi eleifend. Donec vitae tortor neque. Donec justo justo, bibendum sed interdum nec, molestie faucibus augue. Donec in libero sed nulla commodo porttitor. Sed ut iaculis lorem, eu vehicula libero. Pellentesque eget placerat mi, non ornare odio.', UTC_TIMESTAMP(), 1);
 INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed lobortis neque. Mauris et mauris vehicula, eleifend risus eu, ornare metus. Phasellus porta orci quis lectus sodales, quis vulputate mi eleifend. Donec vitae tortor neque. Donec justo justo, bibendum sed interdum nec, molestie faucibus augue. Donec in libero sed nulla commodo porttitor. Sed ut iaculis lorem, eu vehicula libero. Pellentesque eget placerat mi, non ornare odio.', UTC_TIMESTAMP(), 1);
 INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed lobortis neque. Mauris et mauris vehicula, eleifend risus eu, ornare metus. Phasellus porta orci quis lectus sodales, quis vulputate mi eleifend. Donec vitae tortor neque. Donec justo justo, bibendum sed interdum nec, molestie faucibus augue. Donec in libero sed nulla commodo porttitor. Sed ut iaculis lorem, eu vehicula libero. Pellentesque eget placerat mi, non ornare odio.', UTC_TIMESTAMP(), 1);
@@ -62,3 +70,4 @@ INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('Lorem ipsu
 INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed lobortis neque. Mauris et mauris vehicula, eleifend risus eu, ornare metus. Phasellus porta orci quis lectus sodales, quis vulputate mi eleifend. Donec vitae tortor neque. Donec justo justo, bibendum sed interdum nec, molestie faucibus augue. Donec in libero sed nulla commodo porttitor. Sed ut iaculis lorem, eu vehicula libero. Pellentesque eget placerat mi, non ornare odio.', UTC_TIMESTAMP(), 1);
 
 INSERT INTO post (content, time_added, cultural_offering_id) VALUES ('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed lobortis neque. Mauris et mauris vehicula, eleifend risus eu, ornare metus. Phasellus porta orci quis lectus sodales, quis vulputate mi eleifend. Donec vitae tortor neque. Donec justo justo, bibendum sed interdum nec, molestie faucibus augue. Donec in libero sed nulla commodo porttitor. Sed ut iaculis lorem, eu vehicula libero. Pellentesque eget placerat mi, non ornare odio.', UTC_TIMESTAMP(), 1);
+

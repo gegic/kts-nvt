@@ -1,0 +1,20 @@
+
+<div class="p-grid">
+    <div style="font-size: 30px;" class="p-col-12 p-sm-12 p-md-4 p-lg-4 p-xl-4 p-d-flex p-flex-column p-ai-center p-jc-between">
+        <div class="p-mb-3">
+            All reviews
+        </div>
+        <div class="p-mb-3" style="font-size: 30px;">
+            <i style="font-size: 30px;" class="pi pi-user"></i>{{cultural_offering.numReviews}}
+        </div>
+        <div class="p-card p-p-2 p-mb-3" style="font-size: 84px; color: white;" [style.backgroundColor]="resolveColor()">
+            {{cultural_offering.overallRating}}
+        </div>
+        <div>
+            <app-star-component [value]="cultural_offering.overallRating" [size]="24"></app-star-component>
+        </div>
+    </div>
+    <div class="p-col-12 p-sm-12 p-md-8 p-lg-8 p-xl-8 p-mb-3">
+        <p-chart type="doughnut" [data]="data"></p-chart>
+    </div>
+</div>

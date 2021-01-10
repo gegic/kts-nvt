@@ -1,6 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
+import {FileUploadModule} from 'primeng/fileupload';
 import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppRoutingModule} from './app-routing.module';
@@ -45,6 +46,16 @@ import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sideb
 import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
 import { OfferingItemComponent } from './view/offering-item/offering-item.component';
 import { MapPopupComponent } from './view/map-popup/map-popup.component';
+import { OfferingReviewComponent } from './view/offering-page/offering-review/offering-review.component';
+import { OfferingAllRatingsComponent } from './view/offering-all-ratings/offering-all-ratings.component';
+import { OfferingRatingsListComponent } from './view/offering-page/offering-review/offering-ratings-list/offering-ratings-list.component';
+import { RatingItemComponent } from './view/offering-page/offering-review/offering-ratings-list/rating-item/rating-item.component';
+import {ChartModule} from 'primeng/chart';
+import { StarComponent } from './components/star-component/star-component.component';
+import { OfferingPageComponent } from './view/offering-page/offering-page.component';
+import {TabMenuModule} from 'primeng/tabmenu';
+import {MenuItem} from 'primeng/api';
+import { OfferingPhotosComponent } from './view/offering-page/offering-photos/offering-photos.component';
 import { CulturalOfferingDetailsComponent } from './view/cultural-offering-details/cultural-offering-details.component';
 import { DetailsNavigationComponent } from './view/details-navigation/details-navigation.component';
 import { PostsComponent } from './view/posts/posts.component';
@@ -85,12 +96,20 @@ import {DialogModule} from 'primeng/dialog';
     OfferingsListComponent,
     OfferingItemComponent,
     MapPopupComponent,
+    OfferingReviewComponent,
+    OfferingAllRatingsComponent,
+    OfferingRatingsListComponent,
+    RatingItemComponent,
+    StarComponent,
+    OfferingPageComponent,
+    OfferingPhotosComponent,
     CulturalOfferingDetailsComponent,
     DetailsNavigationComponent,
     PostsComponent,
     PhotosComponent,
     ReviewsComponent,
     CulturalOfferingAboutComponent
+
   ],
   imports: [
     BrowserModule,
@@ -117,6 +136,9 @@ import {DialogModule} from 'primeng/dialog';
     ProgressSpinnerModule,
     RippleModule,
     ScrollPanelModule,
+    FileUploadModule,
+    ChartModule,
+    TabMenuModule,
     InfiniteScrollModule,
     SkeletonModule,
     ScrollTopModule,
