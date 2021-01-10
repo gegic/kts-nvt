@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="p-col-12 p-lg-9">
-      <p-card class="new-post-card">
+      <p-card class="new-post-card" *ngIf="getUserRole() === 'MODERATOR'">
         <h3 class="p-mt-0 p-text-normal">
           Announce some news...
         </h3>
@@ -76,7 +76,6 @@
     </div>
   </div>
   <p-scrollTop [threshold]="300"></p-scrollTop>
-  <p-confirmDialog [baseZIndex]="1012" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
   <p-dialog header="Edit"
             [resizable]="false"
             [(visible)]="isEditDialogOpen"

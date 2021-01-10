@@ -4,7 +4,8 @@
       <h2 class="p-text-bold p-my-0">
         All photos
       </h2>
-      <button class="p-button p-d-block p-ml-auto"
+      <button *ngIf="getUserRole() === 'MODERATOR'"
+              class="p-button p-d-block p-ml-auto"
               label="Add a photo"
               (click)="isOpenAddDialog = true"
               pButton></button>
@@ -36,7 +37,7 @@
       </div>
     </ng-template>
   </div>
-  <p-dialog [(visible)]="isOpenAddDialog" [modal]="true" (onHide)="clearFiles()">
+  <p-dialog header="Write a review" [(visible)]="isOpenAddDialog" [modal]="true" (onHide)="clearFiles()">
     <p-progressBar *ngIf="uploadLoading" mode="indeterminate"></p-progressBar>
     <p-fileUpload name="photo[]"
                   [customUpload]="true"
@@ -55,10 +56,10 @@
       <img [src]="getPhotoUrl(item)" style="max-width: 80vw; max-height: 80vh; display: block; " alt="preview">
     </ng-template>
     <ng-template pTemplate="thumbnail" let-item>
-    <div class="p-grid p-nogutter p-justify-center">
-      <img [src]="getThumbnailUrl(item)" style="display: block;" alt="thumbnail">
-    </div>
-  </ng-template>
+      <div class="p-grid p-nogutter p-justify-center">
+        <img [src]="getThumbnailUrl(item)" style="display: block;" alt="thumbnail">
+      </div>
+    </ng-template>
 
   </p-galleria>
 
@@ -69,6 +70,4 @@
           pRipple
           pButton>
   </button>
-  <p-confirmDialog [baseZIndex]="5000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-
 </div>

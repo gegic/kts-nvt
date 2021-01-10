@@ -2,48 +2,55 @@ package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewPhotoDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.ReviewPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
-import rs.ac.uns.ftn.ktsnvt.kultura.security.Token;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.ReviewPhotoRepository;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
 import javax.transaction.Transactional;
-import javax.validation.constraints.Null;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CulturalOfferingMainPhotoService {
+public class ReviewPhotoService {
 
-    private CulturalOfferingMainPhotoRepository repository;
+    private ReviewPhotoRepository repository;
     private Mapper mapper;
     @Autowired
-    public CulturalOfferingMainPhotoService(CulturalOfferingMainPhotoRepository repository,
-                                            Mapper mapper) {
+    public ReviewPhotoService(ReviewPhotoRepository repository,
+                              Mapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }
 
-    public CulturalOfferingPhotoDto addPhoto(MultipartFile photoFile) {
-        CulturalOfferingMainPhoto photo = new CulturalOfferingMainPhoto();
+    public List<ReviewPhotoDto> addPhotos(MultipartFile[] photoFile) {
+        List<ReviewPhotoDto> photoDtos = new ArrayList<>();
+        for (MultipartFile multipartFile : photoFile) {
+            photoDtos.add(this.addPhoto(multipartFile));
+        }
+        return photoDtos;
+    }
+
+    private ReviewPhotoDto addPhoto(MultipartFile photoFile) {
+        ReviewPhoto photo = new ReviewPhoto();
         BufferedImage bufferedImage;
         BufferedImage thumbnail;
 
         try {
-            bufferedImage = Thumbnails.of(photoFile.getInputStream()).size(1000, 1000).asBufferedImage();
-            thumbnail = Thumbnails.of(photoFile.getInputStream()).size(200, 200).asBufferedImage();
+            bufferedImage = Thumbnails.of(photoFile.getInputStream()).size(700, 700).asBufferedImage();
+            thumbnail = Thumbnails.of(photoFile.getInputStream()).size(100, 100).asBufferedImage();
         } catch (IOException e) {
             return null;
         }
@@ -63,18 +70,19 @@ public class CulturalOfferingMainPhotoService {
         photo = repository.save(photo);
 
         try {
-            savePhoto("./photos/main", bufferedImage, photo);
-            savePhoto("./photos/main/thumbnail", thumbnail, photo);
+            savePhoto("./photos/review", bufferedImage, photo);
+            savePhoto("./photos/review/thumbnail", thumbnail, photo);
         } catch (IOException e) {
             repository.delete(photo);
             System.out.println("Exception:" + e);
         }
-        return mapper.fromEntity(photo, CulturalOfferingPhotoDto.class);
+        return mapper.fromEntity(photo, ReviewPhotoDto.class);
+
     }
 
     private void savePhoto(String path,
                            BufferedImage bufferedImage,
-                           CulturalOfferingMainPhoto p) throws IOException {
+                           ReviewPhoto p) throws IOException {
         Path fileStorageLocation = Paths.get(path)
                 .toAbsolutePath().normalize();
         Path targetLocation = fileStorageLocation.resolve(String.format("%d.png", p.getId()));
@@ -90,11 +98,23 @@ public class CulturalOfferingMainPhotoService {
         } catch (NullPointerException e) {
             token = "";
         }
-        List<CulturalOfferingMainPhoto> photos = repository.getNullOffering(token);
-        photos.parallelStream().map(p -> new File("./photos/main/thumbnail/" + p.getId() + ".png"))
+        List<ReviewPhoto> photos = repository.getNullOffering(token);
+        photos.parallelStream().map(p -> new File("./photos/review/thumbnail/" + p.getId() + ".png"))
                 .forEach(File::delete);
-        photos.parallelStream().map(p -> new File("./photos/main/" + p.getId() + ".png"))
+        photos.parallelStream().map(p -> new File("./photos/review/" + p.getId() + ".png"))
                 .forEach(File::delete);
+
+        repository.deleteAll(photos);
+    }
+
+    @Transactional
+    public void deleteForReview(long reviewId) {
+        List<ReviewPhoto> photos = repository.getAllByReviewId(reviewId);
+        photos.parallelStream().map(p -> new File("./photos/review/thumbnail/" + p.getId() + ".png"))
+                .forEach(File::delete);
+        photos.parallelStream().map(p -> new File("./photos/review/" + p.getId() + ".png"))
+                .forEach(File::delete);
+
         repository.deleteAll(photos);
     }
     

@@ -31,7 +31,11 @@
         </ng-template>
       </div>
       <div class="p-col p-flex p-as-end p-text-right">
-        <button class="p-button" icon="pi pi-pencil" label="Edit" pButton></button>
+        <button *ngIf="getUserRole() === 'MODERATOR'; else subscribeButton" class="p-button" icon="pi pi-pencil" label="Edit" pButton></button>
+        <ng-template #subscribeButton>
+          <button class="p-button" icon="pi pi-bell" label="Subscribe" pButton></button>
+        </ng-template>
+
         <p class="p-text-light" *ngIf="!!culturalOffering; else numSubscribedSkeleton">
           {{culturalOffering.numSubscribed}} people subscribed.
         </p>

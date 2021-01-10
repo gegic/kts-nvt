@@ -1,16 +1,17 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {PhotoService} from '../../core/services/photos/photo.service';
 import {CulturalOfferingDetailsService} from '../../core/services/cultural-offering-details/cultural-offering-details.service';
 import {CulturalOfferingPhoto} from '../../core/models/culturalOfferingPhoto';
 import {Confirmation, ConfirmationService, MessageService} from 'primeng/api';
 import {Observable} from 'rxjs';
+import {AuthService} from '../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-photos',
   templateUrl: './photos.component.html',
   styleUrls: ['./photos.component.scss']
 })
-export class PhotosComponent implements OnInit {
+export class PhotosComponent implements OnInit, OnDestroy {
 
   page = -1;
   totalPages = 0;
@@ -25,7 +26,8 @@ export class PhotosComponent implements OnInit {
   constructor(private detailsService: CulturalOfferingDetailsService,
               private photoService: PhotoService,
               private messageService: MessageService,
-              private confirmationService: ConfirmationService) { }
+              private confirmationService: ConfirmationService,
+              private authService: AuthService) { }
 
   ngOnInit(): void {
     this.detailsService.culturalOffering.subscribe(val => {
@@ -46,7 +48,12 @@ export class PhotosComponent implements OnInit {
     const obs = this.photoService.getPhotos(this.detailsService.culturalOffering.getValue()?.id ?? 0, this.page + 1);
     obs.subscribe(
       val => {
-        this.photoService.photos = this.photoService.photos.concat(val.content);
+        for (const el of val.content) {
+          if (this.photoService.photos.some(p => p.id === el.id)) {
+            continue;
+          }
+          this.photoService.photos.push(el);
+        }
         this.page = val.pageable.pageNumber;
         this.totalPages = val.totalPages;
       }
@@ -95,6 +102,11 @@ export class PhotosComponent implements OnInit {
     this.getPhotos();
   }
 
+  getUserRole(): string {
+    return this.authService.getUserRole();
+  }
+
+
   onPhotoHoverStart(photo: CulturalOfferingPhoto): void {
     photo.hovering = true;
   }
@@ -117,9 +129,7 @@ export class PhotosComponent implements OnInit {
   }
 
   photoDeletionConfirmed(photo: CulturalOfferingPhoto): void {
-    console.log(photo);
     if (!photo.id) {
-      console.log('NEMA ID SLIKE');
       return;
     }
     this.photoService.delete(photo.id).subscribe(() => {
@@ -144,7 +154,13 @@ export class PhotosComponent implements OnInit {
       this.galleriaVisible = true;
     }
   }
+
   get photos(): CulturalOfferingPhoto[] {
     return this.photoService.photos;
   }
+
+  ngOnDestroy(): void {
+    this.photoService.photos = [];
+  }
+
 }

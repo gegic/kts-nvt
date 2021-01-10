@@ -3,6 +3,7 @@ import {CulturalOfferingDetailsService} from '../../core/services/cultural-offer
 import {ActivatedRoute} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
 import {CulturalOffering} from '../../core/models/cultural-offering';
+import {AuthService} from '../../core/services/auth/auth.service';
 
 @Component({
   selector: 'app-cultural-offering-details',
@@ -31,7 +32,8 @@ export class CulturalOfferingDetailsComponent implements OnInit {
   ];
 
   constructor(private detailsService: CulturalOfferingDetailsService,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -44,6 +46,10 @@ export class CulturalOfferingDetailsComponent implements OnInit {
         );
       }
     );
+  }
+
+  getUserRole(): string {
+    return this.authService.getUserRole();
   }
 
   get culturalOffering(): CulturalOffering | undefined {

@@ -18,10 +18,7 @@ import javax.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 /*
 
@@ -109,7 +106,7 @@ public class Mapper {
                 } catch (NoSuchFieldException | EntityDtoIncompatibleException | InvocationTargetException e) {
                     System.err.println("Something bad happened here");
                     continue;
-                } catch (IdNotFoundException e) {
+                } catch (IdNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException e) {
                     e.printStackTrace();
                     continue;
                 }
@@ -174,18 +171,20 @@ public class Mapper {
                         .capitalize(field.getAnnotation(EntityKey.class).fieldName()));
                 try {
                     fieldValue = entityKeyToEntity(field, dto);
-                } catch (InvocationTargetException e) {
+                } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | InstantiationException e) {
                     continue;
                 }
                 try {
-                    m = entityClass.getMethod(setterName, field.getAnnotation(EntityKey.class).entityType());
+                    if (Collection.class.isAssignableFrom(fieldValue.getClass())) {
+                        m = entityClass.getMethod(setterName, field.getType());
+                    } else {
+                        m = entityClass.getMethod(setterName, field.getAnnotation(EntityKey.class).entityType());
+                    }
                 } catch (NoSuchMethodException e) {
                     System.err.printf("No setter %s in class %s%n", setterName, entityClass.getName());
                     continue;
                 }
-
             } else if (field.isAnnotationPresent(EntityField.class) || field.isAnnotationPresent(Computed.class)) {
-                // ignore
                 continue;
             }
             else {
@@ -291,7 +290,7 @@ public class Mapper {
         return currentOrigin;
     }
 
-    private <TEntity> Object entityToEntityKey(Field field, TEntity entity) throws NoSuchFieldException, EntityDtoIncompatibleException, InvocationTargetException {
+    private <TEntity> Object entityToEntityKey(Field field, TEntity entity) throws NoSuchFieldException, EntityDtoIncompatibleException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
         EntityKey annotatedField = field.getAnnotation(EntityKey.class);
         Class<?> entityFieldClass = annotatedField.entityType();
         String entityFieldName = annotatedField.fieldName();
@@ -331,12 +330,16 @@ public class Mapper {
         boolean isCollection = Collection.class.isAssignableFrom(fieldClass);
 
         if (isCollection) {
-            if (!entityFieldClass.isAssignableFrom(Collection.class)) throw new EntityDtoIncompatibleException();
+            Collection<Object> entityFieldObjects = (Collection<Object>) entityFieldObject;
+            Collection<Object> keys;
+            if (Set.class.isAssignableFrom(field.getType())) {
+                keys = new HashSet<>();
+            } else {
+                keys = new ArrayList<>();
+            }
 
-            Collection<Object> keys = new ArrayList<>();
-
-            Object[] entityFieldObjects = ((Object[]) entityFieldObject);
             for (Object o : entityFieldObjects) {
+                o = initializeAndUnproxy(o);
                 keys.add(invokeGetMethod(idField, o));
             }
             key = keys;
@@ -346,23 +349,22 @@ public class Mapper {
         return key;
     }
 
-    private <TDto> Object entityKeyToEntity(Field field, TDto dto) throws InvocationTargetException {
+    private <TDto> Object entityKeyToEntity(Field field, TDto dto) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
         EntityKey annotatedField = field.getAnnotation(EntityKey.class);
         Class<?> entityFieldClass = annotatedField.entityType();
         Class<?> fieldClass = field.getType();
         Object found;
 
         boolean isCollection = Collection.class.isAssignableFrom(fieldClass);
-
         if (isCollection) {
-            Object[] keys = (Object[]) invokeGetMethod(field, dto);
-            Collection<Object> objects = new ArrayList<>();
-            if (keys == null) {
-                return null;
-            }
+            Collection<Object> keys = (Collection) invokeGetMethod(field, dto);
+
+            Collection<Object> objects = keys.getClass().getConstructor().newInstance();
+
             for (Object key : keys) {
                 objects.add(getOneEntity(entityFieldClass, key));
             }
+
             found = objects;
         } else {
             Object key = invokeGetMethod(field, dto);
