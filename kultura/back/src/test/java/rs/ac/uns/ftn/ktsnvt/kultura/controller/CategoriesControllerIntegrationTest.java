@@ -174,7 +174,7 @@ public class CategoriesControllerIntegrationTest {
         ResponseEntity<CategoryDto> response = restTemplate.exchange(
                 "/api/categories", HttpMethod.PUT, httpEntity, CategoryDto.class);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
 
         this.accessToken = null;
     }
