@@ -26,6 +26,7 @@ public class ReviewDto {
 
     private String comment;
 
+    @NotNull
     private LocalDateTime timeAdded;
 
     @EntityKey(entityType = CulturalOffering.class, fieldName = "culturalOffering")

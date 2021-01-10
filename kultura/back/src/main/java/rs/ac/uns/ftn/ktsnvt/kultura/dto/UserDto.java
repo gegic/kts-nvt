@@ -24,10 +24,11 @@ public class UserDto {
     @Size(min=8, max=50, message = "A password should be between 8 and 50 characters long.")
     private String password;
 
-    @NotBlank
+
+    @NotBlank(message = "First name of user cannot be blank.")
     private String firstName;
 
-    @NotBlank
+    @NotBlank(message = "Last name of user cannot be blank.")
     private String lastName;
 
     private LocalDateTime lastPasswordChange;

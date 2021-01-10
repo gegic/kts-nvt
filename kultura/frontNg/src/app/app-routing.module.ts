@@ -9,13 +9,13 @@ import {RegisterNameComponent} from './view/login-registration/registration/regi
 import {RegisterPasswordComponent} from './view/login-registration/registration/register-password/register-password.component';
 import {RegisterSuccessComponent} from './view/login-registration/registration/register-success/register-success.component';
 import {RegisterVerifyComponent} from './view/login-registration/registration/register-verify/register-verify.component';
-import {MainViewComponent} from './view/main-view/main-view.component';
 import {MapViewComponent} from './view/map-view/map-view.component';
 import {CulturalOfferingAddComponent} from './view/cultural-offering-add/cultural-offering-add.component';
 import {ModeratorAddComponent} from './view/moderator-add/moderator-add.component';
 import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {HomeViewComponent} from './view/home-view/home-view.component';
+import {OfferingPageComponent} from './view/offering-page/offering-page.component';
 import {AdminPanelComponent} from './view/admin-panel/admin-panel.component';
 import {CulturalOfferingDetailsComponent} from './view/cultural-offering-details/cultural-offering-details.component';
 import {PostsComponent} from './view/posts/posts.component';
@@ -23,6 +23,7 @@ import {PhotosComponent} from './view/photos/photos.component';
 import {ReviewsComponent} from './view/reviews/reviews.component';
 import {CulturalOfferingAboutComponent} from './view/cultural-offering-about/cultural-offering-about.component';
 import {ListViewComponent} from './view/list-view/list-view.component';
+
 
 const routes: Routes = [
   {
@@ -66,6 +67,10 @@ const routes: Routes = [
     children: [
       {path: ':id', component: RegisterVerifyComponent}
     ]
+  },
+  {
+    //dev
+    path: 'offering', component: OfferingPageComponent, canActivate: [],
   },
 ];
 
