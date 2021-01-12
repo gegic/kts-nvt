@@ -46,7 +46,7 @@ const routes: Routes = [
         canActivate: [AuthGuard] },
       { path: 'admin-panel', component: ModeratorsViewComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
       { path: 'add-moderator', component: ModeratorAddComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
-      { path: 'edit-moderator', component: ModeratorEditComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] }
+      { path: 'edit-moderator/:id', component: ModeratorEditComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] }
     ]
   },
   {

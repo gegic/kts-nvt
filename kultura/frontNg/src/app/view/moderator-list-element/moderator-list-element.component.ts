@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Moderator} from '../../core/models/moderator';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {ModeratorService} from '../../core/services/moderator/moderator.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-moderator-list-element',
@@ -13,7 +14,8 @@ export class ModeratorListElementComponent implements OnInit {
   moderator !: Moderator;
   @Output()
   moderatorDeleted: EventEmitter<any> = new EventEmitter<any>();
-  constructor(private confirmationService: ConfirmationService,
+  constructor(private router: Router,
+              private confirmationService: ConfirmationService,
               private messageService: MessageService,
               private moderatorService: ModeratorService) { }
 
@@ -44,7 +46,7 @@ export class ModeratorListElementComponent implements OnInit {
   }
 
   onClickEdit(): void{
-    console.log('EDIT');
+    this.router.navigate([`/edit-moderator/${this.moderator?.id ?? 0}`]).then(r => console.log('EDIT'));
   }
 
 }
