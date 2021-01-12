@@ -23,4 +23,5 @@ public class CulturalOfferingConstants {
     public static final Long TEST_SUBCATEGORY_ID1 = 2L;
     public static final Long TEST_ID1 = 22L;
 
+    public static final Long PHOTO_ID = 1L;
 }

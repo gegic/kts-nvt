@@ -138,17 +138,11 @@ public class CulturalOfferingControllerIntegrationTest {
         this.culturalOfferingService.update(oldValues);
     }
     @Test
-    @Transactional
-    public void testUpdateDoesntExist() throws Exception {
-        // oldValues
-        CulturalOfferingDto oldValues = culturalOfferingService.readById(CulturalOfferingConstants.EXISTING_ID1).orElse(null);
-        if (oldValues == null) {
-            throw new Exception("Test invalid");
-        }
+    public void testUpdateDoesntExist() {
 
         CulturalOfferingDto dbCulturalOffering = new CulturalOfferingDto();
 
-        dbCulturalOffering.setId(CulturalOfferingConstants.EXISTING_ID1);
+        dbCulturalOffering.setId(CulturalOfferingConstants.TEST_ID1);
         dbCulturalOffering.setName(CulturalOfferingConstants.TEST_NAME1);
 
         this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
@@ -160,14 +154,9 @@ public class CulturalOfferingControllerIntegrationTest {
         ResponseEntity<CulturalOfferingDto> response = restTemplate.exchange(
                 "/api/cultural-offerings", HttpMethod.PUT, httpEntity, CulturalOfferingDto.class);
 
-        CulturalOfferingDto updatedCulturalOffering = response.getBody();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertThat(dbCulturalOffering.getName()).isEqualTo(CulturalOfferingConstants.TEST_NAME1);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
         this.accessToken = null;
-
-        this.culturalOfferingService.update(oldValues);
     }
 
 //    @Test
@@ -226,6 +215,7 @@ public class CulturalOfferingControllerIntegrationTest {
         culturalOfferingDto.setLongitude(CulturalOfferingConstants.TEST_LONGITUDE1);
         culturalOfferingDto.setSubcategoryId(CulturalOfferingConstants.TEST_SUBCATEGORY_ID1);
         culturalOfferingDto.setName(CulturalOfferingConstants.TEST_NAME1);
+        culturalOfferingDto.setPhotoId(CulturalOfferingConstants.PHOTO_ID);
 
         return culturalOfferingDto;
     }

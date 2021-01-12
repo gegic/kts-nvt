@@ -65,6 +65,11 @@ public class UserService implements UserDetailsService {
 
   @Transactional
   public UserDto create(UserDto dto, String role) {
+    if(dto.getId()!=null){
+      if(userRepository.existsById(dto.getId())){
+        throw new ResourceExistsException("User with id: "+ dto.getId() +"already exists");
+      }
+    }
     User u = new User();
 
     u.setPassword(passwordEncoder.encode(dto.getPassword()));

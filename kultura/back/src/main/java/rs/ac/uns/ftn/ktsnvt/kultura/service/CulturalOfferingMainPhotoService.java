@@ -96,10 +96,12 @@ public class CulturalOfferingMainPhotoService {
     @Transactional
     public void deletePhoto(CulturalOfferingMainPhoto photo) {
 
-        new File("./photos/main/thumbnail/" + photo.getId() + ".png").delete();
-        new File("./photos/main/" + photo.getId() + ".png").delete();
+        if (photo!=null){
+            new File("./photos/main/thumbnail/" + photo.getId() + ".png").delete();
+            new File("./photos/main/" + photo.getId() + ".png").delete();
 
-        repository.delete(photo);
+            repository.delete(photo);
+        }
     }
     
 }
