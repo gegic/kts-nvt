@@ -1,16 +1,12 @@
 <p-card>
-  <p>List of moderators</p>
-  <ul *ngFor="let moderator of moderatorsList">
-    <li>
-      <span>{{moderator['email']}}</span>
-    </li>
-  </ul>
+  <div class="list-header p-d-flex p-ai-center">
+    <h2 class="p-text-light">Showing all moderators</h2>
+    <button class="p-button p-ml-auto" routerLink="/add-moderator" label="NEW MODERATOR" pButton></button>
+  </div>
+  <app-moderator-list-element *ngFor="let moderator of moderatorsList"
+                    [moderator]="moderator"
+  >
+  </app-moderator-list-element>
 
-  <button class="primary add-button p-button-rounded p-button-raised p-button-icon p-ripple"
-          icon="pi pi-plus"
-          pButton
-          routerLink="/add-moderator"
-          type="button"
-  ></button>
 </p-card>
 

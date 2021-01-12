@@ -67,6 +67,7 @@ import { ListViewComponent } from './view/list-view/list-view.component';
 import { ListElementComponent } from './view/list-element/list-element.component';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {SliderModule} from 'primeng/slider';
+import { ModeratorListElementComponent } from './view/moderator-list-element/moderator-list-element.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +103,8 @@ import {SliderModule} from 'primeng/slider';
     CulturalOfferingAboutComponent,
     ReviewElementComponent,
     ListViewComponent,
-    ListElementComponent
+    ListElementComponent,
+    ModeratorListElementComponent,
   ],
   imports: [
     BrowserModule,
@@ -139,7 +141,8 @@ import {SliderModule} from 'primeng/slider';
     ProgressBarModule,
     RatingModule,
     InputNumberModule,
-    SliderModule
+    SliderModule,
+    AvatarModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
