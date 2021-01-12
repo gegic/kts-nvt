@@ -1,6 +1,16 @@
 <div class="navbar p-grid p-justify-between p-px-3 p-mx-0">
-  <div class="p-col-4 p-p-0 p-col-align-center">
+  <div class="p-col-2 p-p-0 p-col-align-center">
     <a routerLink="/" class="logo p-my-0">kultura</a>
+  </div>
+  <div class="p-col-2 p-p-0 p-col-align-center">
+    <span class="p-input-icon-left">
+    <i class="pi pi-search"></i>
+      <input type="text"
+             placeholder="Search"
+             [(ngModel)]="searchQuery"
+             (keyup)="setSearchQuery($event)"
+             pInputText>
+    </span>
   </div>
   <div class="p-col-4 p-text-center p-p-0">
     <button class="p-button-text topnav-button p-px-4"

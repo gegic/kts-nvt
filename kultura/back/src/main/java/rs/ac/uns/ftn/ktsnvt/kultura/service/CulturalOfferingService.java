@@ -46,8 +46,8 @@ public class CulturalOfferingService {
     }
 
 
-    public Page<CulturalOfferingDto> readAll(Pageable p) {
-        return culturalOfferingRepository.findAll(p).map(co -> modelMapper.fromEntity(co, CulturalOfferingDto.class));
+    public Page<CulturalOfferingDto> readAll(Pageable p, String searchQuery, float ratingMin, float ratingMax) {
+        return culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax).map(co -> modelMapper.fromEntity(co, CulturalOfferingDto.class));
     }
 
     public Optional<CulturalOfferingDto> readById(long id) {
@@ -76,7 +76,7 @@ public class CulturalOfferingService {
                 .orElseThrow(EntityNotFoundException::new);
 
         CulturalOffering updateWith = modelMapper.toExistingEntity(c, toUpdate);
-        
+
         toUpdate.setName(updateWith.getName());
         toUpdate.setAddress(updateWith.getAddress());
         toUpdate.setLatitude(updateWith.getLatitude());

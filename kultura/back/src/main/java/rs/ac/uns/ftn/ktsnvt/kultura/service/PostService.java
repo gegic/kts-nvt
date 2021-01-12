@@ -36,15 +36,15 @@ public class PostService {
     @Transactional
     public Optional<PostDto> readById(long id) {
         return postRepository.findById(id).map(post -> mapper.fromEntity(post, PostDto.class));
-}
+    }
 
     @Transactional
     public PostDto update(PostDto p){
         ResourceNotFoundException exc = new ResourceNotFoundException("A post with ID " + p.getId() + " doesn't exist!");
+
         Post toUpdate = postRepository.findById(p.getId()).orElseThrow(() -> exc );
-        Post updateEntity = mapper.toExistingEntity(p, toUpdate);
-        Post updatedEntity = postRepository.save(updateEntity);
-        return mapper.fromEntity(updatedEntity, PostDto.class);
+
+        return mapper.fromEntity(postRepository.save(mapper.fromDto(p, Post.class)), PostDto.class);
     }
 
     public PostDto save(PostDto p) {

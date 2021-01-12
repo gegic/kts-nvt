@@ -1,7 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
-import {FileUploadModule} from 'primeng/fileupload';
 import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppRoutingModule} from './app-routing.module';
@@ -46,16 +45,6 @@ import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sideb
 import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
 import { OfferingItemComponent } from './view/offering-item/offering-item.component';
 import { MapPopupComponent } from './view/map-popup/map-popup.component';
-import { OfferingReviewComponent } from './view/offering-page/offering-review/offering-review.component';
-import { OfferingAllRatingsComponent } from './view/offering-all-ratings/offering-all-ratings.component';
-import { OfferingRatingsListComponent } from './view/offering-page/offering-review/offering-ratings-list/offering-ratings-list.component';
-import { RatingItemComponent } from './view/offering-page/offering-review/offering-ratings-list/rating-item/rating-item.component';
-import {ChartModule} from 'primeng/chart';
-import { StarComponent } from './components/star-component/star-component.component';
-import { OfferingPageComponent } from './view/offering-page/offering-page.component';
-import {TabMenuModule} from 'primeng/tabmenu';
-import {MenuItem} from 'primeng/api';
-import { OfferingPhotosComponent } from './view/offering-page/offering-photos/offering-photos.component';
 import { CulturalOfferingDetailsComponent } from './view/cultural-offering-details/cultural-offering-details.component';
 import { DetailsNavigationComponent } from './view/details-navigation/details-navigation.component';
 import { PostsComponent } from './view/posts/posts.component';
@@ -76,6 +65,8 @@ import {RatingModule} from 'primeng/rating';
 import { ReviewElementComponent } from './view/review-element/review-element.component';
 import { ListViewComponent } from './view/list-view/list-view.component';
 import { ListElementComponent } from './view/list-element/list-element.component';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {SliderModule} from 'primeng/slider';
 
 @NgModule({
   declarations: [
@@ -103,13 +94,6 @@ import { ListElementComponent } from './view/list-element/list-element.component
     OfferingsListComponent,
     OfferingItemComponent,
     MapPopupComponent,
-    OfferingReviewComponent,
-    OfferingAllRatingsComponent,
-    OfferingRatingsListComponent,
-    RatingItemComponent,
-    StarComponent,
-    OfferingPageComponent,
-    OfferingPhotosComponent,
     CulturalOfferingDetailsComponent,
     DetailsNavigationComponent,
     PostsComponent,
@@ -119,9 +103,6 @@ import { ListElementComponent } from './view/list-element/list-element.component
     ReviewElementComponent,
     ListViewComponent,
     ListElementComponent
-    ReviewElementComponent
-
-    CulturalOfferingAboutComponent
   ],
   imports: [
     BrowserModule,
@@ -148,9 +129,6 @@ import { ListElementComponent } from './view/list-element/list-element.component
     ProgressSpinnerModule,
     RippleModule,
     ScrollPanelModule,
-    FileUploadModule,
-    ChartModule,
-    TabMenuModule,
     InfiniteScrollModule,
     SkeletonModule,
     ScrollTopModule,
@@ -159,7 +137,9 @@ import { ListElementComponent } from './view/list-element/list-element.component
     FileUploadModule,
     GalleriaModule,
     ProgressBarModule,
-    RatingModule
+    RatingModule,
+    InputNumberModule,
+    SliderModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

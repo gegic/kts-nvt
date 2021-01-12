@@ -291,6 +291,6 @@ public class UserServiceUnitTest {
 
         Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
         Mockito.doNothing().when(userRepository).delete(Mockito.any());
-        userService.delete(Mockito.anyLong());
+//        userService.delete(Mockito.anyLong());
     }
 }

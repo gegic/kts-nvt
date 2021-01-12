@@ -65,11 +65,7 @@ public class UserService implements UserDetailsService {
 
   @Transactional
   public UserDto create(UserDto dto, String role) {
-    if(dto.getId() != null && userRepository.existsById(dto.getId()))
-    {
-      throw new ResourceExistsException("User with id: "+dto.getId() + " already exists.");
-    }
-      User u = new User();
+    User u = new User();
 
     u.setPassword(passwordEncoder.encode(dto.getPassword()));
     u.setFirstName(dto.getFirstName());
@@ -97,7 +93,7 @@ public class UserService implements UserDetailsService {
     return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
   }
 
-  public void delete(long id) throws ResourceNotFoundException {
+  public void delete(long id) throws Exception {
     User existingUser = userRepository.findById(id).orElse(null);
     if (existingUser == null) {
       throw new ResourceNotFoundException("User with given id doesn't exist");

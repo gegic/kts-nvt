@@ -23,7 +23,6 @@ public class CulturalOfferingDto {
     private String briefInfo;
 
     //dodati posle min/max za ovo kad skontamo na osnovu mape koje su te vrednosti koje omogucujemo
-
     private Float latitude;
 
     private Float longitude;

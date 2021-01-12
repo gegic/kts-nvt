@@ -23,10 +23,22 @@ export class ListViewComponent implements OnInit, OnDestroy {
     {label: 'rating (ascending)', command: () => this.setSortType('rating (ascending)', 'overallRating,asc')},
     {label: 'rating (descending)', command: () => this.setSortType('rating (descending)', 'overallRating,desc')},
   ];
+  isOpenRatingDialog = false;
+  isOpenReviewsDialog = false;
+  isOpenCategoryDialog = false;
+
+  filter: {
+    rating?: any[],
+    reviews?: number,
+    category?: number
+  } = {};
 
   constructor(private culturalOfferingsService: CulturalOfferingsService) { }
 
   ngOnInit(): void {
+    this.culturalOfferingsService.searchQuery.subscribe(val => {
+      this.resetCulturalOfferings();
+    });
     this.getCulturalOfferings();
   }
 
@@ -66,6 +78,22 @@ export class ListViewComponent implements OnInit, OnDestroy {
   setSortType(label: string, sort: string): void {
     this.sortType.label = label;
     this.sortType.sort = sort;
+    this.resetCulturalOfferings();
+  }
+
+  resetRating(): void {
+    if (!this.culturalOfferingsService.rating) {
+      this.filter.rating = undefined;
+    } else {
+      this.filter.rating = [this.culturalOfferingsService.rating.min, this.culturalOfferingsService.rating.max];
+    }
+  }
+
+  saveRating(): void {
+    const rating = this.filter.rating ?? [1, 5];
+    this.culturalOfferingsService.rating = {
+      min: rating[0], max: rating[1]
+    };
     this.resetCulturalOfferings();
   }
 
