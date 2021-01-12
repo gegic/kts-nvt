@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Moderator} from '../../core/models/moderator';
 import {ConfirmationService, MessageService} from 'primeng/api';
+import {ModeratorService} from '../../core/services/moderator/moderator.service';
 
 @Component({
   selector: 'app-moderator-list-element',
@@ -10,8 +11,11 @@ import {ConfirmationService, MessageService} from 'primeng/api';
 export class ModeratorListElementComponent implements OnInit {
   @Input()
   moderator !: Moderator;
+  @Output()
+  moderatorDeleted: EventEmitter<any> = new EventEmitter<any>();
   constructor(private confirmationService: ConfirmationService,
-              private messageService: MessageService) { }
+              private messageService: MessageService,
+              private moderatorService: ModeratorService) { }
 
   ngOnInit(): void {
   }
@@ -29,7 +33,14 @@ export class ModeratorListElementComponent implements OnInit {
   }
 
   deletionConfirmed(): void {
-    console.log('Djes baaaaaa brise li');
+    this.moderatorService.delete(this.moderator?.id ?? 0).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted successfully',
+        detail: 'The moderator was deleted successfully'
+      });
+      this.moderatorDeleted.emit(this.moderator.id);
+    });
   }
 
 }

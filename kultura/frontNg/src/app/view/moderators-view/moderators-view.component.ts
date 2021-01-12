@@ -8,19 +8,21 @@ import {ModeratorService} from '../../core/services/moderator/moderator.service'
 })
 export class ModeratorsViewComponent implements OnInit {
 
-  moderatorsList: [] | undefined = [];
+  moderatorsList: any[] = [];
 
   constructor(private moderatorService: ModeratorService) {
   }
 
   ngOnInit(): void {
     this.moderatorService.getModerators().subscribe(moderators => {
-      this.moderatorsList = moderators.content;
+      this.moderatorsList = moderators.content || [];
     });
   }
 
-  onClickLogout(): void {
-    console.log(this.moderatorService.getModerators());
+  deleteUser(id: string): void{
+    let result: any[] = [];
+    result = this.moderatorsList.filter(x => x.id !== id);
+    this.moderatorsList = result || [];
   }
 
 }
