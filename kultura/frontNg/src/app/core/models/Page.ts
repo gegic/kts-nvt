@@ -1,4 +1,4 @@
-export class ModeratorsPage {
+export class Page {
   content?: [];
   empty?: boolean;
   first?: boolean;

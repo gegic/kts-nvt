@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {ModeratorsPage} from '../../models/moderatorsPage';
+import {Page} from '../../models/Page';
 import {Moderator} from '../../models/moderator';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class ModeratorService {
   constructor(private httpClient: HttpClient) {
   }
 
-  public getModerators(): Observable<ModeratorsPage> {
+  public getModerators(): Observable<Page> {
     return this.httpClient.get('/api/users/moderators');
   }
 
