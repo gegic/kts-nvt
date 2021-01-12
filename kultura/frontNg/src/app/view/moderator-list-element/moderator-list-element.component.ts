@@ -43,4 +43,8 @@ export class ModeratorListElementComponent implements OnInit {
     });
   }
 
+  onClickEdit(): void{
+    console.log('EDIT');
+  }
+
 }

@@ -68,6 +68,7 @@ import { ListElementComponent } from './view/list-element/list-element.component
 import {InputNumberModule} from 'primeng/inputnumber';
 import {SliderModule} from 'primeng/slider';
 import { ModeratorListElementComponent } from './view/moderator-list-element/moderator-list-element.component';
+import { ModeratorEditComponent } from './view/moderator-edit/moderator-edit.component';
 
 @NgModule({
   declarations: [
@@ -105,6 +106,7 @@ import { ModeratorListElementComponent } from './view/moderator-list-element/mod
     ListViewComponent,
     ListElementComponent,
     ModeratorListElementComponent,
+    ModeratorEditComponent,
   ],
   imports: [
     BrowserModule,
