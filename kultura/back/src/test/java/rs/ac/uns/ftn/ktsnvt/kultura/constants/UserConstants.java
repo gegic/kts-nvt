@@ -40,4 +40,11 @@ public class UserConstants {
     public static final String EXISTING_USER_LAST_NAME = "Prezime";
     public static final String EXISTING_USER_PASSWORD = "hashed password";
     public static final String USER_AUTHORITY = "ROLE_USER";
+
+
+
+    public static final String NEW_USER_EMAIL = "new.user@mail.com";
+    public static final String NEW_USER_FIRST_NAME = "new";
+    public static final String NEW_USER_LAST_NAME = "new";
+    public static final String NEW_USER_PASSWORD = "password";
 }

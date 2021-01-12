@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.Constants;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.MODERATOR_EMAIL;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.MODERATOR_PASSWORD;
 
@@ -80,13 +81,35 @@ public class ReviewControllerIntegrationTest {
                 "/api/reviews/cultural-offering/" + CulturalOfferingConstants.EXISTING_ID2
                 , HttpMethod.GET, httpEntity, responseType);
 
-//        List<ReviewDto> reviews = response.getBody().getContent();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(ReviewConstants.EXISTING_ID, reviews.getId());
-//        assertEquals(ReviewConstants.EXISTING_COMMENT, review.getComment());
-//        assertEquals(ReviewConstants.EXISTING_RATING, review.getRating());
+        assertNotNull(response.getBody());
+        List<ReviewDto> reviews = response.getBody().getContent();
+        reviews.forEach(r->assertEquals(r.getCulturalOfferingId(), CulturalOfferingConstants.EXISTING_ID2));
+        this.accessToken = null;
+    }
 
+    @Test
+    public void whenReadByCulturalOfferingIdNonExisting(){
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        //mora ovako jer ne moze se pozvati .class nad generickim ovim djavolom od Pagea, tugica
+        ParameterizedTypeReference<HelperPage<ReviewDto>> responseType = new ParameterizedTypeReference<HelperPage<ReviewDto>>() {};
+
+        ResponseEntity<HelperPage<ReviewDto>> response = restTemplate.exchange(
+                "/api/reviews/cultural-offering/" + CulturalOfferingConstants.TEST_ID1
+                , HttpMethod.GET, httpEntity, responseType);
+
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        List<ReviewDto> reviews = response.getBody().getContent();
+        assertEquals(0, reviews.size());
         this.accessToken = null;
     }
 
@@ -103,13 +126,30 @@ public class ReviewControllerIntegrationTest {
                 "/api/reviews/" + ReviewConstants.EXISTING_ID,
                 HttpMethod.GET, httpEntity, ReviewDto.class);
 
-//        List<ReviewDto> reviews = response.getBody().getContent();
-
         assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(ReviewConstants.EXISTING_ID, reviews.getId());
-//        assertEquals(ReviewConstants.EXISTING_COMMENT, review.getComment());
-//        assertEquals(ReviewConstants.EXISTING_RATING, review.getRating());
+        ReviewDto result = response.getBody();
+        assertNotNull(result);
+        assertEquals(ReviewConstants.EXISTING_ID, result.getId());
 
+        this.accessToken = null;
+    }
+
+    @Test
+    public void whenReadByIdNotFound(){
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<ReviewDto> response = restTemplate.exchange(
+                "/api/reviews/" + ReviewConstants.TEST_ID,
+                HttpMethod.GET, httpEntity, ReviewDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ReviewDto result = response.getBody();
+        assertNull(result);
         this.accessToken = null;
     }
 

@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.*;
 
 @RunWith(SpringRunner.class)
@@ -74,10 +75,36 @@ public class SubcategoryControllerIntegrationTest {
                 "/api/subcategories/category/" + CategoryConstants.EXISTING_ID1
                 , HttpMethod.GET, httpEntity, responseType);
 
-        List<SubcategoryDto> subcategories = response.getBody().getContent();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        List<SubcategoryDto> subcategories = response.getBody().getContent();
         assertEquals(subcategories.get(0).getCategoryId(), CategoryConstants.EXISTING_ID1);
+        this.accessToken = null;
+    }
+
+    @Test
+    public void whenGetSubcategoriesByCategoriyIdNonExisting(){
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        //mora ovako jer ne moze se pozvati .class nad generickim ovim djavolom od Pagea, tugica
+        ParameterizedTypeReference<HelperPage<SubcategoryDto>> responseType =
+                new ParameterizedTypeReference<HelperPage<SubcategoryDto>>() {};
+
+        ResponseEntity<HelperPage<SubcategoryDto>> response = restTemplate.exchange(
+                "/api/subcategories/category/" + CategoryConstants.NON_EXISTING_ID
+                , HttpMethod.GET, httpEntity, responseType);
+
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        List<SubcategoryDto> subcategories = response.getBody().getContent();
+        assertEquals(0, subcategories.size());
         this.accessToken = null;
     }
 
@@ -102,6 +129,27 @@ public class SubcategoryControllerIntegrationTest {
         this.accessToken = null;
 
         this.subcategoryService.delete(createdSubcategory.getId());
+    }
+
+
+
+    @Test
+    public void whenCreateSubcategoryNameExists(){
+        SubcategoryDto newSubcategory = createExistingSubcategoryDto();
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(newSubcategory, headers);
+
+        ResponseEntity<SubcategoryDto> response = restTemplate.exchange(
+                "/api/subcategories", HttpMethod.POST, httpEntity, SubcategoryDto.class);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        this.accessToken = null;
+
     }
 
     @Test
@@ -131,11 +179,44 @@ public class SubcategoryControllerIntegrationTest {
         subcategoryService.update(oldValues);
     }
 
+    @Test
+    public void whenUpdateSubcategoryNameExists() throws Exception {
+        SubcategoryDto oldValues = subcategoryService.findById(SubcategoryConstants.EXISTING_ID1).orElseThrow(() -> new Exception("Test invalid!"));
+
+        SubcategoryDto updateCategory = new SubcategoryDto();
+        updateCategory.setId(SubcategoryConstants.EXISTING_ID1);
+        updateCategory.setName(SubcategoryConstants.EXISTING_NAME2);
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(updateCategory, headers);
+
+        ResponseEntity<SubcategoryDto> response = restTemplate.exchange(
+                "/api/subcategories", HttpMethod.PUT, httpEntity, SubcategoryDto.class);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+
+        this.accessToken = null;
+
+        subcategoryService.update(oldValues);
+    }
+
     private SubcategoryDto createTestSubcategoryDto() {
         SubcategoryDto subcategoryDto = new SubcategoryDto();
 
         subcategoryDto.setCategoryId(SubcategoryConstants.TEST_CATEGORY_ID);
         subcategoryDto.setName(SubcategoryConstants.TEST_NAME);
+
+        return subcategoryDto;
+    }
+    private SubcategoryDto createExistingSubcategoryDto() {
+        SubcategoryDto subcategoryDto = new SubcategoryDto();
+
+        subcategoryDto.setCategoryId(SubcategoryConstants.TEST_CATEGORY_ID);
+        subcategoryDto.setName(SubcategoryConstants.EXISTING_NAME1);
 
         return subcategoryDto;
     }

@@ -18,6 +18,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.TokenUtils;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 
@@ -34,8 +35,10 @@ public class AuthController {
     @Autowired
     Mapper mapper;
 
-    @PostMapping(path="/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginDto loginInfo){
+    @PostMapping(path="/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces= MediaType.APPLICATION_JSON_VALUE)
+//    DEV
+//    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginDto loginInfo){
+    public ResponseEntity<TokenResponse> login( @RequestBody LoginDto loginInfo){
         try{
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(loginInfo.getEmail(),
@@ -77,7 +80,7 @@ public class AuthController {
     }
 
     @PostMapping(path="/register")
-    public ResponseEntity<Void> register(@RequestBody UserDto userDto) {
+    public ResponseEntity<Void> register(@Valid @RequestBody UserDto userDto) {
         try {
             userService.create(userDto);
             return ResponseEntity.ok().build();

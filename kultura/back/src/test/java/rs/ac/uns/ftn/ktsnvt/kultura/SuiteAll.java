@@ -11,7 +11,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.*;
 @Suite.SuiteClasses({AuthControllerIntegrationTest.class, CategoriesControllerIntegrationTest.class, CulturalOfferingControllerIntegrationTest.class,
         PostControllerIntegrationTest.class, ReviewControllerIntegrationTest.class, SubcategoryControllerIntegrationTest.class,
         UsersControllerIntegrationTest.class, CategoryServiceIntegrationTest.class, CategoryServiceUnitTest.class, CulturalOfferingServiceIntegrationTest.class,
-        CulturalOfferingServiceUnitTest.class, PostServiceIntegrationTest.class, ReviewServiceIntegrationTest.class, SubcategoryServiceIntegrationTest.class,
+        CulturalOfferingServiceUnitTest.class,PostServiceUnitTest.class, PostServiceIntegrationTest.class, ReviewServiceIntegrationTest.class, SubcategoryServiceIntegrationTest.class,
         UserServiceIntegrationTest.class, UserServiceUnitTest.class, CategoryRepositoryIntegrationTest.class, CulturalOfferingRepositoryIntegrationTest.class,
         PostRepositoryIntegrationTest.class, ReviewRepositoryIntegrationTest.class, SubcategoryRepositoryIntegrationTest.class,
         UserRepositoryIntegrationTest.class})

@@ -60,6 +60,7 @@ public class AuthControllerIntegrationTest {
                         String.class);
         JsonNode parent= null;
         String token = "";
+        assertNotNull(responseEntity.getBody());
         try {
             parent = new ObjectMapper().readTree(responseEntity.getBody());
             token = parent.path("token").asText();
@@ -71,6 +72,25 @@ public class AuthControllerIntegrationTest {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(ADMIN_EMAIL, email);
+    }
+
+    @Test
+    public void testLoginUsernameFailed() {
+
+        ResponseEntity<String> responseEntity =
+                restTemplate.postForEntity("/auth/login",
+                        new LoginDto(NEW_EMAIL, ADMIN_PASSWORD),
+                        String.class);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+    @Test
+    public void testLoginPasswordFailed() {
+
+        ResponseEntity<String> responseEntity =
+                restTemplate.postForEntity("/auth/login",
+                        new LoginDto(ADMIN_EMAIL, NEW_USER_PASSWORD),
+                        String.class);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
     @Test
@@ -144,6 +164,7 @@ public class AuthControllerIntegrationTest {
         ResponseEntity<UserDto> response = restTemplate.getForEntity("/auth/verify/" + UNVERIFIED_ID, UserDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
         assertTrue(response.getBody().isVerified());
 
         User u = userRepository.findById(response.getBody().getId()).orElse(null);

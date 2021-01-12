@@ -116,7 +116,7 @@ public class UserServiceIntegrationTest {
 
         UserDto u = createUserDto();
         u.setId(ADMIN_ID);
-        
+
         UserDto updated = userService.update(u);
 
         assertEquals(ADMIN_ID, u.getId().longValue());
@@ -127,6 +127,7 @@ public class UserServiceIntegrationTest {
 
         userService.update(oldValues);
     }
+
 
     @Test
     public void testUpdateUserThrowsResourceNotFoundException() {

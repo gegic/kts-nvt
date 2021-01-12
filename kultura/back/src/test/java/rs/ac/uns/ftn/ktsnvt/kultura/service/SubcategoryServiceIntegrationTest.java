@@ -4,24 +4,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
-import rs.ac.uns.ftn.ktsnvt.kultura.constants.ReviewConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.SubcategoryConstants;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.SubcategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
+import javax.persistence.EntityExistsException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

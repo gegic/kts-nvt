@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(SpringRunner.class)
 @Rollback(false)
@@ -50,6 +51,12 @@ public class PostServiceIntegrationTest {
         return postDto;
     }
 
+    private PostDto createTestUpdatePostDto(){
+        PostDto dto = createTestPostDto();
+        dto.setId(PostConstants.EXISTING_ID1);
+        return dto;
+    }
+
     @Test
     @Transactional
     public void testReadAllByCulturalOfferingId(){
@@ -72,6 +79,14 @@ public class PostServiceIntegrationTest {
 
     @Test
     @Transactional
+    public void testReadByIdDoesntExist(){
+        Optional<PostDto> returnedPost = postService.readById(PostConstants.TEST_ID);
+
+        assertFalse(returnedPost.isPresent());
+    }
+
+    @Test
+    @Transactional
     public void testSave(){
         PostDto newPost = createTestPostDto();
         PostDto createdPost = postService.save(newPost);
@@ -89,5 +104,19 @@ public class PostServiceIntegrationTest {
         postService.delete(createdPost.getId());
     }
 
+    @Test
+    @Transactional
+    @Rollback(value = true)
+    public void testUpdate() {
+        PostDto updatePost = createTestUpdatePostDto();
+        PostDto updatedPost = postService.update(updatePost);
+
+        assertThat(updatedPost).isNotNull();
+
+        // Validate that new category is in the database
+        assertThat(updatedPost.getId()).isEqualTo(updatePost.getId());
+        assertThat(updatedPost.getContent()).isEqualTo(updatePost.getContent());
+
+    }
 
 }
