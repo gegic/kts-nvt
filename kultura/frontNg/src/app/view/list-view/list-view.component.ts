@@ -39,7 +39,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
     noReviews: true
   };
   relativeLocation?: [number, number];
-  absolutLocation?: [number, number];
+  absoluteLocation?: [number, number];
   lastLoadedPageFilter = {categories: -1, subcategories: -1};
   totalPagesFilter = {categories: 0, subcategories: 0};
   categoriesLoading = false;
@@ -147,8 +147,11 @@ export class ListViewComponent implements OnInit, OnDestroy {
     if (this.isLocationRelative && this.relativeLocation) {
       bounds = (new L.LatLng(this.relativeLocation[0] ?? 0, this.relativeLocation[1] ?? 0))
         .toBounds(this.locationDistance * 1000);
+    } else if (this.absoluteLocation) {
+      bounds = (new L.LatLng(this.absoluteLocation[0] ?? 0, this.absoluteLocation[1] ?? 0))
+        .toBounds(this.locationDistance * 1000);
     } else {
-      bounds = (new L.LatLng( 0, 0))
+      bounds = (new L.LatLng(0, 0))
         .toBounds(this.locationDistance * 1000);
     }
     const southWest = bounds.getSouthWest();
@@ -224,12 +227,12 @@ export class ListViewComponent implements OnInit, OnDestroy {
   }
 
   addressSelected(place: NominatimPlace): void {
-    this.absolutLocation = [place.lat, place.lon];
+    this.absoluteLocation = [place.lat, place.lon];
   }
 
   addressLostFocus(): void {
     this.address = '';
-    this.absolutLocation = undefined;
+    this.absoluteLocation = undefined;
   }
 
   categoryChosen(id: number): void {

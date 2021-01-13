@@ -52,25 +52,35 @@ public class CulturalOfferingService {
                                              float ratingMax,
                                              boolean noReviews,
                                              long categoryId,
-                                             long subcategoryId) {
+                                             long subcategoryId,
+                                             float latitudeStart,
+                                             float latitudeEnd,
+                                             float longitudeStart,
+                                             float longitudeEnd) {
         Page<CulturalOffering> found;
         if (subcategoryId != -1) {
             if (noReviews) {
-                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax);
+                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
             } else {
-                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax);
+                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
             }
         } else if (categoryId != -1) {
             if (noReviews) {
-                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax);
+                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
             } else {
-                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax);
+                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
             }
         } else {
             if (noReviews) {
-                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax);
+                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
             } else {
-                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax);
+                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
             }
         }
 

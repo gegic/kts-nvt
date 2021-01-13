@@ -71,6 +71,9 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.onZoomLoad();
     this.onMove();
+    this.map.on('click', event => {
+      console.log(event);
+    });
 
     this.mapService.zoom
       .pipe(debounceTime(200), distinctUntilChanged())
