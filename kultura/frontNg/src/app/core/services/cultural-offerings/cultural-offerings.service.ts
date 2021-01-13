@@ -31,12 +31,21 @@ export class CulturalOfferingsService {
   constructor(private httpClient: HttpClient) { }
 
   getCulturalOfferings(page: number, sort: string): Observable<any> {
-    let apiUrl = `/api/cultural-offerings?page=${page}&sort=${sort}`;
+    let apiUrl = `/api/cultural-offerings?page=${page}&sort=${sort}&no-reviews=${this.noReviews}`;
     if (!!this.searchQuery) {
       apiUrl += `&search=${this.searchQuery.getValue()}`;
     }
     if (!!this.rating) {
       apiUrl += `&rating-min=${this.rating.min}&rating-max=${this.rating.max}`;
+    }
+    if (!!this.selectedCategory) {
+      apiUrl += `&category=${this.selectedCategory.id}`;
+    }
+    if (!!this.selectedSubcategory) {
+      apiUrl += `&category=${this.selectedSubcategory.id}`;
+    }
+    if (!!this.latitudeStart && !!this.latitudeEnd && !!this.longitudeStart && !!this.longitudeEnd) {
+      apiUrl += `$lng-start=${this.longitudeStart}&lng-end=${this.longitudeEnd}&lat-start=${this.latitudeStart}&lat-end=${this.latitudeEnd}`;
     }
     return this.httpClient.get(apiUrl);
   }

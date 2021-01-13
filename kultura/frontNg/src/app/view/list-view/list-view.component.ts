@@ -143,24 +143,29 @@ export class ListViewComponent implements OnInit, OnDestroy {
     this.culturalOfferingsService.filterByLocation = this.filterByLocation;
     this.culturalOfferingsService.isLocationRelative = this.isLocationRelative;
     this.culturalOfferingsService.locationDistance = this.locationDistance;
-    let bounds: L.LatLngBounds;
+    let bounds: L.LatLngBounds | undefined;
     if (this.isLocationRelative && this.relativeLocation) {
       bounds = (new L.LatLng(this.relativeLocation[0] ?? 0, this.relativeLocation[1] ?? 0))
         .toBounds(this.locationDistance * 1000);
     } else if (this.absoluteLocation) {
       bounds = (new L.LatLng(this.absoluteLocation[0] ?? 0, this.absoluteLocation[1] ?? 0))
         .toBounds(this.locationDistance * 1000);
-    } else {
-      bounds = (new L.LatLng(0, 0))
-        .toBounds(this.locationDistance * 1000);
     }
-    const southWest = bounds.getSouthWest();
-    const northEast = bounds.getNorthEast();
-    this.culturalOfferingsService.latitudeStart = southWest.lat;
-    this.culturalOfferingsService.longitudeStart = southWest.lng;
-    this.culturalOfferingsService.latitudeEnd = northEast.lat;
-    this.culturalOfferingsService.longitudeEnd = northEast.lng;
+    if (!!bounds) {
+      const southWest = bounds.getSouthWest();
+      const northEast = bounds.getNorthEast();
+      this.culturalOfferingsService.latitudeStart = southWest.lat;
+      this.culturalOfferingsService.longitudeStart = southWest.lng;
+      this.culturalOfferingsService.latitudeEnd = northEast.lat;
+      this.culturalOfferingsService.longitudeEnd = northEast.lng;
+    } else {
+      this.culturalOfferingsService.latitudeStart = undefined;
+      this.culturalOfferingsService.longitudeStart = undefined;
+      this.culturalOfferingsService.latitudeEnd = undefined;
+      this.culturalOfferingsService.longitudeEnd = undefined;
+    }
     this.resetCulturalOfferings();
+    this.isFilterDialogOpen = false;
   }
 
   getCategories(reset?: boolean): void {
