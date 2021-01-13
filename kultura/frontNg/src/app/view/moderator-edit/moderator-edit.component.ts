@@ -4,6 +4,7 @@ import {ModeratorService} from '../../core/services/moderator/moderator.service'
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Moderator} from '../../core/models/moderator';
 import {MessageService} from 'primeng/api';
+import {RegisterService} from '../../core/services/register/register.service';
 
 @Component({
   selector: 'app-moderator-edit',
@@ -11,6 +12,7 @@ import {MessageService} from 'primeng/api';
   styleUrls: ['./moderator-edit.component.css']
 })
 export class ModeratorEditComponent implements OnInit {
+  oldModerator: Moderator | undefined;
   moderatorForm: FormGroup = new FormGroup(
     {
       id : new FormControl(undefined),
@@ -24,6 +26,7 @@ export class ModeratorEditComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private moderatorService: ModeratorService,
               private messageService: MessageService,
+              private registerService: RegisterService,
               private router: Router) { }
 
   ngOnInit(): void {
@@ -38,7 +41,8 @@ export class ModeratorEditComponent implements OnInit {
               lastName : data.lastName,
               email : data.email
             });
-            this.moderatorForm.controls.email.disable();
+            this.oldModerator = data;
+            // this.moderatorForm.controls.email.disable();
           }
         );
         console.log(val);
@@ -47,17 +51,17 @@ export class ModeratorEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.moderatorForm);
+    let hasErrors = false;
     const moderator: Moderator = {
       id : this.moderatorForm.controls.id.value,
-      email: this.moderatorForm.controls.email.value
+      email : this.moderatorForm.controls.email.value,
+      verified: this.oldModerator?.verified
     };
     if (this.moderatorForm.controls.firstName.value.trim() === '' ) {
-      this.moderatorForm.patchValue({firstName: ''});
     } else {
       if (this.moderatorForm.controls.firstName.invalid){
+        hasErrors = true;
         this.messageService.add({severity: 'error', detail: 'First name cannot be empty and must start with a capital letter'});
-        this.moderatorForm.patchValue({firstName: ''});
       }
       else{
       moderator.firstName = this.moderatorForm.controls.firstName.value;
@@ -65,21 +69,79 @@ export class ModeratorEditComponent implements OnInit {
     }
 
     if (this.moderatorForm.controls.lastName.value.trim() === '' ) {
-      this.moderatorForm.patchValue({lastName: ''});
     } else {
       if (this.moderatorForm.controls.lastName.invalid){
+        hasErrors = true;
         this.messageService.add({severity: 'error', detail: 'Last name name cannot be empty and must start with a capital letter'});
-        this.moderatorForm.patchValue({lastName: ''});
       }
       else{
         moderator.lastName = this.moderatorForm.controls.lastName.value;
       }
     }
-    this.moderatorService.updateModerator(moderator).subscribe(
-      data => {
+
+    if (this.moderatorForm.controls.email.value.trim() !== '' ) {
+      if (this.moderatorForm.controls.email.invalid){
+        hasErrors = true;
+
+        this.messageService.add({severity: 'error', detail: 'Enter the mail in the correct format'}); }
+      else{
+        this.registerService.getIdByMail(this.moderatorForm.controls.email.value)
+          .subscribe(
+            data => {
+              console.log('MAIL');
+              console.log(data.value);
+              console.log(this.oldModerator);
+              if (data.value === this.moderatorForm.controls.id.value) {
+                this.moderatorForm.patchValue({
+                  email: this.moderatorForm.controls.email.value});
+              }
+              else{
+                hasErrors = true;
+                this.messageService.add({
+                  severity: 'error', summary: 'Email already exists',
+                  detail: 'An account with this email already exists.'
+                });
+                this.moderatorForm.patchValue({
+                  email: this.oldModerator?.email
+                });
+              }
+            },
+            () => {
+              this.moderatorForm.patchValue({
+                email: this.moderatorForm.controls.email.value});
+            }
+          );
+      }
+    }
+
+    if (this.moderatorForm.controls.password.value ||  this.moderatorForm.controls.repeatPassword.value) {
+      if (this.moderatorForm.controls.password.invalid) {
+        hasErrors = true;
         this.messageService.add({
-          severity: 'success', summary: 'Moderator updated successfully.',
-          detail: 'All that remains is for the moderator to verify the profile.'
+          severity: 'error', detail: 'Password has to contain at least one uppercase, ' +
+            'one lowercase letter and one digit. It has to be at least 8 characters long'
+        });
+      }
+      else if (this.moderatorForm.controls.password.value !== this.moderatorForm.controls.repeatPassword.value) {
+        hasErrors = true;
+        this.messageService.add({
+          severity: 'error',
+          detail: 'Repeated password has to match the original password.'
+        });
+      }
+      else {
+        // moderator.lastPasswordChange = moderator.password;
+        moderator.password = this.moderatorForm.controls.password.value;
+      }
+    }
+
+    if (hasErrors){
+      return;
+    }
+    this.moderatorService.updateModerator(moderator).subscribe(
+      () => {
+        this.messageService.add({
+          severity: 'success', summary: 'Moderator updated successfully.'
         });
         this.router.navigate(['/admin-panel']);
       }

@@ -28,7 +28,7 @@ export class ModeratorService {
   public updateModerator(moderator: Moderator): Observable<any>{
     console.log('ModeratorService update moderator');
     console.log(moderator);
-    return  this.httpClient.put('/api/users', moderator);
+    return this.httpClient.put('/api/users', moderator);
   }
 
   delete(id: string | number): Observable<any> {
