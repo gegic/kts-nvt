@@ -93,7 +93,7 @@ public class UserService implements UserDetailsService {
     existingUser.setFirstName(userDto.getFirstName());
     existingUser.setLastName(userDto.getLastName());
     existingUser.setVerified(userDto.isVerified());
-    existingUser.setPassword(userDto.getPassword());
+    existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
     existingUser.setLastPasswordChange(LocalDateTime.now());
     return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
   }
