@@ -64,6 +64,18 @@ public class AuthController {
         }
     }
 
+    @GetMapping(path="/exists/email/id/{email}")
+    public ResponseEntity<StringDto> getIdByExistsMail(@PathVariable String email) {
+        Optional<UserDto> userDto = userService.findByEmail(email);
+        if(userDto.isPresent()) {
+            UserDto userDto1 = userDto.get();
+            return ResponseEntity.ok(new StringDto(
+                    String.format("%s", userDto1.getId())));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping(path="/exists/verify/id/{id}")
     public ResponseEntity<StringDto> existsById(@PathVariable long id) {
         Optional<UserDto> userDto = userService.findById(id);
