@@ -14,20 +14,22 @@
               [label]="sortType.label"
               (click)="menu.toggle($event)"
               pButton></button>
-
-      <div class="p-d-flex p-ml-auto p-ai-center filter">
-        <i class="pi pi-filter"></i>
-        <button class="p-button p-button-text p-button-secondary p-p-1 p-ml-1"
-                [label]="!!filter.rating ? filter.rating[0] + '-' + filter.rating[1] : 'RATING'"
-                (click)="isOpenRatingDialog = true"
-                pButton></button>
-        <button class="p-button p-button-text p-button-secondary p-p-1 p-ml-1"
-                [label]="'REVIEWS'"
-                pButton></button>
-        <button class="p-button p-button-text p-button-secondary p-p-1 p-ml-1"
-                [label]="'CATEGORY'"
-                pButton></button>
+      <div class="p-d-flex p-ml-auto">
+        <button class="p-button p-button-icon p-button-text p-button-plain p-button-rounded"
+                icon="pi pi-filter"
+                (click)="openFilterDialog()"
+                pButton
+                pRipple
+        ></button>
+        <button class="p-button p-button-text p-button-plain"
+                label="RESET"
+                (click)="resetFilter()"
+                pButton
+                pRipple
+                *ngIf="filterSet"
+        ></button>
       </div>
+
     </div>
     <app-list-element *ngFor="let culturalOffering of culturalOfferings"
                       [culturalOffering]="culturalOffering"
@@ -35,9 +37,127 @@
     >
     </app-list-element>
   </div>
-  <p-dialog [(visible)]="isOpenRatingDialog" (onHide)="resetRating()">
-    <h3 class="p-text-light">Rating range</h3>
-    <p-slider class="p-mt-5" [min]="0" [max]="5" [(ngModel)]="filter.rating" [range]="true"></p-slider>
-    <button class="p-button p-mt-2" label="Save" (click)="saveRating()" pButton></button>
+  <p-dialog header="Filter"
+            [resizable]="false"
+            [(visible)]="isFilterDialogOpen"
+            [blockScroll]="true"
+            [modal]="true"
+            (onHide)="restoreFilter()"
+  >
+    <div class="filter-dialog-content">
+      <div class="p-grid p-p-0 p-m-0">
+        <div class="p-col-12 p-md-4 p-px-3">
+          <div class="p-d-flex p-ai-center">
+            <h3 class="p-text-normal p-my-0">Rating: {{filter.rating[0]}}-{{filter.rating[1]}}</h3>
+            <div class="p-field-checkbox no-rating">
+              <p-checkbox [(ngModel)]="filter.noReviews" [binary]="true" inputId="noReviews"></p-checkbox>
+              <label for="noReviews">No reviews</label>
+            </div>
+          </div>
+          <hr class="p-mb-4">
+          <div>
+            <p-slider [(ngModel)]="filter.rating"
+                      [range]="true"
+                      [min]="1"
+                      [max]="5"
+                      [step]="0.1"
+                      [draggable]="false"
+            ></p-slider>
+          </div>
+        </div>
+        <div class="p-col-12 p-md-4 p-px-3">
+          <div class="p-d-flex p-ai-center">
+            <h3 class="p-text-normal p-my-0">Reviews</h3>
+          </div>
+          <hr class="p-mb-4">
+          <div class="p-field-checkbox">
+            <p-checkbox [binary]="true" inputId="noReviews" [(ngModel)]="onlyReviews"></p-checkbox>
+            <label for="noReviews">Only with reviews</label>
+          </div>
+        </div>
+        <div class="p-col-12 p-md-4 p-px-3">
+          <div class="p-d-flex p-ai-center">
+            <h3 class="p-text-normal p-my-0">Category</h3>
+          </div>
+          <hr class="p-mb-4">
+          <div class="p-grid">
+            <div class="p-col-6">
+              <ng-select class="custom"
+                         bindLabel="name"
+                         [(ngModel)]="filter.category"
+                         [items]="categories"
+                         [searchable]="false"
+                         [virtualScroll]="true"
+                         [loading]="categoriesLoading"
+                         (clear)="resetSubcategories()"
+                         (scrollToEnd)="getCategories()"
+                         (ngModelChange)="categoryChosen($event.id)"
+              ></ng-select>
+            </div>
+            <div class="p-col-6">
+              <ng-select class="custom"
+                         bindLabel="name"
+                         [(ngModel)]="filter.subcategory"
+                         [items]="subcategories"
+                         [searchable]="false"
+                         [virtualScroll]="true"
+                         [loading]="subcategoriesLoading"
+                         (scrollToEnd)="getSubcategories()"
+                         [disabled]="!filter.category"
+              ></ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="p-col-12 p-mt-6 p-px-3">
+          <div class="p-d-flex p-ai-center">
+            <h3 class="p-text-normal p-my-0">Location</h3>
+            <div class="p-field-checkbox no-rating">
+              <p-checkbox [(ngModel)]="filterByLocation" [binary]="true" inputId="byLocation"></p-checkbox>
+              <label for="byLocation">By location</label>
+            </div>
+          </div>
+          <hr class="p-mb-4">
+          <div class="p-grid">
+            <div class="p-col-12 p-md-3">
+              <p-selectButton [options]="[{label: 'Relative', value: true}, {label: 'Absolute', value: false}]"
+                              [(ngModel)]="isLocationRelative"
+                              [disabled]="!relativeLocation || !filterByLocation"
+              ></p-selectButton>
+            </div>
+            <div class="p-col-12 p-md-4">
+              <p-autoComplete id="address"
+                              placeholder="Address"
+                              [(ngModel)]="address"
+                              *ngIf="!isLocationRelative"
+                              field="display_name"
+                              [minLength]="2"
+                              [suggestions]="recommendations"
+                              (completeMethod)="getAddress($event)"
+                              (onSelect)="addressSelected($event)"
+                              (onBlur)="addressLostFocus()"
+                              [disabled]="!filterByLocation"
+                              pInputText
+              >
+                <ng-template let-recommendation pTemplate="item.display_name">
+                  <div style="width: 4vw">{{ recommendation.display_name }}</div>
+                </ng-template>
+              </p-autoComplete>
+            </div>
+            <div class="p-col-12 p-md-5">
+              <p-selectButton class="distance-selection"
+                              [options]="[{label: '2km', value: 2}, {label: '5km', value: 5}, {label: '10km', value: 10},
+                                        {label: '20km', value: 20}, {label: '50km', value: 50}]"
+                              [(ngModel)]="locationDistance"
+                              [disabled]="!filterByLocation"
+              ></p-selectButton>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <p-footer>
+      <button class="p-button" label="Save filter" (click)="saveFilter()" pButton></button>
+    </p-footer>
   </p-dialog>
 </div>

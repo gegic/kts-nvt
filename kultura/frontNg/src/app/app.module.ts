@@ -67,6 +67,8 @@ import { ListViewComponent } from './view/list-view/list-view.component';
 import { ListElementComponent } from './view/list-element/list-element.component';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {SliderModule} from 'primeng/slider';
+import {CheckboxModule} from "primeng/checkbox";
+import {SelectButtonModule} from "primeng/selectbutton";
 
 @NgModule({
   declarations: [
@@ -139,7 +141,9 @@ import {SliderModule} from 'primeng/slider';
     ProgressBarModule,
     RatingModule,
     InputNumberModule,
-    SliderModule
+    SliderModule,
+    CheckboxModule,
+    SelectButtonModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

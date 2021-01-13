@@ -46,8 +46,35 @@ public class CulturalOfferingService {
     }
 
 
-    public Page<CulturalOfferingDto> readAll(Pageable p, String searchQuery, float ratingMin, float ratingMax) {
-        return culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax).map(co -> modelMapper.fromEntity(co, CulturalOfferingDto.class));
+    public Page<CulturalOfferingDto> readAll(Pageable p,
+                                             String searchQuery,
+                                             float ratingMin,
+                                             float ratingMax,
+                                             boolean noReviews,
+                                             long categoryId,
+                                             long subcategoryId) {
+        Page<CulturalOffering> found;
+        if (subcategoryId != -1) {
+            if (noReviews) {
+                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax);
+            } else {
+                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax);
+            }
+        } else if (categoryId != -1) {
+            if (noReviews) {
+                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax);
+            } else {
+                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax);
+            }
+        } else {
+            if (noReviews) {
+                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax);
+            } else {
+                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax);
+            }
+        }
+
+        return found.map(co -> modelMapper.fromEntity(co, CulturalOfferingDto.class));
     }
 
     public Optional<CulturalOfferingDto> readById(long id) {

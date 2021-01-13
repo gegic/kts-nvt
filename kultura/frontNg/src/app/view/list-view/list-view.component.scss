@@ -18,3 +18,36 @@
   padding: 4px;
   background-color: #EFE4E6;
 }
+
+::ng-deep .filter-dialog-content {
+  width: 70vw !important;
+  height: 50vh !important;
+}
+
+::ng-deep .no-rating {
+  margin-bottom: 0;
+  margin-left: auto;
+}
+
+::ng-deep .p-field-checkbox {
+  user-select: none;
+}
+
+::ng-deep .distance-selection {
+  margin-left: auto;
+}
+
+:host {
+  ::ng-deep {
+    p-autoComplete {
+      padding: 0;
+    }
+    p-autoComplete .p-autocomplete,
+    p-autoComplete .p-autocomplete-input {
+      width: 100%;
+    }
+    .ng-select .ng-select-container .ng-value-container .ng-input>input {
+      cursor: pointer;
+    }
+  }
+}
