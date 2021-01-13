@@ -19,4 +19,8 @@ export class ModeratorService {
   public createModerator(moderator: Moderator): Observable<any>{
     return  this.httpClient.post('/api/users/moderator', moderator);
   }
+
+  delete(id: string | number): Observable<any> {
+    return this.httpClient.delete(`/api/users/${id}`);
+  }
 }
