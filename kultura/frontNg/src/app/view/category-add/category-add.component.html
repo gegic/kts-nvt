@@ -1,0 +1,37 @@
+<form (submit)="onSubmit()" [formGroup]="categoryForm">
+  <p-card class="flat-card">
+    <div class="p-col">
+      <h2>Create a category</h2>
+      <small class="p-text-light">A category blabla...</small>
+      <div class="card p-grid">
+        <div class="p-fluid p-col">
+          <div class="p-field p-col">
+              <span class="p-float-label">
+                 <input autocomplete="off"
+                        formControlName="email"
+                        id="email"
+                        pInputText
+                        type="text">
+                <label for="email">Email</label>
+              </span>
+          </div>
+          <div class="p-field p-col">
+              <span class="p-float-label">
+                <input autocomplete="off"
+                       formControlName="firstName"
+                       id="firstName"
+                       pInputText
+                       type="text">
+                <label for="firstName">First name</label>
+              </span>
+          </div>
+
+        </div>
+      </div>
+      <div class="p-text-right">
+        <button class="p-button p-button primary" label="Create" pButton type="submit"></button>
+      </div>
+
+    </div>
+  </p-card>
+</form>

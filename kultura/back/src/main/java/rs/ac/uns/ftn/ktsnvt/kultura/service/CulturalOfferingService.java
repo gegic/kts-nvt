@@ -73,7 +73,7 @@ public class CulturalOfferingService {
         if (c.getId() == null) throw new NullPointerException();
 
         CulturalOffering toUpdate = culturalOfferingRepository.findById(c.getId())
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(()->new ResourceNotFoundException("Cultural offering with id: " + c.getId() + " doesn't exist."));
 
         CulturalOffering updateWith = modelMapper.toExistingEntity(c, toUpdate);
 
@@ -86,7 +86,7 @@ public class CulturalOfferingService {
         toUpdate.setSubcategory(toUpdate.getSubcategory());
         CulturalOfferingMainPhoto p = updateWith.getPhoto();
         CulturalOfferingMainPhoto photo = toUpdate.getPhoto();
-        if (p.getId() != photo.getId()) {
+        if (p!=null && p.getId() != photo.getId()) {
             mainPhotoService.deletePhoto(photo);
             p.setCulturalOffering(toUpdate);
         }
