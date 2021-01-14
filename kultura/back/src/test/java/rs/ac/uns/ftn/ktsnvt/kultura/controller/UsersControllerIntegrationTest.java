@@ -119,6 +119,8 @@ public class UsersControllerIntegrationTest {
 
     @Test
     public void testPostNewUser() throws Exception {
+
+
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         UserDto newUser = createUserDto();
@@ -146,6 +148,7 @@ public class UsersControllerIntegrationTest {
 
     @Test
     public void testPostNewUserEmailExistsConflict() throws Exception {
+
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         UserDto newUser = createUserDto();
@@ -196,7 +199,7 @@ public class UsersControllerIntegrationTest {
     @Test
     @Rollback
     public void testUpdate() throws Exception {
-//        UserDto oldValues = userService.findById(ADMIN_ID).orElseThrow(() -> new Exception("Test invalid!"));
+        UserDto oldValues = userService.findById(ADMIN_ID).orElseThrow(() -> new Exception("Test invalid!"));
 
 
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
@@ -219,14 +222,14 @@ public class UsersControllerIntegrationTest {
 
         this.accessToken = null;
 
-//        userService.update(oldValues);
+        userService.update(oldValues);
     }
 
 
     @Test
-    @Transactional
-    @Rollback
     public void testUpdateUserAsUser() throws Exception {
+        UserDto oldValues = userService.findById(USER_ID).orElseThrow(() -> new Exception("Test invalid!"));
+
         this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
         UserDto u = createUserDto();
         u.setId(USER_ID);
@@ -240,12 +243,16 @@ public class UsersControllerIntegrationTest {
         UserDto updatedUser = response.getBody();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(updatedUser);
         assertEquals(u.getEmail(), updatedUser.getEmail());
         assertEquals(u.getFirstName(), updatedUser.getFirstName());
         assertEquals(u.getLastName(), updatedUser.getLastName());
         assertNull(updatedUser.getPassword());
 
         this.accessToken = null;
+
+        userService.update(oldValues);
+
     }
 
     @Test
