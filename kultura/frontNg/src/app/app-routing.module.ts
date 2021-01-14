@@ -53,7 +53,7 @@ const routes: Routes = [
       // { path: 'user-edit', component:UserEditComponent, data: {roles: ['USER']}, canActivate: [AuthGuard] }
     ]
   },
-  { path: 'user-edit', component:UserEditComponent},
+  { path: 'user-edit', component: UserEditComponent},
   {
     path: 'login', component: LoginRegisterComponent, canActivate: [AuthGuard],
     children: [

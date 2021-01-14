@@ -28,51 +28,55 @@
             <p-tabView>
                 <p-tabPanel header="Edit informations">
                     <div class="p-fluid">
-
-                        <div class="p-field">
-                            <label>New first name</label>
-                            <input type="text" pInputText />
-                        </div>  
-                        <div class="p-field">
-                            <label>New last name</label>
-                            <input type="text" pInputText />
-                        </div>  
-                        <div class="p-field">
-                            <label>New e-mail</label>
-                            <input type="text" pInputText />
-                        </div>  
-                        <div class="p-flex-row-reverse">
-                            <button type="submit"
-                                class="p-button"
-                                label="Submit"
-                                pButton
-                            ></button>
-                        </div>   
+                        <form #f="ngForm" (ngSubmit)="updateInfo()" >
+                            <div class="p-field">
+                                <label>New first name</label>
+                                <input [(ngModel)]="name" name="name" type="text" pInputText />
+                            </div>  
+                            <div class="p-field">
+                                <label>New last name</label>
+                                <input [(ngModel)]="lastName" name="lastName" type="text" pInputText />
+                            </div>  
+                            <div class="p-field">
+                                <label>New e-mail</label>
+                                <input [formControl]="email" name="email" email type="text" pInputText />
+                            </div>
+                            <div class="p-flex-row-reverse">
+                                <button type="submit"
+                                    class="p-button"
+                                    label="Submit"
+                                    pButton
+                                ></button>
+                            </div>   
+                        </form>
                     </div>
                 </p-tabPanel>
-                <p-tabPanel header="Edit passwords">
-                    <div class="p-fluid">
+                <p-tabPanel header="Edit password">
+                    <form #f="ngForm" (ngSubmit)="updatePassword()" >
 
-                        <div class="p-field">
-                            <label>Old password</label>
-                            <input type="password" pInputText />
-                        </div>  
-                        <div class="p-field">
-                            <label>New password</label>
-                            <input type="password" pInputText />
-                        </div>  
-                        <div class="p-field">
-                            <label>Confirm password</label>
-                            <input type="password" pInputText />
-                        </div>    
-                        <div class="p-flex-row-reverse">
-                            <button type="submit"
-                                class="p-button"
-                                label="Submit"
-                                pButton
-                            ></button>
-                        </div>  
-                    </div>
+                        <div class="p-fluid">
+
+                            <!-- <div class="p-field">
+                                <label>Old password</label>
+                                <input type="password" pInputText />
+                            </div>   -->
+                            <div class="p-field">
+                                <label>New password</label>
+                                <input [formControl]="passwordControl" type="password" pInputText />
+                            </div>  
+                            <div class="p-field">
+                                <label>Confirm password</label>
+                                <input [formControl]="confirmPasswordControl" type="password" pInputText />
+                            </div>    
+                            <div class="p-flex-row-reverse">
+                                <button type="submit"
+                                    class="p-button"
+                                    label="Submit"
+                                    pButton
+                                ></button>
+                            </div>  
+                        </div>
+                    </form>
                 </p-tabPanel>
             </p-tabView>
         </div>
