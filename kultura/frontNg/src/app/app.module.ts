@@ -72,6 +72,8 @@ import { ModeratorEditComponent } from './view/moderator-edit/moderator-edit.com
 import { CategoryAddComponent } from './view/category-add/category-add.component';
 import { CategoriesViewComponent } from './view/categories-view/categories-view.component';
 import { CategoryListItemComponent } from './view/category-list-item/category-list-item.component';
+import { UserEditComponent } from './view/user-view/user-edit/user-edit.component';
+import {TabViewModule} from 'primeng/tabview';
 
 @NgModule({
   declarations: [
@@ -112,7 +114,8 @@ import { CategoryListItemComponent } from './view/category-list-item/category-li
     ModeratorEditComponent,
     CategoryAddComponent,
     CategoriesViewComponent,
-    CategoryListItemComponent
+    CategoryListItemComponent,
+    UserEditComponent
   ],
   imports: [
     BrowserModule,
@@ -150,7 +153,8 @@ import { CategoryListItemComponent } from './view/category-list-item/category-li
     RatingModule,
     InputNumberModule,
     SliderModule,
-    AvatarModule
+    AvatarModule,
+    TabViewModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

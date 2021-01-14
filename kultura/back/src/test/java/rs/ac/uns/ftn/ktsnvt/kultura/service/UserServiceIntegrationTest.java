@@ -109,10 +109,10 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    //@Transactional
-    //@Rollback
+    @Transactional
+    @Rollback
     public void testUpdateUser() throws Exception {
-        UserDto oldValues = userService.findById(ADMIN_ID).orElseThrow(() -> new Exception("Test invalid"));
+//        UserDto oldValues = userService.findById(ADMIN_ID).orElseThrow(() -> new Exception("Test invalid"));
 
         UserDto u = createUserDto();
         u.setId(ADMIN_ID);
@@ -125,7 +125,7 @@ public class UserServiceIntegrationTest {
         assertEquals(u.getLastName(), updated.getLastName());
         assertNull(updated.getPassword());
 
-        userService.update(oldValues);
+//        userService.update(oldValues);
     }
 
 

@@ -194,8 +194,9 @@ public class UsersControllerIntegrationTest {
     }
 
     @Test
+    @Rollback
     public void testUpdate() throws Exception {
-        UserDto oldValues = userService.findById(ADMIN_ID).orElseThrow(() -> new Exception("Test invalid!"));
+//        UserDto oldValues = userService.findById(ADMIN_ID).orElseThrow(() -> new Exception("Test invalid!"));
 
 
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
@@ -218,7 +219,7 @@ public class UsersControllerIntegrationTest {
 
         this.accessToken = null;
 
-        userService.update(oldValues);
+//        userService.update(oldValues);
     }
 
     @Test
