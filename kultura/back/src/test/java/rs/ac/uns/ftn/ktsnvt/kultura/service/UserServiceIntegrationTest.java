@@ -3,7 +3,6 @@ package rs.ac.uns.ftn.ktsnvt.kultura.service;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,7 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -43,7 +42,10 @@ public class UserServiceIntegrationTest {
     private UserRepository userRepository;
 
     @Autowired
-    private Mapper mapper;
+    private PasswordEncoder passwordEncoder;
+
+
+
 
     @Test
     public void testReadAll() {
@@ -130,6 +132,20 @@ public class UserServiceIntegrationTest {
 
 
     @Test
+    @Transactional
+    @Rollback
+    public void testUpdateUserPassword() throws Exception {
+
+        UserDto u = createUserDtoWithNewPassword();
+
+        UserDto updated = userService.update(u);
+
+        assertEquals(ADMIN_ID, u.getId().longValue());
+        assertEquals(ADMIN_EMAIL, updated.getEmail());
+        assertEquals(ADMIN_FULL_NAME, updated.getFirstName()+" "+updated.getLastName());
+    }
+
+    @Test
     public void testUpdateUserThrowsResourceNotFoundException() {
         UserDto u = createUserDto();
         u.setId(NON_EXISTENT_ID);
@@ -213,6 +229,19 @@ public class UserServiceIntegrationTest {
                 NEW_FIRST_NAME,
                 "last name",
                 LocalDateTime.now(),
+                true,
+                null
+        );
+    }
+
+    private UserDto createUserDtoWithNewPassword() {
+        return  new UserDto(
+                ADMIN_ID,
+                null,
+                "admin1234",
+                null,
+                null,
+                null,
                 true,
                 null
         );

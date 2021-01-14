@@ -209,19 +209,61 @@ public class UsersControllerIntegrationTest {
         ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
                 httpEntity, UserDto.class);
 
-        UserDto createdUser = response.getBody();
+        UserDto updatedUser = response.getBody();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(u.getEmail(), createdUser.getEmail());
-        assertEquals(u.getFirstName(), createdUser.getFirstName());
-        assertEquals(u.getLastName(), createdUser.getLastName());
-        assertNull(createdUser.getPassword());
+        assertEquals(u.getEmail(), updatedUser.getEmail());
+        assertEquals(u.getFirstName(), updatedUser.getFirstName());
+        assertEquals(u.getLastName(), updatedUser.getLastName());
+        assertNull(updatedUser.getPassword());
 
         this.accessToken = null;
 
 //        userService.update(oldValues);
     }
 
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testUpdateUserAsUser() throws Exception {
+        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
+        UserDto u = createUserDto();
+        u.setId(USER_ID);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(u, headers);
+
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
+                httpEntity, UserDto.class);
+
+        UserDto updatedUser = response.getBody();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(u.getEmail(), updatedUser.getEmail());
+        assertEquals(u.getFirstName(), updatedUser.getFirstName());
+        assertEquals(u.getLastName(), updatedUser.getLastName());
+        assertNull(updatedUser.getPassword());
+
+        this.accessToken = null;
+    }
+
+    @Test
+    public void testUpdateDifferentUserAsUser() throws Exception {
+        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
+        UserDto u = createUserDto();
+        u.setId(ADMIN_ID);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(u, headers);
+
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
+                httpEntity, UserDto.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        this.accessToken = null;
+    }
     @Test
     public void testUpdateNonExistent() {
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);

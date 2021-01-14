@@ -89,13 +89,19 @@ public class UserService implements UserDetailsService {
     if (existingUser == null) {
       throw new ResourceNotFoundException("User with given id doesn't exist");
     }
-    existingUser.setEmail(userDto.getEmail());
-    existingUser.setFirstName(userDto.getFirstName());
-    existingUser.setLastName(userDto.getLastName());
-    existingUser.setVerified(userDto.isVerified());
-    existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+    User updated = mapper.toExistingEntity(userDto, existingUser);
+
+//    existingUser.setEmail(userDto.getEmail());
+//    existingUser.setFirstName(userDto.getFirstName());
+//    existingUser.setLastName(userDto.getLastName());
+//    existingUser.setVerified(userDto.isVerified());
+    if(userDto.getPassword()!=null){
+      existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+    }
     existingUser.setLastPasswordChange(LocalDateTime.now());
-    return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
+//    return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
+    return mapper.fromEntity(userRepository.save(updated), UserDto.class);
   }
 
   public void delete(long id) throws Exception {
