@@ -9,20 +9,25 @@ import {CategoryService} from '../../core/services/category/category.service';
 })
 export class CategoriesViewComponent implements OnInit {
 
-  categoriesList: [] | undefined = [];
+  categoriesList: any[] = [];
 
   constructor(private categoryService: CategoryService) {
   }
 
   ngOnInit(): void {
-    // tslint:disable-next-line:no-debugger
-    debugger;
     this.categoryService.getCategories().subscribe(categories => {
-      this.categoriesList = categories.content;
+      this.categoriesList = categories.content || [];
     });
   }
 
   onClickLogout(): void {
     console.log(this.categoryService.getCategories());
   }
+
+  deleteCategory(id: string): void{
+    let result: any[] = [];
+    result = this.categoriesList.filter(x => x.id !== id);
+    this.categoriesList = result || [];
+  }
+
 }

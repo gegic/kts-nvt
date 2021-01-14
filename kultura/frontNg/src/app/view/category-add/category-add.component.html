@@ -2,7 +2,6 @@
   <p-card class="flat-card">
     <div class="p-col">
       <h2>Create a category</h2>
-      <small class="p-text-light">A category blabla...</small>
       <div class="card p-grid">
         <div class="p-fluid p-col">
           <div class="p-field p-col">
@@ -26,6 +25,45 @@
               </span>
           </div>
 
+          <div class="p-field p-col">
+              <span class="p-float-label">
+                 <input autocomplete="off"
+                        formControlName="lastName"
+                        id="lastName"
+                        pInputText
+                        type="text">
+                <label for="lastName">Last name</label>
+              </span>
+
+          </div>
+
+        </div>
+        <div class="card p-col">
+          <p>&nbsp;</p>
+          <div class="p-fluid ">
+            <div class="p-field p-col">
+                <span class="p-float-label">
+                  <input autocomplete="off"
+                         formControlName="password"
+                         id="password"
+                         pPassword
+                         type="password">
+                  <label for="password">Password</label>
+                </span>
+
+            </div>
+            <div class="p-field p-col">
+                <span class="p-float-label">
+                  <input [feedback]="false"
+                         autocomplete="off"
+                         formControlName="repeatPassword"
+                         id="repeatPassword"
+                         pPassword
+                         type="password">
+                  <label for="repeatPassword">Repeat Password</label>
+                </span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="p-text-right">
@@ -35,3 +73,6 @@
     </div>
   </p-card>
 </form>
+
+
+

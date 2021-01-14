@@ -30,6 +30,27 @@ export class CategoryListItemComponent implements OnInit {
   }
 
   onClickDelete(): void{
+    this.confirmationService.confirm(
+        {
+          message: `Are you sure that you want to delete ${this.category?.name} ?
+          You will also delete all of its subcategories`,
+          acceptLabel: 'Delete',
+          rejectLabel: 'Close',
+          header: 'Deletion',
+          icon: 'pi pi-trash',
+          accept: () => this.deletionConfirmed()
+        });
+  }
+
+  deletionConfirmed(): void {
+    this.categoryService.delete(this.category?.id ?? 0).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Deleted successfully',
+        detail: 'The category and its subcategories were deleted successfully'
+      });
+      this.categoryDeleted.emit(this.category.id);
+    });
   }
 
   onClickEdit(): void{
