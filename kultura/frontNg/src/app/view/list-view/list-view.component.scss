@@ -9,7 +9,7 @@
 }
 
 ::ng-deep .sort-button {
-  margin-bottom: 3px;
+  margin-bottom: 3px !important;
 }
 
 .filter {
@@ -22,6 +22,7 @@
 ::ng-deep .filter-dialog-content {
   width: 70vw !important;
   height: 50vh !important;
+  overflow: hidden;
 }
 
 ::ng-deep .no-rating {

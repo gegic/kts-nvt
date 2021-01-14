@@ -61,17 +61,21 @@ public class CulturalOfferingService {
         if (subcategoryId != -1) {
             if (noReviews) {
                 found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                        categoryId, subcategoryId,
                         latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
             } else {
                 found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                        categoryId, subcategoryId,
                         latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
             }
         } else if (categoryId != -1) {
             if (noReviews) {
                 found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                        categoryId,
                         latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
             } else {
                 found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                        categoryId,
                         latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
             }
         } else {

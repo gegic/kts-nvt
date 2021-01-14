@@ -1,6 +1,6 @@
 <div>
   <div class="list-header p-d-flex p-ai-center">
-    <h2 class="p-text-light">Showing all offerings</h2>
+    <h2 class="p-text-light">{{filterSet || !!searchQuery ? 'Search and filter results' : 'Showing all offerings'}}</h2>
     <button class="p-button p-ml-auto new-offering" routerLink="/create-offering" label="NEW OFFERING" pButton></button>
   </div>
   <div class="list-content"
@@ -31,11 +31,18 @@
       </div>
 
     </div>
-    <app-list-element *ngFor="let culturalOffering of culturalOfferings"
-                      [culturalOffering]="culturalOffering"
-                      (offeringDeleted)="onOfferingDeleted()"
-    >
-    </app-list-element>
+    <div *ngIf="culturalOfferings.length > 0; else noOfferings">
+      <app-list-element *ngFor="let culturalOffering of culturalOfferings"
+                        [culturalOffering]="culturalOffering"
+                        (offeringDeleted)="onOfferingDeleted()"
+      >
+      </app-list-element>
+    </div>
+    <ng-template #noOfferings>
+      <h2 class="p-text-bold">
+        {{filterSet || !!searchQuery ? 'No results...' : 'No offerings...'}}
+      </h2>
+    </ng-template>
   </div>
   <p-dialog header="Filter"
             [resizable]="false"
@@ -127,8 +134,8 @@
             <div class="p-col-12 p-md-4">
               <p-autoComplete id="address"
                               placeholder="Address"
-                              [(ngModel)]="address"
-                              *ngIf="!isLocationRelative"
+                              [(ngModel)]="absoluteAddress"
+                              *ngIf="!isLocationRelative; else relativeAddressDiv"
                               field="display_name"
                               [minLength]="2"
                               [suggestions]="recommendations"
@@ -142,6 +149,12 @@
                   <div style="width: 4vw">{{ recommendation.display_name }}</div>
                 </ng-template>
               </p-autoComplete>
+              <ng-template #relativeAddressDiv>
+                <div class="p-ml-2 p-flex-wrap">
+                  <p class="p-text-normal p-my-0"
+                  >{{relativeAddress}}</p>
+                </div>
+              </ng-template>
             </div>
             <div class="p-col-12 p-md-5">
               <p-selectButton class="distance-selection"

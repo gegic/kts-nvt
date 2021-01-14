@@ -44,7 +44,6 @@ import {AdminPanelComponent} from './view/admin-panel/admin-panel.component';
 import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sidebar.component';
 import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
 import { OfferingItemComponent } from './view/offering-item/offering-item.component';
-import { MapPopupComponent } from './view/map-popup/map-popup.component';
 import { CulturalOfferingDetailsComponent } from './view/cultural-offering-details/cultural-offering-details.component';
 import { DetailsNavigationComponent } from './view/details-navigation/details-navigation.component';
 import { PostsComponent } from './view/posts/posts.component';
@@ -67,8 +66,8 @@ import { ListViewComponent } from './view/list-view/list-view.component';
 import { ListElementComponent } from './view/list-element/list-element.component';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {SliderModule} from 'primeng/slider';
-import {CheckboxModule} from "primeng/checkbox";
-import {SelectButtonModule} from "primeng/selectbutton";
+import {CheckboxModule} from 'primeng/checkbox';
+import {SelectButtonModule} from 'primeng/selectbutton';
 
 @NgModule({
   declarations: [
@@ -95,7 +94,6 @@ import {SelectButtonModule} from "primeng/selectbutton";
     OfferingSidebarComponent,
     OfferingsListComponent,
     OfferingItemComponent,
-    MapPopupComponent,
     CulturalOfferingDetailsComponent,
     DetailsNavigationComponent,
     PostsComponent,

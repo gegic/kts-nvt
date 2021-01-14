@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {CulturalOffering} from '../../models/cultural-offering';
 import {Category} from '../../models/category';
 import {Subcategory} from '../../models/subcategory';
+import * as L from 'leaflet';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,8 @@ export class CulturalOfferingsService {
   latitudeEnd?: number;
   longitudeStart?: number;
   longitudeEnd?: number;
+  absoluteAddress = '';
+  absolutePosition?: [number, number];
 
 
   categories?: Category[] = [];
@@ -42,10 +45,11 @@ export class CulturalOfferingsService {
       apiUrl += `&category=${this.selectedCategory.id}`;
     }
     if (!!this.selectedSubcategory) {
-      apiUrl += `&category=${this.selectedSubcategory.id}`;
+      apiUrl += `&subcategory=${this.selectedSubcategory.id}`;
     }
-    if (!!this.latitudeStart && !!this.latitudeEnd && !!this.longitudeStart && !!this.longitudeEnd) {
-      apiUrl += `$lng-start=${this.longitudeStart}&lng-end=${this.longitudeEnd}&lat-start=${this.latitudeStart}&lat-end=${this.latitudeEnd}`;
+    if (!!this.absoluteAddress && !!this.latitudeStart && !!this.latitudeEnd && !!this.longitudeStart && !!this.longitudeEnd) {
+      apiUrl += `&lng-start=${this.longitudeStart}&lng-end=${this.longitudeEnd}` +
+        `&lat-start=${this.latitudeStart}&lat-end=${this.latitudeEnd}`;
     }
     return this.httpClient.get(apiUrl);
   }
@@ -62,6 +66,10 @@ export class CulturalOfferingsService {
     return this.httpClient.get(`/api/subcategories/category/${categoryId}?page=${lastLoadedPage}`);
   }
 
+  getRelativeAddress(position: any[]): Observable<any> {
+    return this.httpClient.get(this.reverseGeocoding(position));
+  }
+
   delete(id: number): Observable<any> {
     return this.httpClient.delete(`/api/cultural-offerings/${id}`);
   }
@@ -69,4 +77,9 @@ export class CulturalOfferingsService {
   private queryLocation(address: string): string {
     return `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${address}&limit=4`;
   }
+
+  private reverseGeocoding(latLng: any[]): string {
+    return `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latLng[0]}&lon=${latLng[1]}`;
+  }
+
 }

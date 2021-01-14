@@ -48,15 +48,16 @@ export class ListViewComponent implements OnInit, OnDestroy {
   isLocationRelative = false;
   filterByLocation = false;
   locationDistance = 2;
-  private map: L.Map | null = null;
   recommendations: NominatimPlace[] = [];
-  address = '';
-
+  absoluteAddress = '';
+  absoluteAddressSelected = false;
+  relativeAddress = '';
+  offeringsLoading = false;
 
   constructor(private culturalOfferingsService: CulturalOfferingsService) { }
 
   ngOnInit(): void {
-    this.culturalOfferingsService.searchQuery.subscribe(val => {
+    this.culturalOfferingsService.searchQuery.subscribe(() => {
       this.resetCulturalOfferings();
     });
     this.getCulturalOfferings();
@@ -66,6 +67,9 @@ export class ListViewComponent implements OnInit, OnDestroy {
   getLocation(): void {
     navigator.geolocation.getCurrentPosition(position => {
       this.relativeLocation = [position.coords.latitude, position.coords.longitude];
+      this.culturalOfferingsService.getRelativeAddress(this.relativeLocation).subscribe(data => {
+        this.relativeAddress = data.display_name;
+      });
     });
   }
 
@@ -73,6 +77,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
     if (this.page === this.totalPages) {
       return;
     }
+    this.offeringsLoading = true;
     this.culturalOfferingsService.getCulturalOfferings(this.page + 1, this.sortType.sort).subscribe(
       val => {
         for (const el of val.content) {
@@ -81,6 +86,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
           }
           this.culturalOfferingsService.culturalOfferings.push(el);
         }
+        this.offeringsLoading = false;
         this.page = val.pageable.pageNumber;
         this.totalPages = val.totalPages;
       }
@@ -117,6 +123,9 @@ export class ListViewComponent implements OnInit, OnDestroy {
     this.filterByLocation = false;
     this.isLocationRelative = false;
     this.locationDistance = 2;
+    this.getLocation();
+    this.absoluteLocation = undefined;
+    this.absoluteAddress = '';
     this.saveFilter(true);
   }
 
@@ -128,6 +137,8 @@ export class ListViewComponent implements OnInit, OnDestroy {
     this.filterByLocation = this.culturalOfferingsService.filterByLocation;
     this.isLocationRelative = this.culturalOfferingsService.isLocationRelative;
     this.locationDistance = this.culturalOfferingsService.locationDistance;
+    this.absoluteLocation = this.culturalOfferingsService.absolutePosition;
+    this.absoluteAddress = this.culturalOfferingsService.absoluteAddress;
   }
 
   saveFilter(reset?: boolean): void {
@@ -148,6 +159,8 @@ export class ListViewComponent implements OnInit, OnDestroy {
       bounds = (new L.LatLng(this.relativeLocation[0] ?? 0, this.relativeLocation[1] ?? 0))
         .toBounds(this.locationDistance * 1000);
     } else if (this.absoluteLocation) {
+      this.culturalOfferingsService.absolutePosition = this.absoluteLocation;
+      this.culturalOfferingsService.absoluteAddress = this.absoluteAddress;
       bounds = (new L.LatLng(this.absoluteLocation[0] ?? 0, this.absoluteLocation[1] ?? 0))
         .toBounds(this.locationDistance * 1000);
     }
@@ -222,8 +235,9 @@ export class ListViewComponent implements OnInit, OnDestroy {
   }
 
   getAddress(event: any): void {
-    const enteredAddress = event.query;
+    this.absoluteAddressSelected = false;
 
+    const enteredAddress = event.query;
     this.culturalOfferingsService.getRecommendations(enteredAddress).subscribe(
       data => {
         this.recommendations = data as NominatimPlace[];
@@ -232,12 +246,15 @@ export class ListViewComponent implements OnInit, OnDestroy {
   }
 
   addressSelected(place: NominatimPlace): void {
+    this.absoluteAddressSelected = true;
     this.absoluteLocation = [place.lat, place.lon];
   }
 
   addressLostFocus(): void {
-    this.address = '';
-    this.absoluteLocation = undefined;
+    if (!this.absoluteAddressSelected) {
+      this.absoluteAddress = '';
+      this.absoluteLocation = undefined;
+    }
   }
 
   categoryChosen(id: number): void {
@@ -263,6 +280,10 @@ export class ListViewComponent implements OnInit, OnDestroy {
 
   get categories(): Category[] {
     return this.culturalOfferingsService.categories ?? [];
+  }
+
+  get searchQuery(): string {
+    return this.culturalOfferingsService.searchQuery.getValue();
   }
 
   ngOnDestroy(): void {
