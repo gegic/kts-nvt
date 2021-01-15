@@ -25,7 +25,11 @@
 }
 
 ::ng-deep .post-card .p-card {
-  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+::ng-deep .new-post-card .p-card {
+  margin-bottom: 2vh;
 }
 
 ::ng-deep .post-card .p-card-body,

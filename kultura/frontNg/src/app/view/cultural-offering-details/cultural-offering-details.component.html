@@ -44,7 +44,21 @@
                   pButton></button>
         </div>
         <ng-template #subscribeButton>
-          <button class="p-button" icon="pi pi-bell" label="Subscribe" pButton></button>
+          <button *ngIf="(culturalOffering && !culturalOffering.subscribed) || !isLoggedIn(); else unsubscribe"
+                  class="p-button"
+                  icon="pi pi-bell"
+                  label="Subscribe"
+                  (click)="onClickSubscribe()"
+                  pButton
+          ></button>
+          <ng-template #unsubscribe>
+            <button class="p-button p-button-text p-button-plain"
+                    icon="pi pi-bell"
+                    label="Unsubscribe"
+                    (click)="onClickUnsubscribe()"
+                    pButton
+            ></button>
+          </ng-template>
         </ng-template>
         <p class="p-text-light" *ngIf="!!culturalOffering; else numSubscribedSkeleton">
           {{culturalOffering.numSubscribed}} people subscribed.

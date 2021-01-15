@@ -1,9 +1,7 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
 import lombok.*;
-import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Computed;
-import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityField;
-import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 
@@ -54,4 +52,7 @@ public class CulturalOfferingDto {
 
     @Computed(element = "subscribedUsers", functionName = "size")
     private Integer numSubscribed;
+
+    @Ignore(ignoreType = IgnoreType.BOTH)
+    private Boolean subscribed;
 }

@@ -27,6 +27,7 @@ public class SubcategoriesController {
         this.subcategoryService = subcategoryService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR', 'USER')")
     @GetMapping("/category/{categoryId}")
     ResponseEntity<Page<SubcategoryDto>> getSubcategoriesByCategoryId(@PathVariable long categoryId,
                                                                       @RequestParam(defaultValue = "0") int page,

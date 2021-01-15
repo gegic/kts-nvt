@@ -16,15 +16,37 @@
       <small class="p-mt-1">{{culturalOffering.numPhotos}} photos.</small>
     </div>
     <div class="p-col p-text-right p-as-end">
-      <div class="p-d-block button-group p-mb-3">
-        <button class="p-button p-button-rounded p-button-icon p-button-danger"
-                icon="pi pi-trash"
-                (click)="onClickDelete()"
-                pButton></button>
-        <button class="p-button p-button-rounded p-button-icon p-ml-3"
-                icon="pi pi-pencil"
-                (click)="onClickEdit()"
-                pButton></button>
+      <div class="p-d-block p-mb-3">
+        <div *ngIf="getUserRole() === 'MODERATOR'; else subscribeButton">
+          <button class="p-button p-button-rounded p-button-icon p-button-danger"
+                  icon="pi pi-trash"
+                  (click)="onClickDelete($event)"
+                  pButton
+          ></button>
+          <button class="p-button p-button-rounded p-button-icon p-ml-3"
+                  icon="pi pi-pencil"
+                  (click)="onClickEdit($event)"
+                  pButton
+          ></button>
+        </div>
+        <ng-template #subscribeButton>
+            <button class="p-button"
+                    *ngIf="!culturalOffering.subscribed || !isLoggedIn(); else unsubscribeButton"
+                    label="Subscribe"
+                    icon="pi pi-bell"
+                    (click)="onClickSubscribe($event)"
+                    pButton
+            ></button>
+            <ng-template #unsubscribeButton>
+              <button class="p-button p-button-text p-button-plain"
+                      *ngIf="!!culturalOffering.subscribed || !isLoggedIn()"
+                      label="Unsubscribe"
+                      icon="pi pi-bell"
+                      (click)="onClickUnsubscribe($event)"
+                      pButton
+              ></button>
+            </ng-template>
+        </ng-template>
       </div>
       <div class="p-d-inline-flex p-ml-auto">
         <i class="pi pi-star"></i>

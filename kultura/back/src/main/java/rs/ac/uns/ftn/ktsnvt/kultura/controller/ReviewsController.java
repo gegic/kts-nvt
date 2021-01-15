@@ -22,7 +22,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-@PreAuthorize("hasRole('MODERATOR') || hasRole('USER')")
 @RestController
 @RequestMapping(path = "/api/reviews", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ReviewsController {
@@ -95,6 +94,7 @@ public class ReviewsController {
         return ResponseEntity.ok(saved);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'MODERATOR')")
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable long id){
         this.reviewService.delete(id);

@@ -22,6 +22,9 @@ export class NavbarComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
+    this.culturalOfferingsService.searchQuery.subscribe(val => {
+      this.searchQuery = val;
+    });
   }
 
   onClickLogout(): void {
@@ -33,6 +36,14 @@ export class NavbarComponent implements OnInit {
       this.culturalOfferingsService.searchQuery.next(this.searchQuery);
       this.router.navigate(['list-view']);
     }
+  }
+
+  onClickSignIn(): void {
+    this.router.navigate(['login']);
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
 
   get name(): string {

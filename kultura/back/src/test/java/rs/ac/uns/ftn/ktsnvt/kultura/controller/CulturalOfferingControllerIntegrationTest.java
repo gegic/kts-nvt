@@ -107,7 +107,7 @@ public class CulturalOfferingControllerIntegrationTest {
     @Transactional
     public void testUpdate() throws Exception {
         // oldValues
-        CulturalOfferingDto oldValues = culturalOfferingService.readById(CulturalOfferingConstants.EXISTING_ID1).orElse(null);
+        CulturalOfferingDto oldValues = culturalOfferingService.readById(CulturalOfferingConstants.EXISTING_ID1, -1).orElse(null);
         if (oldValues == null) {
             throw new Exception("Test invalid");
         }

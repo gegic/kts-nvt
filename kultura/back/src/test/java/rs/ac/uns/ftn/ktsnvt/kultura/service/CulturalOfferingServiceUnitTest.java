@@ -164,10 +164,11 @@ public class CulturalOfferingServiceUnitTest {
                             c.getSubcategory().getName(),
                             c.getSubcategory().getCategory().getId(),
                             c.getSubcategory().getCategory().getName(),
-                            0
+                            0,
+                            null
                     );
                 });
-        List<CulturalOfferingDto> list = culturalOfferingService.findByBounds(9, 14, -4, 17);
+        List<CulturalOfferingDto> list = culturalOfferingService.findByBounds(9, 14, -4, 17, -1);
 
         assertEquals(1, list.size());
         assertEquals(CulturalOfferingConstants.EXISTING_ID1, list.get(0).getId());
@@ -191,7 +192,7 @@ public class CulturalOfferingServiceUnitTest {
                 }
         );
 
-        List<CulturalOfferingDto> list = culturalOfferingService.findByBounds(30, 46, 50, 60);
+        List<CulturalOfferingDto> list = culturalOfferingService.findByBounds(30, 46, 50, 60, -1);
 
         assertTrue(list.isEmpty());
     }

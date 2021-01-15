@@ -19,31 +19,25 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const isAuthRoute: boolean = route.url.filter(
-      us => us.path.includes('login') || us.path.includes('register') || us.path.includes('verify')).length === 0;
     const user = Object.assign(new User(), this.authService.user.getValue());
     const token: string | null = this.authService.token.getValue();
     const isTokenExpired: boolean = !!token ? this.jwtHelper.isTokenExpired(token) : true;
-    const isAuthenticated = !isTokenExpired && !!user;
-    if (!isAuthRoute && isAuthenticated) {
-      this.router.navigateByUrl('/');
-      return false;
-    } else if (isAuthRoute && !isAuthenticated) {
-      this.router.navigateByUrl('/login');
+    const isAuthenticated = !isTokenExpired && user.id !== -1;
+
+    let accessRoles: string[] = [];
+    if (route.data.hasOwnProperty('roles')) {
+      accessRoles = route.data.roles as string[];
+    } else {
+      return true;
+    }
+    if (accessRoles.length === 0) {
       return false;
     }
-
-    if (isAuthRoute) { // if everything is alright but the route is authorized, check for the user roles
-      let accessRoles: string[] = [];
-
-      if (route.data.hasOwnProperty('roles')) {
-        accessRoles = route.data.roles as string[];
-      } else {
-        return true;
-      }
-      if (accessRoles.length === 0) {
-        return true;
-      }
+    if (!isAuthenticated && accessRoles.includes('UNREGISTERED')) {
+      return true;
+    } else if (!isAuthenticated && !accessRoles.includes('UNREGISTERED')) {
+      return false;
+    } else {
       const auth = this.authorize(accessRoles, user) ?? false;
       if (!auth) {
         if (user.getRole() === 'ADMIN') {

@@ -45,17 +45,25 @@ export class CulturalOfferingDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(
       val => {
-        this.detailsService.getCulturalOffering(val.id).subscribe(
-          data => {
-            this.detailsService.culturalOffering.next(data);
-          }
-        );
+        this.getCulturalOffering(val.id);
       }
     );
   }
 
   getUserRole(): string {
     return this.authService.getUserRole();
+  }
+
+  getCulturalOffering(id: number): void {
+    let userId: number | undefined;
+    if (this.isLoggedIn() && this.getUserRole() === 'USER') {
+      userId = this.authService.user.getValue()?.id ?? -1;
+    }
+    this.detailsService.getCulturalOffering(id, userId).subscribe(
+      data => {
+        this.detailsService.culturalOffering.next(data);
+      }
+    );
   }
 
   onClickDelete(): void {
@@ -74,6 +82,26 @@ export class CulturalOfferingDetailsComponent implements OnInit {
     this.router.navigate([`/edit-offering/${this.culturalOffering?.id ?? 0}`]);
   }
 
+
+  onClickSubscribe(): void {
+    if (!this.isLoggedIn()) {
+      this.router.navigate(['login']);
+    } else {
+      this.culturalOfferingsService.subscribe(this.authService.user.getValue()?.id ?? 0,
+        this.culturalOffering?.id ?? 0).subscribe(data => {
+          this.detailsService.culturalOffering.next(data);
+      });
+    }
+  }
+
+  onClickUnsubscribe(): void {
+    this.culturalOfferingsService.unsubscribe(this.authService.user.getValue()?.id ?? 0,
+      this.culturalOffering?.id ?? 0).subscribe(data => {
+        this.detailsService.culturalOffering.next(data);
+      });
+  }
+
+
   deletionConfirmed(): void {
     this.culturalOfferingsService.delete(this.culturalOffering?.id ?? 0).subscribe(() => {
       this.router.navigate(['']);
@@ -83,6 +111,10 @@ export class CulturalOfferingDetailsComponent implements OnInit {
         detail: 'The cultural offering was deleted successfully'
       });
     });
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
   get culturalOffering(): CulturalOffering | undefined {
     return this.detailsService.culturalOffering.getValue();

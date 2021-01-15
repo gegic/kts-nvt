@@ -29,10 +29,13 @@ import {CategoriesViewComponent} from './view/categories-view/categories-view.co
 const routes: Routes = [
   {
     path: '', component: MainViewComponent, children: [
-      { path: '', component: MapViewComponent, data: {roles: ['MODERATOR', 'USER']}, canActivate: [AuthGuard] },
-      { path: 'list-view', component: ListViewComponent, data: {roles: ['MODERATOR', 'USER']}, canActivate: [AuthGuard] },
+      { path: '', component: MapViewComponent, data: {roles: ['MODERATOR', 'USER', 'UNREGISTERED']},
+        canActivate: [AuthGuard] },
+      { path: 'list-view', component: ListViewComponent, data: {roles: ['MODERATOR', 'USER', 'UNREGISTERED']},
+        canActivate: [AuthGuard] },
       { path: 'cultural-offering/:id', redirectTo: 'cultural-offering/:id/posts'},
-      { path: 'cultural-offering/:id', component: CulturalOfferingDetailsComponent, data: {roles: ['MODERATOR', 'USER']},
+      { path: 'cultural-offering/:id', component: CulturalOfferingDetailsComponent,
+        data: {roles: ['MODERATOR', 'USER', 'UNREGISTERED']},
         canActivate: [AuthGuard],
         children: [
           { path: 'posts', component: PostsComponent },
@@ -53,14 +56,14 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'login', component: LoginRegisterComponent, canActivate: [AuthGuard],
+    path: 'login', component: LoginRegisterComponent, data: {roles: ['UNREGISTERED']}, canActivate: [AuthGuard],
     children: [
       {path: '', component: EnterEmailComponent, data: {animation: 'EnterEmail'}},
       {path: 'password', component: EnterPasswordComponent, data: {animation: 'EnterPassword'}}
     ]
   },
   {
-    path: 'register', component: LoginRegisterComponent, canActivate: [AuthGuard],
+    path: 'register', component: LoginRegisterComponent, data: {roles: ['UNREGISTERED']}, canActivate: [AuthGuard],
     children: [
       {path: '', component: RegisterEmailComponent, data: {animation: 'RegisterEmail'}},
       {path: 'name', component: RegisterNameComponent, data: {animation: 'RegisterName'}},
@@ -69,7 +72,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'verify', component: LoginRegisterComponent, canActivate: [AuthGuard],
+    path: 'verify', component: LoginRegisterComponent, data: {roles: ['UNREGISTERED']}, canActivate: [AuthGuard],
     children: [
       {path: ':id', component: RegisterVerifyComponent}
     ]

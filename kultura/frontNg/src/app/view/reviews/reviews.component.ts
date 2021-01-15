@@ -151,6 +151,9 @@ export class ReviewsComponent implements OnInit, OnDestroy {
   }
 
   onWriteReviewClick(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['login']);
+    }
     this.isAddDialogOpen = true;
   }
 

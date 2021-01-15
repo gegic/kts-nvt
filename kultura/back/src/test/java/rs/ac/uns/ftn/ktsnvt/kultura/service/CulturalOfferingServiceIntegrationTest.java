@@ -45,7 +45,7 @@ public class CulturalOfferingServiceIntegrationTest {
     @Test
     @Transactional
     public void testReadById(){
-        Optional<CulturalOfferingDto> culturalOfferingDto = culturalOfferingService.readById(CulturalOfferingConstants.EXISTING_ID1);
+        Optional<CulturalOfferingDto> culturalOfferingDto = culturalOfferingService.readById(CulturalOfferingConstants.EXISTING_ID1, -1);
 
         assertEquals(CulturalOfferingConstants.EXISTING_ID1, culturalOfferingDto.get().getId());
 
@@ -54,11 +54,11 @@ public class CulturalOfferingServiceIntegrationTest {
     @Test
     @Transactional
     public void testReadAll() {
-        Pageable pageRequest = PageRequest.of(0, CulturalOfferingConstants.PAGE_SIZE);
-
-//        Page<CulturalOfferingDto> returnedCulturalOfferings = culturalOfferingService.readAll(pageRequest, "",
-//                1, 5);
-
+        // TODO
+//        Pageable pageRequest = PageRequest.of(0, CulturalOfferingConstants.PAGE_SIZE);
+//
+//        Page<CulturalOfferingDto> returnedCulturalOfferings = culturalOfferingService.readAll(pageRequest);
+//
 //        assertEquals(CulturalOfferingConstants.DB_COUNT, returnedCulturalOfferings.getContent().size());
 
     }
@@ -67,10 +67,10 @@ public class CulturalOfferingServiceIntegrationTest {
     @Transactional
     public void testUpdate() throws Exception {
         CulturalOfferingDto oldValues = culturalOfferingService.readById
-                (CulturalOfferingConstants.EXISTING_ID1).orElseThrow(() -> new Exception("Test invalid!"));
+                (CulturalOfferingConstants.EXISTING_ID1, -1).orElseThrow(() -> new Exception("Test invalid!"));
 
         CulturalOfferingDto dbCulturalOffering = culturalOfferingService.readById
-                (CulturalOfferingConstants.EXISTING_ID1).get();
+                (CulturalOfferingConstants.EXISTING_ID1, -1).get();
 
         dbCulturalOffering.setName(CulturalOfferingConstants.TEST_NAME1);
 
@@ -78,7 +78,7 @@ public class CulturalOfferingServiceIntegrationTest {
         assertThat(dbCulturalOffering).isNotNull();
 
         //verify that database contains updated data
-        dbCulturalOffering = culturalOfferingService.readById(CulturalOfferingConstants.EXISTING_ID1).get();
+        dbCulturalOffering = culturalOfferingService.readById(CulturalOfferingConstants.EXISTING_ID1, -1).get();
         assertThat(dbCulturalOffering.getName()).isEqualTo(CulturalOfferingConstants.TEST_NAME1);
 
         culturalOfferingService.update(oldValues);

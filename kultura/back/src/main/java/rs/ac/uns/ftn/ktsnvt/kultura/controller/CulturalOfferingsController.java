@@ -22,7 +22,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-@PreAuthorize("hasRole('MODERATOR') || hasRole('USER')")
 @RestController
 @RequestMapping(path = "/api/cultural-offerings", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CulturalOfferingsController {
@@ -51,12 +50,13 @@ public class CulturalOfferingsController {
              @RequestParam(defaultValue = "-180", name = "lng-start") float longitudeStart,
              @RequestParam(defaultValue = "180", name = "lng-end") float longitudeEnd,
              @RequestParam(defaultValue = "-90", name = "lat-start") float latitudeStart,
-             @RequestParam(defaultValue = "90", name = "lat-end") float latitudeEnd) {
+             @RequestParam(defaultValue = "90", name = "lat-end") float latitudeEnd,
+             @RequestParam(defaultValue = "-1", name = "user") long userId) {
 
         Pageable p = PageableExtractor.extract(page, size, sort);
         return ResponseEntity.ok(this.culturalOfferingService.readAll(p,
                 searchQuery, ratingMin, ratingMax, noReviews, categoryId, subcategoryId,
-                latitudeStart, latitudeEnd, longitudeStart, longitudeEnd));
+                latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, userId));
     }
 
     @GetMapping(path = "/bounds")
@@ -64,15 +64,31 @@ public class CulturalOfferingsController {
             @RequestParam(name = "lng-start") float longitudeStart,
             @RequestParam(name = "lng-end") float longitudeEnd,
             @RequestParam(name = "lat-start") float latitudeStart,
-            @RequestParam(name = "lat-end") float latitudeEnd) {
+            @RequestParam(name = "lat-end") float latitudeEnd,
+            @RequestParam(defaultValue = "-1", name = "user") long userId) {
 
         return ResponseEntity.ok(this.culturalOfferingService
-                .findByBounds(latitudeStart, latitudeEnd, longitudeStart, longitudeEnd));
+                .findByBounds(latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, userId));
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<CulturalOfferingDto> get(@PathVariable String id){
-        return ResponseEntity.of(this.culturalOfferingService.readById(Long.parseLong(id)));
+    public ResponseEntity<CulturalOfferingDto> get(@PathVariable String id,
+                                                   @RequestParam(defaultValue = "-1", name = "user") long userId){
+        return ResponseEntity.of(this.culturalOfferingService.readById(Long.parseLong(id), userId));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/subscribe/cultural-offering/{culturalOfferingId}/user/{userId}")
+    public ResponseEntity<CulturalOfferingDto> subscribe(@PathVariable long culturalOfferingId,
+                                                         @PathVariable long userId) {
+        return ResponseEntity.ok(this.culturalOfferingService.subscribe(culturalOfferingId, userId));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/unsubscribe/cultural-offering/{culturalOfferingId}/user/{userId}")
+    public ResponseEntity<CulturalOfferingDto> unsubscribe(@PathVariable long culturalOfferingId,
+                                                           @PathVariable long userId) {
+        return ResponseEntity.ok(this.culturalOfferingService.unsubscribe(culturalOfferingId, userId));
     }
 
     @PreAuthorize("hasRole('MODERATOR')")

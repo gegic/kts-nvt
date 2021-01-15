@@ -27,10 +27,17 @@ export class MapService {
   loadMarkers(latitudeStart: number,
               latitudeEnd: number,
               longitudeStart: number,
-              longitudeEnd: number): Observable<any> {
+              longitudeEnd: number,
+              userId?: number): Observable<any> {
 
-    return this.httpClient.get(`/api/cultural-offerings/bounds?lng-start=${longitudeStart}&lng-end=${longitudeEnd}&` +
-      `lat-start=${latitudeStart}&lat-end=${latitudeEnd}`);
+    let apiUrl = `/api/cultural-offerings/bounds?lng-start=${longitudeStart}&lng-end=${longitudeEnd}&` +
+      `lat-start=${latitudeStart}&lat-end=${latitudeEnd}`;
+
+    if (!!userId) {
+      apiUrl += `&user=${userId}`;
+    }
+
+    return this.httpClient.get(apiUrl);
   }
 
   removeMarkers(): void {

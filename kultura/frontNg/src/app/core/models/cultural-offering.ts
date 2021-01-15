@@ -18,4 +18,5 @@ export class CulturalOffering {
   numPhotos?: number;
   categoryName?: string;
   categoryId?: number;
+  subscribed?: boolean;
 }

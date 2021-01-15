@@ -3,7 +3,7 @@ import {Moment} from 'moment-timezone';
 import * as moment from 'moment-timezone';
 
 export class User {
-  id = 0;
+  id = -1;
   email = '';
   password = '';
   firstName = '';

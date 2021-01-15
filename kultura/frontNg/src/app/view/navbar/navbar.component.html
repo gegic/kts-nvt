@@ -1,14 +1,6 @@
 <div class="navbar p-grid p-justify-between p-px-3 p-mx-0">
-  <div class="p-col-4 p-p-0 p-col-align-center p-d-flex p-ai-center">
+  <div class="p-col-2 p-p-0 p-col-align-center">
     <a routerLink="/" class="logo p-my-0">kultura</a>
-    <span class="p-input-icon-left search-bar p-d-none p-d-md-inline-block">
-    <i class="pi pi-search"></i>
-      <input type="text"
-             placeholder="Search"
-             [(ngModel)]="searchQuery"
-             (keyup)="setSearchQuery($event)"
-             pInputText>
-    </span>
   </div>
   <div class="p-col-2 p-p-0 p-col-align-center">
     <span class="p-input-icon-left">
@@ -36,6 +28,7 @@
     ></button>
   </div>
   <div class="p-col-4 p-justify-end p-col-align-center p-p-0">
+    <div *ngIf="isLoggedIn(); else signIn">
       <p-menu class="user-menu" [model]="menuItems" [popup]="true" #menu></p-menu>
       <ngx-avatar class="ng-avatar"
                   bgColor="#275DAD"
@@ -45,5 +38,13 @@
                   (click)="menu.toggle($event)"
       >
       </ngx-avatar>
+    </div>
+    <ng-template #signIn>
+      <button class="p-button p-d-block p-ml-auto"
+              (click)="onClickSignIn()"
+              label="Sign in"
+              pButton
+      ></button>
+    </ng-template>
   </div>
 </div>

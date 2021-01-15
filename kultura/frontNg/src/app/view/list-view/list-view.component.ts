@@ -6,6 +6,7 @@ import {Category} from '../../core/models/category';
 import {Subcategory} from '../../core/models/subcategory';
 import * as L from 'leaflet';
 import {NominatimPlace} from '../../core/services/place-offering/place-offering.service';
+import {AuthService} from "../../core/services/auth/auth.service";
 
 @Component({
   selector: 'app-list-view',
@@ -54,7 +55,8 @@ export class ListViewComponent implements OnInit, OnDestroy {
   relativeAddress = '';
   offeringsLoading = false;
 
-  constructor(private culturalOfferingsService: CulturalOfferingsService) { }
+  constructor(private culturalOfferingsService: CulturalOfferingsService,
+              private authService: AuthService) { }
 
   ngOnInit(): void {
     this.culturalOfferingsService.searchQuery.subscribe(() => {
@@ -78,7 +80,11 @@ export class ListViewComponent implements OnInit, OnDestroy {
       return;
     }
     this.offeringsLoading = true;
-    this.culturalOfferingsService.getCulturalOfferings(this.page + 1, this.sortType.sort).subscribe(
+    let userId: number | undefined;
+    if (this.isLoggedIn() && this.getUserRole() === 'USER') {
+      userId = this.authService.user.getValue()?.id ?? -1;
+    }
+    this.culturalOfferingsService.getCulturalOfferings(this.page + 1, this.sortType.sort, userId).subscribe(
       val => {
         for (const el of val.content) {
           if (this.culturalOfferingsService.culturalOfferings.some(co => co.id === el.id)) {
@@ -260,7 +266,14 @@ export class ListViewComponent implements OnInit, OnDestroy {
   categoryChosen(id: number): void {
     this.resetSubcategories();
     this.getSubcategories(id);
+  }
 
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+  getUserRole(): string {
+    return this.authService.getUserRole();
   }
 
   get culturalOfferings(): CulturalOffering[] {
@@ -289,5 +302,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.culturalOfferingsService.culturalOfferings = [];
+    this.culturalOfferingsService.searchQuery.next('');
+    this.resetFilter();
   }
 }

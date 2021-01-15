@@ -3,6 +3,7 @@ import {CulturalOffering} from '../../core/models/cultural-offering';
 import {Router} from '@angular/router';
 import {CulturalOfferingsService} from '../../core/services/cultural-offerings/cultural-offerings.service';
 import {ConfirmationService, MessageService} from 'primeng/api';
+import {AuthService} from "../../core/services/auth/auth.service";
 
 @Component({
   selector: 'app-list-element',
@@ -19,7 +20,8 @@ export class ListElementComponent implements OnInit {
   constructor(private router: Router,
               private culturalOfferingsService: CulturalOfferingsService,
               private messageService: MessageService,
-              private confirmationService: ConfirmationService) { }
+              private confirmationService: ConfirmationService,
+              private authService: AuthService) { }
 
   ngOnInit(): void {
   }
@@ -32,7 +34,8 @@ export class ListElementComponent implements OnInit {
     this.router.navigate([`/cultural-offering/${this.culturalOffering.id}`]);
   }
 
-  onClickDelete(): void {
+  onClickDelete(event: any): void {
+    event.stopPropagation();
     this.confirmationService.confirm(
       {
         message: `Are you sure that you want to delete ${this.culturalOffering?.name ?? ''}`,
@@ -44,8 +47,29 @@ export class ListElementComponent implements OnInit {
       });
   }
 
-  onClickEdit(): void {
+  onClickEdit(event: any): void {
+    event.stopPropagation();
     this.router.navigate([`/edit-offering/${this.culturalOffering?.id ?? 0}`]);
+  }
+
+  onClickSubscribe(event: any): void {
+    event.stopPropagation();
+    if (!this.isLoggedIn()) {
+      this.router.navigate(['login']);
+    } else {
+      this.culturalOfferingsService.subscribe(this.authService.user.getValue()?.id ?? 0,
+        this.culturalOffering.id ?? 0).subscribe(data => {
+          this.culturalOffering = data;
+      });
+    }
+  }
+
+  onClickUnsubscribe(event: any): void {
+    event.stopPropagation();
+    this.culturalOfferingsService.unsubscribe(this.authService.user.getValue()?.id ?? 0,
+      this.culturalOffering.id ?? 0).subscribe(data => {
+        this.culturalOffering = data;
+    });
   }
 
   deletionConfirmed(): void {
@@ -57,6 +81,14 @@ export class ListElementComponent implements OnInit {
       });
       this.offeringDeleted.emit();
     });
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+  getUserRole(): string {
+    return this.authService.getUserRole();
   }
 
   get reviews(): string {

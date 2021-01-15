@@ -69,7 +69,7 @@
         <div class="p-col-12 p-sm-6 p-md-3 p-text-center p-as-center">
           <p *ngIf="getUserRole() === 'MODERATOR'; else userAddReview"
              class="p-text-light">You are not able to review the offering since you’re logged in as a moderator.</p>
-          <ng-template #userAddReview>
+          <div #userAddReview>
             <p *ngIf="!!userReview.id">Click on the button below to view and edit your review.</p>
             <button class="p-button"
                     [label]="!userReview.id ? 'Write a review' : 'Edit review'"
@@ -77,7 +77,7 @@
                     pButton
             ></button>
 
-          </ng-template>
+          </div>
         </div>
       </div>
       <hr class="p-mx-6 p-my-5">

@@ -33,7 +33,7 @@ export class CulturalOfferingsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getCulturalOfferings(page: number, sort: string): Observable<any> {
+  getCulturalOfferings(page: number, sort: string, userId?: number): Observable<any> {
     let apiUrl = `/api/cultural-offerings?page=${page}&sort=${sort}&no-reviews=${this.noReviews}`;
     if (!!this.searchQuery) {
       apiUrl += `&search=${this.searchQuery.getValue()}`;
@@ -50,6 +50,9 @@ export class CulturalOfferingsService {
     if (!!this.absoluteAddress && !!this.latitudeStart && !!this.latitudeEnd && !!this.longitudeStart && !!this.longitudeEnd) {
       apiUrl += `&lng-start=${this.longitudeStart}&lng-end=${this.longitudeEnd}` +
         `&lat-start=${this.latitudeStart}&lat-end=${this.latitudeEnd}`;
+    }
+    if (!!userId) {
+      apiUrl += `&user=${userId}`;
     }
     return this.httpClient.get(apiUrl);
   }
@@ -72,6 +75,17 @@ export class CulturalOfferingsService {
 
   delete(id: number): Observable<any> {
     return this.httpClient.delete(`/api/cultural-offerings/${id}`);
+  }
+
+
+  subscribe(userId: number, culturalOfferingId: number): Observable<any> {
+    return this.httpClient.put(`/api/cultural-offerings/subscribe/cultural-offering/` +
+      `${culturalOfferingId}/user/${userId}`, null);
+  }
+
+  unsubscribe(userId: number, culturalOfferingId: number): Observable<any> {
+    return this.httpClient.put(`/api/cultural-offerings/unsubscribe/cultural-offering/` +
+      `${culturalOfferingId}/user/${userId}`, null);
   }
 
   private queryLocation(address: string): string {

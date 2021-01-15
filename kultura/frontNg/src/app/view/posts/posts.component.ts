@@ -210,6 +210,10 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.authService.getUserRole();
   }
 
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
   get culturalOffering(): CulturalOffering | undefined {
     return this.detailsService.culturalOffering.getValue();
   }
