@@ -50,10 +50,10 @@ const routes: Routes = [
       { path: 'add-moderator', component: ModeratorAddComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
       { path: 'edit-moderator/:id', component: ModeratorEditComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
       { path: 'admin-panel/categories', component: CategoriesViewComponent },
-      // { path: 'user-edit', component:UserEditComponent, data: {roles: ['USER']}, canActivate: [AuthGuard] }
+      { path: 'user-edit', component: UserEditComponent, data: {roles: ['USER']}, canActivate: [AuthGuard] }
     ]
   },
-  { path: 'user-edit', component: UserEditComponent},
+  // { path: 'user-edit', component: UserEditComponent},
   {
     path: 'login', component: LoginRegisterComponent, canActivate: [AuthGuard],
     children: [

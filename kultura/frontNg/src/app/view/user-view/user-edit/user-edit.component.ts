@@ -21,15 +21,16 @@ export class UserEditComponent implements OnInit {
 
   user: User;
   passwordControl: FormControl = new FormControl('', [this.containDigit(), this.containSmall(), this.containCapital()]);
-  confirmPasswordControl: FormControl = new FormControl('', [Validators.pattern(PASSWORD_REGEX), this.samePasswords(this.passwordControl)]);
+  confirmPasswordControl: FormControl = new FormControl('', [this.samePasswords(this.passwordControl)]);
 
-  name: string = '';
-  lastName: string = '';
+  name = '';
+  lastName = '';
   email: FormControl = new FormControl('');
 
   constructor(
       private userService: UserService,
-      private messageService: MessageService){ 
+      private messageService: MessageService
+    ){
     // this.user = JSON.parse(localStorage.getItem("user"));
     this.user = new User();
     this.user.email = 'a@a.com',
@@ -41,73 +42,65 @@ export class UserEditComponent implements OnInit {
   }
 
   updateInfo(): void{
-    if(this.email.value&&this.email.invalid){
+    if (this.email.value && this.email.invalid){
       this.messageService.add({severity: 'error', detail: 'E-mail is not valid.'});
       return;
     }
-    let user: User = new User();
+    const user: User = new User();
     user.id = this.user.id;
     user.email = this.email.value;
     user.firstName = this.name;
     user.lastName = this.lastName;
     this.userService.update(user).subscribe(
       (data: {user: User}) => {
-        console.log(data);     
+        console.log(data);
       },
-      ()=>{
+      () => {
         this.messageService.add({severity: 'error', detail: 'Update failed'});
       }
     );
   }
   updatePassword(): void{
-    if(this.passwordControl.invalid){
+    if (this.passwordControl.invalid){
       console.log(this.passwordControl.errors);
-      
       this.messageService.add({severity: 'error', detail: 'Password is not valid.'});
       return;
     }
-    if(this.confirmPasswordControl.invalid){
+    if (this.confirmPasswordControl.invalid){
       this.messageService.add({severity: 'error', detail: this.confirmPasswordControl.errors?.msg});
       return;
     }
 
-    let user: User = new User();
+    const user: User = new User();
     user.id = this.user.id;
     user.password = this.passwordControl.value;
     this.userService.update(user).subscribe(
       (data: {user: User}) => {
-        console.log(data);     
+        console.log(data);
       },
-      ()=>{
+      () => {
         this.messageService.add({severity: 'error', detail: 'Update failed'});
       });
   }
 
-  samePasswords(val: FormControl): ValidatorFn {  
-    return (control: AbstractControl): { [key: string]: any } | null =>  
-        control.value === val.value
-            ? null : {msg: "Passwords must be same"};
+  samePasswords(val: FormControl): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null =>
+      control.value === val.value ? null : {msg: 'Passwords must be same'};
   }
 
-  containCapital(): ValidatorFn {  
-    return (control: AbstractControl): { [key: string]: any } | null =>  
-            
-    CAPITAL_REGEX.test(control.value) 
-            ? null : {msg: "Password must contain capital letter."};
+  containCapital(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null =>
+    CAPITAL_REGEX.test(control.value) ? null : {msg: 'Password must contain capital letter.'};
   }
 
-  containSmall(): ValidatorFn {  
-    return (control: AbstractControl): { [key: string]: any } | null =>  
-            
-    SMALL_REGEX.test(control.value) 
-            ? null : {msg: "Password must contain letter."};
+  containSmall(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null =>
+    SMALL_REGEX.test(control.value) ? null : {msg: 'Password must contain letter.'};
   }
 
-  containDigit(): ValidatorFn {  
-    return (control: AbstractControl): { [key: string]: any } | null =>  
-            
-    DIGIT_REGEX.test(control.value) 
-            ? null : {msg: "Password must contain digit."};
+  containDigit(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null =>
+    DIGIT_REGEX.test(control.value) ? null : {msg: 'Password must contain digit.'};
   }
 }
 
