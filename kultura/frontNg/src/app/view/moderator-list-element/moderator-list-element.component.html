@@ -1,0 +1,32 @@
+<p-card>
+  <div class="p-grid p-m-0 p-p-0 ">
+    <div class="p-col-fixed" >
+      <ngx-avatar class="my-avatar"  [name]="moderator.firstName+' '+ moderator.lastName"> </ngx-avatar>
+    </div>
+    <div class="p-col p-ml-4">
+      <h4 class="p-text-bold p-m-0">
+        {{moderator.firstName}} {{moderator.lastName}}
+      </h4>
+      <p class=" p-m-0">
+       Mail address: {{moderator.email}}
+      </p>
+    </div>
+
+    <div class="p-col p-text-right p-as-end">
+      <div class="p-d-block button-group p-mb-3">
+        <button class="p-button p-button-rounded p-button-icon p-button-danger"
+                icon="pi pi-trash"
+                (click)="onClickDelete()"
+                pButton></button>
+        <button class="p-button p-button-rounded p-button-icon p-ml-3"
+                icon="pi pi-pencil"
+                (click)="onClickEdit()"
+                pButton></button>
+      </div>
+    </div>
+  </div>
+</p-card>
+
+
+
+

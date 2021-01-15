@@ -260,6 +260,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
   categoryChosen(id: number): void {
     this.resetSubcategories();
     this.getSubcategories(id);
+
   }
 
   get culturalOfferings(): CulturalOffering[] {

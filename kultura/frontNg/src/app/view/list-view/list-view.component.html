@@ -29,7 +29,6 @@
                 *ngIf="filterSet"
         ></button>
       </div>
-
     </div>
     <div *ngIf="culturalOfferings.length > 0; else noOfferings">
       <app-list-element *ngFor="let culturalOffering of culturalOfferings"

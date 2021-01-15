@@ -73,14 +73,12 @@ public class ReviewServiceIntegrationTest {
                 .readAllByCulturalOfferingId(ReviewConstants.EXISTING_CULTURAL_OFFERING_ID, pageRequest);
 
         assertEquals(ReviewConstants.DB_COUNT, returnedReviews.getContent().size());
-
     }
 
     @Test
     //@Rollback(true)
     public void testSave(){
         ReviewDto newReview = createTestReviewDto();
-
         Pageable pageRequest = PageRequest.of(0, PAGE_SIZE);
 
         ReviewDto createdReview = reviewService.create(newReview);

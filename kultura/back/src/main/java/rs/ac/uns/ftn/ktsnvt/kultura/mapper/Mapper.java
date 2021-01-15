@@ -171,6 +171,11 @@ public class Mapper {
                         .capitalize(field.getAnnotation(EntityKey.class).fieldName()));
                 try {
                     fieldValue = entityKeyToEntity(field, dto);
+
+                    // MAYBE BABY
+                    if (fieldValue==null){
+                        continue;
+                    }
                 } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException | InstantiationException e) {
                     continue;
                 }
@@ -359,13 +364,18 @@ public class Mapper {
         if (isCollection) {
             Collection<Object> keys = (Collection) invokeGetMethod(field, dto);
 
-            Collection<Object> objects = keys.getClass().getConstructor().newInstance();
+            if (keys == null){
+                found = null;
+            }else{
 
-            for (Object key : keys) {
-                objects.add(getOneEntity(entityFieldClass, key));
+                Collection<Object> objects = keys.getClass().getConstructor().newInstance();
+
+                for (Object key : keys) {
+                    objects.add(getOneEntity(entityFieldClass, key));
+                }
+
+                found = objects;
             }
-
-            found = objects;
         } else {
             Object key = invokeGetMethod(field, dto);
             found = getOneEntity(entityFieldClass, key);

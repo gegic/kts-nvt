@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.*;
 
 @RunWith(SpringRunner.class)
@@ -77,6 +78,7 @@ public class CategoriesControllerIntegrationTest {
 
         CategoryDto newCategory = response.getBody();
 
+        assertNotNull(newCategory);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(newCategory.getName(), categoryDto.getName());
 
@@ -157,7 +159,25 @@ public class CategoriesControllerIntegrationTest {
         this.categoryService.update(oldValues);
     }
 
+    @Test
+    public void whenUpdateNameExists(){
+        CategoryDto cat = new CategoryDto();
+        cat.setId(CategoryConstants.EXISTING_ID1);
+        cat.setName(CategoryConstants.EXISTING_NAME2);
 
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(cat, headers);
+
+        ResponseEntity<CategoryDto> response = restTemplate.exchange(
+                "/api/categories", HttpMethod.PUT, httpEntity, CategoryDto.class);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+
+        this.accessToken = null;
+    }
 
     @Test
     public void whenCreateCategoryCategoryExists(){

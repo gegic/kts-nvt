@@ -7,7 +7,7 @@ export class Moderator{
   password ?: string;
   firstName ?: string;
   lastName ?: string;
-  lastPasswordChange?: Moment;
+  lastPasswordChange?: string | undefined;
   authorities?: Authority[];
   verified ?: boolean;
 }

@@ -117,4 +117,5 @@ public interface CulturalOfferingRepository extends JpaRepository<CulturalOfferi
                                               float latitudeEnd,
                                               float longitudeStart,
                                               float longitudeEnd);
+
 }

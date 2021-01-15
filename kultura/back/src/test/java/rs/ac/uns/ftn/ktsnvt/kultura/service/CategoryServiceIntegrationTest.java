@@ -32,8 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants.PAGE_SIZE;
 
 @RunWith(SpringRunner.class)
@@ -69,6 +68,11 @@ public class CategoryServiceIntegrationTest {
         assertEquals(CategoryConstants.EXISTING_ID1, cat.get().getId());
         assertEquals(CategoryConstants.EXISTING_NAME1, cat.get().getName());
 
+    }
+    @Test
+    public void testReadByIdDoesntExist(){
+        Optional<CategoryDto> cat = categoryService.readById(CategoryConstants.NON_EXISTING_ID);
+        assertFalse(cat.isPresent());
     }
 
     @Test

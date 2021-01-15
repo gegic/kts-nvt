@@ -68,6 +68,11 @@ import {InputNumberModule} from 'primeng/inputnumber';
 import {SliderModule} from 'primeng/slider';
 import {CheckboxModule} from 'primeng/checkbox';
 import {SelectButtonModule} from 'primeng/selectbutton';
+import { ModeratorListElementComponent } from './view/moderator-list-element/moderator-list-element.component';
+import { ModeratorEditComponent } from './view/moderator-edit/moderator-edit.component';
+import { CategoryAddComponent } from './view/category-add/category-add.component';
+import { CategoriesViewComponent } from './view/categories-view/categories-view.component';
+import { CategoryListItemComponent } from './view/category-list-item/category-list-item.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +107,12 @@ import {SelectButtonModule} from 'primeng/selectbutton';
     CulturalOfferingAboutComponent,
     ReviewElementComponent,
     ListViewComponent,
-    ListElementComponent
+    ListElementComponent,
+    ModeratorListElementComponent,
+    ModeratorEditComponent,
+    CategoryAddComponent,
+    CategoriesViewComponent,
+    CategoryListItemComponent
   ],
   imports: [
     BrowserModule,

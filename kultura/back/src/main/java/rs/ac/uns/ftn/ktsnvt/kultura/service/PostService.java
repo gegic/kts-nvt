@@ -44,7 +44,7 @@ public class PostService {
 
         Post toUpdate = postRepository.findById(p.getId()).orElseThrow(() -> exc );
 
-        return mapper.fromEntity(postRepository.save(mapper.fromDto(p, Post.class)), PostDto.class);
+        return mapper.fromEntity(postRepository.save(mapper.toExistingEntity(p, toUpdate)), PostDto.class);
     }
 
     public PostDto save(PostDto p) {

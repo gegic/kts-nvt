@@ -1,0 +1,13 @@
+<p-card>
+  <h1>List of categories</h1>
+  <app-category-list-item *ngFor="let category of categoriesList"
+                          [category]="category">
+  </app-category-list-item>
+
+<!--  <button class="primary add-button p-button-rounded p-button-raised p-button-icon p-ripple"-->
+<!--          icon="pi pi-plus"-->
+<!--          pButton-->
+<!--          routerLink="/add-moderator"-->
+<!--          type="button"-->
+<!--  ></button>-->
+</p-card>

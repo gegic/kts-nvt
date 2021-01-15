@@ -39,7 +39,7 @@ import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.MODERATOR_EMAIL;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.MODERATOR_PASSWORD;
 
@@ -90,9 +90,77 @@ public class PostControllerIntegrationTest {
         List<PostDto> posts = response.getBody().getContent();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(PostConstants.EXISTING_ID2, posts.get(0).getId());
+        posts.forEach(p->assertEquals(CulturalOfferingConstants.EXISTING_ID1, p.getCulturalOfferingId()));
         assertEquals(PostConstants.DB_COUNT, posts.size());
 
+        this.accessToken = null;
+    }
+
+    @Test
+    public void whenGetPostsByCulturalOfferingIdNonExistant(){
+        Pageable pageRequest = PageRequest.of(0, 3);
+
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        //mora ovako jer ne moze se pozvati .class nad generickim ovim djavolom od Pagea, tugica
+        ParameterizedTypeReference<HelperPage<PostDto>> responseType = new ParameterizedTypeReference<HelperPage<PostDto>>() {};
+
+        ResponseEntity<HelperPage<PostDto>> response = restTemplate.exchange(
+                "/api/posts/cultural-offering/" + CulturalOfferingConstants.TEST_ID1,
+                HttpMethod.GET, httpEntity, responseType);
+
+        assertNotNull(response.getBody());
+        List<PostDto> posts = response.getBody().getContent();
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(0, posts.size());
+
+        this.accessToken = null;
+    }
+
+    @Test
+    public void getByIdTest(){
+
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<PostDto> response = restTemplate.exchange(
+                "/api/posts/" + PostConstants.EXISTING_ID1,
+                HttpMethod.GET, httpEntity, PostDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        PostDto resultDto = response.getBody();
+        assertNotNull(resultDto);
+        assertEquals(PostConstants.EXISTING_ID1, resultDto.getId());
+        this.accessToken = null;
+    }
+
+
+    @Test
+    public void getByIdNotFoundTest(){
+
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<PostDto> response = restTemplate.exchange(
+                "/api/posts/" + PostConstants.TEST_ID,
+                HttpMethod.GET, httpEntity, PostDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        PostDto resultDto = response.getBody();
+        assertNull(resultDto);
         this.accessToken = null;
     }
 
@@ -111,7 +179,7 @@ public class PostControllerIntegrationTest {
                 "/api/posts", HttpMethod.POST, httpEntity, PostDto.class);
 
         PostDto newPost = response.getBody();
-
+        assertNotNull(newPost);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(newPost.getContent(), post.getContent());
 
@@ -139,7 +207,7 @@ public class PostControllerIntegrationTest {
                 "/api/posts", HttpMethod.PUT, httpEntity, PostDto.class);
 
         PostDto newPost = response.getBody();
-
+        assertNotNull(newPost);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(newPost.getContent(), post.getContent());
 
