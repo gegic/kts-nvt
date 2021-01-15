@@ -45,9 +45,49 @@ public class CulturalOfferingService {
         this.reviewService = reviewService;
     }
 
+    public Page<CulturalOfferingDto> readAll(Pageable p,
+                                             String searchQuery,
+                                             float ratingMin,
+                                             float ratingMax,
+                                             boolean noReviews,
+                                             long categoryId,
+                                             long subcategoryId,
+                                             float latitudeStart,
+                                             float latitudeEnd,
+                                             float longitudeStart,
+                                             float longitudeEnd) {
+        Page<CulturalOffering> found;
+        if (subcategoryId != -1) {
+            if (noReviews) {
+                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                        categoryId, subcategoryId,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+            } else {
+                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                        categoryId, subcategoryId,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+            }
+        } else if (categoryId != -1) {
+            if (noReviews) {
+                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                        categoryId,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+            } else {
+                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                        categoryId,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+            }
+        } else {
+            if (noReviews) {
+                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+            } else {
+                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+            }
+        }
 
-    public Page<CulturalOfferingDto> readAll(Pageable p, String searchQuery, float ratingMin, float ratingMax) {
-        return culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax).map(co -> modelMapper.fromEntity(co, CulturalOfferingDto.class));
+        return found.map(co -> modelMapper.fromEntity(co, CulturalOfferingDto.class));
     }
 
     public Optional<CulturalOfferingDto> readById(long id) {

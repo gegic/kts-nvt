@@ -2,6 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CulturalOfferingsService} from '../../core/services/cultural-offerings/cultural-offerings.service';
 import {CulturalOffering} from '../../core/models/cultural-offering';
 import {MenuItem} from 'primeng/api';
+import {Category} from '../../core/models/category';
+import {Subcategory} from '../../core/models/subcategory';
+import * as L from 'leaflet';
+import {NominatimPlace} from '../../core/services/place-offering/place-offering.service';
 
 @Component({
   selector: 'app-list-view',
@@ -23,29 +27,57 @@ export class ListViewComponent implements OnInit, OnDestroy {
     {label: 'rating (ascending)', command: () => this.setSortType('rating (ascending)', 'overallRating,asc')},
     {label: 'rating (descending)', command: () => this.setSortType('rating (descending)', 'overallRating,desc')},
   ];
-  isOpenRatingDialog = false;
-  isOpenReviewsDialog = false;
-  isOpenCategoryDialog = false;
+  isFilterDialogOpen = false;
 
   filter: {
-    rating?: any[],
-    reviews?: number,
-    category?: number
-  } = {};
+    rating: any[],
+    category?: Category,
+    subcategory?: Subcategory,
+    noReviews: boolean
+  } = {
+    rating: [1, 5],
+    noReviews: true
+  };
+  relativeLocation?: [number, number];
+  absoluteLocation?: [number, number];
+  lastLoadedPageFilter = {categories: -1, subcategories: -1};
+  totalPagesFilter = {categories: 0, subcategories: 0};
+  categoriesLoading = false;
+  subcategoriesLoading = false;
+  filterSet = false;
+  isLocationRelative = false;
+  filterByLocation = false;
+  locationDistance = 2;
+  recommendations: NominatimPlace[] = [];
+  absoluteAddress = '';
+  absoluteAddressSelected = false;
+  relativeAddress = '';
+  offeringsLoading = false;
 
   constructor(private culturalOfferingsService: CulturalOfferingsService) { }
 
   ngOnInit(): void {
-    this.culturalOfferingsService.searchQuery.subscribe(val => {
+    this.culturalOfferingsService.searchQuery.subscribe(() => {
       this.resetCulturalOfferings();
     });
     this.getCulturalOfferings();
+    this.getLocation();
+  }
+
+  getLocation(): void {
+    navigator.geolocation.getCurrentPosition(position => {
+      this.relativeLocation = [position.coords.latitude, position.coords.longitude];
+      this.culturalOfferingsService.getRelativeAddress(this.relativeLocation).subscribe(data => {
+        this.relativeAddress = data.display_name;
+      });
+    });
   }
 
   getCulturalOfferings(): void {
     if (this.page === this.totalPages) {
       return;
     }
+    this.offeringsLoading = true;
     this.culturalOfferingsService.getCulturalOfferings(this.page + 1, this.sortType.sort).subscribe(
       val => {
         for (const el of val.content) {
@@ -54,6 +86,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
           }
           this.culturalOfferingsService.culturalOfferings.push(el);
         }
+        this.offeringsLoading = false;
         this.page = val.pageable.pageNumber;
         this.totalPages = val.totalPages;
       }
@@ -81,24 +114,177 @@ export class ListViewComponent implements OnInit, OnDestroy {
     this.resetCulturalOfferings();
   }
 
-  resetRating(): void {
-    if (!this.culturalOfferingsService.rating) {
-      this.filter.rating = undefined;
+  resetFilter(): void {
+    this.filterSet = false;
+    this.filter.rating = [0, 5];
+    this.filter.noReviews = true;
+    this.filter.category = undefined;
+    this.filter.subcategory = undefined;
+    this.filterByLocation = false;
+    this.isLocationRelative = false;
+    this.locationDistance = 2;
+    this.getLocation();
+    this.absoluteLocation = undefined;
+    this.absoluteAddress = '';
+    this.saveFilter(true);
+  }
+
+  restoreFilter(): void {
+    this.filter.rating = [this.culturalOfferingsService.rating.min, this.culturalOfferingsService.rating.max];
+    this.filter.noReviews = this.culturalOfferingsService.noReviews;
+    this.filter.category = this.culturalOfferingsService.selectedCategory;
+    this.filter.subcategory = this.culturalOfferingsService.selectedSubcategory;
+    this.filterByLocation = this.culturalOfferingsService.filterByLocation;
+    this.isLocationRelative = this.culturalOfferingsService.isLocationRelative;
+    this.locationDistance = this.culturalOfferingsService.locationDistance;
+    this.absoluteLocation = this.culturalOfferingsService.absolutePosition;
+    this.absoluteAddress = this.culturalOfferingsService.absoluteAddress;
+  }
+
+  saveFilter(reset?: boolean): void {
+    if (!reset) {
+      this.filterSet = true;
+    }
+    this.culturalOfferingsService.rating = {
+      min: this.filter.rating[0], max: this.filter.rating[1]
+    };
+    this.culturalOfferingsService.noReviews = this.filter.noReviews;
+    this.culturalOfferingsService.selectedCategory = this.filter.category;
+    this.culturalOfferingsService.selectedSubcategory = this.filter.subcategory;
+    this.culturalOfferingsService.filterByLocation = this.filterByLocation;
+    this.culturalOfferingsService.isLocationRelative = this.isLocationRelative;
+    this.culturalOfferingsService.locationDistance = this.locationDistance;
+    let bounds: L.LatLngBounds | undefined;
+    if (this.isLocationRelative && this.relativeLocation) {
+      bounds = (new L.LatLng(this.relativeLocation[0] ?? 0, this.relativeLocation[1] ?? 0))
+        .toBounds(this.locationDistance * 1000);
+    } else if (this.absoluteLocation) {
+      this.culturalOfferingsService.absolutePosition = this.absoluteLocation;
+      this.culturalOfferingsService.absoluteAddress = this.absoluteAddress;
+      bounds = (new L.LatLng(this.absoluteLocation[0] ?? 0, this.absoluteLocation[1] ?? 0))
+        .toBounds(this.locationDistance * 1000);
+    }
+    if (!!bounds) {
+      const southWest = bounds.getSouthWest();
+      const northEast = bounds.getNorthEast();
+      this.culturalOfferingsService.latitudeStart = southWest.lat;
+      this.culturalOfferingsService.longitudeStart = southWest.lng;
+      this.culturalOfferingsService.latitudeEnd = northEast.lat;
+      this.culturalOfferingsService.longitudeEnd = northEast.lng;
     } else {
-      this.filter.rating = [this.culturalOfferingsService.rating.min, this.culturalOfferingsService.rating.max];
+      this.culturalOfferingsService.latitudeStart = undefined;
+      this.culturalOfferingsService.longitudeStart = undefined;
+      this.culturalOfferingsService.latitudeEnd = undefined;
+      this.culturalOfferingsService.longitudeEnd = undefined;
+    }
+    this.resetCulturalOfferings();
+    this.isFilterDialogOpen = false;
+  }
+
+  getCategories(reset?: boolean): void {
+    if (reset) {
+      this.lastLoadedPageFilter.categories = -1;
+      this.totalPagesFilter.categories = 0;
+    }
+    if (this.lastLoadedPageFilter.categories >= this.totalPagesFilter.categories) {
+      return;
+    }
+    this.categoriesLoading = true;
+    this.culturalOfferingsService.getCategories(this.lastLoadedPageFilter.categories + 1).subscribe(
+      data => {
+        this.culturalOfferingsService.categories = this.culturalOfferingsService.categories?.concat(data.content as Category[]);
+        this.lastLoadedPageFilter.categories = data.pageable.pageNumber;
+        this.totalPagesFilter.categories = data.totalPages;
+        this.categoriesLoading = false;
+      }
+    );
+  }
+
+  getSubcategories(passedId?: number): void {
+    if (this.lastLoadedPageFilter.subcategories >= this.totalPagesFilter.subcategories) {
+      return;
+    }
+    this.subcategoriesLoading = true;
+    let id: number;
+    if (!passedId) {
+      id = this.filter.category?.id ?? 0;
+    } else {
+      id = passedId;
+    }
+    this.culturalOfferingsService.getSubcategories(id, this.lastLoadedPageFilter.subcategories + 1).subscribe(
+      data => {
+        this.culturalOfferingsService.subcategories = this.culturalOfferingsService
+          .subcategories?.concat(data.content as Subcategory[]);
+        this.lastLoadedPageFilter.subcategories = data.pageable.pageNumber;
+        this.totalPagesFilter.subcategories = data.totalPages;
+        this.subcategoriesLoading = false;
+      }
+    );
+  }
+
+  resetSubcategories(): void {
+    this.filter.subcategory = undefined;
+    this.culturalOfferingsService.subcategories = [];
+    this.totalPagesFilter.subcategories = 0;
+    this.lastLoadedPageFilter.subcategories = -1;
+  }
+
+  openFilterDialog(): void {
+    this.isFilterDialogOpen = true;
+    this.getCategories(true);
+  }
+
+  getAddress(event: any): void {
+    this.absoluteAddressSelected = false;
+
+    const enteredAddress = event.query;
+    this.culturalOfferingsService.getRecommendations(enteredAddress).subscribe(
+      data => {
+        this.recommendations = data as NominatimPlace[];
+      }
+    );
+  }
+
+  addressSelected(place: NominatimPlace): void {
+    this.absoluteAddressSelected = true;
+    this.absoluteLocation = [place.lat, place.lon];
+  }
+
+  addressLostFocus(): void {
+    if (!this.absoluteAddressSelected) {
+      this.absoluteAddress = '';
+      this.absoluteLocation = undefined;
     }
   }
 
-  saveRating(): void {
-    const rating = this.filter.rating ?? [1, 5];
-    this.culturalOfferingsService.rating = {
-      min: rating[0], max: rating[1]
-    };
-    this.resetCulturalOfferings();
+  categoryChosen(id: number): void {
+    this.resetSubcategories();
+    this.getSubcategories(id);
+
   }
 
   get culturalOfferings(): CulturalOffering[] {
     return this.culturalOfferingsService.culturalOfferings;
+  }
+
+  get onlyReviews(): boolean {
+    return !this.filter.noReviews;
+  }
+
+  set onlyReviews(val: boolean) {
+    this.filter.noReviews = !val;
+  }
+
+  get subcategories(): Subcategory[] {
+    return this.culturalOfferingsService.subcategories ?? [];
+  }
+
+  get categories(): Category[] {
+    return this.culturalOfferingsService.categories ?? [];
+  }
+
+  get searchQuery(): string {
+    return this.culturalOfferingsService.searchQuery.getValue();
   }
 
   ngOnDestroy(): void {
