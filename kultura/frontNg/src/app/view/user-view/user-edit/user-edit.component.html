@@ -1,57 +1,131 @@
 <div class="m-top p-grid p-mx-0 p-justify-center centered-grid">
-    <div class="p-col-12 p-sm-9 p-md-9 p-lg-8 p-xl-4">
+    <div class="p-col-12 p-sm-9 p-md-9 p-lg-8 p-xl-6">
         <div class="p-card p-p-3">
-            <div class="p-card p-grid p-p-3 p-mb-3">
+            <div class="p-card colored-card p-grid p-p-3 p-mb-3">
                     <span class="p-col-12 p-sm-12 p-md-4 p-lg-4 p-xl-4">
                         <ngx-avatar [size]="150" [name]="user.firstName+' '+ user.lastName"></ngx-avatar>
                     </span>
-                    <span class="p-col-12 p-sm-12 p-md-8 p-lg-8 p-xl-8 p-p-3">
+                    <span class="p-col-12 p-sm-12 p-md-8 p-lg-8 p-xl-8 p-p-3 p-d-flex p-ai-center p-jc-center">
+                        <p-table [value]="fields">
+                            <!-- <ng-template pTemplate="header">
+                                <tr>
+                                    <th>First name</th>
+                                    <th>Last name</th>
+                                    <th></th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </ng-template> -->
+                            <ng-template pTemplate="body" let-field>
+                                <tr>
+                                    <td>{{field.name}}</td>
+                                    <td>{{field.value}}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <!-- <div>
                             <div class="p-field  large-text">
-                                <b>First name:</b>{{user.firstName}}
+                                First name:{{user.firstName}}
                             </div> 
-                            <hr>
                             <div class="p-field large-text">
-                                <b>
                                     Last name: 
-                                </b>
                                 {{user.lastName}}
                             </div> 
-                            <hr>
                             <div class="p-field large-text">
-                                <b>
                                     E-mail: 
-                                </b>
                                 {{user.email}}
                             </div>     
+                        </div> -->
                     </span>
             </div>
             <p-tabView>
-                <p-tabPanel header="Edit informations">
-                    <div class="p-fluid">
-                        <form #f="ngForm" (ngSubmit)="updateInfo()" >
-                            <div class="p-field">
-                                <label>New first name</label>
-                                <input [(ngModel)]="name" name="name" type="text" pInputText />
-                            </div>  
-                            <div class="p-field">
-                                <label>New last name</label>
-                                <input [(ngModel)]="lastName" name="lastName" type="text" pInputText />
-                            </div>  
-                            <div class="p-field">
-                                <label>New e-mail</label>
-                                <input [formControl]="email" name="email" email type="text" pInputText />
+                <p-tabPanel header="Change informations">
+                    <div class="p-fluid">  
+                        <form #f="ngForm" (ngSubmit)="updateName()">
+                            <div class="p-fluid">
+    
+                                <div class="p-field">
+                                    <label>Update first name</label>
+                                    <div class="p-grid">
+                                        <div class="p-col-12 p-sm-12 p-md-8 p-lg-8 p-xl-8">
+                                            <input 
+                                                [formControl]="name"
+                                                name="name"
+                                                type="text"
+                                                pInputText
+                                                autocomplete="off"
+                                            />
+                                        </div>
+                                        <div class="p-col-12 p-sm-12 p-md-4 p-lg-4 p-xl-4">
+                                            <button 
+                                                type="submit"
+                                                class="p-button"
+                                                label="Submit"
+                                                pButton
+                                            ></button>
+                                        </div>
+                                    </div>
+                                </div>   
                             </div>
-                            <div class="p-flex-row-reverse">
-                                <button type="submit"
-                                    class="p-button"
-                                    label="Submit"
-                                    pButton
-                                ></button>
-                            </div>   
+                        </form>
+                        <form #f="ngForm" (ngSubmit)="updateLastName()">
+                            <div class="p-fluid">
+    
+                                <div class="p-field">
+                                    <label>Update last name</label>
+                                    <div class="p-grid">
+                                        <div class="p-col-12 p-sm-12 p-md-8 p-lg-8 p-xl-8">
+                                            <input
+                                                [formControl]="lastName"
+                                                name="lastName"
+                                                type="text"
+                                                pInputText
+                                                autocomplete="off"
+                                            />
+                                        </div>
+                                        <div class="p-col-12 p-sm-12 p-md-4 p-lg-4 p-xl-4">
+                                            <button 
+                                                type="submit"
+                                                class="p-button"
+                                                label="Submit"
+                                                pButton
+                                            ></button>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                        </form>
+                        <form #f="ngForm" (ngSubmit)="updateEmail()">
+                            <div class="p-fluid">
+    
+                                <div class="p-field">
+                                    <label>Update e-mail</label>
+                                    <div class="p-grid">
+                                        <div class="p-col-12 p-sm-12 p-md-8 p-lg-8 p-xl-8">
+                                            <input
+                                                autocomplete="off"
+                                                [formControl]="email"
+                                                name="email"
+                                                email
+                                                type="text"
+                                                pInputText 
+                                            />
+                                        </div>
+                                        <div class="p-col-12 p-sm-12 p-md-4 p-lg-4 p-xl-4">
+                                            <button 
+                                                type="submit"
+                                                class="p-button"
+                                                label="Submit"
+                                                pButton
+                                            ></button>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
                         </form>
                     </div>
                 </p-tabPanel>
-                <p-tabPanel header="Edit password">
+
+                <p-tabPanel header="Change password">
                     <form #f="ngForm" (ngSubmit)="updatePassword()" >
 
                         <div class="p-fluid">
@@ -62,11 +136,11 @@
                             </div>   -->
                             <div class="p-field">
                                 <label>New password</label>
-                                <input [formControl]="passwordControl" type="password" pInputText />
+                                <input [formControl]="passwordControl" type="password" pInputText pPassword/>
                             </div>  
                             <div class="p-field">
                                 <label>Confirm password</label>
-                                <input [formControl]="confirmPasswordControl" type="password" pInputText />
+                                <input [formControl]="confirmPasswordControl" type="password" pInputText pPassword/>
                             </div>    
                             <div class="p-flex-row-reverse">
                                 <button type="submit"

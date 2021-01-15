@@ -74,6 +74,7 @@ import { CategoriesViewComponent } from './view/categories-view/categories-view.
 import { CategoryListItemComponent } from './view/category-list-item/category-list-item.component';
 import { UserEditComponent } from './view/user-view/user-edit/user-edit.component';
 import {TabViewModule} from 'primeng/tabview';
+import {TableModule} from 'primeng/table';
 
 @NgModule({
   declarations: [
@@ -154,7 +155,8 @@ import {TabViewModule} from 'primeng/tabview';
     InputNumberModule,
     SliderModule,
     AvatarModule,
-    TabViewModule
+    TabViewModule,
+    TableModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
