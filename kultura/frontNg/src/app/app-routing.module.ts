@@ -54,7 +54,7 @@ const routes: Routes = [
     ]
   },
 
-  //DEV
+  // DEV
   { path: 'user-edit-test', component: UserEditComponent},
   {
     path: 'login', component: LoginRegisterComponent, canActivate: [AuthGuard],
