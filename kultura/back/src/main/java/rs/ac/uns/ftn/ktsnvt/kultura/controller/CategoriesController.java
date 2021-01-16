@@ -46,6 +46,7 @@ public class CategoriesController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     ResponseEntity<CategoryDto> add(@Valid @RequestBody CategoryDto categoryDto){
+        System.out.println("usao u add");
         CategoryDto saved = this.categoryService.create(categoryDto);
         return ResponseEntity.created(URI.create("/api/category/" + saved.getId())).body(saved);
     }

@@ -20,8 +20,7 @@ export class CategoryAddComponent implements OnInit {
     }
   );
 
-  constructor(private registerService: RegisterService,
-              private categoryService: CategoryService,
+  constructor(private categoryService: CategoryService,
               private messageService: MessageService,
               private router: Router) {
   }
@@ -52,12 +51,15 @@ export class CategoryAddComponent implements OnInit {
       this.categoryForm.patchValue({name: ''});
     }
     else{
-      this.categoryService.createCategory(category);
-      this.messageService.add({
-        severity: 'success', summary: 'Category added successfully.',
-        detail: 'You can now modify the category and add subcategories to it.'
-      });
-      this.router.navigate(['admin-panel/categories']);
+      this.categoryService.createCategory(category).subscribe(
+        data => {
+          this.messageService.add({
+            severity: 'success', summary: 'Category added successfully.',
+            detail: 'You can now modify the category and add subcategories to it.'
+          });
+          this.router.navigate(['admin-panel/categories']);
+        }
+      );
     }
   }
 }

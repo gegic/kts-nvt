@@ -10,18 +10,16 @@ import {CategoryService} from '../../core/services/category/category.service';
 export class CategoriesViewComponent implements OnInit {
 
   categoriesList: any[] = [];
+  page = 0;
+  totalPages = 1;
 
   constructor(private categoryService: CategoryService) {
   }
 
   ngOnInit(): void {
-    this.categoryService.getCategories().subscribe(categories => {
+    this.categoryService.getCategories(0).subscribe(categories => {
       this.categoriesList = categories.content || [];
     });
-  }
-
-  onClickLogout(): void {
-    console.log(this.categoryService.getCategories());
   }
 
   deleteCategory(id: string): void{
@@ -30,4 +28,25 @@ export class CategoriesViewComponent implements OnInit {
     this.categoriesList = result || [];
   }
 
+  onScrollDown(): void{
+    this.getCategories();
+  }
+
+  getCategories(): void{
+    if (this.page === this.totalPages) {
+      return;
+    }
+    this.categoryService.getCategories(this.page + 1).subscribe(
+      val => {
+        for (const el of val.content) {
+          if (this.categoryService.categoriesList.some(category => category.id === el.id)) {
+            continue;
+          }
+          this.categoriesList.push(el);
+        }
+        this.page = val.pageable.pageNumber;
+        this.totalPages = val.totalPages;
+      }
+    );
+  }
 }

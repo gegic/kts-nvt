@@ -15,12 +15,12 @@ export class CategoryService {
   constructor(private httpClient: HttpClient) {
   }
 
-  public getCategories(): Observable<Page> {
-    return this.httpClient.get('/api/categories');
+  public getCategories(page: number): Observable<any> {
+    return this.httpClient.get(`/api/categories?page=${page}`);
   }
 
   public checkExists(categoryName: string): boolean {
-    this.getCategories().subscribe(categories => {
+    this.getCategories(0).subscribe(categories => {
       this.categoriesList = categories.content || [];
     });
     for (const category of this.categoriesList){
@@ -33,9 +33,7 @@ export class CategoryService {
   }
 
   public createCategory(category: Category): Observable<any>{
-    console.log('CateogryService create category');
-    console.log(category);
-    return this.httpClient.post('/api/categories', category);
+    return this.httpClient.post(`/api/categories`, category);
   }
 
   public delete(id: string | number): Observable<any> {
