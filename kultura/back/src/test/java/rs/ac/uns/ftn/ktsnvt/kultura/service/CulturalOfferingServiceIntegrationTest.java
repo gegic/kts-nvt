@@ -54,11 +54,11 @@ public class CulturalOfferingServiceIntegrationTest {
     @Test
     @Transactional
     public void testReadAll() {
-        // TODO
-//        Pageable pageRequest = PageRequest.of(0, CulturalOfferingConstants.PAGE_SIZE);
-//
-//        Page<CulturalOfferingDto> returnedCulturalOfferings = culturalOfferingService.readAll(pageRequest);
-//
+        Pageable pageRequest = PageRequest.of(0, CulturalOfferingConstants.PAGE_SIZE);
+
+//        Page<CulturalOfferingDto> returnedCulturalOfferings = culturalOfferingService.readAll(pageRequest, "",
+//                1, 5);
+
 //        assertEquals(CulturalOfferingConstants.DB_COUNT, returnedCulturalOfferings.getContent().size());
 
     }
