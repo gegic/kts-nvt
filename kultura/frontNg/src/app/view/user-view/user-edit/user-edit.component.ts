@@ -37,13 +37,13 @@ export class UserEditComponent implements OnInit {
       private authService: AuthService
     ){
 
-    // this.user = Object.assign(new User(), this.authService.user.getValue());
+    this.user = Object.assign(new User(), this.authService.user.getValue());
 
     // DEV
-    this.user = new User();
-    this.user.email = 'a@a.com',
-    this.user.firstName = 'Dzoni';
-    this.user.lastName = 'Dep';
+    // this.user = new User();
+    // this.user.email = 'a@a.com',
+    // this.user.firstName = 'Dzoni';
+    // this.user.lastName = 'Dep';
 
     this.fields = [
       {
@@ -119,8 +119,12 @@ export class UserEditComponent implements OnInit {
 
   commitUpdate(user: User, field: string): void{
     this.userService.update(user).subscribe(
-      (data: {user: User}) => {
+      (data) => {
         console.log(data);
+        this.userService.getById(user.id).subscribe((data1: {user: User}) => {
+          console.log(data1);
+          this.authService.updateUserData(user);
+        });
         this.messageService.add({severity: 'success', detail: field + ' updated'});
       },
       () => {

@@ -39,4 +39,8 @@ export class AuthService {
     const user = Object.assign(new User(), this.user.getValue());
     return user.getRole();
   }
+
+  updateUserData(user: User): void{
+    this.user.next(user);
+  }
 }

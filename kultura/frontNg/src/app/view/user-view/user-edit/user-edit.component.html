@@ -1,5 +1,5 @@
 <div class="m-top p-grid p-mx-0 p-justify-center centered-grid">
-    <div class="p-col-12 p-sm-9 p-md-9 p-lg-8 p-xl-6">
+    <div class="p-col-12 p-sm-12 p-md-12 p-lg-9 p-xl-9">
         <div class="p-card p-p-3">
             <div class="p-card colored-card p-grid p-p-3 p-mb-3">
                     <span class="p-col-12 p-sm-12 p-md-4 p-lg-4 p-xl-4 p-d-flex p-ai-center p-jc-center">
@@ -25,28 +25,28 @@
                         <!-- <div>
                             <div class="p-field  large-text">
                                 First name:{{user.firstName}}
-                            </div> 
+                            </div>
                             <div class="p-field large-text">
-                                    Last name: 
+                                    Last name:
                                 {{user.lastName}}
-                            </div> 
+                            </div>
                             <div class="p-field large-text">
-                                    E-mail: 
+                                    E-mail:
                                 {{user.email}}
-                            </div>     
+                            </div>
                         </div> -->
                     </span>
             </div>
             <p-tabView>
                 <p-tabPanel header="Change informations">
-                    <div class="p-p-0">  
+                    <div class="p-p-0">
                         <form #f="ngForm" (ngSubmit)="updateName()">
                             <div class="p-card p-fluid p-p-3 p-mb-5">
                                 <div class="p-mb-5">Update first name</div>
                                 <div class="p-grid">
                                     <div class="p-col-12 p-sm-12 p-md-8 p-lg-8 p-xl-8">
                                         <span class="p-float-label">
-                                            <input 
+                                            <input
                                                 [formControl]="name"
                                                 name="name"
                                                 type="text"
@@ -58,7 +58,7 @@
                                         </span>
                                     </div>
                                     <div class="p-col-12 p-sm-12 p-md-4 p-lg-4 p-xl-4">
-                                        <button 
+                                        <button
                                             type="submit"
                                             class="p-button"
                                             label="Submit"
@@ -66,7 +66,7 @@
                                         ></button>
                                     </div>
                                 </div>
-                            </div>   
+                            </div>
                         </form>
                         <form #f="ngForm" (ngSubmit)="updateLastName()">
                             <div class="p-card p-fluid p-p-3 p-mb-5">
@@ -85,7 +85,7 @@
                                         </span>
                                     </div>
                                     <div class="p-col-12 p-sm-12 p-md-4 p-lg-4 p-xl-4">
-                                        <button 
+                                        <button
                                             type="submit"
                                             class="p-button"
                                             label="Submit"
@@ -93,7 +93,7 @@
                                         ></button>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                         </form>
                         <form #f="ngForm" (ngSubmit)="updateEmail()">
                                 <div class="p-card p-fluid p-p-3">
@@ -107,13 +107,13 @@
                                                     name="email"
                                                     email
                                                     type="text"
-                                                    pInputText 
+                                                    pInputText
                                                 />
                                                 <label for="email">New e-mail</label>
                                             </span>
                                         </div>
                                         <div class="p-col-12 p-sm-12 p-md-4 p-lg-4 p-xl-4">
-                                            <button 
+                                            <button
                                                 type="submit"
                                                 class="p-button"
                                                 label="Submit"
@@ -121,7 +121,7 @@
                                             ></button>
                                         </div>
                                     </div>
-                                </div> 
+                                </div>
                         </form>
                     </div>
                 </p-tabPanel>
@@ -139,20 +139,20 @@
                                     <input [formControl]="passwordControl" name="password" type="password" pInputText pPassword/>
                                     <label for="password">New password</label>
                                 </span>
-                            </div>  
+                            </div>
                             <div class="p-field p-mb-5">
                                 <span class="p-float-label">
                                     <input [formControl]="confirmPasswordControl" name="confirmPassword" type="password" pInputText pPassword/>
                                     <label for="confirmPassword">Confirm password</label>
                                 </span>
-                            </div>    
+                            </div>
                             <div class="p-flex-row-reverse">
                                 <button type="submit"
                                     class="p-button"
                                     label="Submit"
                                     pButton
                                 ></button>
-                            </div>  
+                            </div>
                         </div>
                     </form>
                 </p-tabPanel>
