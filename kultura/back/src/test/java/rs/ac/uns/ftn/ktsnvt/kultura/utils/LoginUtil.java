@@ -14,9 +14,13 @@ public class LoginUtil {
                 restTemplate.postForEntity("/auth/login",
                         new LoginDto(email, password),
                         String.class);
-        JsonNode parent= null;
+        JsonNode parent;
+        String body = responseEntity.getBody();
+        if(body==null){
+            System.out.println("Can't log in");
+        }
         try {
-            parent = new ObjectMapper().readTree(responseEntity.getBody());
+            parent = new ObjectMapper().readTree(body);
             return parent.path("token").asText();
         } catch (JsonProcessingException e) {
             e.printStackTrace();

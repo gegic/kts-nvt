@@ -27,6 +27,10 @@ public class UserConstants {
     public static final String USER_EMAIL = "user@mail.com";
     public static final String USER_PASSWORD = "admin123";
 
+    public static final String NEW_MODERATOR_EMAIL = "new.moderator@mail.com";
+    public static final String NEW_ADMIN_EMAIL = "new.admin@mail.com";
+    public static final String NEW_USER1_EMAIL = "new.user1@mail.com";
+
     public static final String NEW_EMAIL = "new.user@mail.com";
     public static final String NEW_FIRST_NAME = "name";
 

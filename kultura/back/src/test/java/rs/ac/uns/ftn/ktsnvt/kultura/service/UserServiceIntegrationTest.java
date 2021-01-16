@@ -17,12 +17,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -93,6 +96,53 @@ public class UserServiceIntegrationTest {
         assertEquals(u.getFirstName(), createdUser.getFirstName());
         assertEquals(u.getLastName(), createdUser.getLastName());
         assertNull(createdUser.getPassword());
+        List<String> roles = createdUser.getAuthorities().stream().map(Authority::getAuthority).collect(Collectors.toList());
+        assertEquals(roles.get(0),"ROLE_USER");
+
+        userService.delete(createdUser.getId());
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testCreateModerator() throws Exception {
+
+        long sizeBefore = userRepository.count();
+        UserDto u = createUserDto();
+
+        UserDto createdUser = userService.create(u, "ROLE_MODERATOR");
+
+        long sizeAfter = userRepository.count();
+
+        assertEquals(sizeBefore + 1, sizeAfter);
+        assertEquals(u.getEmail(), createdUser.getEmail());
+        assertEquals(u.getFirstName(), createdUser.getFirstName());
+        assertEquals(u.getLastName(), createdUser.getLastName());
+        assertNull(createdUser.getPassword());
+        List<String> roles = createdUser.getAuthorities().stream().map(Authority::getAuthority).collect(Collectors.toList());
+        assertEquals(roles.get(0),"ROLE_MODERATOR");
+
+        userService.delete(createdUser.getId());
+    }
+    @Test
+    @Transactional
+    @Rollback
+    public void testCreateAdmin() throws Exception {
+
+        long sizeBefore = userRepository.count();
+        UserDto u = createUserDto();
+
+        UserDto createdUser = userService.create(u, "ROLE_ADMIN");
+
+        long sizeAfter = userRepository.count();
+
+        assertEquals(sizeBefore + 1, sizeAfter);
+        assertEquals(u.getEmail(), createdUser.getEmail());
+        assertEquals(u.getFirstName(), createdUser.getFirstName());
+        assertEquals(u.getLastName(), createdUser.getLastName());
+        assertNull(createdUser.getPassword());
+        List<String> roles = createdUser.getAuthorities().stream().map(Authority::getAuthority).collect(Collectors.toList());
+        assertEquals(roles.get(0),"ROLE_ADMIN");
 
         userService.delete(createdUser.getId());
     }

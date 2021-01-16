@@ -63,7 +63,7 @@ public class UsersController {
 
 
     //    @PreAuthorize("userDto.id == authentication.principal.id || hasAnyRole('ADMIN', 'MODERATOR')")
-    @PreAuthorize("hasRole('ADMIN') || #userDto.id == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN') or (#userDto.id == authentication.principal.id)")
     @PutMapping
     ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto) {
         return ResponseEntity.ok(this.userService.update(userDto));

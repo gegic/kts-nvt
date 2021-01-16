@@ -97,13 +97,13 @@ public class UserService implements UserDetailsService {
 //    existingUser.setVerified(userDto.isVerified());
         if (userDto.getPassword() != null) {
             existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            existingUser.setLastPasswordChange(LocalDateTime.now());
         }
 
         boolean emailChanged = userDto.getEmail() != null && !userDto.getEmail().equals(existingUser.getEmail());
         if(emailChanged) {
             existingUser.setVerified(false);
         }
-        existingUser.setLastPasswordChange(LocalDateTime.now());
 //    return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
         User finalUser = userRepository.save(updated);
         if(emailChanged){
