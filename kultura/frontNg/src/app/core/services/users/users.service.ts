@@ -15,7 +15,7 @@ export class UserService {
     return this.httpClient.put('/api/users', user);
   }
 
-  // updatePassword(user: User): Observable<any> {
-  //   return this.httpClient.put('/api/users', user);
-  // }
+  getById(id: number): Observable<any>{
+    return this.httpClient.get(`/api/users/${id}`);
+  }
 }
