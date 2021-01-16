@@ -252,11 +252,26 @@ public class UserServiceUnitTest {
     @Test
     public void testUpdateUser(){
 
-        UserDto newUserDto = getUpdateUserDto();
+        UserDto updateDto = getUpdateUserDto();
 
         Mockito.when(userRepository.findById(Mockito.anyLong())).thenAnswer(i -> Optional.of(getFirstUser()));
 
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenAnswer(i -> i.getArgument(0));
+
+        Mockito.when(mapper.toExistingEntity(Mockito.any(), Mockito.any())).thenAnswer(i -> {
+            UserDto u = i.getArgument(0);
+            return new User(
+                    u.getId(),
+                    u.getEmail(),
+                    null,
+                    u.getFirstName(),
+                    u.getLastName(),
+                    u.getLastPasswordChange(),
+                    u.isVerified(),
+                    u.getAuthorities(),
+                    null
+            );
+        });
 
         Mockito.when(mapper.fromEntity(Mockito.any(User.class), Mockito.eq(UserDto.class))).thenAnswer(i -> {
             User u = i.getArgument(0);
@@ -272,11 +287,16 @@ public class UserServiceUnitTest {
             );
         });
 
-        UserDto updated = userService.update(newUserDto);
-        assertEquals(updated.getEmail(), newUserDto.getEmail());
-        assertEquals(updated.getFirstName(), newUserDto.getFirstName());
-        assertEquals(updated.getLastName(), newUserDto.getLastName());
-        assertEquals(updated.isVerified(), newUserDto.isVerified());
+        try {
+            Mockito.doNothing().when(smtpServer).sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        UserDto updated = userService.update(updateDto);
+        assertEquals(updated.getEmail(), updateDto.getEmail());
+        assertEquals(updated.getFirstName(), updateDto.getFirstName());
+        assertEquals(updated.getLastName(), updateDto.getLastName());
+        assertEquals(updated.isVerified(), updateDto.isVerified());
     }
 
     @Test(expected = ResourceNotFoundException.class)

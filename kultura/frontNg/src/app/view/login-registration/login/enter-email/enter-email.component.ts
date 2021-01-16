@@ -33,6 +33,8 @@ export class EnterEmailComponent implements OnInit {
           this.router.navigate(['./password'], {relativeTo: this.activatedRoute});
         },
         err => {
+          console.log(err);
+          
           this.emailControl.reset();
           this.messageService.add({severity: 'error', summary: 'Email not found', detail: 'A user with this email doesn\'t exist.'});
         }

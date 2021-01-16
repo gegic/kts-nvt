@@ -19,11 +19,17 @@ public class UserConstants {
     public static final long ADMIN_ID = 1;
     public static final String ADMIN_FULL_NAME = "Admin Prezime";
 
+    public static final long MODERATOR_ID = 2;
     public static final String MODERATOR_EMAIL = "moderator@mail.com";
     public static final String MODERATOR_PASSWORD = "admin123";
 
     public static final long USER_ID = 3;
     public static final String USER_EMAIL = "user@mail.com";
+    public static final String USER_PASSWORD = "admin123";
+
+    public static final String NEW_MODERATOR_EMAIL = "new.moderator@mail.com";
+    public static final String NEW_ADMIN_EMAIL = "new.admin@mail.com";
+    public static final String NEW_USER1_EMAIL = "new.user1@mail.com";
 
     public static final String NEW_EMAIL = "new.user@mail.com";
     public static final String NEW_FIRST_NAME = "name";
