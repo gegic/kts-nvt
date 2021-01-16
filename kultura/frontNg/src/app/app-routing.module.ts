@@ -25,6 +25,7 @@ import {CulturalOfferingAboutComponent} from './view/cultural-offering-about/cul
 import {ListViewComponent} from './view/list-view/list-view.component';
 import {ModeratorEditComponent} from './view/moderator-edit/moderator-edit.component';
 import {CategoriesViewComponent} from './view/categories-view/categories-view.component';
+import {CategoryAddComponent} from './view/category-add/category-add.component';
 
 const routes: Routes = [
   {
@@ -47,6 +48,7 @@ const routes: Routes = [
         canActivate: [AuthGuard] },
       { path: 'admin-panel', component: ModeratorsViewComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
       { path: 'add-moderator', component: ModeratorAddComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
+      { path: 'add-category', component: CategoryAddComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
       { path: 'edit-moderator/:id', component: ModeratorEditComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
       { path: 'admin-panel/categories', component: CategoriesViewComponent }
 
