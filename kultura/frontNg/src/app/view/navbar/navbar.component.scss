@@ -66,3 +66,11 @@ ngx-avatar {
   color: #275dad !important;
   border-bottom: 3.5px solid #275dad !important;
 }
+
+.search-bar {
+  margin-left: 3vw;
+}
+
+::ng-deep .search-bar input {
+  width: 100%;
+}

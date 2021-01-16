@@ -17,7 +17,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.net.URI;
 
-@PreAuthorize("hasRole('MODERATOR') || hasRole('ADMIN')")
 @RestController
 @RequestMapping(path = "/api/subcategories", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SubcategoriesController {
@@ -28,7 +27,6 @@ public class SubcategoriesController {
         this.subcategoryService = subcategoryService;
     }
 
-    @PreAuthorize("hasRole('MODERATOR') || hasRole('ADMIN')")
     @GetMapping("/category/{categoryId}")
     ResponseEntity<Page<SubcategoryDto>> getSubcategoriesByCategoryId(@PathVariable long categoryId,
                                                                       @RequestParam(defaultValue = "0") int page,

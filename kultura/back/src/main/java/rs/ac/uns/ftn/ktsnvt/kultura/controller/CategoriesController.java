@@ -16,7 +16,6 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 import javax.validation.Valid;
 import java.net.URI;
 
-@PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
 @RestController
 @RequestMapping(path = "/api/categories", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CategoriesController {
@@ -38,6 +37,7 @@ public class CategoriesController {
         return ResponseEntity.ok(categoryDtos);
     }
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<CategoryDto> get(@PathVariable long id){
         return ResponseEntity.of(this.categoryService.readById(id));
