@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit {
   searchQuery = '';
 
   menuItems: MenuItem[] = [
+    {label: 'Edit account', icon: 'pi pi-user-edit', routerLink: ['/user-edit']},
     {label: 'Logout', icon: 'pi pi-fw pi-power-off', command: e => this.onClickLogout()}
   ];
 

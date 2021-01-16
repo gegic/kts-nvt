@@ -61,6 +61,9 @@ public class UsersController {
         return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
 
+
+    //    @PreAuthorize("userDto.id == authentication.principal.id || hasAnyRole('ADMIN', 'MODERATOR')")
+    @PreAuthorize("hasRole('ADMIN') or (#userDto.id == authentication.principal.id)")
     @PutMapping
     ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto) {
         return ResponseEntity.ok(this.userService.update(userDto));
