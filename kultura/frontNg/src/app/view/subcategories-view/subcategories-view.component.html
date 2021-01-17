@@ -1,1 +1,28 @@
-<p>subcategories-view works!</p>
+<div infinite-scroll
+     (scrolled)="onScrollDown()">
+  <p-card>
+    <div class="list-header p-d-flex p-ai-center">
+      <h2 class="p-text-light">Showing all subcategories of selected category</h2>
+      <button class="p-button p-ml-auto new-offering" routerLink="/add-subcategory" label="NEW SUBCATEGORY" pButton></button>
+    </div>
+<!--    <p-dataView [value]="subcategoriesList">-->
+<!--      <ng-template let-subcategory pTemplate="listItem">-->
+<!--        <div>-->
+<!--          {{subcategory.name}}-->
+<!--        </div>-->
+<!--      </ng-template>-->
+<!--    </p-dataView>-->
+    <app-subcategory-list-item *ngFor="let subcategory of subcategoriesList"
+                            [subcategory]="subcategory" (subcategoryDeleted)="deleteSubcategory($event)">
+    </app-subcategory-list-item>
+
+
+    <!--  <button class="primary add-button p-button-rounded p-button-raised p-button-icon p-ripple"-->
+    <!--          icon="pi pi-plus"-->
+    <!--          pButton-->
+    <!--          routerLink="/add-moderator"-->
+    <!--          type="button"-->
+    <!--  ></button>-->
+  </p-card>
+</div>
+

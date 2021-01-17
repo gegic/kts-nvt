@@ -15,7 +15,7 @@ import {EnterEmailComponent} from './view/login-registration/login/enter-email/e
 import {EnterPasswordComponent} from './view/login-registration/login/enter-password/enter-password.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastModule} from 'primeng/toast';
-import {ConfirmationService, MessageService} from 'primeng/api';
+import {ConfirmationService, MessageService, SharedModule} from 'primeng/api';
 import {JwtInterceptor} from './core/interceptors/jwt.interceptor';
 import {RegisterEmailComponent} from './view/login-registration/registration/register-email/register-email.component';
 import {RegisterNameComponent} from './view/login-registration/registration/register-name/register-name.component';
@@ -74,6 +74,8 @@ import { CategoriesViewComponent } from './view/categories-view/categories-view.
 import { CategoryListItemComponent } from './view/category-list-item/category-list-item.component';
 import { CategoryEditComponent } from './view/category-edit/category-edit.component';
 import { SubcategoriesViewComponent } from './view/subcategories-view/subcategories-view.component';
+import {DataViewModule} from 'primeng/dataview';
+import { SubcategoryListItemComponent } from './view/subcategory-list-item/subcategory-list-item.component';
 
 @NgModule({
   declarations: [
@@ -116,9 +118,11 @@ import { SubcategoriesViewComponent } from './view/subcategories-view/subcategor
     CategoriesViewComponent,
     CategoryListItemComponent,
     CategoryEditComponent,
-    SubcategoriesViewComponent
+    SubcategoriesViewComponent,
+    SubcategoryListItemComponent
   ],
   imports: [
+    SharedModule,
     BrowserModule,
     FormsModule,
     AppRoutingModule,
@@ -154,7 +158,8 @@ import { SubcategoriesViewComponent } from './view/subcategories-view/subcategor
     RatingModule,
     InputNumberModule,
     SliderModule,
-    AvatarModule
+    AvatarModule,
+    DataViewModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
