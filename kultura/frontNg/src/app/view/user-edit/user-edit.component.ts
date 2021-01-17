@@ -22,12 +22,12 @@ export class UserEditComponent implements OnInit {
 
   user: User;
 
-  passwordControl: FormControl = new FormControl('', [this.containDigit(), this.containSmall(), this.containCapital(), this.emptyField('New password')]);
-  confirmPasswordControl: FormControl = new FormControl('', [this.samePasswords(this.passwordControl)]);
+  passwordControl: FormControl;
+  confirmPasswordControl: FormControl;
 
-  name: FormControl = new FormControl('', [this.emptyField('First name'), this.sameAsOld('First name', this.user?.firstName)]);
-  lastName: FormControl = new FormControl('', [this.emptyField('Last name'), this.sameAsOld('First name', this.user?.lastName)]);
-  email: FormControl = new FormControl('', [this.emptyField('E-mail'), this.sameAsOld('First name', this.user?.email)]);
+  name: FormControl;
+  lastName: FormControl;
+  email: FormControl;
 
   fields: any[] = [];
 
@@ -39,6 +39,13 @@ export class UserEditComponent implements OnInit {
 
     this.user = Object.assign(new User(), this.authService.user.getValue());
     this.refreshUserData(this.user);
+
+    this.passwordControl = new FormControl('', [this.containDigit(), this.containSmall(), this.containCapital(), this.emptyField('New password')]);
+    this.confirmPasswordControl = new FormControl('', [this.samePasswords(this.passwordControl)]);
+    this.name = new FormControl('', [this.emptyField('First name'), this.sameAsOld('First name', this.user?.firstName)]);
+    this.lastName = new FormControl('', [this.emptyField('Last name'), this.sameAsOld('First name', this.user?.lastName)]);
+    this.email = new FormControl('', [this.emptyField('E-mail'), this.sameAsOld('First name', this.user?.email)]);
+
   }
 
   ngOnInit(): void {
@@ -159,9 +166,9 @@ export class UserEditComponent implements OnInit {
 
   }
 
-  sameAsOld(field: string, value: any): ValidatorFn {
+  sameAsOld(fieldName: string, field: any): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null =>
-      control.value === value ? {msg: field + ' must not be same as old.'} : null;
+      control.value === field ? {msg: fieldName + ' must not be same as old.'} : null;
   }
 
   emptyField(field: string): ValidatorFn {

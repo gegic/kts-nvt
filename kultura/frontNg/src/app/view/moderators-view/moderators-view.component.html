@@ -3,10 +3,10 @@
     <h2 class="p-text-light">Showing all moderators</h2>
     <button class="p-button p-ml-auto" routerLink="/add-moderator" label="NEW MODERATOR" pButton></button>
   </div>
-  <app-moderator-list-element *ngFor="let moderator of moderatorsList"
-                    [moderator]="moderator" (moderatorDeleted)="deleteUser($event)"
-  >
-  </app-moderator-list-element>
-
+  <div *ngFor="let moderator of moderatorsList; let i = index" [class]="[i<moderatorsList.length-1?'p-mb-3':'']">
+    <app-moderator-list-element
+      [moderator]="moderator" (moderatorDeleted)="deleteUser($event)"
+    >
+    </app-moderator-list-element>
+  </div>
 </p-card>
-

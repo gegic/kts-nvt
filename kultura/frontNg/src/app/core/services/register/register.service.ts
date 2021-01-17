@@ -14,35 +14,35 @@ export class RegisterService {
     this.user = new User();
   }
 
-  get email(): string {
+  get email(): string | null {
     return this.user.email;
   }
 
-  set email(value: string) {
+  set email(value: string | null) {
     this.user.email = value;
   }
 
-  get firstName(): string {
+  get firstName(): string | null {
     return this.user.firstName;
   }
 
-  set firstName(value: string) {
+  set firstName(value: string | null) {
     this.user.firstName = value;
   }
 
-  get lastName(): string {
+  get lastName(): string | null {
     return this.user.lastName;
   }
 
-  set lastName(value: string) {
+  set lastName(value: string | null) {
     this.user.lastName = value;
   }
 
-  get password(): string {
+  get password(): string | null {
     return this.user.password;
   }
 
-  set password(value: string) {
+  set password(value: string | null) {
     this.user.password = value;
   }
 
