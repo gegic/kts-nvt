@@ -163,7 +163,7 @@ public class Mapper {
         for (Field field : fields) {
             if(field.isAnnotationPresent(Ignore.class)
                     && (field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.BOTH ||
-                    field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.ENTITY_TO_DTO)) {
+                    field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.DTO_TO_ENTITY)) {
                 continue;
             }
             if (field.isAnnotationPresent(EntityKey.class)) {
@@ -405,17 +405,19 @@ public class Mapper {
         try {
             if (o == null) return null;
             return getGetMethod(o.getClass(), f).invoke(o);
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new GetterException(o.getClass(), f);
         }
     }
 
-    private Method getGetMethod(Class<?> c, Field f) {
+    private Method getGetMethod(Class<?> c, Field f) throws NoSuchFieldException {
+
         boolean isBoolean = f.getType().isAssignableFrom(boolean.class);
         return getGetMethod(c, f.getName(), isBoolean);
     }
 
     private Method getGetMethod(Class<?> c, String fieldName, boolean isBoolean) throws GetterException {
+
 
         String getterName = isBoolean ? String.format("is%s", StringUtils.capitalize(fieldName)) :
                 String.format("get%s", StringUtils.capitalize(fieldName));

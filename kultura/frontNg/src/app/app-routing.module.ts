@@ -25,7 +25,7 @@ import {CulturalOfferingAboutComponent} from './view/cultural-offering-about/cul
 import {ListViewComponent} from './view/list-view/list-view.component';
 import {ModeratorEditComponent} from './view/moderator-edit/moderator-edit.component';
 import {CategoriesViewComponent} from './view/categories-view/categories-view.component';
-import {UserEditComponent} from './view/user-view/user-edit/user-edit.component';
+import {UserEditComponent} from './view/user-edit/user-edit.component';
 
 const routes: Routes = [
   {

@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CulturalOfferingDetailsService} from '../../core/services/cultural-offering-details/cultural-offering-details.service';
-import {PostsService} from '../../core/services/posts/posts.service';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {Router} from '@angular/router';
 import {DialogService} from 'primeng/dynamicdialog';
@@ -10,7 +9,6 @@ import {ReviewNumbers} from '../../core/models/reviewNumbers';
 import {Review} from '../../core/models/review';
 import {AuthService} from '../../core/services/auth/auth.service';
 import {ReviewPhoto} from '../../core/models/reviewPhoto';
-import {CulturalOfferingPhoto} from '../../core/models/culturalOfferingPhoto';
 import {ReviewGalleriaService} from '../../core/services/review-galleria/review-galleria.service';
 
 @Component({

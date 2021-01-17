@@ -32,7 +32,9 @@ public class UserConstants {
     public static final String NEW_USER1_EMAIL = "new.user1@mail.com";
 
     public static final String NEW_EMAIL = "new.user@mail.com";
+    public static final String NEW_LAST_NAME = "lastname";
     public static final String NEW_FIRST_NAME = "name";
+    public static final String NEW_PASSWORD = "Sifra123";
 
     public static final long NON_EXISTENT_ID = 22L;
     public static final String NON_EXISTENT_EMAIL = "nomail@mail.nomail";

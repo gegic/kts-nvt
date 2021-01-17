@@ -42,5 +42,6 @@ export class AuthService {
 
   updateUserData(user: User): void{
     this.user.next(user);
+    localStorage.setItem('user', JSON.stringify(user));
   }
 }
