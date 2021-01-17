@@ -54,6 +54,7 @@ export class CategoryListItemComponent implements OnInit {
   }
 
   onClickEdit(): void{
+    this.router.navigate([`/edit-category/${this.category?.id ?? 0}`]).then(r => console.log('EDIT'));
   }
 
 }

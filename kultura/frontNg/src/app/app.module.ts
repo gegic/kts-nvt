@@ -72,6 +72,8 @@ import { ModeratorEditComponent } from './view/moderator-edit/moderator-edit.com
 import { CategoryAddComponent } from './view/category-add/category-add.component';
 import { CategoriesViewComponent } from './view/categories-view/categories-view.component';
 import { CategoryListItemComponent } from './view/category-list-item/category-list-item.component';
+import { CategoryEditComponent } from './view/category-edit/category-edit.component';
+import { SubcategoriesViewComponent } from './view/subcategories-view/subcategories-view.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +114,9 @@ import { CategoryListItemComponent } from './view/category-list-item/category-li
     ModeratorEditComponent,
     CategoryAddComponent,
     CategoriesViewComponent,
-    CategoryListItemComponent
+    CategoryListItemComponent,
+    CategoryEditComponent,
+    SubcategoriesViewComponent
   ],
   imports: [
     BrowserModule,

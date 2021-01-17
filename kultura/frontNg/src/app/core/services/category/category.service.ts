@@ -40,4 +40,8 @@ export class CategoryService {
     return this.httpClient.delete(`/api/categories/${id}`);
   }
 
+  public getCategory(id: number): Observable<Category> {
+    return this.httpClient.get('/api/categories/' + id);
+  }
+
 }
