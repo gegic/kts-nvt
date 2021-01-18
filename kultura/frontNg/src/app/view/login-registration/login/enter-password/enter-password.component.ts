@@ -34,7 +34,7 @@ export class EnterPasswordComponent implements OnInit {
 
   onClickLogin(): void {
     if (!this.passwordControl.valid) {
-      this.messageService.add({severity: 'error', detail: 'Passwords are at least eight characters long.'});
+      this.messageService.add({id: 'toast-container', severity: 'error', detail: 'Passwords are at least eight characters long.'});
       return;
     }
     this.loginService.password = this.passwordControl.value;
@@ -42,14 +42,14 @@ export class EnterPasswordComponent implements OnInit {
       .subscribe(
         (data: {token: string, user: User}) => {
           if (!data.user.verified) {
-            this.messageService.add({severity: 'error', detail: 'Your account is not verified.'});
+            this.messageService.add({id: 'toast-container', severity: 'error', detail: 'Your account is not verified.'});
             return;
           }
           this.authService.login(data.token, data.user);
           this.router.navigateByUrl('/');
         },
         () => {
-          this.messageService.add({severity: 'error', detail: 'Your password is incorrect'});
+          this.messageService.add({id: 'toast-container', severity: 'error', detail: 'Your password is incorrect'});
           this.passwordControl.reset();
         }
       );
