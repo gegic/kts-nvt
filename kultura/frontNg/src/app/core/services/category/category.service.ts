@@ -22,4 +22,8 @@ export class CategoryService {
   delete(id: number): Observable<any> {
     return this.httpClient.delete(`/api/categories/${id}`);
   }
+
+  create(category: Category): Observable<any> {
+    return this.httpClient.post('/api/categories', category);
+  }
 }

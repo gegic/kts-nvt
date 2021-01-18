@@ -67,7 +67,6 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import { ModeratorListElementComponent } from './view/moderator-list-element/moderator-list-element.component';
 import { ModeratorEditComponent } from './view/moderator-edit/moderator-edit.component';
-import { CategoryAddComponent } from './view/category-add/category-add.component';
 import { CategoriesViewComponent } from './view/categories-view/categories-view.component';
 import { CategoryListItemComponent } from './view/category-list-item/category-list-item.component';
 import { UserEditComponent } from './view/user-edit/user-edit.component';
@@ -107,7 +106,6 @@ import {TableModule} from 'primeng/table';
     ListElementComponent,
     ModeratorListElementComponent,
     ModeratorEditComponent,
-    CategoryAddComponent,
     CategoriesViewComponent,
     CategoryListItemComponent,
     UserEditComponent

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Category} from '../../core/models/category';
 import {Router} from '@angular/router';
 import {ConfirmationService, MessageService} from 'primeng/api';
@@ -10,7 +10,7 @@ import {Subscription} from 'rxjs';
   templateUrl: './category-list-item.component.html',
   styleUrls: ['./category-list-item.component.scss']
 })
-export class CategoryListItemComponent implements OnInit {
+export class CategoryListItemComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   @Input()
@@ -62,6 +62,10 @@ export class CategoryListItemComponent implements OnInit {
   }
 
   onClickEdit(): void{
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
 }
