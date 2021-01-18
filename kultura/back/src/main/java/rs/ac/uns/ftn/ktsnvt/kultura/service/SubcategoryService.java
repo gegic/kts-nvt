@@ -8,7 +8,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.SubcategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
 import javax.persistence.EntityExistsException;
@@ -19,13 +21,17 @@ import java.util.Optional;
 @Service
 public class SubcategoryService {
 
-    private SubcategoryRepository subcategoryRepository;
-    private Mapper mapper;
+    private final SubcategoryRepository subcategoryRepository;
+    private final CategoryRepository categoryRepository;
+    private final Mapper mapper;
 
     @Autowired
-    public SubcategoryService(SubcategoryRepository categoryRepository, Mapper mapper) {
-        this.subcategoryRepository = categoryRepository;
+    public SubcategoryService(SubcategoryRepository subcategoryRepository,
+                              Mapper mapper,
+                              CategoryRepository categoryRepository) {
+        this.subcategoryRepository = subcategoryRepository;
         this.mapper = mapper;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional
@@ -37,8 +43,12 @@ public class SubcategoryService {
     public SubcategoryDto create(SubcategoryDto subcategoryDto) {
         Subcategory toAdd = mapper.fromDto(subcategoryDto, Subcategory.class);
         if (subcategoryRepository.existsById(toAdd.getId())) throw new EntityExistsException();
+        Subcategory added = subcategoryRepository.save(toAdd);
+        Category c = added.getCategory();
+        c.getSubcategories().add(added);
+        categoryRepository.save(c);
 
-        return mapper.fromEntity(subcategoryRepository.save(toAdd), SubcategoryDto.class);
+        return mapper.fromEntity(added, SubcategoryDto.class);
     }
 
     @Transactional

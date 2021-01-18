@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
@@ -21,7 +22,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -47,6 +50,8 @@ public class CategoryServiceIntegrationTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private SubcategoryRepository subcategoryRepository;
 
     @Autowired
     private Mapper mapper;
@@ -107,7 +112,6 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     @Transactional
-    //@Rollback(true)
     public void testCreate(){
         CategoryDto cat = new CategoryDto();
         cat.setId(CategoryConstants.TEST_CATEGORY_ID1);
@@ -122,7 +126,7 @@ public class CategoryServiceIntegrationTest {
 
         assertThat(dbCategory).isNotNull();
 
-        // Validate that new category is in the database
+        // Validate if the new category is in the database
         List<CategoryDto> categories = categoryService.readAll(pageRequest).getContent();
         assertThat(categories).hasSize(dbSizeBeforeAdd + 1);
 
@@ -146,6 +150,58 @@ public class CategoryServiceIntegrationTest {
         assertThat(dbCategory.getName()).isEqualTo(CategoryConstants.TEST_CATEGORY_NAME1);
 
         categoryService.update(oldValues);
+    }
+    
+    @Test
+    @Transactional
+    public void testDelete() {
+        // arrange
+        Category newCat = new Category();
+        newCat.setName("Kategorija");
+        newCat = categoryRepository.save(newCat);
+        long idToDelete = newCat.getId();
+        long oldSize = categoryRepository.count();
+
+        // act
+        categoryService.delete(idToDelete);
+
+        long newSize = categoryRepository.count();
+
+        assertEquals(oldSize - 1, newSize);
+    }
+
+    @Test
+    public void testDeleteNotFound() {
+        // arrange
+        long idToDelete = 481;
+
+        // act
+        ThrowingRunnable tr = () -> categoryService.delete(idToDelete);
+
+        assertThrows(ResourceNotFoundException.class, tr);
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteHasSubcategories() {
+        // arrange
+        Category newCat = new Category();
+        newCat.setName("Kategorija");
+        newCat = categoryRepository.save(newCat);
+
+        Subcategory sc = new Subcategory();
+        sc.setName("Potkategorija");
+        sc.setCategory(newCat);
+        sc = subcategoryRepository.save(sc);
+        newCat.getSubcategories().add(sc);
+        newCat = categoryRepository.save(newCat);
+
+        long idToDelete = newCat.getId();
+
+        // act
+        ThrowingRunnable tr = () -> categoryService.delete(idToDelete);
+
+        assertThrows(ResourceExistsException.class, tr);
     }
 
 }
