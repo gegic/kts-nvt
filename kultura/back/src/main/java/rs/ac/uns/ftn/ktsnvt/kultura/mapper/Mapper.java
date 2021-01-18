@@ -31,14 +31,10 @@ public class Mapper {
 
     public static final String INFER_ORIGIN = "@infer";
 
-    private EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
     private ApplicationContext applicationContext;
     private Repositories repos;
     @Autowired
-    public Mapper(EntityManagerFactory entityManagerFactory,
-                  ApplicationContext applicationContext) {
-        this.entityManagerFactory = entityManagerFactory;
+    public Mapper(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         this.repos = new Repositories(applicationContext);
     }
@@ -77,7 +73,6 @@ public class Mapper {
 
     public <TEntity, TDto> TDto fromEntity(TEntity entity, Class<TDto> dtoClass) {
 
-        entityManager = entityManagerFactory.createEntityManager();
         TDto dto;
         try {
             dto = dtoClass.getDeclaredConstructor().newInstance();
@@ -144,8 +139,6 @@ public class Mapper {
             }
         }
 
-        entityManager.close();
-
         return dto;
     }
 
@@ -154,7 +147,6 @@ public class Mapper {
                                                      Class<?> dtoClass,
                                                      Class<?> entityClass) {
 
-        entityManager = entityManagerFactory.createEntityManager();
 
         Field[] fields = dtoClass.getDeclaredFields();
         String setterName;
@@ -163,7 +155,7 @@ public class Mapper {
         for (Field field : fields) {
             if(field.isAnnotationPresent(Ignore.class)
                     && (field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.BOTH ||
-                    field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.ENTITY_TO_DTO)) {
+                    field.getAnnotation(Ignore.class).ignoreType() == IgnoreType.DTO_TO_ENTITY)) {
                 continue;
             }
             if (field.isAnnotationPresent(EntityKey.class)) {
@@ -234,7 +226,6 @@ public class Mapper {
             }
 
         }
-        entityManager.close();
         return entity;
     }
 
@@ -405,17 +396,19 @@ public class Mapper {
         try {
             if (o == null) return null;
             return getGetMethod(o.getClass(), f).invoke(o);
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new GetterException(o.getClass(), f);
         }
     }
 
-    private Method getGetMethod(Class<?> c, Field f) {
+    private Method getGetMethod(Class<?> c, Field f) throws NoSuchFieldException {
+
         boolean isBoolean = f.getType().isAssignableFrom(boolean.class);
         return getGetMethod(c, f.getName(), isBoolean);
     }
 
     private Method getGetMethod(Class<?> c, String fieldName, boolean isBoolean) throws GetterException {
+
 
         String getterName = isBoolean ? String.format("is%s", StringUtils.capitalize(fieldName)) :
                 String.format("get%s", StringUtils.capitalize(fieldName));

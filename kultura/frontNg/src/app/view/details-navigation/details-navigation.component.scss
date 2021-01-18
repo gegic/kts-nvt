@@ -10,6 +10,24 @@
   border-bottom: 3.5px solid rgba(39, 93, 173, .2) !important;
 }
 
+::ng-deep .nav-icon-button {
+  color: #584F51 !important;
+  height: 8vh;
+  max-height: 8vh;
+  width: 10vw !important;
+  max-width: 5rem !important;
+  border-bottom: 3.5px solid transparent !important;
+}
+
+::ng-deep .nav-icon-button span {
+  font-size: 1.2em !important;
+}
+
+::ng-deep .nav-icon-button:hover {
+  color: #38435d !important;
+  border-bottom: 3.5px solid rgba(39, 93, 173, .2) !important;
+}
+
 ::ng-deep .activated,
 ::ng-deep .activated:hover {
   color: #275dad !important;

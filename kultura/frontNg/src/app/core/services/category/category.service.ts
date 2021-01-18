@@ -3,14 +3,15 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Page} from '../../models/Page';
 import {Moderator} from '../../models/moderator';
-import {CulturalOffering} from '../../models/cultural-offering';
 import {Category} from '../../models/category';
+import {Subcategory} from '../../models/subcategory';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  categoriesList: Category[] = [];
+
+  categories: Category[] = [];
 
   constructor(private httpClient: HttpClient) {
   }
@@ -19,29 +20,31 @@ export class CategoryService {
     return this.httpClient.get(`/api/categories?page=${page}`);
   }
 
-  public checkExists(categoryName: string): boolean {
-    this.getCategories(0).subscribe(categories => {
-      this.categoriesList = categories.content || [];
-    });
-    for (const category of this.categoriesList){
-      if (category.name?.toUpperCase() === categoryName.toUpperCase()) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  public createCategory(category: Category): Observable<any>{
-    return this.httpClient.post(`/api/categories`, category);
-  }
-
-  public delete(id: string | number): Observable<any> {
+  delete(id: number): Observable<any> {
     return this.httpClient.delete(`/api/categories/${id}`);
   }
 
-  public getCategory(id: number): Observable<Category> {
-    return this.httpClient.get('/api/categories/' + id);
+  create(category: Category): Observable<any> {
+    return this.httpClient.post('/api/categories', category);
   }
 
+  update(category: Category): Observable<any> {
+    return this.httpClient.put('/api/categories', category);
+  }
+
+  getSubcategories(categoryId: number, page: number): Observable<any> {
+    return this.httpClient.get(`/api/subcategories/category/${categoryId}?page=${page}`);
+  }
+
+  updateSubcategory(subcategory: Subcategory): Observable<any> {
+    return this.httpClient.put('/api/subcategories', subcategory);
+  }
+
+  createSubcategory(subcategory: Subcategory): Observable<any> {
+    return this.httpClient.post('/api/subcategories', subcategory);
+  }
+
+  deleteSubcategory(id: number): Observable<any> {
+    return this.httpClient.delete(`/api/subcategories/${id}`);
+  }
 }

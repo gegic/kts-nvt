@@ -14,7 +14,6 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.PageableExtractor;
 
 import java.net.URI;
 
-@PreAuthorize("hasRole('MODERATOR') || hasRole('USER')")
 @RestController
 @RequestMapping(path = "/api/photos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CulturalOfferingPhotosController {

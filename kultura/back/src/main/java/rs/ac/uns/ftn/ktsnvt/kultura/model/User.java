@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -13,6 +15,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User implements UserDetails {
 

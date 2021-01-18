@@ -1,15 +1,17 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Moderator} from '../../core/models/moderator';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {ModeratorService} from '../../core/services/moderator/moderator.service';
 import {Router} from '@angular/router';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-moderator-list-element',
   templateUrl: './moderator-list-element.component.html',
-  styleUrls: ['./moderator-list-element.component.css']
+  styleUrls: ['./moderator-list-element.component.scss']
 })
-export class ModeratorListElementComponent implements OnInit {
+export class ModeratorListElementComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
   @Input()
   moderator !: Moderator;
   @Output()
@@ -35,18 +37,24 @@ export class ModeratorListElementComponent implements OnInit {
   }
 
   deletionConfirmed(): void {
-    this.moderatorService.delete(this.moderator?.id ?? 0).subscribe(() => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Deleted successfully',
-        detail: 'The moderator was deleted successfully'
-      });
-      this.moderatorDeleted.emit(this.moderator.id);
-    });
+    this.subscriptions.push(
+      this.moderatorService.delete(this.moderator?.id ?? 0).subscribe(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted successfully',
+          detail: 'The moderator was deleted successfully'
+        });
+        this.moderatorDeleted.emit(this.moderator);
+      })
+    );
   }
 
   onClickEdit(): void{
     this.router.navigate([`/edit-moderator/${this.moderator?.id ?? 0}`]).then(r => console.log('EDIT'));
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
 }

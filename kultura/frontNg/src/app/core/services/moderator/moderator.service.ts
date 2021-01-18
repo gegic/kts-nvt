@@ -10,11 +10,13 @@ import {User} from '../../models/user';
 })
 export class ModeratorService {
 
+  moderators: any[] = [];
+
   constructor(private httpClient: HttpClient) {
   }
 
-  public getModerators(): Observable<Page> {
-    return this.httpClient.get('/api/users/moderators');
+  public getModerators(page: number): Observable<any> {
+    return this.httpClient.get( `/api/users/moderators?page=${page}`);
   }
 
   public getModeratorById(id: number): Observable<Moderator> {
@@ -26,8 +28,6 @@ export class ModeratorService {
   }
 
   public updateModerator(moderator: Moderator): Observable<any>{
-    console.log('ModeratorService update moderator');
-    console.log(moderator);
     return this.httpClient.put('/api/users', moderator);
   }
 

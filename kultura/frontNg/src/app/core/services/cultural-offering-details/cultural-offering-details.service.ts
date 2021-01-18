@@ -12,7 +12,11 @@ export class CulturalOfferingDetailsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getCulturalOffering(id: number): Observable<any> {
-    return this.httpClient.get(`/api/cultural-offerings/${id}`);
+  getCulturalOffering(id: number, userId?: number): Observable<any> {
+    let apiUrl = `/api/cultural-offerings/${id}`;
+    if (!!userId) {
+      apiUrl += `?user=${userId}`;
+    }
+    return this.httpClient.get(apiUrl);
   }
 }

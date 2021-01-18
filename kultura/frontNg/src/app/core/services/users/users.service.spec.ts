@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MapPopupService } from './map-popup.service';
+import { UserService } from './users.service';
 
-describe('MapPopupService', () => {
-  let service: MapPopupService;
+describe('UserServiceService', () => {
+  let service: UserService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(MapPopupService);
+    service = TestBed.inject(UserService);
   });
 
   it('should be created', () => {

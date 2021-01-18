@@ -85,9 +85,10 @@ public class CulturalOffering {
     @Getter
     @Setter
     private Set<Post> posts = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "subscription",
+            uniqueConstraints = @UniqueConstraint(columnNames = {"cultural_offering_id", "user_id"}),
             joinColumns = @JoinColumn(name = "cultural_offering_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     @Getter

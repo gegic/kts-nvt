@@ -1,21 +1,21 @@
 import {Moment} from 'moment-timezone';
 
 export class CulturalOffering {
-  id?: number;
-  name?: string;
-  briefInfo?: string;
-  latitude?: number;
-  longitude?: number;
-  address?: string;
+  id = -1;
+  name = '';
+  briefInfo = '';
+  latitude = 0;
+  longitude = 0;
+  address = '';
   photoId?: number;
-  overallRating?: number;
-  numReviews?: number;
-  lastChange?: Moment;
+  overallRating = 0;
+  numReviews = 0;
   additionalInfo?: string;
   subcategoryId?: number;
-  subcategoryName?: string;
-  numSubscribed?: number;
+  subcategoryName = '';
+  numSubscribed = 0;
   numPhotos?: number;
-  categoryName?: string;
+  categoryName = '';
   categoryId?: number;
+  subscribed?: boolean;
 }

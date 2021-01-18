@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.auth.LoginDto;
 
@@ -14,9 +15,10 @@ public class LoginUtil {
                 restTemplate.postForEntity("/auth/login",
                         new LoginDto(email, password),
                         String.class);
-        JsonNode parent= null;
+        JsonNode parent;
+        String body = responseEntity.getBody();
         try {
-            parent = new ObjectMapper().readTree(responseEntity.getBody());
+            parent = new ObjectMapper().readTree(body);
             return parent.path("token").asText();
         } catch (JsonProcessingException e) {
             e.printStackTrace();

@@ -1,9 +1,6 @@
 h2 {
   display: block;
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: 0.55em;
-  margin-right: 0;
+  margin: 0 0 0 0.55em;
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
 
@@ -11,10 +8,13 @@ h2 {
 
 small {
   display: block;
-  margin-top: 0;
-  margin-bottom: 1.67em;
-  margin-left: 1.5em;
-  margin-right: 0;
+  margin: 0 0 1.67em 1.5em;
+}
+
+::ng-deep .flat-card .p-card {
+  margin-top: 15vh !important;
+  margin-left: 15vw !important;
+  margin-right: 15vw !important;
 }
 
 .menu {

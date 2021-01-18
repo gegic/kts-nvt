@@ -19,7 +19,103 @@ public interface CulturalOfferingRepository extends JpaRepository<CulturalOfferi
                                         float longitudeStart,
                                         float longitudeEnd);
 
-    @Query("select co from CulturalOffering co where lower(co.name) like lower(concat('%', :searchQuery,'%'))" +
-            "and co.overallRating >= :ratingMin and co.overallRating <= :ratingMax")
-    Page<CulturalOffering> searchAll(Pageable p, String searchQuery, float ratingMin, float ratingMax);
+    @Query("select co from CulturalOffering co where lower(co.name) like lower(concat('%', :searchQuery,'%')) " +
+            "and co.overallRating >= :ratingMin " +
+            "and co.overallRating <= :ratingMax " +
+            "and (co.latitude between :latitudeStart and :latitudeEnd) and " +
+            "(co.longitude between :longitudeStart and :longitudeEnd)")
+    Page<CulturalOffering> searchAll(Pageable p,
+                                     String searchQuery,
+                                     float ratingMin,
+                                     float ratingMax,
+                                     float latitudeStart,
+                                     float latitudeEnd,
+                                     float longitudeStart,
+                                     float longitudeEnd);
+
+    @Query("select co from CulturalOffering co where lower(co.name) like lower(concat('%', :searchQuery,'%')) " +
+            "and ((co.overallRating >= :ratingMin " +
+            "and co.overallRating <= :ratingMax) " +
+            "or co.overallRating = 0) " +
+            "and (co.latitude between :latitudeStart and :latitudeEnd) and " +
+            "(co.longitude between :longitudeStart and :longitudeEnd)")
+    Page<CulturalOffering> searchAllNoReviews(Pageable p,
+                                              String searchQuery,
+                                              float ratingMin,
+                                              float ratingMax,
+                                              float latitudeStart,
+                                              float latitudeEnd,
+                                              float longitudeStart,
+                                              float longitudeEnd);
+
+    @Query("select co from CulturalOffering co where lower(co.name) like lower(concat('%', :searchQuery,'%')) " +
+            "and co.overallRating >= :ratingMin " +
+            "and co.overallRating <= :ratingMax " +
+            "and co.subcategory.category.id = :categoryId " +
+            "and (co.latitude between :latitudeStart and :latitudeEnd) and " +
+            "(co.longitude between :longitudeStart and :longitudeEnd)")
+    Page<CulturalOffering> searchAll(Pageable p,
+                                     String searchQuery,
+                                     float ratingMin,
+                                     float ratingMax,
+                                     long categoryId,
+                                     float latitudeStart,
+                                     float latitudeEnd,
+                                     float longitudeStart,
+                                     float longitudeEnd);
+
+    @Query("select co from CulturalOffering co where lower(co.name) like lower(concat('%', :searchQuery,'%')) " +
+            "and ((co.overallRating >= :ratingMin " +
+            "and co.overallRating <= :ratingMax) " +
+            "or co.overallRating = 0) " +
+            "and co.subcategory.category.id = :categoryId " +
+            "and (co.latitude between :latitudeStart and :latitudeEnd) and " +
+            "(co.longitude between :longitudeStart and :longitudeEnd)")
+    Page<CulturalOffering> searchAllNoReviews(Pageable p,
+                                              String searchQuery,
+                                              float ratingMin,
+                                              float ratingMax,
+                                              long categoryId,
+                                              float latitudeStart,
+                                              float latitudeEnd,
+                                              float longitudeStart,
+                                              float longitudeEnd);
+
+    @Query("select co from CulturalOffering co where lower(co.name) like lower(concat('%', :searchQuery,'%')) " +
+            "and co.overallRating >= :ratingMin " +
+            "and co.overallRating <= :ratingMax " +
+            "and -1l <> :categoryId " +
+            "and co.subcategory.id = :subcategoryId " +
+            "and (co.latitude between :latitudeStart and :latitudeEnd) and " +
+            "(co.longitude between :longitudeStart and :longitudeEnd)")
+    Page<CulturalOffering> searchAll(Pageable p,
+                                     String searchQuery,
+                                     float ratingMin,
+                                     float ratingMax,
+                                     long categoryId,
+                                     long subcategoryId,
+                                     float latitudeStart,
+                                     float latitudeEnd,
+                                     float longitudeStart,
+                                     float longitudeEnd);
+
+    @Query("select co from CulturalOffering co where lower(co.name) like lower(concat('%', :searchQuery,'%')) " +
+            "and ((co.overallRating >= :ratingMin " +
+            "and co.overallRating <= :ratingMax) " +
+            "or co.overallRating = 0) " +
+            "and -1l <> :categoryId " +
+            "and co.subcategory.id = :subcategoryId " +
+            "and (co.latitude between :latitudeStart and :latitudeEnd) and " +
+            "(co.longitude between :longitudeStart and :longitudeEnd)")
+    Page<CulturalOffering> searchAllNoReviews(Pageable p,
+                                              String searchQuery,
+                                              float ratingMin,
+                                              float ratingMax,
+                                              long categoryId,
+                                              long subcategoryId,
+                                              float latitudeStart,
+                                              float latitudeEnd,
+                                              float longitudeStart,
+                                              float longitudeEnd);
+
 }

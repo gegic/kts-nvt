@@ -7,10 +7,10 @@ import {LoadLevel} from '../../core/models/loadLevel';
 import {CulturalOffering} from '../../core/models/cultural-offering';
 import {CulturalOfferingMarker} from '../../core/models/culturalOfferingMarker';
 import {inOutAnimation} from './view-offering-button-animation';
-import {MapPopupService} from '../../core/services/map-popup.service';
 import {Router} from '@angular/router';
 import {AuthService} from '../../core/services/auth/auth.service';
 import {User} from '../../core/models/user';
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-map-view',
@@ -20,15 +20,16 @@ import {User} from '../../core/models/user';
 })
 export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  private subscriptions: Subscription[] = [];
+
   viewOfferings = false;
   private map: L.Map | null = null;
   private tileLayer: L.TileLayer | null = null;
 
   @ViewChild('map')
-  mapElement: ElementRef<HTMLElement> | null = null;
+  mapElement!: ElementRef<HTMLElement>;
 
   constructor(private mapService: MapService,
-              private popupService: MapPopupService,
               private router: Router,
               private authService: AuthService) {
   }
@@ -71,18 +72,23 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.onZoomLoad();
     this.onMove();
-
-    this.mapService.zoom
-      .pipe(debounceTime(200), distinctUntilChanged())
-      .subscribe(val => {
-      if (val >= ZOOM_REGULAR) {
-        this.loadRegular(this.map);
-      }
-      else {
-        this.mapService.removeMarkers();
-        this.onClickCollapse();
-      }
+    this.map.on('click', event => {
+      console.log(event);
     });
+
+    this.subscriptions.push(
+      this.mapService.zoom
+        .pipe(debounceTime(200), distinctUntilChanged())
+        .subscribe(val => {
+        if (val >= ZOOM_REGULAR) {
+          this.loadRegular(this.map);
+        }
+        else {
+          this.mapService.removeMarkers();
+          this.onClickCollapse();
+        }
+      })
+    );
   }
 
   private loadRegular(map: L.Map | null): void {
@@ -100,41 +106,45 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const latitudeEnd = northEast.lat + 0.02;
     const longitudeEnd = northEast.lng + 0.02;
     this.mapService.removeOutOfBounds(latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
-    this.mapService.loadMarkers(latitudeStart, latitudeEnd, longitudeStart, longitudeEnd).subscribe(
-      (data: CulturalOffering[]) => {
-        const markers = data.map(co => new CulturalOfferingMarker(co));
-        markers.forEach(m => {
-          if (this.mapService.markers.hasOwnProperty(m.culturalOffering.id ?? 0)) {
-            this.mapService.markers[m.culturalOffering.id ?? 0].setVisible(true);
-            return;
-          }
-          m.hovering.subscribe(val => {
-            if (val) {
-              m.openPopup();
-            } else {
-              m.closePopup();
-            }
-          });
-          m.bindPopup(m.culturalOffering.name ?? '');
-          // @ts-ignore
-          m.on('mouseover', ev => {
-            if (!ev.target.isVisible()) {
+    this.subscriptions.push(
+      this.mapService.loadMarkers(latitudeStart, latitudeEnd, longitudeStart, longitudeEnd).subscribe(
+        (data: CulturalOffering[]) => {
+          const markers = data.map(co => new CulturalOfferingMarker(co));
+          markers.forEach(m => {
+            if (this.mapService.markers.hasOwnProperty(m.culturalOffering.id ?? 0)) {
+              this.mapService.markers[m.culturalOffering.id ?? 0].setVisible(true);
               return;
             }
-            ev.target.hovering.next(true);
-            ev.target.openPopup();
+            this.subscriptions.push(
+              m.hovering.subscribe(val => {
+                if (val) {
+                  m.openPopup();
+                } else {
+                  m.closePopup();
+                }
+              })
+            );
+            m.bindPopup(m.culturalOffering.name ?? '');
+            // @ts-ignore
+            m.on('mouseover', ev => {
+              if (!ev.target.isVisible()) {
+                return;
+              }
+              ev.target.hovering.next(true);
+              ev.target.openPopup();
+            });
+            m.on('mouseout', ev => {
+              ev.target.hovering.next(false);
+              ev.target.closePopup();
+            });
+            m.on('click', ev => {
+              this.router.navigate([`/cultural-offering/${ev.target?.culturalOffering.id}`]);
+            });
+            this.mapService.markers[m.culturalOffering.id ?? 0] = m;
+            m.addTo(map);
           });
-          m.on('mouseout', ev => {
-            ev.target.hovering.next(false);
-            ev.target.closePopup();
-          });
-          m.on('click', ev => {
-            this.router.navigate([`/cultural-offering/${ev.target?.culturalOffering.id}`]);
-          });
-          this.mapService.markers[m.culturalOffering.id ?? 0] = m;
-          m.addTo(map);
-        });
-      }
+        }
+      )
     );
   }
 
@@ -176,5 +186,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.mapService.clearMarkers();
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 }

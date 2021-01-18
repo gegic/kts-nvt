@@ -48,13 +48,28 @@ ngx-avatar {
   color: #584F51 !important;
   height: 8vh;
   max-height: 8vh;
-  width: 10vh !important;
+  width: 10vw !important;
+  max-width: 5rem !important;
   border-bottom: 3.5px solid transparent !important;
 }
 
 ::ng-deep .topnav-button span {
   font-size: 1.5em !important;
 }
+
+@media only screen and (max-width: 576px) {
+  ::ng-deep .topnav-button span {
+    font-size: 1.3em !important;
+  }
+}
+
+@media only screen and (max-width: 340px) {
+  ::ng-deep .logo-col {
+    display: none !important;
+  }
+}
+
+
 
 ::ng-deep .topnav-button:hover {
   color: #38435d !important;
@@ -65,4 +80,12 @@ ngx-avatar {
 ::ng-deep .activated:hover {
   color: #275dad !important;
   border-bottom: 3.5px solid #275dad !important;
+}
+
+.search-bar {
+  margin-left: 3vw;
+}
+
+::ng-deep .search-bar input {
+  width: 100% !important;
 }

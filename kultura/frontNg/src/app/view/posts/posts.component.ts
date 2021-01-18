@@ -1,9 +1,17 @@
-import {AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {CulturalOffering} from '../../core/models/cultural-offering';
 import {CulturalOfferingDetailsService} from '../../core/services/cultural-offering-details/cultural-offering-details.service';
 import {PostsService} from '../../core/services/posts/posts.service';
 import {Post} from '../../core/models/post';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {ConfirmationService, MenuItem, MessageService} from 'primeng/api';
 import {Router} from '@angular/router';
@@ -20,6 +28,8 @@ import {AuthService} from '../../core/services/auth/auth.service';
 })
 export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  private subscriptions: Subscription[] = [];
+
   page = -1;
   totalPages = 0;
   stickBriefInfo: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -31,6 +41,7 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
   isEditDialogOpen = false;
   editContent = '';
   editingPost?: Post;
+  isPostsLoading = false;
 
   constructor(private detailsService: CulturalOfferingDetailsService,
               private postsService: PostsService,
@@ -41,20 +52,19 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
               private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.detailsService.culturalOffering.subscribe(val => {
+    this.subscriptions.push(this.detailsService.culturalOffering
+      .pipe(distinctUntilChanged()).subscribe(val => {
       if (!!val) {
-        this.postsService.posts = [];
-        this.getPosts();
+        this.resetPosts();
       }
-    });
-
-    this.stickBriefInfo.pipe(distinctUntilChanged()).subscribe(
-      val => {
-        this.stickBriefInfoValue = val;
-      });
+    }));
   }
 
   ngAfterViewInit(): void {
+    this.subscriptions.push(this.stickBriefInfo.pipe(distinctUntilChanged()).subscribe(
+      val => {
+        this.stickBriefInfoValue = val;
+      }));
     if (!!this.briefInfoTop) {
       return;
     }
@@ -70,19 +80,24 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     if (this.page === this.totalPages) {
+      this.isPostsLoading = false;
       return;
     }
-    this.postsService.getPosts(this.detailsService.culturalOffering.getValue()?.id ?? 0, this.page + 1).subscribe(
-      val => {
-        for (const el of val.content) {
-          if (this.postsService.posts.some(post => post.id === el.id)) {
-            continue;
+    this.isPostsLoading = true;
+    this.subscriptions.push(
+      this.postsService.getPosts(this.detailsService.culturalOffering.getValue()?.id ?? 0, this.page + 1).subscribe(
+        val => {
+          for (const el of val.content) {
+            if (this.postsService.posts.some(post => post.id === el.id)) {
+              continue;
+            }
+            this.postsService.posts.push(el);
           }
-          this.postsService.posts.push(el);
+          this.page = val.pageable.pageNumber;
+          this.totalPages = val.totalPages;
+          this.isPostsLoading = false;
         }
-        this.page = val.pageable.pageNumber;
-        this.totalPages = val.totalPages;
-      }
+      )
     );
   }
 
@@ -122,18 +137,21 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.culturalOffering) {
       return;
     }
-    this.postsService.createPost(this.newPostContent, this.culturalOffering?.id ?? 0)
-      .subscribe(val => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Now, everyone will be able to read the post you added.'
-      });
-      this.resetPosts();
-    });
+    this.subscriptions.push(
+      this.postsService.createPost(this.newPostContent, this.culturalOffering?.id ?? 0)
+        .subscribe(val => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Now, everyone will be able to read the post you added.'
+        });
+        this.resetPosts();
+      })
+    );
   }
 
   resetPosts(): void {
+    this.isPostsLoading = true;
     this.postsService.posts = [];
     this.page = -1;
     this.totalPages = 0;
@@ -166,16 +184,18 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     postToUpdate.content = this.editContent;
     postToUpdate.timeAdded = this.editingPost.timeAdded;
     postToUpdate.culturalOfferingId = this.editingPost.culturalOfferingId;
-    this.postsService.updatePost(postToUpdate).subscribe(val => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Post updated',
-        detail: 'The post was updated successfully.'
-      });
-      this.editContent = '';
-      this.isEditDialogOpen = false;
-      this.resetPosts();
-    });
+    this.subscriptions.push(
+      this.postsService.updatePost(postToUpdate).subscribe(val => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Post updated',
+          detail: 'The post was updated successfully.'
+        });
+        this.editContent = '';
+        this.isEditDialogOpen = false;
+        this.resetPosts();
+      })
+    );
   }
 
   deletePost(post: Post): void {
@@ -194,20 +214,26 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!post.id) {
       return;
     }
-    this.postsService.deletePost(post.id).subscribe(
-      () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Post deleted',
-          detail: 'The post was deleted successfully.'
-        });
-        this.resetPosts();
-      }
+    this.subscriptions.push(
+      this.postsService.deletePost(post.id).subscribe(
+        () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Post deleted',
+            detail: 'The post was deleted successfully.'
+          });
+          this.resetPosts();
+        }
+      )
     );
   }
 
   getUserRole(): string {
     return this.authService.getUserRole();
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
 
   get culturalOffering(): CulturalOffering | undefined {
@@ -220,6 +246,7 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.postsService.posts = [];
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
@@ -37,7 +38,7 @@ public class UsersController {
 
     @GetMapping(path = "/moderators")
     public ResponseEntity<Page<UserDto>> getModerators(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(defaultValue = "3") int size,
+                                                       @RequestParam(defaultValue = "10") int size,
                                                        @RequestParam(defaultValue = "id,desc") String[] sort) {
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<UserDto> moderatorsDto = this.userService.readByAuthority(p, "ROLE_MODERATOR");
@@ -61,6 +62,9 @@ public class UsersController {
         return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
 
+
+    //    @PreAuthorize("userDto.id == authentication.principal.id || hasAnyRole('ADMIN', 'MODERATOR')")
+    @PreAuthorize("hasRole('ADMIN') or (#userDto.id == authentication.principal.id)")
     @PutMapping
     ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto) {
         return ResponseEntity.ok(this.userService.update(userDto));

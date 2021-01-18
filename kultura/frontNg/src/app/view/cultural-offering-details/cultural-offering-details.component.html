@@ -1,6 +1,6 @@
 <div>
   <div class="top-part">
-    <div class="p-grid p-px-0 p-m-0 p-py-3">
+    <div class="p-grid p-px-0 p-m-0 p-py-3 p-justify-around">
       <div class="p-col-fixed p-as-center"
            style="width: 150px"
       >
@@ -10,20 +10,21 @@
         </ng-template>
       </div>
       <div class="p-col p-ml-4">
-        <h4 class="p-text-normal" *ngIf="!!culturalOffering; else categorySkeleton">
-          {{culturalOffering.categoryName}} > {{culturalOffering.subcategoryName}}
+        <h4 class="p-text-normal" *ngIf="!isOfferingLoading && !!culturalOffering; else categorySkeleton">
+          {{culturalOffering.categoryName}} >
+          {{culturalOffering.subcategoryName}}
         </h4>
         <ng-template #categorySkeleton>
           <p-skeleton></p-skeleton>
         </ng-template>
         <div class="p-d-inline-flex p-mt-4 p-mb-0">
           <i class="pi pi-star"></i>
-          <small class="p-ml-1 p-text-light" *ngIf="!!culturalOffering; else reviewsSkeleton">{{reviews}}</small>
+          <small class="p-ml-1 p-text-light" *ngIf="!isOfferingLoading && !!culturalOffering; else reviewsSkeleton">{{reviews}}</small>
           <ng-template #reviewsSkeleton>
             <p-skeleton class="p-ml-1"></p-skeleton>
           </ng-template>
         </div>
-        <h2 class="p-text-bold p-mt-0" *ngIf="!!culturalOffering; else nameSkeleton">
+        <h2 class="p-text-bold p-mt-0" *ngIf="!isOfferingLoading && !!culturalOffering; else nameSkeleton">
           {{culturalOffering.name}}
         </h2>
         <ng-template #nameSkeleton>
@@ -32,21 +33,44 @@
       </div>
       <div class="p-col p-flex p-as-end p-text-right">
         <div *ngIf="getUserRole() === 'MODERATOR'; else subscribeButton">
-          <button class="p-button p-button-danger p-mr-3"
+          <button class="p-button p-button-danger p-mr-3 p-d-none p-d-lg-inline"
                   icon="pi pi-trash"
                   label="Delete"
                   pButton
                   (click)="onClickDelete()"></button>
-          <button class="p-button"
+          <button class="p-button blue-button p-d-none p-d-lg-inline"
                   icon="pi pi-pencil"
                   label="Edit"
                   (click)="onClickEdit()"
                   pButton></button>
+
+          <button class="p-button p-button-danger p-button-icon p-button-rounded p-mr-3 p-d-inline p-d-lg-none"
+                  icon="pi pi-trash"
+                  pButton
+                  (click)="onClickDelete()"></button>
+          <button class="p-button blue-button p-button-icon p-button-rounded p-d-inline p-d-lg-none"
+                  icon="pi pi-pencil"
+                  (click)="onClickEdit()"
+                  pButton></button>
         </div>
         <ng-template #subscribeButton>
-          <button class="p-button" icon="pi pi-bell" label="Subscribe" pButton></button>
+          <button *ngIf="(culturalOffering && !culturalOffering.subscribed) || !isLoggedIn(); else unsubscribe"
+                  class="p-button blue-button"
+                  icon="pi pi-bell"
+                  label="Subscribe"
+                  (click)="onClickSubscribe()"
+                  pButton
+          ></button>
+          <ng-template #unsubscribe>
+            <button class="p-button p-button-text p-button-plain"
+                    icon="pi pi-bell"
+                    label="Unsubscribe"
+                    (click)="onClickUnsubscribe()"
+                    pButton
+            ></button>
+          </ng-template>
         </ng-template>
-        <p class="p-text-light" *ngIf="!!culturalOffering; else numSubscribedSkeleton">
+        <p class="p-text-light" *ngIf="!isOfferingLoading && !!culturalOffering; else numSubscribedSkeleton">
           {{culturalOffering.numSubscribed}} people subscribed.
         </p>
         <ng-template #numSubscribedSkeleton>

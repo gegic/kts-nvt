@@ -1,10 +1,8 @@
 <div class="navbar p-grid p-justify-between p-px-3 p-mx-0">
-  <div class="p-col-2 p-p-0 p-col-align-center">
+  <div class="p-col-4 p-p-0 p-col-align-center p-d-flex p-ai-center logo-col">
     <a routerLink="/" class="logo p-my-0">kultura</a>
-  </div>
-  <div class="p-col-2 p-p-0 p-col-align-center">
-    <span class="p-input-icon-left">
-    <i class="pi pi-search"></i>
+    <span class="p-input-icon-left search-bar p-d-none p-d-md-inline-block" *ngIf="getUserRole() !== 'ADMIN'">
+      <i class="pi pi-search"></i>
       <input type="text"
              placeholder="Search"
              [(ngModel)]="searchQuery"
@@ -12,22 +10,40 @@
              pInputText>
     </span>
   </div>
-  <div class="p-col-4 p-text-center p-p-0">
-    <button class="p-button-text topnav-button p-px-4"
-            [routerLinkActiveOptions]="{exact: true}"
-            routerLinkActive="activated"
-            [routerLink]="''"
-            icon="pi pi-map"
-            pButton
-    ></button>
-    <button class="p-button-text topnav-button p-px-4"
-            routerLinkActive="activated"
-            [routerLink]="'list-view'"
-            icon="pi pi-th-large"
-            pButton
-    ></button>
+  <div class="p-col-5 p-sm-4 p-text-center p-p-0">
+    <ng-container *ngIf="getUserRole() !== 'ADMIN'; else adminNavbar">
+      <button class="p-button-text topnav-button p-px-4"
+              [routerLinkActiveOptions]="{exact: true}"
+              routerLinkActive="activated"
+              [routerLink]="''"
+              icon="pi pi-map"
+              pButton
+      ></button>
+      <button class="p-button-text topnav-button p-px-4"
+              routerLinkActive="activated"
+              [routerLink]="'list-view'"
+              icon="pi pi-th-large"
+              pButton
+      ></button>
+    </ng-container>
+    <ng-template #adminNavbar>
+        <button class="p-button-text topnav-button p-px-4"
+                [routerLinkActiveOptions]="{exact: true}"
+                routerLinkActive="activated"
+                [routerLink]="'moderators'"
+                icon="pi pi-users"
+                pButton
+        ></button>
+        <button class="p-button-text topnav-button p-px-4"
+                routerLinkActive="activated"
+                [routerLink]="'categories'"
+                icon="pi pi-th-large"
+                pButton
+        ></button>
+    </ng-template>
   </div>
-  <div class="p-col-4 p-justify-end p-col-align-center p-p-0">
+  <div class="p-col-3 p-sm-4 p-justify-end p-col-align-center p-p-0">
+    <div *ngIf="isLoggedIn(); else signIn">
       <p-menu class="user-menu" [model]="menuItems" [popup]="true" #menu></p-menu>
       <ngx-avatar class="ng-avatar"
                   bgColor="#275DAD"
@@ -37,5 +53,13 @@
                   (click)="menu.toggle($event)"
       >
       </ngx-avatar>
+    </div>
+    <ng-template #signIn>
+      <button class="p-button p-d-block blue-button p-ml-auto"
+              (click)="onClickSignIn()"
+              label="Sign in"
+              pButton
+      ></button>
+    </ng-template>
   </div>
 </div>

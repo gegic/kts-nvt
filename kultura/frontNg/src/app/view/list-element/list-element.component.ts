@@ -1,15 +1,19 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {CulturalOffering} from '../../core/models/cultural-offering';
 import {Router} from '@angular/router';
 import {CulturalOfferingsService} from '../../core/services/cultural-offerings/cultural-offerings.service';
 import {ConfirmationService, MessageService} from 'primeng/api';
+import {AuthService} from '../../core/services/auth/auth.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-list-element',
   templateUrl: './list-element.component.html',
   styleUrls: ['./list-element.component.scss']
 })
-export class ListElementComponent implements OnInit {
+export class ListElementComponent implements OnInit, OnDestroy {
+
+  private subscriptions: Subscription[] = [];
 
   @Input()
   culturalOffering!: CulturalOffering;
@@ -19,7 +23,8 @@ export class ListElementComponent implements OnInit {
   constructor(private router: Router,
               private culturalOfferingsService: CulturalOfferingsService,
               private messageService: MessageService,
-              private confirmationService: ConfirmationService) { }
+              private confirmationService: ConfirmationService,
+              private authService: AuthService) { }
 
   ngOnInit(): void {
   }
@@ -32,7 +37,8 @@ export class ListElementComponent implements OnInit {
     this.router.navigate([`/cultural-offering/${this.culturalOffering.id}`]);
   }
 
-  onClickDelete(): void {
+  onClickDelete(event: any): void {
+    event.stopPropagation();
     this.confirmationService.confirm(
       {
         message: `Are you sure that you want to delete ${this.culturalOffering?.name ?? ''}`,
@@ -44,19 +50,54 @@ export class ListElementComponent implements OnInit {
       });
   }
 
-  onClickEdit(): void {
+  onClickEdit(event: any): void {
+    event.stopPropagation();
     this.router.navigate([`/edit-offering/${this.culturalOffering?.id ?? 0}`]);
   }
 
+  onClickSubscribe(event: any): void {
+    event.stopPropagation();
+    if (!this.isLoggedIn()) {
+      this.router.navigate(['login']);
+    } else {
+      this.subscriptions.push(
+        this.culturalOfferingsService.subscribe(this.authService.user.getValue()?.id ?? 0,
+          this.culturalOffering.id ?? 0).subscribe(data => {
+            this.culturalOffering = data;
+        })
+      );
+    }
+  }
+
+  onClickUnsubscribe(event: any): void {
+    event.stopPropagation();
+    this.subscriptions.push(
+      this.culturalOfferingsService.unsubscribe(this.authService.user.getValue()?.id ?? 0,
+        this.culturalOffering.id ?? 0).subscribe(data => {
+          this.culturalOffering = data;
+      })
+    );
+  }
+
   deletionConfirmed(): void {
-    this.culturalOfferingsService.delete(this.culturalOffering?.id ?? 0).subscribe(() => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Deleted successfully',
-        detail: 'The cultural offering was deleted successfully'
-      });
-      this.offeringDeleted.emit();
-    });
+    this.subscriptions.push(
+      this.culturalOfferingsService.delete(this.culturalOffering?.id ?? 0).subscribe(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted successfully',
+          detail: 'The cultural offering was deleted successfully'
+        });
+        this.offeringDeleted.emit();
+      })
+    );
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+  getUserRole(): string {
+    return this.authService.getUserRole();
   }
 
   get reviews(): string {
@@ -65,6 +106,10 @@ export class ListElementComponent implements OnInit {
     } else {
       return `${(Math.round((this.culturalOffering?.overallRating ?? 0) * 10) / 10).toFixed(1)} rating out of ${this.culturalOffering?.numReviews} reviews.`;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
 }

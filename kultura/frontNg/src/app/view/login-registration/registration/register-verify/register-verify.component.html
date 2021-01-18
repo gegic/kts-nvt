@@ -22,14 +22,14 @@
     <div class="p-grid p-px-5 p-justify-end p-mt-5">
       <div class="p-col">
         <button type="button"
-                class="p-button-outlined"
+                class="p-button-outlined blue-button-outlined"
                 label="Sign in"
                 routerLink="/login"
                 pButton></button>
       </div>
       <div class="p-col p-text-right">
         <button type="button"
-                class="p-button"
+                class="p-button blue-button"
                 (click)="onClickVerify()"
                 [disabled]="verified"
                 [label]="verified ? 'Verified' : 'Verify'"

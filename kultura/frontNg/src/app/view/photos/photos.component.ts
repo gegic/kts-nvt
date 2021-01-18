@@ -3,7 +3,7 @@ import {PhotoService} from '../../core/services/photos/photo.service';
 import {CulturalOfferingDetailsService} from '../../core/services/cultural-offering-details/cultural-offering-details.service';
 import {CulturalOfferingPhoto} from '../../core/models/culturalOfferingPhoto';
 import {Confirmation, ConfirmationService, MessageService} from 'primeng/api';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {AuthService} from '../../core/services/auth/auth.service';
 
 @Component({
@@ -13,12 +13,15 @@ import {AuthService} from '../../core/services/auth/auth.service';
 })
 export class PhotosComponent implements OnInit, OnDestroy {
 
+  private subscriptions: Subscription[] = [];
+
   page = -1;
   totalPages = 0;
   isOpenAddDialog = false;
   galleriaVisible = false;
   activeIndex = -1;
   uploadLoading = false;
+  isPhotosLoading = false;
 
   @ViewChild('upload')
   upload!: any;
@@ -30,12 +33,14 @@ export class PhotosComponent implements OnInit, OnDestroy {
               private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.detailsService.culturalOffering.subscribe(val => {
-      if (!!val) {
-        this.photoService.photos = [];
-        this.getPhotos();
-      }
-    });
+    this.subscriptions.push(
+      this.detailsService.culturalOffering
+        .subscribe(val => {
+        if (!!val) {
+          this.resetPhotos();
+        }
+      })
+    );
   }
 
   getPhotos(): Observable<any> | null {
@@ -43,20 +48,25 @@ export class PhotosComponent implements OnInit, OnDestroy {
       return null;
     }
     if (this.page === this.totalPages) {
+      this.isPhotosLoading = false;
       return null;
     }
+    this.isPhotosLoading = true;
     const obs = this.photoService.getPhotos(this.detailsService.culturalOffering.getValue()?.id ?? 0, this.page + 1);
-    obs.subscribe(
-      val => {
-        for (const el of val.content) {
-          if (this.photoService.photos.some(p => p.id === el.id)) {
-            continue;
+    this.subscriptions.push(
+      obs.subscribe(
+        val => {
+          for (const el of val.content) {
+            if (this.photoService.photos.some(p => p.id === el.id)) {
+              continue;
+            }
+            this.photoService.photos.push(el);
           }
-          this.photoService.photos.push(el);
+          this.page = val.pageable.pageNumber;
+          this.totalPages = val.totalPages;
+          this.isPhotosLoading = false;
         }
-        this.page = val.pageable.pageNumber;
-        this.totalPages = val.totalPages;
-      }
+      )
     );
     return obs;
   }
@@ -80,22 +90,25 @@ export class PhotosComponent implements OnInit, OnDestroy {
   onClickUpload(event: any): void {
     const file: File = event.files[0];
     this.uploadLoading = true;
-    this.photoService.addPhoto(file, this.detailsService.culturalOffering.getValue()?.id ?? 0).subscribe(
-      () => {
-        this.isOpenAddDialog = false;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Added',
-          detail: 'A photo was added successfully'
-        });
-        this.uploadLoading = false;
-        this.resetPhotos();
-        this.clearFiles();
-      }
+    this.subscriptions.push(
+      this.photoService.addPhoto(file, this.detailsService.culturalOffering.getValue()?.id ?? 0).subscribe(
+        () => {
+          this.isOpenAddDialog = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Added',
+            detail: 'A photo was added successfully'
+          });
+          this.uploadLoading = false;
+          this.resetPhotos();
+          this.clearFiles();
+        }
+      )
     );
   }
 
   resetPhotos(): void {
+    this.isPhotosLoading = true;
     this.photoService.photos = [];
     this.page = -1;
     this.totalPages = 0;
@@ -132,23 +145,30 @@ export class PhotosComponent implements OnInit, OnDestroy {
     if (!photo.id) {
       return;
     }
-    this.photoService.delete(photo.id).subscribe(() => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Photo deleted',
-        detail: 'The photo was deleted successfully.'
-      });
-      this.galleriaVisible = false;
-      this.resetPhotos();
-    });
+    this.subscriptions.push(
+      this.photoService.delete(photo.id).subscribe(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Photo deleted',
+          detail: 'The photo was deleted successfully.'
+        });
+        this.galleriaVisible = false;
+        this.resetPhotos();
+      })
+    );
   }
 
   imageClick(index: number): void {
     if ((index >= this.photos.length - 4) && (this.page < this.totalPages)) {
-      this.getPhotos()?.subscribe(() => {
-          this.activeIndex = index;
-          this.galleriaVisible = true;
-        });
+      const obs = this.getPhotos();
+      if (obs) {
+        this.subscriptions.push(
+          obs.subscribe(() => {
+            this.activeIndex = index;
+            this.galleriaVisible = true;
+          })
+        );
+      }
     } else {
       this.activeIndex = index;
       this.galleriaVisible = true;
@@ -161,6 +181,7 @@ export class PhotosComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.photoService.photos = [];
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
 }

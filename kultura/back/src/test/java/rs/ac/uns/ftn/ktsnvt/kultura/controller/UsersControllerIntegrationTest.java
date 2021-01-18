@@ -1,42 +1,26 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
-import rs.ac.uns.ftn.ktsnvt.kultura.constants.CulturalOfferingConstants;
-import rs.ac.uns.ftn.ktsnvt.kultura.constants.SubcategoryConstants;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.SubcategoryDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.auth.LoginDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.exception.ErrorMessage;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
-import rs.ac.uns.ftn.ktsnvt.kultura.service.CategoryService;
-import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingService;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.LoginUtil;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.*;
 
@@ -69,6 +53,8 @@ public class UsersControllerIntegrationTest {
         ResponseEntity<HelperPage<UserDto>> response = restTemplate.exchange("/api/users/moderators", HttpMethod.GET,
                 httpEntity, responseType);
 
+        assertNotNull(response.getBody());
+
         UserDto moderator = response.getBody().getContent().get(0);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -91,7 +77,7 @@ public class UsersControllerIntegrationTest {
                 httpEntity, UserDto.class);
 
         UserDto moderator = response.getBody();
-
+        assertNotNull(moderator);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(USER_ID, moderator.getId().longValue());
         assertEquals(USER_EMAIL, moderator.getEmail());
@@ -118,7 +104,10 @@ public class UsersControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void testPostNewUser() throws Exception {
+
+
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         UserDto newUser = createUserDto();
@@ -131,7 +120,7 @@ public class UsersControllerIntegrationTest {
                 httpEntity, UserDto.class);
 
         UserDto createdUser = response.getBody();
-
+        assertNotNull(createdUser);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(newUser.getEmail(), createdUser.getEmail());
         assertEquals(newUser.getFirstName(), createdUser.getFirstName());
@@ -144,8 +133,39 @@ public class UsersControllerIntegrationTest {
         userService.delete(createdUser.getId());
     }
 
+
+    @Test
+//    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void testPostNewUserBadPassword() throws Exception {
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        UserDto newUser = createUserDto();
+        newUser.setPassword("aaaa");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(newUser, headers);
+
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users/", HttpMethod.POST,
+                httpEntity, UserDto.class);
+
+        UserDto createdUser = response.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        this.accessToken = null;
+
+        if (createdUser != null && createdUser.getId() != null){
+            userService.delete(createdUser.getId());
+        }
+
+    }
+
+
     @Test
     public void testPostNewUserEmailExistsConflict() throws Exception {
+
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         UserDto newUser = createUserDto();
@@ -156,21 +176,30 @@ public class UsersControllerIntegrationTest {
         headers.add("Authorization", "Bearer " + this.accessToken);
         HttpEntity<Object> httpEntity = new HttpEntity<>(newUser, headers);
 
-        ResponseEntity<ErrorMessage> response = restTemplate.exchange("/api/users/", HttpMethod.POST,
-                httpEntity, ErrorMessage.class);
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users/", HttpMethod.POST,
+                httpEntity, UserDto.class);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
 
         this.accessToken = null;
 
         newUser.setEmail(NEW_EMAIL);
+
+
+        UserDto createdUser = response.getBody();
+
+        if (createdUser != null && createdUser.getId() != null){
+            userService.delete(createdUser.getId());
+        }
     }
 
     @Test
+    @Transactional
     public void testPostNewModerator() throws Exception {
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         UserDto newUser = createUserDto();
+        newUser.setEmail(NEW_MODERATOR_EMAIL);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.accessToken);
@@ -180,7 +209,7 @@ public class UsersControllerIntegrationTest {
                 httpEntity, UserDto.class);
 
         UserDto createdUser = response.getBody();
-
+        assertNotNull(createdUser);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(newUser.getEmail(), createdUser.getEmail());
         assertEquals(newUser.getFirstName(), createdUser.getFirstName());
@@ -194,12 +223,208 @@ public class UsersControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void testUpdate() throws Exception {
-        UserDto oldValues = userService.findById(ADMIN_ID).orElseThrow(() -> new Exception("Test invalid!"));
+        UserDto oldValues = userService.findById(USER_ID).orElseThrow(() -> new Exception("Test invalid!"));
 
 
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+        UserDto u = createUpdateUserDto();
+        u.setId(USER_ID);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(u, headers);
+
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
+                httpEntity, UserDto.class);
+
+        UserDto updatedUser = response.getBody();
+
+
+        assertNotNull(updatedUser);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(u.getEmail(), updatedUser.getEmail());
+        assertEquals(u.getFirstName(), updatedUser.getFirstName());
+        assertEquals(u.getLastName(), updatedUser.getLastName());
+        assertEquals(u.getLastName(), updatedUser.getLastName());
+        assertFalse(updatedUser.isVerified());
+        assertNull(updatedUser.getPassword());
+
+
+
+        this.accessToken = null;
+
+        userService.update(oldValues);
+    }
+
+    @Test
+//    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void testUpdateInfo(){
+//        UserDto oldValues = userService.findById(USER_ID).orElseThrow(() -> new Exception("Test invalid!"));
+
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+        UserDto u = createUpdateUserInfoDto();
+        u.setId(USER_ID);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(u, headers);
+
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
+                httpEntity, UserDto.class);
+
+        UserDto updatedUser = response.getBody();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(updatedUser);
+        assertEquals(u.getEmail(), updatedUser.getEmail());
+        assertEquals(u.getFirstName(), updatedUser.getFirstName());
+        assertEquals(u.getLastName(), updatedUser.getLastName());
+        assertFalse(updatedUser.isVerified());
+        assertNull(updatedUser.getPassword());
+
+        this.accessToken = null;
+
+//        userService.update(oldValues);
+    }
+
+    @Test
+//    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void testUpdatePassword() throws Exception {
+        UserDto oldValues = userService.findById(USER_ID).orElseThrow(() -> new Exception("Test invalid!"));
+
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+        UserDto u = createUpdateUserPasswordDto();
+        u.setId(USER_ID);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(u, headers);
+
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
+                httpEntity, UserDto.class);
+
+        UserDto updatedUser = response.getBody();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(updatedUser);
+        assertEquals(oldValues.getEmail(), updatedUser.getEmail());
+        assertEquals(oldValues.getFirstName(), updatedUser.getFirstName());
+        assertEquals(oldValues.getLastName(), updatedUser.getLastName());
+        assertEquals(oldValues.isVerified(), updatedUser.isVerified());
+        assertNull(updatedUser.getPassword());
+
+        this.accessToken = null;
+
+        String token = LoginUtil.login(restTemplate, USER_EMAIL, NEW_PASSWORD);
+        assertNotNull(token);
+
+//        userService.update(oldValues);
+    }
+
+
+    @Test
+//    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void testUpdateUserAsUser() {
+//        UserDto oldValues = userService.findById(USER_ID).orElseThrow(() -> new Exception("Test invalid!"));
+
+        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
+        UserDto u = createUpdateUserDto();
+        u.setEmail(UserConstants.NEW_USER_EMAIL);
+        u.setId(USER_ID);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(u, headers);
+
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
+                httpEntity, UserDto.class);
+
+        UserDto updatedUser = response.getBody();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(updatedUser);
+        assertEquals(u.getEmail(), updatedUser.getEmail());
+        assertEquals(u.getFirstName(), updatedUser.getFirstName());
+        assertEquals(u.getLastName(), updatedUser.getLastName());
+        assertFalse(updatedUser.isVerified());
+        assertNull(updatedUser.getPassword());
+
+        this.accessToken = null;
+
+//        userService.update(oldValues);
+    }
+    @Test
+//    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void testUpdateAdminAsAdmin() {
+//        UserDto oldValues = userService.findById(ADMIN_ID).orElseThrow(() -> new Exception("Test invalid!"));
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+        UserDto u = createUpdateUserDto();
+        u.setId(ADMIN_ID);
+        u.setEmail(NEW_ADMIN_EMAIL);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(u, headers);
+
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
+                httpEntity, UserDto.class);
+
+        UserDto updatedUser = response.getBody();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(updatedUser);
+        assertEquals(u.getEmail(), updatedUser.getEmail());
+        assertEquals(u.getFirstName(), updatedUser.getFirstName());
+        assertEquals(u.getLastName(), updatedUser.getLastName());
+        assertFalse(updatedUser.isVerified());
+        assertNull(updatedUser.getPassword());
+
+        this.accessToken = null;
+
+//        userService.update(oldValues);
+    }
+
+    @Test
+//    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void testUpdateModeratorAsModerator() {
+//        UserDto oldValues = userService.findById(MODERATOR_ID).orElseThrow(() -> new Exception("Test invalid!"));
+
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
         UserDto u = createUserDto();
+        u.setId(MODERATOR_ID);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(u, headers);
+
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
+                httpEntity, UserDto.class);
+
+        UserDto updatedUser = response.getBody();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(updatedUser);
+        assertEquals(u.getEmail(), updatedUser.getEmail());
+        assertEquals(u.getFirstName(), updatedUser.getFirstName());
+        assertEquals(u.getLastName(), updatedUser.getLastName());
+        assertFalse(updatedUser.isVerified());
+        assertNull(updatedUser.getPassword());
+
+        this.accessToken = null;
+
+//        userService.update(oldValues);
+    }
+
+    @Test
+//    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void testUpdateDifferentUserAsUser() {
+        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
+        UserDto u = createUpdateUserDto();
         u.setId(ADMIN_ID);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.accessToken);
@@ -208,41 +433,39 @@ public class UsersControllerIntegrationTest {
         ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
                 httpEntity, UserDto.class);
 
-        UserDto createdUser = response.getBody();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(u.getEmail(), createdUser.getEmail());
-        assertEquals(u.getFirstName(), createdUser.getFirstName());
-        assertEquals(u.getLastName(), createdUser.getLastName());
-        assertNull(createdUser.getPassword());
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
         this.accessToken = null;
-
-        userService.update(oldValues);
     }
-
     @Test
-    public void testUpdateNonExistent() {
+//    @Transactional
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void testUpdateNonExistent() throws Exception {
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
-        UserDto u = createUserDto();
+        UserDto u = createUpdateUserDto();
         u.setId(NON_EXISTENT_ID);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.accessToken);
         HttpEntity<Object> httpEntity = new HttpEntity<>(u, headers);
 
-        ResponseEntity<ErrorMessage> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
-                httpEntity, ErrorMessage.class);
+        ResponseEntity<UserDto> response = restTemplate.exchange("/api/users", HttpMethod.PUT,
+                httpEntity, UserDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
         this.accessToken = null;
+
+        UserDto createdUser = response.getBody();
+        if (createdUser != null && createdUser.getId() != null){
+            userService.delete(createdUser.getId());
+        }
     }
 
     private UserDto createUserDto() {
         return  new UserDto(
                 null,
                 NEW_EMAIL,
-                "admin123",
+                "Admin123",
                 NEW_FIRST_NAME,
                 "last name",
                 LocalDateTime.now(),
@@ -250,5 +473,40 @@ public class UsersControllerIntegrationTest {
                 null
         );
     }
-
+    private UserDto createUpdateUserDto() {
+        return  new UserDto(
+                null,
+                NEW_EMAIL,
+                null,
+                NEW_FIRST_NAME,
+                "last name",
+                LocalDateTime.now(),
+                true,
+                null
+        );
+    }
+    private UserDto createUpdateUserInfoDto() {
+        return  new UserDto(
+                null,
+                NEW_EMAIL,
+                null,
+                NEW_FIRST_NAME,
+                NEW_LAST_NAME,
+                null,
+                true,
+                null
+        );
+    }
+    private UserDto createUpdateUserPasswordDto() {
+        return  new UserDto(
+                null,
+                null,
+                NEW_PASSWORD,
+                null,
+                null,
+                null,
+                true,
+                null
+        );
+    }
 }

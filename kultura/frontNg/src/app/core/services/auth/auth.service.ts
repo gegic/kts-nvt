@@ -39,4 +39,13 @@ export class AuthService {
     const user = Object.assign(new User(), this.user.getValue());
     return user.getRole();
   }
+
+  isLoggedIn(): boolean {
+    return !!this.user.getValue();
+  }
+  
+  updateUserData(user: User): void{
+    this.user.next(user);
+    localStorage.setItem('user', JSON.stringify(user));
+  }
 }

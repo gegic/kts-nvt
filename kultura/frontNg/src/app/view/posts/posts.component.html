@@ -28,23 +28,12 @@
               <p-skeleton shape="rectangle"></p-skeleton>
             </ng-template>
           </div>
-          <div class="p-d-inline-flex p-mt-3 p-mb-0">
-            <i class="pi pi-clock" style="font-size: 2rem"></i>
-            <div class="p-ml-2 p-flex-wrap">
-              <p class="p-text-normal p-my-0"
-                 *ngIf="!!culturalOffering; else reviewTimeSkeleton"
-              >{{culturalOffering?.briefInfo}}</p>
-              <ng-template #reviewTimeSkeleton>
-                <p-skeleton shape="rectangle"></p-skeleton>
-              </ng-template>
-            </div>
-          </div>
         </p-card>
       </div>
     </div>
     <div class="p-col-12 p-lg-9">
       <p-card class="new-post-card" *ngIf="getUserRole() === 'MODERATOR'">
-        <h3 class="p-mt-0 p-text-normal">
+        <h3 class="p-mt-0 p-mb-3 p-text-normal">
           Announce some news...
         </h3>
         <textarea [maxLength]="1000" [rows]="5" [(ngModel)]="newPostContent" [autoResize]="true" placeholder="Start typing..." pInputTextarea>
@@ -58,6 +47,9 @@
           </button>
         </div>
       </p-card>
+      <p-card class="post-card" *ngIf="(getUserRole() === 'USER' || !isLoggedIn()) && posts.length === 0">
+        <h3 class="p-text-normal">There are no posts to show right now...</h3>
+      </p-card>
       <div infinite-scroll
            (scrolled)="onScrollDown()">
         <p-card class="post-card p-pt-0" *ngFor="let post of posts">
@@ -66,12 +58,16 @@
             <p-menu [model]="getMenuItems(post)" [popup]="true" #menu></p-menu>
             <button class="p-ml-auto options-button p-button p-button-icon p-button-text"
                     icon="pi pi-ellipsis-h"
+                    *ngIf="getUserRole() === 'MODERATOR'"
                     (click)="menu.toggle($event)"
                     pButton
             ></button>
           </div>
           <p class="p-mt-0 p-mb-2">{{ post.content }}</p>
         </p-card>
+        <div class="p-text-center">
+          <p-progressSpinner *ngIf="isPostsLoading"></p-progressSpinner>
+        </div>
       </div>
     </div>
   </div>

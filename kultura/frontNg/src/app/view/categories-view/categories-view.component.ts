@@ -1,52 +1,150 @@
-import { Component, OnInit } from '@angular/core';
-import {ModeratorService} from '../../core/services/moderator/moderator.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CategoryService} from '../../core/services/category/category.service';
+import {Observable, Subscription} from 'rxjs';
+import {MessageService} from 'primeng/api';
+import {Category} from '../../core/models/category';
+import {FormControl, Validators} from '@angular/forms';
+import {DialogService} from 'primeng/dynamicdialog';
+import {SubcategoriesViewComponent} from '../subcategories-view/subcategories-view.component';
 
 @Component({
   selector: 'app-categories-view',
   templateUrl: './categories-view.component.html',
-  styleUrls: ['./categories-view.component.css']
+  styleUrls: ['./categories-view.component.scss']
 })
-export class CategoriesViewComponent implements OnInit {
+export class CategoriesViewComponent implements OnInit, OnDestroy {
 
-  categoriesList: any[] = [];
-  page = 0;
-  totalPages = 1;
+  private subscriptions: Subscription[] = [];
 
-  constructor(private categoryService: CategoryService) {
+  page = -1;
+  totalPages = 0;
+  isCategoriesLoading = false;
+
+  isAddDialogOpen = false;
+  nameControl = new FormControl('', [Validators.required]);
+  editingCategory?: Category;
+
+  constructor(private categoryService: CategoryService,
+              private messageService: MessageService,
+              private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
-    this.categoryService.getCategories(0).subscribe(categories => {
-      this.categoriesList = categories.content || [];
-    });
+    this.resetCategories();
   }
 
-  deleteCategory(id: string): void{
-    let result: any[] = [];
-    result = this.categoriesList.filter(x => x.id !== id);
-    this.categoriesList = result || [];
-  }
-
-  onScrollDown(): void{
+  resetCategories(): void {
+    this.isCategoriesLoading = true;
+    this.categoryService.categories = [];
+    this.page = -1;
+    this.totalPages = 0;
+    this.nameControl.reset();
     this.getCategories();
   }
 
-  getCategories(): void{
+  onScrollDown(): void {
+    this.getCategories();
+  }
+
+  getCategories(): void {
     if (this.page === this.totalPages) {
+      this.isCategoriesLoading = false;
       return;
     }
-    this.categoryService.getCategories(this.page + 1).subscribe(
-      val => {
-        for (const el of val.content) {
-          if (this.categoryService.categoriesList.some(category => category.id === el.id)) {
-            continue;
+    this.isCategoriesLoading = true;
+    this.subscriptions.push(
+      this.categoryService.getCategories(this.page + 1).subscribe(
+        val => {
+          for (const el of val.content) {
+            if (this.categoryService.categories.some(mod => mod.id === el.id)) {
+              continue;
+            }
+            this.categoryService.categories.push(el);
           }
-          this.categoriesList.push(el);
+          this.page = val.pageable.pageNumber;
+          this.totalPages = val.totalPages;
+          this.isCategoriesLoading = false;
         }
-        this.page = val.pageable.pageNumber;
-        this.totalPages = val.totalPages;
-      }
+      )
     );
+  }
+
+  openAddDialog(editing = false, category?: Category): void {
+    this.isAddDialogOpen = true;
+    if (editing) {
+      this.nameControl.setValue(category?.name ?? '');
+      this.editingCategory = category;
+    }
+  }
+
+  openSubcategoriesDialog(category: Category): void {
+    this.dialogService.open(SubcategoriesViewComponent, {
+      header: 'Subcategories',
+      modal: true,
+      data: {category},
+      baseZIndex: 2000,
+    });
+  }
+
+  onHideAddDialog(): void {
+    this.nameControl.reset();
+    this.editingCategory = undefined;
+  }
+
+  saveCategory(): void {
+    if (!this.nameControl.valid) {
+      this.messageService.add(
+        {severity: 'error', summary: 'Required', detail: 'Name is required.'}
+      );
+    }
+    const name = this.nameControl.value;
+    let c: Category;
+    if (!!this.editingCategory) {
+      c = this.editingCategory;
+    } else {
+      c = new Category();
+    }
+    c.name = name;
+    let o: Observable<any>;
+
+    if (!!this.editingCategory) {
+      o = this.categoryService.update(c);
+    } else {
+      o = this.categoryService.create(c);
+    }
+    this.subscriptions.push(
+      o.subscribe(() => {
+        this.messageService.add(
+          {severity: 'success', summary: 'Created', detail: 'Category was created.'}
+        );
+        this.resetCategories();
+        this.isAddDialogOpen = false;
+        this.nameControl.reset();
+        this.editingCategory = undefined;
+      },
+      () => {
+        this.messageService.add(
+          {severity: 'error', summary: 'Already exists', detail: 'A category with this name already exists'}
+        );
+        this.isAddDialogOpen = false;
+        this.nameControl.reset();
+      })
+    );
+  }
+
+  categoryDeletionConfirmed(): void {
+    this.resetCategories();
+  }
+
+  get categories(): Category[] {
+    return this.categoryService.categories;
+  }
+
+  get editing(): boolean {
+    return !!this.editingCategory;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 }

@@ -1,13 +1,12 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
 import lombok.*;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.validators.NullOrNotBlank;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Ignore;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.IgnoreType;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -22,12 +21,13 @@ public class UserDto {
 
     @Ignore(ignoreType = IgnoreType.ENTITY_TO_DTO)
     @Size(min=8, max=50, message = "A password should be between 8 and 50 characters long.")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$")
     private String password;
 
-    @NotBlank
+    @NullOrNotBlank
     private String firstName;
 
-    @NotBlank
+    @NullOrNotBlank
     private String lastName;
 
     private LocalDateTime lastPasswordChange;

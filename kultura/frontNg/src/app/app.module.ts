@@ -15,14 +15,13 @@ import {EnterEmailComponent} from './view/login-registration/login/enter-email/e
 import {EnterPasswordComponent} from './view/login-registration/login/enter-password/enter-password.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastModule} from 'primeng/toast';
-import {ConfirmationService, MessageService, SharedModule} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {JwtInterceptor} from './core/interceptors/jwt.interceptor';
 import {RegisterEmailComponent} from './view/login-registration/registration/register-email/register-email.component';
 import {RegisterNameComponent} from './view/login-registration/registration/register-name/register-name.component';
 import {RegisterPasswordComponent} from './view/login-registration/registration/register-password/register-password.component';
 import {RegisterSuccessComponent} from './view/login-registration/registration/register-success/register-success.component';
 import {RegisterVerifyComponent} from './view/login-registration/registration/register-verify/register-verify.component';
-import {UserViewComponent} from './view/user-view/user-view.component';
 import {MainViewComponent} from './view/main-view/main-view.component';
 import {HomeViewComponent} from './view/home-view/home-view.component';
 import {MapViewComponent} from './view/map-view/map-view.component';
@@ -40,11 +39,8 @@ import {NgSelectModule} from '@ng-select/ng-select';
 import {ModeratorAddComponent} from './view/moderator-add/moderator-add.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {RippleModule} from 'primeng/ripple';
-import {AdminPanelComponent} from './view/admin-panel/admin-panel.component';
-import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sidebar.component';
 import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
 import { OfferingItemComponent } from './view/offering-item/offering-item.component';
-import { MapPopupComponent } from './view/map-popup/map-popup.component';
 import { CulturalOfferingDetailsComponent } from './view/cultural-offering-details/cultural-offering-details.component';
 import { DetailsNavigationComponent } from './view/details-navigation/details-navigation.component';
 import { PostsComponent } from './view/posts/posts.component';
@@ -67,15 +63,17 @@ import { ListViewComponent } from './view/list-view/list-view.component';
 import { ListElementComponent } from './view/list-element/list-element.component';
 import {InputNumberModule} from 'primeng/inputnumber';
 import {SliderModule} from 'primeng/slider';
+import {CheckboxModule} from 'primeng/checkbox';
+import {SelectButtonModule} from 'primeng/selectbutton';
 import { ModeratorListElementComponent } from './view/moderator-list-element/moderator-list-element.component';
 import { ModeratorEditComponent } from './view/moderator-edit/moderator-edit.component';
-import { CategoryAddComponent } from './view/category-add/category-add.component';
 import { CategoriesViewComponent } from './view/categories-view/categories-view.component';
 import { CategoryListItemComponent } from './view/category-list-item/category-list-item.component';
-import { CategoryEditComponent } from './view/category-edit/category-edit.component';
+import { UserEditComponent } from './view/user-edit/user-edit.component';
+import {TabViewModule} from 'primeng/tabview';
+import {TableModule} from 'primeng/table';
 import { SubcategoriesViewComponent } from './view/subcategories-view/subcategories-view.component';
-import {DataViewModule} from 'primeng/dataview';
-import { SubcategoryListItemComponent } from './view/subcategory-list-item/subcategory-list-item.component';
+import {ToolbarModule} from 'primeng/toolbar';
 
 @NgModule({
   declarations: [
@@ -89,7 +87,6 @@ import { SubcategoryListItemComponent } from './view/subcategory-list-item/subca
     RegisterPasswordComponent,
     RegisterSuccessComponent,
     RegisterVerifyComponent,
-    UserViewComponent,
     MainViewComponent,
     HomeViewComponent,
     MapViewComponent,
@@ -98,11 +95,8 @@ import { SubcategoryListItemComponent } from './view/subcategory-list-item/subca
     CulturalOfferingPlaceComponent,
     ModeratorAddComponent,
     ModeratorsViewComponent,
-    AdminPanelComponent,
-    OfferingSidebarComponent,
     OfferingsListComponent,
     OfferingItemComponent,
-    MapPopupComponent,
     CulturalOfferingDetailsComponent,
     DetailsNavigationComponent,
     PostsComponent,
@@ -114,15 +108,13 @@ import { SubcategoryListItemComponent } from './view/subcategory-list-item/subca
     ListElementComponent,
     ModeratorListElementComponent,
     ModeratorEditComponent,
-    CategoryAddComponent,
+    CategoriesViewComponent,
     CategoriesViewComponent,
     CategoryListItemComponent,
-    CategoryEditComponent,
-    SubcategoriesViewComponent,
-    SubcategoryListItemComponent
+    UserEditComponent,
+    SubcategoriesViewComponent
   ],
   imports: [
-    SharedModule,
     BrowserModule,
     FormsModule,
     AppRoutingModule,
@@ -150,6 +142,7 @@ import { SubcategoryListItemComponent } from './view/subcategory-list-item/subca
     InfiniteScrollModule,
     SkeletonModule,
     ScrollTopModule,
+    ToolbarModule,
     ConfirmDialogModule,
     DialogModule,
     FileUploadModule,
@@ -159,7 +152,10 @@ import { SubcategoryListItemComponent } from './view/subcategory-list-item/subca
     InputNumberModule,
     SliderModule,
     AvatarModule,
-    DataViewModule
+    TabViewModule,
+    TableModule,
+    CheckboxModule,
+    SelectButtonModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

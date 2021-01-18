@@ -26,7 +26,7 @@
     <div class="p-col-1 p-text-right">
       <p-menu [model]="getMenuItems()" [popup]="true" #menu></p-menu>
       <button *ngIf="getUserRole() === 'MODERATOR'"
-              class="p-button-lg p-button-text p-button-rounded" icon="pi pi-ellipsis-h"
+              class="p-button-lg blue-button-text p-button-text p-button-rounded" icon="pi pi-ellipsis-h"
               (click)="menu.toggle($event)"
               pRipple
               pButton
