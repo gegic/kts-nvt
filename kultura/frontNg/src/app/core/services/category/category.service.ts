@@ -3,21 +3,23 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Page} from '../../models/Page';
 import {Moderator} from '../../models/moderator';
+import {Category} from '../../models/category';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
 
+  categories: Category[] = [];
+
   constructor(private httpClient: HttpClient) {
   }
 
-  public getCategories(): Observable<any> {
-    return this.httpClient.get('/api/categories');
+  public getCategories(page: number): Observable<any> {
+    return this.httpClient.get(`/api/categories?page=${page}`);
   }
 
-  // public createCategory(category: Category): Observable<any>{
-  //   return  this.httpClient.post('/api/category', category);
-  // }
-
+  delete(id: number): Observable<any> {
+    return this.httpClient.delete(`/api/categories/${id}`);
+  }
 }

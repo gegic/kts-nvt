@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
 import lombok.*;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Computed;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -21,4 +22,7 @@ public class CategoryDto {
     @Getter
     @Setter
     private String name;
+
+    @Computed(element = "subcategories", functionName = "size")
+    private Integer numSubcategories;
 }

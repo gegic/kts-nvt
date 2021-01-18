@@ -1,9 +1,12 @@
-<p-card class="p-mb-3" (click)="onClickCategory()">
+<p-card class="category-card">
   <div class="p-d-flex p-m-0 p-p-0 ">
     <div class="p-col">
       <h2 class="p-m-0 p-text-light">
         {{category.name}}
       </h2>
+      <h5 class="p-mt-1 p-text-normal">
+        {{category.numSubcategories}} subcategories.
+      </h5>
     </div>
     <div class="p-col p-text-right p-as-end">
       <div class="p-d-block button-group p-mb-3">
