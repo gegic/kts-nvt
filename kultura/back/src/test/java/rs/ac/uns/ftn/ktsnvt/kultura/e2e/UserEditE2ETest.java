@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.springframework.test.annotation.DirtiesContext;
 import rs.ac.uns.ftn.ktsnvt.kultura.pages.LoginPage;
 import rs.ac.uns.ftn.ktsnvt.kultura.pages.UserEditPage;
 
@@ -17,6 +18,7 @@ public class UserEditE2ETest {
   private static final String NAME = "Hercul";
   private static final String LASTNAME = "Poirot";
   private static final String EMAIL = "hp@mail.com";
+  private static final String PASSWORD = "Admin1234";
 
   private WebDriver driver;
 
@@ -97,6 +99,7 @@ public class UserEditE2ETest {
   }
 
   @Test
+  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void ChangeEmailTestSuccess() throws InterruptedException {
 
     driver.get("http://localhost:4200/login");
@@ -119,8 +122,7 @@ public class UserEditE2ETest {
     justWait();
     userEditPage = PageFactory.initElements(driver, UserEditPage.class);
     justWait();
-    assertEquals(EMAIL,userEditPage.getEmailVal().getText());
-    assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
+    assertEquals("http://localhost:4200/login", driver.getCurrentUrl());
   }
 
   @Test
@@ -140,13 +142,16 @@ public class UserEditE2ETest {
 
     driver.get("http://localhost:4200/user-edit");
     justWait();
+    userEditPage.getPasswordTab().click();
+    justWait();
     userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-    userEditPage.getEmail().sendKeys(EMAIL);
-    userEditPage.getSubmitEmail().click();
+    userEditPage.getPassword().sendKeys(PASSWORD);
+    userEditPage.getConfirmPassword().sendKeys(PASSWORD);
+    userEditPage.getSubmitPassword().click();
     justWait();
     userEditPage = PageFactory.initElements(driver, UserEditPage.class);
     justWait();
-    assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
+    assertEquals("http://localhost:4200/login", driver.getCurrentUrl());
   }
 
   private void justWait() throws InterruptedException {

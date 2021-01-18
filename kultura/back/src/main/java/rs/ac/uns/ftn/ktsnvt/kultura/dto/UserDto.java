@@ -15,19 +15,31 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserDto {
 
+    public interface PostGroup{
+
+    }
+    public interface PutGroup{
+
+    }
+
     private Long id;
-    @Email(message = "You entered an invalid email address.")
+    @Email(message = "You entered an invalid email address.", groups = PostGroup.class)
+    @NotNull(groups = PostGroup.class)
     private String email;
 
     @Ignore(ignoreType = IgnoreType.ENTITY_TO_DTO)
-    @Size(min=8, max=50, message = "A password should be between 8 and 50 characters long.")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$")
+    @Size(min=8, max=50, message = "A password should be between 8 and 50 characters long.", groups = PostGroup.class)
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$", groups = PostGroup.class)
+    @NotNull(groups = PostGroup.class)
     private String password;
 
-    @NullOrNotBlank
+    @NotBlank(groups = PostGroup.class)
+    @NullOrNotBlank(groups = PutGroup.class)
     private String firstName;
 
-    @NullOrNotBlank
+
+    @NotBlank(groups = PostGroup.class)
+    @NullOrNotBlank(groups = PutGroup.class)
     private String lastName;
 
     private LocalDateTime lastPasswordChange;

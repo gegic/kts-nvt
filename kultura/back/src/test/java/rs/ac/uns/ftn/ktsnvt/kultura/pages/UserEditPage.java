@@ -28,6 +28,9 @@ public class UserEditPage {
     @FindBy(id = "confirmPassword")
     private WebElement confirmPassword;
 
+    @FindBy(id = "p-tabpanel-1-label")
+    private WebElement passwordTab;
+
     @FindBy(id = "submitName")
     private WebElement submitName;
 
