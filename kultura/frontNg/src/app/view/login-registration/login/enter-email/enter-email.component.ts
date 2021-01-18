@@ -34,9 +34,8 @@ export class EnterEmailComponent implements OnInit {
         },
         err => {
           console.log(err);
-          
           this.emailControl.reset();
-          this.messageService.add({severity: 'error', summary: 'Email not found', detail: 'A user with this email doesn\'t exist.'});
+          this.messageService.add({id: 'toast-container', severity: 'error', summary: 'Email not found', detail: 'A user with this email doesn\'t exist.'});
         }
       );
   }
