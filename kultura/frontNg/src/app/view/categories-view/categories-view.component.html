@@ -11,10 +11,15 @@
                             [category]="category"
                             (categoryDeleted)="categoryDeletionConfirmed()"
                             (clickEdit)="openAddDialog(true, $event)"
+                            (clickSubcategories)="openSubcategoriesDialog($event)"
     >
     </app-category-list-item>
   </div>
-  <p-dialog [modal]="true" header="Add a new category" [(visible)]="isAddDialogOpen" (onHide)="onHideAddDialog()">
+  <p-dialog [modal]="true" [header]="editing ? 'Edit category' : 'Add a new category'"
+            [(visible)]="isAddDialogOpen"
+            (onHide)="onHideAddDialog()"
+            [resizable]="false"
+  >
     <div>
       <form (ngSubmit)="saveCategory()">
         <span class="p-float-label p-mt-5">

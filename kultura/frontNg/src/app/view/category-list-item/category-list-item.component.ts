@@ -19,7 +19,8 @@ export class CategoryListItemComponent implements OnInit, OnDestroy {
   categoryDeleted: EventEmitter<any> = new EventEmitter<any>();
   @Output()
   clickEdit: EventEmitter<any> = new EventEmitter<any>();
-
+  @Output()
+  clickSubcategories: EventEmitter<Category> = new EventEmitter<Category>();
 
   constructor(private router: Router,
               private categoryService: CategoryService,
@@ -30,6 +31,10 @@ export class CategoryListItemComponent implements OnInit, OnDestroy {
   }
 
   getThumbnailUrl(): void {
+  }
+
+  onClickSubcategories(): void {
+    this.clickSubcategories.emit(this.category);
   }
 
   onClickDelete(): void {

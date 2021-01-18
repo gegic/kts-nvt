@@ -19,6 +19,18 @@ INSERT INTO category (id, name) VALUES (12, 'Kategorija12');
 
 INSERT INTO subcategory (name, category_id) VALUES ('Muzej', 1);
 INSERT INTO subcategory (name, category_id) VALUES ('Galerija', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija1', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija2', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija3', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija4', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija5', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija6', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija7', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija8', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija9', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija10', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija11', 1);
+INSERT INTO subcategory (name, category_id) VALUES ('Potkategorija12', 1);
 
 INSERT INTO subcategory (name, category_id) VALUES ('Vasar', 2);
 INSERT INTO subcategory (name, category_id) VALUES ('Sajam', 2);

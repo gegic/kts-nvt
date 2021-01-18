@@ -1,0 +1,66 @@
+<div class="card">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table #dt
+           [value]="subcategories"
+           [lazy]="true"
+           [lazyLoadOnInit]="true"
+           [totalRecords]="totalElements"
+           [loading]="isSubcategoriesLoading"
+           (onLazyLoad)="getSubcategories($event)"
+           [rows]="10"
+           [paginator]="true"
+           dataKey="id"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} subcategories"
+           [showCurrentPageReport]="true"
+  >
+    <ng-template pTemplate="caption">
+      <div class="p-d-flex p-ai-center p-jc-between">
+        <h5 class="p-m-0">Manage Subcategories</h5>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th># Offerings</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-subcategory>
+      <tr>
+        <td>{{subcategory.name}}</td>
+        <td>{{subcategory.numOfferings}}</td>
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editSubcategory(subcategory)"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteSubcategory(subcategory)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="p-d-flex p-ai-center p-jc-between">
+        In total there are {{ totalElements }} subcategories for
+        <ng-container *ngIf="category && category.name">{{category.name}}</ng-container>.
+      </div>
+    </ng-template>
+  </p-table>
+
+  <p-dialog [modal]="true" [header]="editing ? 'Edit subcategory' : 'Add a new subcategory'"
+            [(visible)]="isSubcategoryDialogOpen"
+            (onHide)="onHideSubcategoryDialog()"
+            [resizable]="false"
+  >
+    <div>
+      <form (ngSubmit)="saveSubcategory()">
+        <span class="p-float-label p-mt-5">
+          <input type="text" id="email" name="email" autocomplete="off" [formControl]="nameControl" pInputText>
+          <label for="email">Name</label>
+        </span>
+        <button type="submit" class="p-button blue-button p-d-block p-ml-auto p-mt-4" label="Save" pButton></button>
+      </form>
+    </div>
+  </p-dialog>
+</div>

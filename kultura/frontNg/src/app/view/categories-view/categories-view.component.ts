@@ -1,9 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CategoryService} from '../../core/services/category/category.service';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {MessageService} from 'primeng/api';
 import {Category} from '../../core/models/category';
 import {FormControl, Validators} from '@angular/forms';
+import {DialogService} from 'primeng/dynamicdialog';
+import {SubcategoriesViewComponent} from '../subcategories-view/subcategories-view.component';
 
 @Component({
   selector: 'app-categories-view',
@@ -20,9 +22,11 @@ export class CategoriesViewComponent implements OnInit, OnDestroy {
 
   isAddDialogOpen = false;
   nameControl = new FormControl('', [Validators.required]);
+  editingCategory?: Category;
 
   constructor(private categoryService: CategoryService,
-              private messageService: MessageService) {
+              private messageService: MessageService,
+              private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
@@ -67,10 +71,24 @@ export class CategoriesViewComponent implements OnInit, OnDestroy {
 
   openAddDialog(editing = false, category?: Category): void {
     this.isAddDialogOpen = true;
+    if (editing) {
+      this.nameControl.setValue(category?.name ?? '');
+      this.editingCategory = category;
+    }
+  }
+
+  openSubcategoriesDialog(category: Category): void {
+    this.dialogService.open(SubcategoriesViewComponent, {
+      header: 'Subcategories',
+      modal: true,
+      data: {category},
+      baseZIndex: 2000,
+    });
   }
 
   onHideAddDialog(): void {
     this.nameControl.reset();
+    this.editingCategory = undefined;
   }
 
   saveCategory(): void {
@@ -80,17 +98,30 @@ export class CategoriesViewComponent implements OnInit, OnDestroy {
       );
     }
     const name = this.nameControl.value;
-    const c = new Category();
+    let c: Category;
+    if (!!this.editingCategory) {
+      c = this.editingCategory;
+    } else {
+      c = new Category();
+    }
     c.name = name;
+    let o: Observable<any>;
+
+    if (!!this.editingCategory) {
+      o = this.categoryService.update(c);
+    } else {
+      o = this.categoryService.create(c);
+    }
     this.subscriptions.push(
-    this.categoryService.create(c).subscribe(() => {
-      this.messageService.add(
-        {severity: 'success', summary: 'Created', detail: 'Category was created.'}
-      );
-      this.resetCategories();
-      this.isAddDialogOpen = false;
-      this.nameControl.reset();
-    },
+      o.subscribe(() => {
+        this.messageService.add(
+          {severity: 'success', summary: 'Created', detail: 'Category was created.'}
+        );
+        this.resetCategories();
+        this.isAddDialogOpen = false;
+        this.nameControl.reset();
+        this.editingCategory = undefined;
+      },
       () => {
         this.messageService.add(
           {severity: 'error', summary: 'Already exists', detail: 'A category with this name already exists'}
@@ -107,6 +138,10 @@ export class CategoriesViewComponent implements OnInit, OnDestroy {
 
   get categories(): Category[] {
     return this.categoryService.categories;
+  }
+
+  get editing(): boolean {
+    return !!this.editingCategory;
   }
 
   ngOnDestroy(): void {

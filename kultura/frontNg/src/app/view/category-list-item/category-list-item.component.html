@@ -10,14 +10,21 @@
     </div>
     <div class="p-col p-text-right p-as-end">
       <div class="p-d-block button-group p-mb-3">
-        <button class="p-button p-button-rounded p-button-icon p-button-danger"
+        <button class="p-button p-button-rounded p-button-icon p-button-secondary"
+                icon="pi pi-th-large"
+                (click)="onClickSubcategories()"
+                pButton
+        ></button>
+        <button class="p-button p-button-rounded p-button-icon p-button-danger p-ml-3"
                 icon="pi pi-trash"
                 (click)="onClickDelete()"
-                pButton></button>
+                pButton
+        ></button>
         <button class="p-button blue-button p-button-rounded p-button-icon p-ml-3"
                 icon="pi pi-pencil"
                 (click)="onClickEdit()"
-                pButton></button>
+                pButton
+        ></button>
       </div>
     </div>
   </div>

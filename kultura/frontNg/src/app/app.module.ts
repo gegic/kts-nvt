@@ -72,6 +72,8 @@ import { CategoryListItemComponent } from './view/category-list-item/category-li
 import { UserEditComponent } from './view/user-edit/user-edit.component';
 import {TabViewModule} from 'primeng/tabview';
 import {TableModule} from 'primeng/table';
+import { SubcategoriesViewComponent } from './view/subcategories-view/subcategories-view.component';
+import {ToolbarModule} from 'primeng/toolbar';
 
 @NgModule({
   declarations: [
@@ -107,8 +109,10 @@ import {TableModule} from 'primeng/table';
     ModeratorListElementComponent,
     ModeratorEditComponent,
     CategoriesViewComponent,
+    CategoriesViewComponent,
     CategoryListItemComponent,
-    UserEditComponent
+    UserEditComponent,
+    SubcategoriesViewComponent
   ],
   imports: [
     BrowserModule,
@@ -138,6 +142,7 @@ import {TableModule} from 'primeng/table';
     InfiniteScrollModule,
     SkeletonModule,
     ScrollTopModule,
+    ToolbarModule,
     ConfirmDialogModule,
     DialogModule,
     FileUploadModule,

@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.dto;
 
 import lombok.*;
+import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Computed;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityField;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.EntityKey;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
@@ -24,5 +25,8 @@ public class SubcategoryDto {
 
     @EntityField
     private String categoryName;
+
+    @Computed(element = "culturalOfferings", functionName = "size")
+    private Integer numOfferings;
 
 }

@@ -26,4 +26,12 @@ export class CategoryService {
   create(category: Category): Observable<any> {
     return this.httpClient.post('/api/categories', category);
   }
+
+  update(category: Category): Observable<any> {
+    return this.httpClient.put('/api/categories', category);
+  }
+
+  getSubcategories(categoryId: number, page: number): Observable<any> {
+    return this.httpClient.get(`/api/subcategories/category/${categoryId}?page=${page}`);
+  }
 }
