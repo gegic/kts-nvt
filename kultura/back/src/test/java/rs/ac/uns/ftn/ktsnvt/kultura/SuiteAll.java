@@ -12,7 +12,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.*;
         PostControllerIntegrationTest.class, ReviewControllerIntegrationTest.class, SubcategoryControllerIntegrationTest.class,
         UsersControllerIntegrationTest.class, CategoryServiceIntegrationTest.class, CategoryServiceUnitTest.class, CulturalOfferingServiceIntegrationTest.class,
         PostServiceUnitTest.class, PostServiceIntegrationTest.class, ReviewServiceIntegrationTest.class, SubcategoryServiceIntegrationTest.class,
-        UserServiceIntegrationTest.class, UserServiceUnitTest.class, CategoryRepositoryIntegrationTest.class, CulturalOfferingRepositoryIntegrationTest.class,
+        UserServiceIntegrationTest.class, UserServiceUnitTest.class, CulturalOfferingRepositoryIntegrationTest.class,
         PostRepositoryIntegrationTest.class, ReviewRepositoryIntegrationTest.class, SubcategoryRepositoryIntegrationTest.class,
 //        CulturalOfferingServiceUnitTest.class,
         UserRepositoryIntegrationTest.class})

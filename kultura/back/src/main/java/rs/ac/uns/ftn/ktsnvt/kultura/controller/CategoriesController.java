@@ -64,7 +64,4 @@ public class CategoriesController {
         this.categoryService.delete(Long.parseLong(id));
         return ResponseEntity.ok().build();
     }
-
-
-
 }

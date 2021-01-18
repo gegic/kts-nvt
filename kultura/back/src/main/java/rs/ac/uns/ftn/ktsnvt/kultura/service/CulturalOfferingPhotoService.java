@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.ktsnvt.kultura.config.PhotosConfig;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
@@ -35,14 +36,17 @@ public class CulturalOfferingPhotoService {
     private final CulturalOfferingPhotoRepository culturalOfferingPhotoRepository;
     private final CulturalOfferingRepository culturalOfferingRepository;
     private final Mapper mapper;
+    private final PhotosConfig photosConfig;
 
     @Autowired
     public CulturalOfferingPhotoService(CulturalOfferingPhotoRepository culturalOfferingPhotoRepository,
                                         Mapper mapper,
-                                        CulturalOfferingRepository culturalOfferingRepository) {
+                                        CulturalOfferingRepository culturalOfferingRepository,
+                                        PhotosConfig photosConfig) {
         this.culturalOfferingPhotoRepository = culturalOfferingPhotoRepository;
         this.culturalOfferingRepository = culturalOfferingRepository;
         this.mapper = mapper;
+        this.photosConfig = photosConfig;
     }
 
     public Page<CulturalOfferingPhotoDto> readAllByCulturalOfferingId(long culturalOfferingId, Pageable p) {
@@ -81,8 +85,8 @@ public class CulturalOfferingPhotoService {
         photo = culturalOfferingPhotoRepository.save(photo);
 
         try {
-            savePhoto("./photos", bufferedImage, photo);
-            savePhoto("./photos/thumbnail", thumbnail, photo);
+            savePhoto(photosConfig.getPath(), bufferedImage, photo);
+            savePhoto(photosConfig.getPath() + "thumbnail", thumbnail, photo);
         } catch (IOException e) {
             culturalOfferingPhotoRepository.delete(photo);
             System.out.println("Exception:" + e);
@@ -102,8 +106,8 @@ public class CulturalOfferingPhotoService {
         if (!culturalOfferingRepository.existsById(id)) {
             throw new ResourceNotFoundException("A photo with the given id " + id + " was not found.");
         }
-        File photo = new File("./photos/" + id + ".png");
-        File thumbnail = new File("./photos/thumbnail/" + id + ".png");
+        File photo = new File(photosConfig.getPath() + id + ".png");
+        File thumbnail = new File(photosConfig.getPath() + "thumbnail/" + id + ".png");
         photo.delete();
         thumbnail.delete();
         culturalOfferingPhotoRepository.deleteById(id);
@@ -112,8 +116,8 @@ public class CulturalOfferingPhotoService {
     public void deleteByCulturalOffering(long culturalOfferingId) {
         List<CulturalOfferingPhoto> photos = culturalOfferingPhotoRepository.findAllByCulturalOfferingId(culturalOfferingId);
         for (CulturalOfferingPhoto photo : photos) {
-            new File("./photos/" + photo.getId() + ".png").delete();
-            new File("./photos/thumbnail" + photo.getId() + ".png").delete();
+            new File(photosConfig.getPath() + photo.getId() + ".png").delete();
+            new File(photosConfig.getPath() + "thumbnail" + photo.getId() + ".png").delete();
         }
 
         culturalOfferingPhotoRepository.deleteAll(photos);

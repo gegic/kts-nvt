@@ -58,7 +58,7 @@ public class CulturalOfferingMainPhotoService {
         photo = repository.save(photo);
 
         try {
-            savePhoto("./photos/main", bufferedImage, photo);
+            savePhoto("/main", bufferedImage, photo);
             savePhoto("./photos/main/thumbnail", thumbnail, photo);
         } catch (IOException e) {
             repository.delete(photo);

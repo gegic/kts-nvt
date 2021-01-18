@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import rs.ac.uns.ftn.ktsnvt.kultura.config.PhotosConfig;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewNumbersDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
@@ -25,7 +26,7 @@ import java.util.Set;
 @Service
 public class ReviewService {
 
-
+    private final PhotosConfig photosConfig;
     private final ReviewRepository reviewRepository;
     private final CulturalOfferingRepository culturalOfferingRepository;
     private final ReviewPhotoRepository photoRepository;
@@ -35,11 +36,13 @@ public class ReviewService {
     public ReviewService(ReviewRepository reviewRepository,
                          Mapper mapper,
                          ReviewPhotoRepository photoRepository,
-                         CulturalOfferingRepository culturalOfferingRepository) {
+                         CulturalOfferingRepository culturalOfferingRepository,
+                         PhotosConfig photosConfig) {
         this.reviewRepository = reviewRepository;
         this.mapper = mapper;
         this.photoRepository = photoRepository;
         this.culturalOfferingRepository = culturalOfferingRepository;
+        this.photosConfig = photosConfig;
     }
 
     @Transactional
@@ -90,8 +93,8 @@ public class ReviewService {
             if (newPhotos.stream().anyMatch(rph -> rph.getId() == rp.getId())) {
                 continue;
             }
-            new File("./photos/review/thumbnail/" + rp.getId() + ".png").delete();
-            new File("./photos/review/" + rp.getId() + ".png").delete();
+            new File(photosConfig.getPath() + "review/thumbnail/" + rp.getId() + ".png").delete();
+            new File(photosConfig.getPath() + "review/" + rp.getId() + ".png").delete();
 
             photoRepository.delete(rp);
         }
@@ -125,8 +128,8 @@ public class ReviewService {
 
         for (ReviewPhoto photo : photos) {
 
-            new File("./photos/review/thumbnail/" + photo.getId() + ".png").delete();
-            new File("./photos/review/" + photo.getId() + ".png").delete();
+            new File(photosConfig.getPath() + "review/thumbnail/" + photo.getId() + ".png").delete();
+            new File(photosConfig.getPath() + "review/" + photo.getId() + ".png").delete();
 
             photoRepository.delete(photo);
         }
@@ -156,8 +159,8 @@ public class ReviewService {
         for (Review r : reviews) {
             Set<ReviewPhoto> photos = r.getPhotos();
             for (ReviewPhoto photo : photos) {
-                new File("./photos/review/thumbnail/" + photo.getId() + ".png").delete();
-                new File("./photos/review/" + photo.getId() + ".png").delete();
+                new File(photosConfig.getPath() + "review/thumbnail/" + photo.getId() + ".png").delete();
+                new File(photosConfig.getPath() + "review/" + photo.getId() + ".png").delete();
             }
             photoRepository.deleteAll(photos);
         }
