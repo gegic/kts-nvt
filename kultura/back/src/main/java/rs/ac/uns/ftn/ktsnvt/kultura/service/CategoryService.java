@@ -62,6 +62,13 @@ public class CategoryService {
     }
 
     public void delete(long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category with given id not found"));
+
+        if (category.getSubcategories().size() > 0) {
+            throw new ResourceExistsException("There are subcategories associated with this category");
+        }
+
         categoryRepository.deleteById(id);
     }
 }

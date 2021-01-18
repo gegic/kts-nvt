@@ -1,27 +1,33 @@
-<div class="p-grid p-mx-0 p-justify-center centered-grid">
-  <div class="p-col-12 p-sm-12 p-md-12 p-lg-9 p-xl-9">
-    <p-card>
-      <div class="list-header p-d-flex p-ai-center">
-        <h2 class="p-text-light">Showing all categories</h2>
-      </div>
-    <!--  <app-category-list-item *ngFor="let category of categoriesList"-->
-    <!--                          [category]="category">-->
-    <!--  </app-category-list-item>-->
-      <div
-        *ngFor="let category of categoriesList"
-        class="p-mb-3"
-      >
-        <app-category-list-item [category]="category">
-        </app-category-list-item>
-      </div>
-
-
-    <!--  <button class="primary add-button p-button-rounded p-button-raised p-button-icon p-ripple"-->
-    <!--          icon="pi pi-plus"-->
-    <!--          pButton-->
-    <!--          routerLink="/add-moderator"-->
-    <!--          type="button"-->
-    <!--  ></button>-->
-    </p-card>
+<div>
+  <div class="list-header p-d-flex p-ai-center">
+    <h2 class="p-text-light">Showing all categories</h2>
+    <button class="p-button blue-button p-ml-auto" label="NEW CATEGORY" (click)="openAddDialog()" pButton></button>
   </div>
+  <div class="list-content"
+       (scrolled)="onScrollDown()"
+       infinite-scroll
+  >
+    <app-category-list-item *ngFor="let category of categories"
+                            [category]="category"
+                            (categoryDeleted)="categoryDeletionConfirmed()"
+                            (clickEdit)="openAddDialog(true, $event)"
+                            (clickSubcategories)="openSubcategoriesDialog($event)"
+    >
+    </app-category-list-item>
+  </div>
+  <p-dialog [modal]="true" [header]="editing ? 'Edit category' : 'Add a new category'"
+            [(visible)]="isAddDialogOpen"
+            (onHide)="onHideAddDialog()"
+            [resizable]="false"
+  >
+    <div>
+      <form (ngSubmit)="saveCategory()">
+        <span class="p-float-label p-mt-5">
+          <input type="text" id="email" name="email" autocomplete="off" [formControl]="nameControl" pInputText>
+          <label for="email">Name</label>
+        </span>
+          <button type="submit" class="p-button blue-button p-d-block p-ml-auto p-mt-4" label="Save" pButton></button>
+      </form>
+    </div>
+  </p-dialog>
 </div>

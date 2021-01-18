@@ -67,12 +67,13 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import { ModeratorListElementComponent } from './view/moderator-list-element/moderator-list-element.component';
 import { ModeratorEditComponent } from './view/moderator-edit/moderator-edit.component';
-import { CategoryAddComponent } from './view/category-add/category-add.component';
 import { CategoriesViewComponent } from './view/categories-view/categories-view.component';
 import { CategoryListItemComponent } from './view/category-list-item/category-list-item.component';
 import { UserEditComponent } from './view/user-edit/user-edit.component';
 import {TabViewModule} from 'primeng/tabview';
 import {TableModule} from 'primeng/table';
+import { SubcategoriesViewComponent } from './view/subcategories-view/subcategories-view.component';
+import {ToolbarModule} from 'primeng/toolbar';
 
 @NgModule({
   declarations: [
@@ -107,10 +108,11 @@ import {TableModule} from 'primeng/table';
     ListElementComponent,
     ModeratorListElementComponent,
     ModeratorEditComponent,
-    CategoryAddComponent,
+    CategoriesViewComponent,
     CategoriesViewComponent,
     CategoryListItemComponent,
-    UserEditComponent
+    UserEditComponent,
+    SubcategoriesViewComponent
   ],
   imports: [
     BrowserModule,
@@ -140,6 +142,7 @@ import {TableModule} from 'primeng/table';
     InfiniteScrollModule,
     SkeletonModule,
     ScrollTopModule,
+    ToolbarModule,
     ConfirmDialogModule,
     DialogModule,
     FileUploadModule,

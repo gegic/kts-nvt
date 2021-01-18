@@ -1,9 +1,9 @@
 <p-card class="offering-card" (click)="onClickCard()">
-  <div class="p-grid p-m-0 p-p-0 ">
-    <div class="p-col-fixed" style="width: 100px; height: 100px">
+  <div class="p-grid p-m-0 p-p-0 p-justify-around">
+    <div class="p-col-fixed p-p-0" style="width: 100px; height: 100px">
       <img class="thumbnail-img" [src]="getThumbnailUrl()" alt="thumbnail">
     </div>
-    <div class="p-col p-ml-4">
+    <div class="p-col-12 p-sm-4 p-lg-6 p-ml-4">
       <h5 class="p-text-normal p-m-0">
         {{culturalOffering.categoryName}} > {{culturalOffering.subcategoryName}}
       </h5>
@@ -15,7 +15,7 @@
       </p>
       <small class="p-mt-1">{{culturalOffering.numPhotos}} photos.</small>
     </div>
-    <div class="p-col p-text-right p-as-end">
+    <div class="p-col-12 p-sm-4 p-lg-3 p-text-right p-as-end">
       <div class="p-d-block p-mb-3">
         <div *ngIf="getUserRole() === 'MODERATOR'; else subscribeButton">
           <button class="p-button p-button-rounded p-button-icon p-button-danger"
