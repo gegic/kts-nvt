@@ -1,6 +1,3 @@
 <div class="main-view">
-  <app-admin-view *ngIf="userRole === 'ADMIN'; else homeView"></app-admin-view>
-  <ng-template #homeView>
     <app-home-view></app-home-view>
-  </ng-template>
 </div>

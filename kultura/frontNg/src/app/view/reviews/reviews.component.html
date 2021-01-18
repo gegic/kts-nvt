@@ -69,15 +69,15 @@
         <div class="p-col-12 p-sm-6 p-md-3 p-text-center p-as-center">
           <p *ngIf="getUserRole() === 'MODERATOR'; else userAddReview"
              class="p-text-light">You are not able to review the offering since you’re logged in as a moderator.</p>
-          <div #userAddReview>
+          <ng-template #userAddReview>
             <p *ngIf="!!userReview.id">Click on the button below to view and edit your review.</p>
-            <button class="p-button"
+            <button class="p-button blue-button"
                     [label]="!userReview.id ? 'Write a review' : 'Edit review'"
                     (click)="onWriteReviewClick()"
                     pButton
             ></button>
 
-          </div>
+          </ng-template>
         </div>
       </div>
       <hr class="p-mx-6 p-my-5">
@@ -85,6 +85,9 @@
            (scrolled)="onScrollDown()">
         <div *ngFor="let review of reviews">
           <app-review-element [review]="review" (reviewDeleted)="onReviewDeleted()"></app-review-element>
+        </div>
+        <div class="p-text-center" *ngIf="isReviewsLoading">
+          <p-progressSpinner></p-progressSpinner>
         </div>
       </div>
     </div>
@@ -98,7 +101,7 @@
         <h2 class="p-text-light">
           Be the first person to write a review.
         </h2>
-        <button class="p-button-lg" label="Write a review" (click)="onWriteReviewClick()" pButton></button>
+        <button class="p-button-lg blue-button" label="Write a review" (click)="onWriteReviewClick()" pButton></button>
       </div>
     </ng-template>
   </div>
@@ -130,11 +133,11 @@
           </div>
         </div>
         <div class="p-col p-as-center p-text-right">
-          <button class="p-button p-button-outlined p-button-text" (click)="onClickReupload()" label="Reupload" pButton></button>
+          <button class="p-button p-button-outlined blue-button-outlined blue-button-text p-button-text" (click)="onClickReupload()" label="Reupload" pButton></button>
         </div>
       </div>
     </ng-template>
-    <button class="p-button p-mt-2 send-review"
+    <button class="p-button blue-button p-mt-2 send-review"
             [label]="!userReview.id ? 'Send' : 'Edit'"
             (click)="onClickSend()"
             pButton

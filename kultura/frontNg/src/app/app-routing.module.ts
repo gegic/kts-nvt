@@ -16,7 +16,6 @@ import {ModeratorAddComponent} from './view/moderator-add/moderator-add.componen
 import {AdminViewComponent} from './view/admin-view/admin-view.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {HomeViewComponent} from './view/home-view/home-view.component';
-import {AdminPanelComponent} from './view/admin-panel/admin-panel.component';
 import {CulturalOfferingDetailsComponent} from './view/cultural-offering-details/cultural-offering-details.component';
 import {PostsComponent} from './view/posts/posts.component';
 import {PhotosComponent} from './view/photos/photos.component';
@@ -25,7 +24,7 @@ import {CulturalOfferingAboutComponent} from './view/cultural-offering-about/cul
 import {ListViewComponent} from './view/list-view/list-view.component';
 import {ModeratorEditComponent} from './view/moderator-edit/moderator-edit.component';
 import {CategoriesViewComponent} from './view/categories-view/categories-view.component';
-import {UserEditComponent} from './view/user-view/user-edit/user-edit.component';
+import {UserEditComponent} from './view/user-edit/user-edit.component';
 
 const routes: Routes = [
   {
@@ -49,16 +48,13 @@ const routes: Routes = [
         canActivate: [AuthGuard] },
       { path: 'edit-offering/:id', component: CulturalOfferingAddComponent, data: {roles: ['MODERATOR'], mode: 'edit'},
         canActivate: [AuthGuard] },
-      { path: 'admin-panel', component: ModeratorsViewComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
+      { path: 'moderators', component: ModeratorsViewComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
       { path: 'add-moderator', component: ModeratorAddComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
       { path: 'edit-moderator/:id', component: ModeratorEditComponent, data: {roles: ['ADMIN']}, canActivate: [AuthGuard] },
-      { path: 'admin-panel/categories', component: CategoriesViewComponent },
+      { path: 'categories', component: CategoriesViewComponent },
       { path: 'user-edit', component: UserEditComponent, data: {roles: ['USER', 'MODERATOR', 'ADMIN']}, canActivate: [AuthGuard] }
     ]
   },
-
-  // DEV
-  // { path: 'user-edit-test', component: UserEditComponent},
   {
     path: 'login', component: LoginRegisterComponent, data: {roles: ['UNREGISTERED']}, canActivate: [AuthGuard],
     children: [

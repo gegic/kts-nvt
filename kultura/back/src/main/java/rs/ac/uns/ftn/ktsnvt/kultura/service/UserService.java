@@ -106,7 +106,7 @@ public class UserService implements UserDetailsService {
         }
 //    return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
         User finalUser = userRepository.save(updated);
-        if(emailChanged){
+        if(emailChanged) {
             sendMail(finalUser);
         }
         return mapper.fromEntity(finalUser, UserDto.class);

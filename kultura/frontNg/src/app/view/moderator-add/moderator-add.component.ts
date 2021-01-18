@@ -1,18 +1,21 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ModeratorService} from '../../core/services/moderator/moderator.service';
-import {User} from '../../core/models/user';
 import {MessageService} from 'primeng/api';
 import {RegisterService} from '../../core/services/register/register.service';
 import {Moderator} from '../../core/models/moderator';
 import {Router} from '@angular/router';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-moderator-add',
   templateUrl: './moderator-add.component.html',
-  styleUrls: ['./moderator-add.component.css']
+  styleUrls: ['./moderator-add.component.scss']
 })
-export class ModeratorAddComponent implements OnInit {
+export class ModeratorAddComponent implements OnInit, OnDestroy {
+
+  private subscriptions: Subscription[] = [];
+
   moderatorForm: FormGroup = new FormGroup(
     {
       firstName: new FormControl(undefined, [Validators.required, Validators.pattern(/[\p{L} \d]+/u)]),
@@ -33,8 +36,6 @@ export class ModeratorAddComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('ADD MODERATOR');
-    console.log(this.moderatorForm.controls);
     if (this.moderatorForm.controls.firstName.invalid) {
       this.messageService.add({severity: 'error', detail: 'First name cannot be empty and must start with a capital letter'});
       this.moderatorForm.patchValue({firstName: ''});
@@ -67,31 +68,31 @@ export class ModeratorAddComponent implements OnInit {
       firstName : this.moderatorForm.controls.firstName.value,
       lastName : this.moderatorForm.controls.lastName.value,
     };
-    console.log(this.moderatorForm.controls.firstName.invalid);
     if (this.moderatorForm.invalid) {
       return;
     }
-    this.registerService.checkExistence(this.moderatorForm.controls.email.value)
-      .subscribe(
-        data => {
+    this.subscriptions.push(
+      this.moderatorService.createModerator(moderator).subscribe(
+        () => {
           this.messageService.add({
-            severity: 'error', summary: 'Email already exists',
-            detail: 'An account with this email already exists.'
+            severity: 'success',
+            summary: 'Moderator added successfully.',
+            detail: 'All that remains is for the moderator to verify the profile.'
           });
-          this.moderatorForm.patchValue({email: ''});
+          this.router.navigate(['']);
         },
-        error => {
-          this.moderatorService.createModerator(moderator).subscribe(
-            data => {
-              this.messageService.add({
-                severity: 'success', summary: 'Moderator added successfully.',
-                detail: 'All that remains is for the moderator to verify the profile.'
-              });
-              this.router.navigate(['/']);
-            }
-          );
+        () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Moderator couldn\'t be added',
+            detail: 'This moderator couln\'t be added due to the fact the email already exists in the database'
+          });
         }
-      );
+      )
+    );
+  }
+
+  ngOnDestroy(): void {
   }
 
 }

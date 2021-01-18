@@ -4,7 +4,7 @@ import {DialogService} from 'primeng/dynamicdialog';
 import {CulturalOfferingPlaceComponent} from '../cultural-offering-place/cultural-offering-place.component';
 import {NominatimPlace, PlaceOfferingService} from '../../core/services/place-offering/place-offering.service';
 import {Place} from '../../core/models/place';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {AutoComplete} from 'primeng/autocomplete';
 import {HttpClient} from '@angular/common/http';
 import {AddOfferingService} from '../../core/services/add-offering/add-offering.service';
@@ -36,6 +36,8 @@ const errorDict: IErrorDict = {
 })
 export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
 
+  private subscriptions: (Subscription | undefined)[] = [];
+
   formGroup: FormGroup = new FormGroup(
     {
       name: new FormControl(undefined, [Validators.required, Validators.pattern(/[\p{L} \d]+/u)]),
@@ -66,72 +68,82 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.formGroup.get('address')?.valueChanges.subscribe(val => {
-        if (val !== this.placeOfferingService.place.getValue().address) {
-          this.placeOfferingService.reset();
-          this.mapSet = false;
+    this.subscriptions.push(
+      this.formGroup.get('address')?.valueChanges.subscribe(val => {
+          if (val !== this.placeOfferingService.place.getValue().address) {
+            this.placeOfferingService.reset();
+            this.mapSet = false;
+          }
         }
-      }
+      )
     );
-    this.formGroup.get('selectedCategory')?.valueChanges.subscribe((val: Category) => {
-      if (!val || !val.id) {
-        return;
-      }
-      this.categoryChosen(val.id);
-    });
+    this.subscriptions.push(
+      this.formGroup.get('selectedCategory')?.valueChanges.subscribe((val: Category) => {
+        if (!val || !val.id) {
+          return;
+        }
+        this.categoryChosen(val.id);
+      })
+    );
     this.getCategories();
     this.mode = this.activatedRoute.snapshot.data.mode;
     if (this.mode === 'edit') {
       const id = this.activatedRoute.snapshot.params.id;
-      this.addOfferingService.getOffering(id).subscribe((co: CulturalOffering) => {
-        this.addOfferingService.culturalOffering = co;
-        this.formGroup.patchValue({
-          name: co.name,
-          briefInfo: co.briefInfo,
-          additionalInfo: co.additionalInfo,
-          address: {display_name: co.address},
-          selectedCategory: {id: co.categoryId, name: co.categoryName},
-          selectedSubcategory: {id: co.subcategoryId, name: co.subcategoryName}
-        });
-        this.formGroup.get('selectedSubcategory')?.disable();
-        this.photo = new CulturalOfferingPhoto();
-        this.photo.id = co.photoId;
-        this.mapSet = true;
-      });
+      this.subscriptions.push(
+        this.addOfferingService.getOffering(id).subscribe((co: CulturalOffering) => {
+          this.addOfferingService.culturalOffering = co;
+          this.formGroup.patchValue({
+            name: co.name,
+            briefInfo: co.briefInfo,
+            additionalInfo: co.additionalInfo,
+            address: {display_name: co.address},
+            selectedCategory: {id: co.categoryId, name: co.categoryName},
+            selectedSubcategory: {id: co.subcategoryId, name: co.subcategoryName}
+          });
+          this.formGroup.get('selectedSubcategory')?.disable();
+          this.photo = new CulturalOfferingPhoto();
+          this.photo.id = co.photoId;
+          this.mapSet = true;
+        })
+      );
     }
   }
 
   showMapDialog(): void {
-    this.dialogService.open(CulturalOfferingPlaceComponent, {
-      header: 'Choose on map',
-      width: '80%',
-    }).onClose.subscribe(value => {
-      if (!value) {
-        this.placeOfferingService.reset();
-        return;
-      }
-      const { address, coordinates } = value;
-      this.mapSet = true;
-      this.formGroup.patchValue(
-        {
-          address: {
-            display_name: address
-          }
-        },
-        {
-          emitEvent: false
-        });
-      this.addOfferingService.coordinates = coordinates;
-    });
+    this.subscriptions.push(
+      this.dialogService.open(CulturalOfferingPlaceComponent, {
+        header: 'Choose on map',
+        width: '80%',
+      }).onClose.subscribe(value => {
+        if (!value) {
+          this.placeOfferingService.reset();
+          return;
+        }
+        const { address, coordinates } = value;
+        this.mapSet = true;
+        this.formGroup.patchValue(
+          {
+            address: {
+              display_name: address
+            }
+          },
+          {
+            emitEvent: false
+          });
+        this.addOfferingService.coordinates = coordinates;
+      })
+    );
   }
 
   getAddress(event: any): void {
     const enteredAddress = event.query;
 
-    this.placeOfferingService.getRecommendations(enteredAddress).subscribe(
-      data => {
-        this.recommendations = data as NominatimPlace[];
-      }
+    this.subscriptions.push(
+      this.placeOfferingService.getRecommendations(enteredAddress).subscribe(
+        data => {
+          this.recommendations = data as NominatimPlace[];
+        }
+      )
     );
   }
 
@@ -155,13 +167,15 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
       return;
     }
     this.categoriesLoading = true;
-    this.addOfferingService.getCategories(this.lastLoadedPage.categories + 1).subscribe(
-      data => {
-        this.addOfferingService.categories = this.addOfferingService.categories?.concat(data.content as Category[]);
-        this.lastLoadedPage.categories = data.pageable.pageNumber;
-        this.totalPages.categories = data.totalPages;
-        this.categoriesLoading = false;
-      }
+    this.subscriptions.push(
+      this.addOfferingService.getCategories(this.lastLoadedPage.categories + 1).subscribe(
+        data => {
+          this.addOfferingService.categories = this.addOfferingService.categories?.concat(data.content as Category[]);
+          this.lastLoadedPage.categories = data.pageable.pageNumber;
+          this.totalPages.categories = data.totalPages;
+          this.categoriesLoading = false;
+        }
+      )
     );
   }
 
@@ -188,29 +202,33 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
     } else {
       id = passedId;
     }
-    this.addOfferingService.getSubcategories(id, this.lastLoadedPage.subcategories + 1).subscribe(
-      data => {
-        this.formGroup.get('selectedSubcategory')?.enable();
-        this.addOfferingService.subcategories = this.addOfferingService.subcategories?.concat(data.content as Subcategory[]);
-        this.lastLoadedPage.subcategories = data.pageable.pageNumber;
-        this.totalPages.subcategories = data.totalPages;
-        this.subcategoriesLoading = false;
-      }
+    this.subscriptions.push(
+      this.addOfferingService.getSubcategories(id, this.lastLoadedPage.subcategories + 1).subscribe(
+        data => {
+          this.formGroup.get('selectedSubcategory')?.enable();
+          this.addOfferingService.subcategories = this.addOfferingService.subcategories?.concat(data.content as Subcategory[]);
+          this.lastLoadedPage.subcategories = data.pageable.pageNumber;
+          this.totalPages.subcategories = data.totalPages;
+          this.subcategoriesLoading = false;
+        }
+      )
     );
   }
 
   fileChosen(event: any): void {
     const file = event.target.files[0];
     this.fileLoading = true;
-    this.addOfferingService.addPhoto(file).subscribe(
-      (data: CulturalOfferingPhoto) => {
-        this.fileLoading = false;
-        this.photo = data;
-      },
-      err => {
-        this.fileLoading = false;
-        this.messageService.add({severity: 'error', detail: 'Photo couldn\'t be uploaded due to an unknown reason.'});
-      }
+    this.subscriptions.push(
+      this.addOfferingService.addPhoto(file).subscribe(
+        (data: CulturalOfferingPhoto) => {
+          this.fileLoading = false;
+          this.photo = data;
+        },
+        err => {
+          this.fileLoading = false;
+          this.messageService.add({severity: 'error', detail: 'Photo couldn\'t be uploaded due to an unknown reason.'});
+        }
+      )
     );
   }
 
@@ -247,26 +265,30 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
     this.addOfferingService.photo = this.photo;
 
     if (this.mode === 'add') {
-      this.addOfferingService.addOffering().subscribe(
-        data => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Successfully added',
-            detail: 'The cultural offering was added successfully'
-          });
-          this.router.navigate([`/cultural-offering/${data.id}`]);
-        }
+      this.subscriptions.push(
+        this.addOfferingService.addOffering().subscribe(
+          data => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Successfully added',
+              detail: 'The cultural offering was added successfully'
+            });
+            this.router.navigate([`/cultural-offering/${data.id}`]);
+          }
+        )
       );
     } else {
-      this.addOfferingService.editOffering().subscribe(
-        data => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Successfully edited',
-            detail: 'The cultural offering was edited successfully'
-          });
-          this.router.navigate([`/cultural-offering/${data.id}`]);
-        }
+      this.subscriptions.push(
+        this.addOfferingService.editOffering().subscribe(
+          data => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Successfully edited',
+              detail: 'The cultural offering was edited successfully'
+            });
+            this.router.navigate([`/cultural-offering/${data.id}`]);
+          }
+        )
       );
     }
   }
@@ -285,5 +307,6 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.addOfferingService.clearPhotos();
+    this.subscriptions.forEach(s => s?.unsubscribe());
   }
 }

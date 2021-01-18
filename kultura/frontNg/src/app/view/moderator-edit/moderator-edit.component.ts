@@ -1,17 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ModeratorService} from '../../core/services/moderator/moderator.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Moderator} from '../../core/models/moderator';
 import {MessageService} from 'primeng/api';
 import {RegisterService} from '../../core/services/register/register.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-moderator-edit',
   templateUrl: './moderator-edit.component.html',
-  styleUrls: ['./moderator-edit.component.css']
+  styleUrls: ['./moderator-edit.component.scss']
 })
-export class ModeratorEditComponent implements OnInit {
+export class ModeratorEditComponent implements OnInit, OnDestroy {
+
+  private subscriptions: Subscription[] = [];
+
   oldModerator: Moderator | undefined;
   moderatorForm: FormGroup = new FormGroup(
     {
@@ -30,23 +34,22 @@ export class ModeratorEditComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(
-      val => {
-        this.moderatorService.getModeratorById(val.id).subscribe(
-          data => {
-            console.log(data);
-            this.moderatorForm.patchValue({
-              id : val.id,
-              firstName: data.firstName,
-              lastName : data.lastName,
-              email : data.email
-            });
-            this.oldModerator = data;
-            // this.moderatorForm.controls.email.disable();
-          }
-        );
-        console.log(val);
-      }
+    this.subscriptions.push(
+      this.activatedRoute.params.subscribe(
+        val => {
+          this.moderatorService.getModeratorById(val.id).subscribe(
+            data => {
+              this.moderatorForm.patchValue({
+                id : val.id,
+                firstName: data.firstName,
+                lastName : data.lastName,
+                email : data.email
+              });
+              this.oldModerator = data;
+            }
+          );
+        }
+      )
     );
   }
 
@@ -85,32 +88,31 @@ export class ModeratorEditComponent implements OnInit {
 
         this.messageService.add({severity: 'error', detail: 'Enter the mail in the correct format'}); }
       else{
-        this.registerService.getIdByMail(this.moderatorForm.controls.email.value)
-          .subscribe(
-            data => {
-              console.log('MAIL');
-              console.log(data.value);
-              console.log(this.oldModerator);
-              if (data.value === this.moderatorForm.controls.id.value) {
+        this.subscriptions.push(
+          this.registerService.getIdByMail(this.moderatorForm.controls.email.value)
+            .subscribe(
+              data => {
+                if (data.value === this.moderatorForm.controls.id.value) {
+                  this.moderatorForm.patchValue({
+                    email: this.moderatorForm.controls.email.value});
+                }
+                else{
+                  hasErrors = true;
+                  this.messageService.add({
+                    severity: 'error', summary: 'Email already exists',
+                    detail: 'An account with this email already exists.'
+                  });
+                  this.moderatorForm.patchValue({
+                    email: this.oldModerator?.email
+                  });
+                }
+              },
+              () => {
                 this.moderatorForm.patchValue({
                   email: this.moderatorForm.controls.email.value});
               }
-              else{
-                hasErrors = true;
-                this.messageService.add({
-                  severity: 'error', summary: 'Email already exists',
-                  detail: 'An account with this email already exists.'
-                });
-                this.moderatorForm.patchValue({
-                  email: this.oldModerator?.email
-                });
-              }
-            },
-            () => {
-              this.moderatorForm.patchValue({
-                email: this.moderatorForm.controls.email.value});
-            }
-          );
+            )
+        );
       }
     }
 
@@ -138,14 +140,19 @@ export class ModeratorEditComponent implements OnInit {
     if (hasErrors){
       return;
     }
-    this.moderatorService.updateModerator(moderator).subscribe(
-      () => {
-        this.messageService.add({
-          severity: 'success', summary: 'Moderator updated successfully.'
-        });
-        this.router.navigate(['/admin-panel']);
-      }
+    this.subscriptions.push(
+      this.moderatorService.updateModerator(moderator).subscribe(
+        () => {
+          this.messageService.add({
+            severity: 'success', summary: 'Moderator updated successfully.'
+          });
+          this.router.navigate(['/moderators']);
+        }
+      )
     );
+  }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 }

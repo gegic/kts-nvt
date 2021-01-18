@@ -15,8 +15,6 @@ export class CategoriesViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // tslint:disable-next-line:no-debugger
-    debugger;
     this.categoryService.getCategories().subscribe(categories => {
       this.categoriesList = categories.content;
     });

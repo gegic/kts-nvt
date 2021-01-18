@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormControl, ValidatorFn, Validators } from '@angular/forms';
+import {AbstractControl, Form, FormControl, ValidatorFn, Validators} from '@angular/forms';
 import { User } from 'src/app/core/models/user';
 import { UserService } from 'src/app/core/services/users/users.service';
 import {MessageService} from 'primeng/api';
@@ -20,7 +20,7 @@ const DIGIT_REGEX: RegExp = /(?=.*\d)/;
 export class UserEditComponent implements OnInit {
 
 
-  user: User;
+  user?: User;
 
   passwordControl: FormControl = new FormControl('', [this.containDigit(), this.containSmall(), this.containCapital(), this.emptyField('New password')]);
   confirmPasswordControl: FormControl = new FormControl('', [this.samePasswords(this.passwordControl)]);
@@ -29,46 +29,18 @@ export class UserEditComponent implements OnInit {
   lastName: FormControl = new FormControl('', [this.emptyField('Last name')]);
   email: FormControl = new FormControl('', [this.emptyField('E-mail')]);
 
-  fields: any[];
 
   constructor(
       private userService: UserService,
       private messageService: MessageService,
       private authService: AuthService
     ){
-
-    this.user = Object.assign(new User(), this.authService.user.getValue());
-
-    // DEV
-    // this.user = new User();
-    // this.user.email = 'a@a.com',
-    // this.user.firstName = 'Dzoni';
-    // this.user.lastName = 'Dep';
-
-    this.fields = [
-      {
-        name: 'First name',
-        value: this.user.firstName
-      },
-      {
-        name: 'Last name',
-        value: this.user.lastName
-      },
-      {
-        name: 'E-mail',
-        value: this.user.email
-      }
-    ];
   }
 
   ngOnInit(): void{
+    this.user = Object.assign(new User(), this.authService.user.getValue());
   }
 
-  generateUser(): User{
-    const user: User = new User();
-    user.id = this.user.id;
-    return user;
-  }
 
   updatePassword(): void{
     if (this.passwordControl.invalid){
@@ -80,27 +52,41 @@ export class UserEditComponent implements OnInit {
       this.messageService.add({severity: 'error', detail: this.confirmPasswordControl.errors?.msg});
       return;
     }
-    const user = this.generateUser();
+    const user = this.user;
+    if (!user) {
+      return;
+    }
     user.password = this.passwordControl.value;
-    this.commitUpdate(user, 'password');
+    this.commitUpdate(user, 'password', this.passwordControl, this.confirmPasswordControl);
   }
+
   updateName(): void{
     if (this.name.invalid){
       this.messageService.add({severity: 'error', detail: this.name.errors?.msg});
       return;
     }
-    const user = this.generateUser();
+    const user = this.user;
+
+    if (!user) {
+      return;
+    }
+
     user.firstName = this.name.value;
-    this.commitUpdate(user, 'first name');
+    this.commitUpdate(user, 'first name', this.name);
   }
   updateLastName(): void{
     if (this.lastName.invalid){
       this.messageService.add({severity: 'error', detail: this.lastName.errors?.msg});
       return;
     }
-    const user = this.generateUser();
+    const user = this.user;
+
+    if (!user) {
+      return;
+    }
+
     user.lastName = this.lastName.value;
-    this.commitUpdate(user, 'last name');
+    this.commitUpdate(user, 'last name', this.lastName);
   }
   updateEmail(): void{
     if (this.email.invalid){
@@ -112,23 +98,31 @@ export class UserEditComponent implements OnInit {
       this.messageService.add({severity: 'error', detail: errors?.msg});
       return;
     }
-    const user = this.generateUser();
+    const user = this.user;
+
+    if (!user) {
+      return;
+    }
+
     user.email = this.email.value;
-    this.commitUpdate(user, 'email');
+    this.commitUpdate(user, 'email', this.email);
   }
 
-  commitUpdate(user: User, field: string): void{
+  commitUpdate(user: User, field: string, formControl: FormControl, optionalControl?: FormControl): void{
     this.userService.update(user).subscribe(
-      (data) => {
-        console.log(data);
-        this.userService.getById(user.id).subscribe((data1: {user: User}) => {
-          console.log(data1);
-          this.authService.updateUserData(user);
-        });
+      val => {
+        this.user = val;
+        this.authService.updateUserData(val);
         this.messageService.add({severity: 'success', detail: field + ' updated'});
       },
       () => {
         this.messageService.add({severity: 'error', detail: 'Update of ' + field + ' failed'});
+      },
+      () => {
+        formControl.reset();
+        if (!!optionalControl) {
+          optionalControl.reset();
+        }
       }
     );
   }
@@ -156,6 +150,28 @@ export class UserEditComponent implements OnInit {
   containDigit(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null =>
     DIGIT_REGEX.test(control.value) ? null : {msg: 'Password must contain digit.'};
+  }
+
+  getFields(): any[] {
+
+    if (!this.user) {
+      return [];
+    }
+
+    return [
+      {
+        name: 'First name',
+        value: this.user.firstName
+      },
+      {
+        name: 'Last name',
+        value: this.user.lastName
+      },
+      {
+        name: 'E-mail',
+        value: this.user.email
+      }
+    ];
   }
 }
 

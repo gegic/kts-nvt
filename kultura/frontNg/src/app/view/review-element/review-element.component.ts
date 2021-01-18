@@ -8,6 +8,7 @@ import {AuthService} from '../../core/services/auth/auth.service';
 import {ReviewPhoto} from '../../core/models/reviewPhoto';
 import {ReviewGalleriaService} from '../../core/services/review-galleria/review-galleria.service';
 import {ReviewNumbers} from '../../core/models/reviewNumbers';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-review-element',
@@ -15,6 +16,8 @@ import {ReviewNumbers} from '../../core/models/reviewNumbers';
   styleUrls: ['./review-element.component.scss']
 })
 export class ReviewElementComponent implements OnInit, OnDestroy {
+
+  private subscriptions: Subscription[] = [];
 
   @Input()
   review?: Review;
@@ -55,16 +58,17 @@ export class ReviewElementComponent implements OnInit, OnDestroy {
     if (!this.review || !this.review.id) {
       return;
     }
-    this.reviewService.delete(this.review.id).subscribe(() => {
-      this.reviewDeleted.emit();
-    });
+    this.subscriptions.push(
+      this.reviewService.delete(this.review.id).subscribe(() => {
+        this.reviewDeleted.emit();
+      })
+    );
   }
 
   getAddedAgoString(): string {
     if (!this.review?.timeAdded) {
       return 'Some time ago';
     }
-    console.log(this.review?.timeAdded);
     const now = moment();
     const timeAddedMs = moment.utc(this.review.timeAdded);
     return TimeUtil.timeDifference(now.valueOf(), timeAddedMs.valueOf());
@@ -85,10 +89,9 @@ export class ReviewElementComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.reviewService.reviews = [];
-    this.reviewService.reviewNumbers = new ReviewNumbers();
     this.reviewGalleriaService.value = [];
     this.reviewGalleriaService.visible = false;
     this.reviewGalleriaService.activeIndex = 0;
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 }

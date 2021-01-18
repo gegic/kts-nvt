@@ -1,1 +1,31 @@
-<p>cultural-offering-about works!</p>
+<div class="about">
+  <div class="p-card p-p-5">
+    <div class="map" #map></div>
+    <div class="p-grid p-p-0 p-mb-0 p-mt-6 p-mx-0">
+      <div class="p-col-12 p-sm-4 p-md-3 address-box">
+        <p class="p-text-light" *ngIf="!!culturalOffering && !!culturalOffering.address">{{culturalOffering.address}}</p>
+      </div>
+      <div class="p-col-12 p-sm-8 p-md-9 p-pl-0 p-pl-sm-6">
+        <div class="p-d-inline-flex p-mt-2 p-mb-0">
+          <i class="pi pi-info-circle" style="font-size: 2rem"></i>
+          <div class="p-ml-2 p-flex-wrap">
+            <p class="p-text-normal p-my-0"
+               *ngIf="!!culturalOffering && !!culturalOffering.briefInfo; else briefInfoSkeleton"
+            >{{culturalOffering.briefInfo}}</p>
+            <ng-template #briefInfoSkeleton>
+              <p-skeleton shape="rectangle"></p-skeleton>
+            </ng-template>
+          </div>
+        </div>
+        <div class="p-d-inline-flex p-mt-2 p-mb-0"
+             *ngIf="!!culturalOffering && !!culturalOffering.additionalInfo">
+          <i class="pi pi-info-circle" style="font-size: 2rem"></i>
+          <div class="p-ml-2 p-flex-wrap">
+            <p class="p-text-normal p-my-0">{{culturalOffering.additionalInfo}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

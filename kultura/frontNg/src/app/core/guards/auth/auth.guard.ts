@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate {
       const auth = this.authorize(accessRoles, user) ?? false;
       if (!auth) {
         if (user.getRole() === 'ADMIN') {
-          this.router.navigate(['admin-panel']);
+          this.router.navigate(['moderators']);
         } else {
           this.router.navigate(['']);
         }

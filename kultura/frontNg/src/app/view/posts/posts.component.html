@@ -58,12 +58,16 @@
             <p-menu [model]="getMenuItems(post)" [popup]="true" #menu></p-menu>
             <button class="p-ml-auto options-button p-button p-button-icon p-button-text"
                     icon="pi pi-ellipsis-h"
+                    *ngIf="getUserRole() === 'MODERATOR'"
                     (click)="menu.toggle($event)"
                     pButton
             ></button>
           </div>
           <p class="p-mt-0 p-mb-2">{{ post.content }}</p>
         </p-card>
+        <div class="p-text-center">
+          <p-progressSpinner *ngIf="isPostsLoading"></p-progressSpinner>
+        </div>
       </div>
     </div>
   </div>

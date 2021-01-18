@@ -1,16 +1,19 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {CulturalOffering} from '../../core/models/cultural-offering';
 import {Router} from '@angular/router';
 import {CulturalOfferingsService} from '../../core/services/cultural-offerings/cultural-offerings.service';
 import {ConfirmationService, MessageService} from 'primeng/api';
-import {AuthService} from "../../core/services/auth/auth.service";
+import {AuthService} from '../../core/services/auth/auth.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-list-element',
   templateUrl: './list-element.component.html',
   styleUrls: ['./list-element.component.scss']
 })
-export class ListElementComponent implements OnInit {
+export class ListElementComponent implements OnInit, OnDestroy {
+
+  private subscriptions: Subscription[] = [];
 
   @Input()
   culturalOffering!: CulturalOffering;
@@ -57,30 +60,36 @@ export class ListElementComponent implements OnInit {
     if (!this.isLoggedIn()) {
       this.router.navigate(['login']);
     } else {
-      this.culturalOfferingsService.subscribe(this.authService.user.getValue()?.id ?? 0,
-        this.culturalOffering.id ?? 0).subscribe(data => {
-          this.culturalOffering = data;
-      });
+      this.subscriptions.push(
+        this.culturalOfferingsService.subscribe(this.authService.user.getValue()?.id ?? 0,
+          this.culturalOffering.id ?? 0).subscribe(data => {
+            this.culturalOffering = data;
+        })
+      );
     }
   }
 
   onClickUnsubscribe(event: any): void {
     event.stopPropagation();
-    this.culturalOfferingsService.unsubscribe(this.authService.user.getValue()?.id ?? 0,
-      this.culturalOffering.id ?? 0).subscribe(data => {
-        this.culturalOffering = data;
-    });
+    this.subscriptions.push(
+      this.culturalOfferingsService.unsubscribe(this.authService.user.getValue()?.id ?? 0,
+        this.culturalOffering.id ?? 0).subscribe(data => {
+          this.culturalOffering = data;
+      })
+    );
   }
 
   deletionConfirmed(): void {
-    this.culturalOfferingsService.delete(this.culturalOffering?.id ?? 0).subscribe(() => {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Deleted successfully',
-        detail: 'The cultural offering was deleted successfully'
-      });
-      this.offeringDeleted.emit();
-    });
+    this.subscriptions.push(
+      this.culturalOfferingsService.delete(this.culturalOffering?.id ?? 0).subscribe(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Deleted successfully',
+          detail: 'The cultural offering was deleted successfully'
+        });
+        this.offeringDeleted.emit();
+      })
+    );
   }
 
   isLoggedIn(): boolean {
@@ -97,6 +106,10 @@ export class ListElementComponent implements OnInit {
     } else {
       return `${(Math.round((this.culturalOffering?.overallRating ?? 0) * 10) / 10).toFixed(1)} rating out of ${this.culturalOffering?.numReviews} reviews.`;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
 }

@@ -28,7 +28,7 @@ public class PostsController {
     @GetMapping(path = "/cultural-offering/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<PostDto>> get(@PathVariable long culturalOfferingId,
                                              @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "3") int size) {
+                                             @RequestParam(defaultValue = "10") int size) {
         String[] sort = {"timeAdded", "desc"};
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<PostDto> postDtos = this.postService

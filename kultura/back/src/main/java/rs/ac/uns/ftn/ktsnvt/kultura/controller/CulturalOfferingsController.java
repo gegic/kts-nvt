@@ -39,7 +39,7 @@ public class CulturalOfferingsController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CulturalOfferingDto>> getAll
             (@RequestParam(defaultValue = "0") int page,
-             @RequestParam(defaultValue = "3") int size,
+             @RequestParam(defaultValue = "7") int size,
              @RequestParam(defaultValue = "id,asc") String[] sort,
              @RequestParam(defaultValue = "", name = "search") String searchQuery,
              @RequestParam(defaultValue = "1f", name = "rating-min") float ratingMin,

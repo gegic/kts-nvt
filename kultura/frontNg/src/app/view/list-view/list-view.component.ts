@@ -6,7 +6,8 @@ import {Category} from '../../core/models/category';
 import {Subcategory} from '../../core/models/subcategory';
 import * as L from 'leaflet';
 import {NominatimPlace} from '../../core/services/place-offering/place-offering.service';
-import {AuthService} from "../../core/services/auth/auth.service";
+import {AuthService} from '../../core/services/auth/auth.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-list-view',
@@ -14,6 +15,8 @@ import {AuthService} from "../../core/services/auth/auth.service";
   styleUrls: ['./list-view.component.scss']
 })
 export class ListViewComponent implements OnInit, OnDestroy {
+
+  private subscriptions: Subscription[] = [];
 
   page = -1;
   totalPages = 0;
@@ -53,15 +56,17 @@ export class ListViewComponent implements OnInit, OnDestroy {
   absoluteAddress = '';
   absoluteAddressSelected = false;
   relativeAddress = '';
-  offeringsLoading = false;
+  isOfferingsLoading = false;
 
   constructor(private culturalOfferingsService: CulturalOfferingsService,
               private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.culturalOfferingsService.searchQuery.subscribe(() => {
-      this.resetCulturalOfferings();
-    });
+    this.subscriptions.push(
+      this.culturalOfferingsService.searchQuery.subscribe(() => {
+        this.resetCulturalOfferings();
+      })
+    );
     this.getCulturalOfferings();
     this.getLocation();
   }
@@ -69,37 +74,43 @@ export class ListViewComponent implements OnInit, OnDestroy {
   getLocation(): void {
     navigator.geolocation.getCurrentPosition(position => {
       this.relativeLocation = [position.coords.latitude, position.coords.longitude];
-      this.culturalOfferingsService.getRelativeAddress(this.relativeLocation).subscribe(data => {
-        this.relativeAddress = data.display_name;
-      });
+      this.subscriptions.push(
+        this.culturalOfferingsService.getRelativeAddress(this.relativeLocation).subscribe(data => {
+          this.relativeAddress = data.display_name;
+        })
+      );
     });
   }
 
   getCulturalOfferings(): void {
     if (this.page === this.totalPages) {
+      this.isOfferingsLoading = false;
       return;
     }
-    this.offeringsLoading = true;
+    this.isOfferingsLoading = true;
     let userId: number | undefined;
     if (this.isLoggedIn() && this.getUserRole() === 'USER') {
       userId = this.authService.user.getValue()?.id ?? -1;
     }
-    this.culturalOfferingsService.getCulturalOfferings(this.page + 1, this.sortType.sort, userId).subscribe(
-      val => {
-        for (const el of val.content) {
-          if (this.culturalOfferingsService.culturalOfferings.some(co => co.id === el.id)) {
-            continue;
+    this.subscriptions.push(
+      this.culturalOfferingsService.getCulturalOfferings(this.page + 1, this.sortType.sort, userId).subscribe(
+        val => {
+          for (const el of val.content) {
+            if (this.culturalOfferingsService.culturalOfferings.some(co => co.id === el.id)) {
+              continue;
+            }
+            this.culturalOfferingsService.culturalOfferings.push(el);
           }
-          this.culturalOfferingsService.culturalOfferings.push(el);
+          this.page = val.pageable.pageNumber;
+          this.totalPages = val.totalPages;
+          this.isOfferingsLoading = false;
         }
-        this.offeringsLoading = false;
-        this.page = val.pageable.pageNumber;
-        this.totalPages = val.totalPages;
-      }
+      )
     );
   }
 
   resetCulturalOfferings(): void {
+    this.isOfferingsLoading = true;
     this.culturalOfferingsService.culturalOfferings = [];
     this.page = -1;
     this.totalPages = 0;
@@ -196,13 +207,15 @@ export class ListViewComponent implements OnInit, OnDestroy {
       return;
     }
     this.categoriesLoading = true;
-    this.culturalOfferingsService.getCategories(this.lastLoadedPageFilter.categories + 1).subscribe(
-      data => {
-        this.culturalOfferingsService.categories = this.culturalOfferingsService.categories?.concat(data.content as Category[]);
-        this.lastLoadedPageFilter.categories = data.pageable.pageNumber;
-        this.totalPagesFilter.categories = data.totalPages;
-        this.categoriesLoading = false;
-      }
+    this.subscriptions.push(
+      this.culturalOfferingsService.getCategories(this.lastLoadedPageFilter.categories + 1).subscribe(
+        data => {
+          this.culturalOfferingsService.categories = this.culturalOfferingsService.categories?.concat(data.content as Category[]);
+          this.lastLoadedPageFilter.categories = data.pageable.pageNumber;
+          this.totalPagesFilter.categories = data.totalPages;
+          this.categoriesLoading = false;
+        }
+      )
     );
   }
 
@@ -217,14 +230,16 @@ export class ListViewComponent implements OnInit, OnDestroy {
     } else {
       id = passedId;
     }
-    this.culturalOfferingsService.getSubcategories(id, this.lastLoadedPageFilter.subcategories + 1).subscribe(
-      data => {
-        this.culturalOfferingsService.subcategories = this.culturalOfferingsService
-          .subcategories?.concat(data.content as Subcategory[]);
-        this.lastLoadedPageFilter.subcategories = data.pageable.pageNumber;
-        this.totalPagesFilter.subcategories = data.totalPages;
-        this.subcategoriesLoading = false;
-      }
+    this.subscriptions.push(
+      this.culturalOfferingsService.getSubcategories(id, this.lastLoadedPageFilter.subcategories + 1).subscribe(
+        data => {
+          this.culturalOfferingsService.subcategories = this.culturalOfferingsService
+            .subcategories?.concat(data.content as Subcategory[]);
+          this.lastLoadedPageFilter.subcategories = data.pageable.pageNumber;
+          this.totalPagesFilter.subcategories = data.totalPages;
+          this.subcategoriesLoading = false;
+        }
+      )
     );
   }
 
@@ -244,10 +259,12 @@ export class ListViewComponent implements OnInit, OnDestroy {
     this.absoluteAddressSelected = false;
 
     const enteredAddress = event.query;
-    this.culturalOfferingsService.getRecommendations(enteredAddress).subscribe(
-      data => {
-        this.recommendations = data as NominatimPlace[];
-      }
+    this.subscriptions.push(
+      this.culturalOfferingsService.getRecommendations(enteredAddress).subscribe(
+        data => {
+          this.recommendations = data as NominatimPlace[];
+        }
+      )
     );
   }
 
@@ -304,5 +321,6 @@ export class ListViewComponent implements OnInit, OnDestroy {
     this.culturalOfferingsService.culturalOfferings = [];
     this.culturalOfferingsService.searchQuery.next('');
     this.resetFilter();
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 }

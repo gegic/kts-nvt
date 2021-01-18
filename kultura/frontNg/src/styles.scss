@@ -30,3 +30,24 @@ body {
 .p-button:focus {
   box-shadow: none !important;
 }
+
+.blue-button-text {
+  color: #275dad !important;
+}
+
+.blue-button {
+  background: #275DAD !important;
+  border: 1px solid #275DAD !important;
+}
+
+.blue-button:hover {
+  background: #144183 !important;
+}
+
+.blue-button:disabled {
+  background: #365991 !important;
+}
+
+.blue-button-outlined {
+  border: 1px solid #275DAD !important;
+}

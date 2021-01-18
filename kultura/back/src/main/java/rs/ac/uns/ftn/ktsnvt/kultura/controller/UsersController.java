@@ -37,7 +37,7 @@ public class UsersController {
 
     @GetMapping(path = "/moderators")
     public ResponseEntity<Page<UserDto>> getModerators(@RequestParam(defaultValue = "0") int page,
-                                                       @RequestParam(defaultValue = "3") int size,
+                                                       @RequestParam(defaultValue = "10") int size,
                                                        @RequestParam(defaultValue = "id,desc") String[] sort) {
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<UserDto> moderatorsDto = this.userService.readByAuthority(p, "ROLE_MODERATOR");

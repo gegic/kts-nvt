@@ -4,7 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 @Component({
   selector: 'app-category-add',
   templateUrl: './category-add.component.html',
-  styleUrls: ['../moderator-add/moderator-add.component.css']
+  styleUrls: ['../moderator-add/moderator-add.component.scss']
 })
 export class CategoryAddComponent implements OnInit {
   categoryForm: FormGroup = new FormGroup(

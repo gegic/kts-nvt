@@ -1,13 +1,7 @@
-export class Page {
-  content?: [];
-  empty?: boolean;
-  first?: boolean;
-  last?: boolean;
-  number?: number;
-  numberOfElements?: number;
-  pageable?: {};
-  size?: number;
-  sort?: {};
-  totalElements?: number;
-  totalPages?: number;
+export class Page<T> {
+  content: T[] = [];
+  empty = true;
+  numberOfElements = 0;
+  totalElements = 0;
+  totalPages = 0;
 }

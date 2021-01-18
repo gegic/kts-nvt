@@ -1,12 +1,17 @@
-<p-card>
+<div>
   <div class="list-header p-d-flex p-ai-center">
     <h2 class="p-text-light">Showing all moderators</h2>
-    <button class="p-button p-ml-auto" routerLink="/add-moderator" label="NEW MODERATOR" pButton></button>
+    <button class="p-button blue-button p-ml-auto" routerLink="/add-moderator" label="NEW MODERATOR" pButton></button>
   </div>
-  <app-moderator-list-element *ngFor="let moderator of moderatorsList"
-                    [moderator]="moderator" (moderatorDeleted)="deleteUser($event)"
+  <div class="list-content"
+       (scrolled)="onScrollDown()"
+       infinite-scroll
   >
-  </app-moderator-list-element>
+    <app-moderator-list-element *ngFor="let moderator of moderators"
+                                [moderator]="moderator"
+                                (moderatorDeleted)="moderatorDeletionConfirmed()"
+    >
+    </app-moderator-list-element>
 
-</p-card>
-
+  </div>
+</div>

@@ -39,7 +39,7 @@ public class ReviewsController {
     @GetMapping(path = "/cultural-offering/{culturalOfferingId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ReviewDto>> get(@PathVariable long culturalOfferingId,
                                               @RequestParam(defaultValue = "0") int page,
-                                              @RequestParam(defaultValue = "3") int size,
+                                              @RequestParam(defaultValue = "10") int size,
                                               @RequestParam(defaultValue = "id,desc") String[] sort){
 
         Pageable p = PageableExtractor.extract(page, size, sort);

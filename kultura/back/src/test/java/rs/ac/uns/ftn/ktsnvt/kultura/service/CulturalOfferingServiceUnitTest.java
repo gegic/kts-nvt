@@ -222,7 +222,8 @@ public class CulturalOfferingServiceUnitTest {
                             c.getSubcategory().getName(),
                             c.getSubcategory().getCategory().getId(),
                             c.getSubcategory().getCategory().getName(),
-                            c.getSubscribedUsers().size()
+                            c.getSubscribedUsers().size(),
+                            null
                     );
                 });
         Mockito.when(modelMapper.toExistingEntity(Mockito.any(), Mockito.any())).thenAnswer((i)-> {
@@ -269,7 +270,8 @@ public class CulturalOfferingServiceUnitTest {
                             c.getSubcategory().getName(),
                             c.getSubcategory().getCategory().getId(),
                             c.getSubcategory().getCategory().getName(),
-                            c.getSubscribedUsers().size()
+                            c.getSubscribedUsers().size(),
+                            null
                     );
                 });
         Mockito.when(modelMapper.toExistingEntity(Mockito.any(), Mockito.any())).thenAnswer((i)-> i.<CulturalOffering>getArgument(1));
@@ -303,7 +305,8 @@ public class CulturalOfferingServiceUnitTest {
                             c.getSubcategory().getName(),
                             c.getSubcategory().getCategory().getId(),
                             c.getSubcategory().getCategory().getName(),
-                            c.getSubscribedUsers().size()
+                            c.getSubscribedUsers().size(),
+                            null
                     );
                 });
         Mockito.when(modelMapper.toExistingEntity(Mockito.any(), Mockito.any())).thenAnswer((i)-> i.<CulturalOffering>getArgument(1));

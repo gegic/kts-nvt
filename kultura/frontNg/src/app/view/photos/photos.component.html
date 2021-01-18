@@ -5,7 +5,7 @@
         All photos
       </h2>
       <button *ngIf="getUserRole() === 'MODERATOR'"
-              class="p-button p-d-block p-ml-auto"
+              class="p-button blue-button p-d-block p-ml-auto"
               label="Add a photo"
               (click)="isOpenAddDialog = true"
               pButton></button>
@@ -27,6 +27,9 @@
             </div>
           </div>
         </div>
+        <div class="p-col-12 p-sm-6 p-md-4 p-lg-3 p-justify-center p-text-center" *ngIf="isPhotosLoading">
+          <p-progressSpinner></p-progressSpinner>
+        </div>
       </div>
     </div>
     <ng-template #noPhotos>
@@ -34,6 +37,7 @@
         <h2 class="p-text-light">
           There are no added photos for this cultural offering.
         </h2>
+        <p-progressSpinner *ngIf="isPhotosLoading"></p-progressSpinner>
       </div>
     </ng-template>
   </div>

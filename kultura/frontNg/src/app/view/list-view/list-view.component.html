@@ -1,7 +1,12 @@
 <div>
   <div class="list-header p-d-flex p-ai-center">
     <h2 class="p-text-light">{{filterSet || !!searchQuery ? 'Search and filter results' : 'Showing all offerings'}}</h2>
-    <button class="p-button p-ml-auto new-offering" routerLink="/create-offering" label="NEW OFFERING" pButton></button>
+    <button class="p-button p-ml-auto new-offering blue-button"
+            *ngIf="getUserRole() === 'MODERATOR'"
+            routerLink="/create-offering"
+            label="NEW OFFERING"
+            pButton
+    ></button>
   </div>
   <div class="list-content"
        (scrolled)="onScrollDown()"
@@ -38,9 +43,14 @@
       </app-list-element>
     </div>
     <ng-template #noOfferings>
-      <h2 class="p-text-bold">
+      <h2 class="p-text-bold" *ngIf="!isOfferingsLoading; else offeringsLoadingSpinner">
         {{filterSet || !!searchQuery ? 'No results...' : 'No offerings...'}}
       </h2>
+      <ng-template #offeringsLoadingSpinner>
+        <div class="p-text-center">
+          <p-progressSpinner></p-progressSpinner>
+        </div>
+      </ng-template>
     </ng-template>
   </div>
   <p-dialog header="Filter"
@@ -169,7 +179,7 @@
 
     </div>
     <p-footer>
-      <button class="p-button" label="Save filter" (click)="saveFilter()" pButton></button>
+      <button class="p-button blue-button" label="Save filter" (click)="saveFilter()" pButton></button>
     </p-footer>
   </p-dialog>
 </div>

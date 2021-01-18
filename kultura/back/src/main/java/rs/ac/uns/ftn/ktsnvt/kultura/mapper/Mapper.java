@@ -31,14 +31,10 @@ public class Mapper {
 
     public static final String INFER_ORIGIN = "@infer";
 
-    private EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
     private ApplicationContext applicationContext;
     private Repositories repos;
     @Autowired
-    public Mapper(EntityManagerFactory entityManagerFactory,
-                  ApplicationContext applicationContext) {
-        this.entityManagerFactory = entityManagerFactory;
+    public Mapper(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         this.repos = new Repositories(applicationContext);
     }
@@ -77,7 +73,6 @@ public class Mapper {
 
     public <TEntity, TDto> TDto fromEntity(TEntity entity, Class<TDto> dtoClass) {
 
-        entityManager = entityManagerFactory.createEntityManager();
         TDto dto;
         try {
             dto = dtoClass.getDeclaredConstructor().newInstance();
@@ -144,8 +139,6 @@ public class Mapper {
             }
         }
 
-        entityManager.close();
-
         return dto;
     }
 
@@ -154,7 +147,6 @@ public class Mapper {
                                                      Class<?> dtoClass,
                                                      Class<?> entityClass) {
 
-        entityManager = entityManagerFactory.createEntityManager();
 
         Field[] fields = dtoClass.getDeclaredFields();
         String setterName;
@@ -234,7 +226,6 @@ public class Mapper {
             }
 
         }
-        entityManager.close();
         return entity;
     }
 

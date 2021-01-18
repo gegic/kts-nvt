@@ -6,4 +6,10 @@ export class MapOptions implements L.MapOptions {
   attributionControl = false;
   maxBoundsViscosity = 1.0;
   minZoom = 3;
+  touchZoom = true;
+  doubleClickZoom = true;
+  scrollWheelZoom = true;
+  boxZoom = true;
+  keyboard = true;
+  dragging = true;
 }

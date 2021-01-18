@@ -23,14 +23,14 @@
                   (click)="onClickDelete($event)"
                   pButton
           ></button>
-          <button class="p-button p-button-rounded p-button-icon p-ml-3"
+          <button class="p-button blue-button p-button-rounded p-button-icon p-ml-3"
                   icon="pi pi-pencil"
                   (click)="onClickEdit($event)"
                   pButton
           ></button>
         </div>
         <ng-template #subscribeButton>
-            <button class="p-button"
+            <button class="p-button blue-button"
                     *ngIf="!culturalOffering.subscribed || !isLoggedIn(); else unsubscribeButton"
                     label="Subscribe"
                     icon="pi pi-bell"

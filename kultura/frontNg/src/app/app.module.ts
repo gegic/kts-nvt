@@ -22,7 +22,6 @@ import {RegisterNameComponent} from './view/login-registration/registration/regi
 import {RegisterPasswordComponent} from './view/login-registration/registration/register-password/register-password.component';
 import {RegisterSuccessComponent} from './view/login-registration/registration/register-success/register-success.component';
 import {RegisterVerifyComponent} from './view/login-registration/registration/register-verify/register-verify.component';
-import {UserViewComponent} from './view/user-view/user-view.component';
 import {MainViewComponent} from './view/main-view/main-view.component';
 import {HomeViewComponent} from './view/home-view/home-view.component';
 import {MapViewComponent} from './view/map-view/map-view.component';
@@ -40,8 +39,6 @@ import {NgSelectModule} from '@ng-select/ng-select';
 import {ModeratorAddComponent} from './view/moderator-add/moderator-add.component';
 import {ModeratorsViewComponent} from './view/moderators-view/moderators-view.component';
 import {RippleModule} from 'primeng/ripple';
-import {AdminPanelComponent} from './view/admin-panel/admin-panel.component';
-import { OfferingSidebarComponent } from './view/offering-sidebar/offering-sidebar.component';
 import { OfferingsListComponent } from './view/offerings-list/offerings-list.component';
 import { OfferingItemComponent } from './view/offering-item/offering-item.component';
 import { CulturalOfferingDetailsComponent } from './view/cultural-offering-details/cultural-offering-details.component';
@@ -73,7 +70,7 @@ import { ModeratorEditComponent } from './view/moderator-edit/moderator-edit.com
 import { CategoryAddComponent } from './view/category-add/category-add.component';
 import { CategoriesViewComponent } from './view/categories-view/categories-view.component';
 import { CategoryListItemComponent } from './view/category-list-item/category-list-item.component';
-import { UserEditComponent } from './view/user-view/user-edit/user-edit.component';
+import { UserEditComponent } from './view/user-edit/user-edit.component';
 import {TabViewModule} from 'primeng/tabview';
 import {TableModule} from 'primeng/table';
 
@@ -89,7 +86,6 @@ import {TableModule} from 'primeng/table';
     RegisterPasswordComponent,
     RegisterSuccessComponent,
     RegisterVerifyComponent,
-    UserViewComponent,
     MainViewComponent,
     HomeViewComponent,
     MapViewComponent,
@@ -98,8 +94,6 @@ import {TableModule} from 'primeng/table';
     CulturalOfferingPlaceComponent,
     ModeratorAddComponent,
     ModeratorsViewComponent,
-    AdminPanelComponent,
-    OfferingSidebarComponent,
     OfferingsListComponent,
     OfferingItemComponent,
     CulturalOfferingDetailsComponent,
@@ -156,7 +150,7 @@ import {TableModule} from 'primeng/table';
     SliderModule,
     AvatarModule,
     TabViewModule,
-    TableModule
+    TableModule,
     CheckboxModule,
     SelectButtonModule
   ],
