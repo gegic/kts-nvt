@@ -65,7 +65,7 @@ export class CategoriesViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  openAddDialog(editing = false, categoryId?: number): void {
+  openAddDialog(editing = false, category?: Category): void {
     this.isAddDialogOpen = true;
   }
 

@@ -17,6 +17,9 @@ export class CategoryListItemComponent implements OnInit, OnDestroy {
   category!: Category;
   @Output()
   categoryDeleted: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
+  clickEdit: EventEmitter<any> = new EventEmitter<any>();
+
 
   constructor(private router: Router,
               private categoryService: CategoryService,
@@ -62,6 +65,7 @@ export class CategoryListItemComponent implements OnInit, OnDestroy {
   }
 
   onClickEdit(): void{
+    this.clickEdit.emit(this.category);
   }
 
   ngOnDestroy(): void {
