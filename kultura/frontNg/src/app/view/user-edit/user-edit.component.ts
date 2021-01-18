@@ -22,7 +22,7 @@ export class UserEditComponent implements OnInit {
 
   user?: User;
 
-  passwordControl: FormControl = new FormControl('', [this.containDigit(), this.containSmall(), this.containCapital(), this.emptyField('New password')]);
+  passwordControl: FormControl = new FormControl('', [this.containDigit(), this.containCapital(), this.containSmall(), this.sizeValidator('New password', 8, 50), this.emptyField('New password')]);
   confirmPasswordControl: FormControl = new FormControl('', [this.samePasswords(this.passwordControl)]);
 
   name: FormControl = new FormControl('', [this.emptyField('First name')]);
@@ -123,7 +123,7 @@ export class UserEditComponent implements OnInit {
   commitUpdate(user: User,
                field: string,
                formControl: FormControl,
-               optionalControl: FormControl|null = null,
+               optionalControl: FormControl | null = null,
                signOutAfter: boolean = false,
                signOutMessage: string = ''): void {
     this.userService.update(user).subscribe(
@@ -146,6 +146,11 @@ export class UserEditComponent implements OnInit {
         }
       }
     );
+  }
+
+  sizeValidator(field: string, min: number, max: number): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null =>
+      control.value.length >= min && control.value.length <= max ? null : {msg: field + ' length must be between ' + min + ' and ' + max + ' characters.'};
   }
 
   emptyField(field: string): ValidatorFn {
