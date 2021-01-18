@@ -84,7 +84,7 @@ public interface CulturalOfferingRepository extends JpaRepository<CulturalOfferi
     @Query("select co from CulturalOffering co where lower(co.name) like lower(concat('%', :searchQuery,'%')) " +
             "and co.overallRating >= :ratingMin " +
             "and co.overallRating <= :ratingMax " +
-            "and -1 <> :categoryId " +
+            "and -1l <> :categoryId " +
             "and co.subcategory.id = :subcategoryId " +
             "and (co.latitude between :latitudeStart and :latitudeEnd) and " +
             "(co.longitude between :longitudeStart and :longitudeEnd)")
@@ -103,7 +103,7 @@ public interface CulturalOfferingRepository extends JpaRepository<CulturalOfferi
             "and ((co.overallRating >= :ratingMin " +
             "and co.overallRating <= :ratingMax) " +
             "or co.overallRating = 0) " +
-            "and -1 <> :categoryId " +
+            "and -1l <> :categoryId " +
             "and co.subcategory.id = :subcategoryId " +
             "and (co.latitude between :latitudeStart and :latitudeEnd) and " +
             "(co.longitude between :longitudeStart and :longitudeEnd)")

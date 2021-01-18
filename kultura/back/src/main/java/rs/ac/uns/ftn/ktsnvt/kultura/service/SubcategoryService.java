@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.SubcategoryDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
@@ -54,6 +56,12 @@ public class SubcategoryService {
     }
 
     public void delete(long id) {
+        Subcategory s = subcategoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("A subcategory with the specified id doesn't exist"));
+
+        if (s.getCulturalOfferings().size() > 0) {
+            throw new ResourceExistsException("There are cultural offerings associated to this subcategory.");
+        }
         subcategoryRepository.deleteById(id);
     }
 }

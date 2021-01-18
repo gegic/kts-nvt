@@ -1,9 +1,16 @@
 <div class="p-d-flex p-justify-center p-pt-0 p-mt-0">
-  <button *ngFor="let item of navigationItems"
-          class="p-button-text nav-button p-px-4"
-          routerLinkActive="activated"
-          [routerLink]="item.link"
-          [label]="item.label"
-          pButton
-  ></button>
+  <ng-container *ngFor="let item of navigationItems">
+    <button class="p-button-text nav-button p-px-4 p-d-none p-d-lg-flex"
+            routerLinkActive="activated"
+            [routerLink]="item.link"
+            [label]="item.label"
+            pButton
+    ></button>
+    <button class="p-button-text nav-icon-button p-px-4 p-d-flex p-d-lg-none"
+            routerLinkActive="activated"
+            [routerLink]="item.link"
+            [icon]="!!item.icon ? item.icon : 'pi pi-th-large'"
+            pButton
+    ></button>
+  </ng-container>
 </div>

@@ -18,19 +18,23 @@ export class CulturalOfferingDetailsComponent implements OnInit, OnDestroy {
   readonly navigationItems = [
     {
       label: 'Posts',
-      link: 'posts'
+      link: 'posts',
+      icon: 'pi pi-bars'
     },
     {
       label: 'Photos',
-      link: 'photos'
+      link: 'photos',
+      icon: 'pi pi-images'
     },
     {
       label: 'Reviews',
-      link: 'reviews'
+      link: 'reviews',
+      icon: 'pi pi-star'
     },
     {
       label: 'About',
-      link: 'about'
+      link: 'about',
+      icon: 'pi pi-info-circle'
     }
   ];
 

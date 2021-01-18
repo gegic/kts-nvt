@@ -9,7 +9,7 @@ import {filter} from 'rxjs/operators';
 })
 export class DetailsNavigationComponent implements OnInit {
   @Input()
-  navigationItems: {label: string, link: string}[] = [];
+  navigationItems: {label: string, link: string, icon?: string}[] = [];
 
   constructor() { }
 

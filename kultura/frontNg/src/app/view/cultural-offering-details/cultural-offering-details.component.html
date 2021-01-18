@@ -1,6 +1,6 @@
 <div>
   <div class="top-part">
-    <div class="p-grid p-px-0 p-m-0 p-py-3">
+    <div class="p-grid p-px-0 p-m-0 p-py-3 p-justify-around">
       <div class="p-col-fixed p-as-center"
            style="width: 150px"
       >
@@ -33,14 +33,23 @@
       </div>
       <div class="p-col p-flex p-as-end p-text-right">
         <div *ngIf="getUserRole() === 'MODERATOR'; else subscribeButton">
-          <button class="p-button p-button-danger p-mr-3"
+          <button class="p-button p-button-danger p-mr-3 p-d-none p-d-lg-inline"
                   icon="pi pi-trash"
                   label="Delete"
                   pButton
                   (click)="onClickDelete()"></button>
-          <button class="p-button blue-button"
+          <button class="p-button blue-button p-d-none p-d-lg-inline"
                   icon="pi pi-pencil"
                   label="Edit"
+                  (click)="onClickEdit()"
+                  pButton></button>
+
+          <button class="p-button p-button-danger p-button-icon p-button-rounded p-mr-3 p-d-inline p-d-lg-none"
+                  icon="pi pi-trash"
+                  pButton
+                  (click)="onClickDelete()"></button>
+          <button class="p-button blue-button p-button-icon p-button-rounded p-d-inline p-d-lg-none"
+                  icon="pi pi-pencil"
                   (click)="onClickEdit()"
                   pButton></button>
         </div>
