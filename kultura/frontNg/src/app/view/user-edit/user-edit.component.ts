@@ -160,14 +160,17 @@ export class UserEditComponent implements OnInit {
 
     return [
       {
+        id: 'name-val',
         name: 'First name',
         value: this.user.firstName
       },
       {
+        id: 'lastName-val',
         name: 'Last name',
         value: this.user.lastName
       },
       {
+        id: 'email-val',
         name: 'E-mail',
         value: this.user.email
       }
