@@ -17,10 +17,8 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.AuthorityRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
 import javax.transaction.Transactional;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -91,10 +89,6 @@ public class UserService implements UserDetailsService {
         }
         User updated = mapper.toExistingEntity(userDto, existingUser);
 
-//    existingUser.setEmail(userDto.getEmail());
-//    existingUser.setFirstName(userDto.getFirstName());
-//    existingUser.setLastName(userDto.getLastName());
-//    existingUser.setVerified(userDto.isVerified());
         if (userDto.getPassword() != null) {
             existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
             existingUser.setLastPasswordChange(LocalDateTime.now());
@@ -104,15 +98,14 @@ public class UserService implements UserDetailsService {
         if(emailChanged) {
             existingUser.setVerified(false);
         }
-//    return mapper.fromEntity(userRepository.save(existingUser), UserDto.class);
         User finalUser = userRepository.save(updated);
-        if(emailChanged) {
+        if(emailChanged){
             sendMail(finalUser);
         }
         return mapper.fromEntity(finalUser, UserDto.class);
     }
 
-    public void delete(long id) throws Exception {
+    public void delete(long id) {
         User existingUser = userRepository.findById(id).orElse(null);
         if (existingUser == null) {
             throw new ResourceNotFoundException("User with given id doesn't exist");
@@ -143,7 +136,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public UserDto verify(long id) throws Exception {
+    public UserDto verify(long id) {
         User existingUser = userRepository.findById(id).orElse(null);
         if (existingUser == null) {
             throw new ResourceNotFoundException("User with the given id doesn't exist");

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.auth.LoginDto;
 
@@ -16,9 +17,6 @@ public class LoginUtil {
                         String.class);
         JsonNode parent;
         String body = responseEntity.getBody();
-        if(body==null){
-            System.out.println("Can't log in");
-        }
         try {
             parent = new ObjectMapper().readTree(body);
             return parent.path("token").asText();

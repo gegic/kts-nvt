@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.security;
 
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
@@ -33,16 +34,21 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
             if (username != null) {
                 // uzmi user-a na osnovu username-a
-                User user = userService.loadUserByUsername(username);
+                try{
+                    User user = userService.loadUserByUsername(username);
+                    if (TokenUtils.validateToken(authToken, user)) {
+                        // kreiraj autentifikaciju
+                        Token authentication = new Token(user);
+                        authentication.setCredentials(authToken);
+                        authentication.setAuthenticated(true);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                }catch (UsernameNotFoundException e) {
+                    e.printStackTrace();
+                }
 
                 // proveri da li je prosledjeni token validan
-                if (TokenUtils.validateToken(authToken, user)) {
-                    // kreiraj autentifikaciju
-                    Token authentication = new Token(user);
-                    authentication.setCredentials(authToken);
-                    authentication.setAuthenticated(true);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
+
             }
         }
 
