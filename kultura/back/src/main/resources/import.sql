@@ -65,6 +65,8 @@ INSERT INTO user (email, first_name, last_name, last_password_change, password, 
 INSERT INTO user (email, first_name, last_name, last_password_change, password, verified) VALUES ('moderator12@mail.com', 'Moderator', 'Prezime', UTC_TIMESTAMP(), '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', true);
 INSERT INTO user (email, first_name, last_name, last_password_change, password, verified) VALUES ('moderator13@mail.com', 'Moderator', 'Prezime', UTC_TIMESTAMP(), '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', true);
 INSERT INTO user (email, first_name, last_name, last_password_change, password, verified) VALUES ('moderator14@mail.com', 'Moderator', 'Prezime', UTC_TIMESTAMP(), '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', true);
+INSERT INTO user (email, first_name, last_name, last_password_change, password, verified) VALUES ('user2@mail.com', 'User', 'Prezime', UTC_TIMESTAMP(), '$2a$10$yu3dC4LLPclLT9XAmvVtiuygJdD4kXMUnfBtu5k2.SxlrabVbR/vy', false);
+
 INSERT INTO user_authority (user_id, authority_id) VALUES (1, 1);
 INSERT INTO user_authority (user_id, authority_id) VALUES (2, 2);
 INSERT INTO user_authority (user_id, authority_id) VALUES (3, 3);
@@ -82,6 +84,7 @@ INSERT INTO user_authority (user_id, authority_id) VALUES (14, 2);
 INSERT INTO user_authority (user_id, authority_id) VALUES (15, 2);
 INSERT INTO user_authority (user_id, authority_id) VALUES (16, 2);
 INSERT INTO user_authority (user_id, authority_id) VALUES (17, 2);
+INSERT INTO user_authority (user_id, authority_id) VALUES (18, 3);
 
 INSERT INTO review (comment, rating, time_added, cultural_offering_id, user_id) VALUES ('Komentar', 3, NOW(), 1, 3);
 

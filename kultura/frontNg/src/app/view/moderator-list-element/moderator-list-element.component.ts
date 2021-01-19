@@ -40,6 +40,7 @@ export class ModeratorListElementComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.moderatorService.delete(this.moderator?.id ?? 0).subscribe(() => {
         this.messageService.add({
+          id: 'toast-container',
           severity: 'success',
           summary: 'Deleted successfully',
           detail: 'The moderator was deleted successfully'

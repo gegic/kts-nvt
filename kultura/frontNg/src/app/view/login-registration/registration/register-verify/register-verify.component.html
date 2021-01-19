@@ -14,7 +14,7 @@
         You can verify your account by clicking on the verify button.
       </p>
       <ng-template #pElse>
-        <p>
+        <p id="verified">
           Your account has been verified. Head to the login page in order to sign into the application.
         </p>
       </ng-template>
@@ -30,6 +30,7 @@
       <div class="p-col p-text-right">
         <button type="button"
                 class="p-button blue-button"
+                id="verify"
                 (click)="onClickVerify()"
                 [disabled]="verified"
                 [label]="verified ? 'Verified' : 'Verify'"

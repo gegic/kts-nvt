@@ -46,7 +46,7 @@ public class LoginE2ETest {
     loginPage.getPassword().sendKeys("admin123");
     loginPage.getLoginBtn().click();
     justWait();
-    assertEquals("http://localhost:4200/admin-panel", driver.getCurrentUrl());
+    assertEquals("http://localhost:4200/moderators", driver.getCurrentUrl());
   }
 
   @Test
@@ -124,7 +124,7 @@ public class LoginE2ETest {
 
   private void justWait() throws InterruptedException {
     synchronized (driver) {
-      driver.wait(1000);
+      driver.wait(500);
     }
   }
 }
