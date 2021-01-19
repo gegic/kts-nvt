@@ -18,15 +18,18 @@ import rs.ac.uns.ftn.ktsnvt.kultura.constants.PostConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.PostDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.PostRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @Rollback(false)
@@ -40,7 +43,11 @@ public class PostServiceIntegrationTest {
     @Autowired
     private PostRepository postRepository;
     @Autowired
+    private CulturalOfferingRepository repository;
+    @Autowired
     private Mapper mapper;
+    @PersistenceContext
+    EntityManager em;
 
     private PostDto createTestPostDto() {
         PostDto postDto = new PostDto();
@@ -65,7 +72,7 @@ public class PostServiceIntegrationTest {
         Page<PostDto> returnedPosts = postService
                 .readAllByCulturalOfferingId(CulturalOfferingConstants.EXISTING_ID1, pageRequest);
 
-        assertEquals(CategoryConstants.DB_COUNT, returnedPosts.getContent().size());
+        assertEquals(16, returnedPosts.getTotalElements());
     }
 
     @Test
@@ -88,35 +95,58 @@ public class PostServiceIntegrationTest {
     @Test
     @Transactional
     public void testSave(){
-        PostDto newPost = createTestPostDto();
+        PostDto newPost = new PostDto();
+        newPost.setContent("CONTENT");
+        newPost.setCulturalOfferingId(1L);
+        newPost.setTimeAdded(LocalDateTime.now());
+        long oldDb = postRepository.count();
+
         PostDto createdPost = postService.save(newPost);
 
-        assertThat(createdPost).isNotNull();
+        long newDb = postRepository.count();
 
-        // Validate that new category is in the database
-        Pageable pageRequest = PageRequest.of(0, PostConstants.PAGE_SIZE);
-        List<PostDto> posts = postService
-                .readAllByCulturalOfferingId(CulturalOfferingConstants.EXISTING_ID1, pageRequest).getContent();
-        assertThat(posts).hasSize(PostConstants.DB_COUNT + 1);
-        assertThat(PostConstants.TEST_ID).isEqualTo(createdPost.getId());
-        assertThat(createdPost.getContent()).isEqualTo(newPost.getContent());
+        assertNotNull(createdPost);
+        assertEquals(createdPost.getContent(), newPost.getContent());
+        assertEquals(oldDb + 1, newDb);
 
-        postService.delete(createdPost.getId());
+        postRepository.deleteById(createdPost.getId());
     }
 
     @Test
     @Transactional
-    @Rollback(value = true)
     public void testUpdate() {
-        PostDto updatePost = createTestUpdatePostDto();
+        Post oldPost = postRepository.getOne(1L);
+        em.detach(oldPost);
+
+        PostDto updatePost = new PostDto();
+        updatePost.setId(1L);
+        updatePost.setTimeAdded(oldPost.getTimeAdded());
+        updatePost.setContent("NOVI KONTENT");
+
         PostDto updatedPost = postService.update(updatePost);
 
-        assertThat(updatedPost).isNotNull();
+        assertNotNull(updatedPost);
+        assertEquals(1L, updatedPost.getId().longValue());
+        assertEquals("NOVI KONTENT", updatedPost.getContent());
 
-        // Validate that new category is in the database
-        assertThat(updatedPost.getId()).isEqualTo(updatePost.getId());
-        assertThat(updatedPost.getContent()).isEqualTo(updatePost.getContent());
-
+        postRepository.save(oldPost);
     }
 
+    @Test
+    @Transactional
+    public void testDelete() {
+        Post newPost = new Post();
+        newPost.setContent("KONTENT");
+        newPost.setTimeAdded(LocalDateTime.now());
+        newPost.setCulturalOffering(repository.getOne(1L));
+        newPost = postRepository.save(newPost);
+
+        long oldDb = postRepository.count();
+
+        postRepository.deleteById(newPost.getId());
+
+        long newDb = postRepository.count();
+
+        assertEquals(oldDb - 1, newDb);
+    }
 }

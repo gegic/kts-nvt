@@ -25,7 +25,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,10 +36,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@Rollback(false)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+
 public class CulturalOfferingServiceUnitTest {
 
     @Autowired
@@ -52,8 +53,10 @@ public class CulturalOfferingServiceUnitTest {
     private UserRepository userRepository;
     @Autowired
     private CulturalOfferingMainPhotoRepository photoRepository;
+    @PersistenceContext
+    EntityManager em;
 
-//    @Before
+
     public void setUp() {
     }
 

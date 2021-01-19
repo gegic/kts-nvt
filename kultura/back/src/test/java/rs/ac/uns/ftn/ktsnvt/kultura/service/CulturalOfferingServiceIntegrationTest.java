@@ -23,6 +23,8 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,6 +46,8 @@ public class CulturalOfferingServiceIntegrationTest {
     private UserRepository userRepository;
     @Autowired
     private Mapper modelMapper;
+    @PersistenceContext
+    EntityManager em;
 
 
     @Test
@@ -352,6 +356,7 @@ public class CulturalOfferingServiceIntegrationTest {
     @Transactional
     public void testSubscribe() {
         CulturalOffering old = culturalOfferingRepository.findById(1L).get();
+        em.detach(old);
         long oldSubscribers = old.getSubscribedUsers() == null ? 0 : old.getSubscribedUsers().size();
 
         CulturalOfferingDto dto = culturalOfferingService.subscribe(1, 1);
@@ -361,7 +366,7 @@ public class CulturalOfferingServiceIntegrationTest {
         assertTrue(newOffering.getSubscribedUsers().stream().anyMatch(u -> u.getId() == 1L));
 
         newOffering.getSubscribedUsers().removeIf(u -> u.getId() == 1);
-        culturalOfferingRepository.save(newOffering);
+        culturalOfferingRepository.save(old);
     }
 
     @Test

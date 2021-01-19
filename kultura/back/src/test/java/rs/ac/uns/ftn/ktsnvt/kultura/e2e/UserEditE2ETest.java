@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.pages.LoginPage;
 import rs.ac.uns.ftn.ktsnvt.kultura.pages.UserEditPage;
-import rs.ac.uns.ftn.ktsnvt.kultura.service.AuthorityService;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
 
 import static org.junit.Assert.assertEquals;

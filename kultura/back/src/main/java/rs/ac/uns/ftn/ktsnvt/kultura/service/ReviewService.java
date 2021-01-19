@@ -78,11 +78,11 @@ public class ReviewService {
         Review existing = this.reviewRepository.findById(p.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Review with the given id not found."));
         Review r = mapper.fromDto(p, Review.class);
-        float overallRating = r.getCulturalOffering().getOverallRating();
-        int numReviews = r.getCulturalOffering().getNumReviews();
+        float overallRating = existing.getCulturalOffering().getOverallRating();
+        int numReviews = existing.getCulturalOffering().getNumReviews();
         float newOverallRating = ((overallRating * numReviews) - existing.getRating() + p.getRating()) / numReviews;
 
-        r.getCulturalOffering().setOverallRating(newOverallRating);
+        existing.getCulturalOffering().setOverallRating(newOverallRating);
         existing.setComment(r.getComment());
         existing.setRating(r.getRating());
 

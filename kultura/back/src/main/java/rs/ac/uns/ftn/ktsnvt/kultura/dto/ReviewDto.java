@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -44,5 +45,5 @@ public class ReviewDto {
     private String userEmail;
 
     @EntityKey(fieldName = "photos", entityType = ReviewPhoto.class)
-    private Set<Long> photos;
+    private Set<Long> photos = new HashSet<>();
 }
