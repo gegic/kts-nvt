@@ -18,6 +18,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
@@ -120,14 +121,12 @@ public class CulturalOfferingService {
     }
 
     @Transactional
-    public CulturalOfferingDto create(CulturalOfferingDto c) {
+    public CulturalOfferingDto create(@NotNull CulturalOfferingDto c) {
         CulturalOffering culturalOffering = modelMapper.fromDto(c, CulturalOffering.class);
 
         if (c.getId() != null &&
                 culturalOfferingRepository.existsById(c.getId())) throw new ResourceExistsException("The cultural offering you are trying to create already exists!");
 
-//        CulturalOfferingMainPhoto photo = photoRepository.getOne(c.getPhotoId());
-//        culturalOffering.setPhoto(photo);
         culturalOffering = culturalOfferingRepository.save(culturalOffering);
 
         return modelMapper.fromEntity(culturalOffering, CulturalOfferingDto.class);
@@ -151,7 +150,7 @@ public class CulturalOfferingService {
         toUpdate.setSubcategory(toUpdate.getSubcategory());
         CulturalOfferingMainPhoto p = updateWith.getPhoto();
         CulturalOfferingMainPhoto photo = toUpdate.getPhoto();
-        if (p.getId() != photo.getId()) {
+        if (p != null && p.getId() != photo.getId()) {
             mainPhotoService.deletePhoto(photo);
             p.setCulturalOffering(toUpdate);
         }

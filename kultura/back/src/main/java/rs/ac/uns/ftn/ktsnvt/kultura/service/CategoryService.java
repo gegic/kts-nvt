@@ -56,7 +56,7 @@ public class CategoryService {
         ResourceNotFoundException exc = new ResourceNotFoundException("A category with ID " + c.getId() + " doesn't exist!");
 
         Category toUpdate = categoryRepository.findById(c.getId()).orElseThrow(() -> exc );
-        mapper.toExistingEntity(c, toUpdate);
+        toUpdate = mapper.toExistingEntity(c, toUpdate);
 
         toUpdate = categoryRepository.save(toUpdate);
 

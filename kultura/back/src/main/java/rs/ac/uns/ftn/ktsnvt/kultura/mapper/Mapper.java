@@ -383,6 +383,7 @@ public class Mapper {
     }
 
     private Object invokeGetMethod(String fieldName, Object o) throws NoSuchFieldException, InvocationTargetException {
+        o = initializeAndUnproxy(o);
         Class<?> oClass = o.getClass();
         Field field = oClass.getDeclaredField(fieldName);
         try {
@@ -393,6 +394,7 @@ public class Mapper {
     }
 
     private Object invokeGetMethod(Field f, Object o) throws InvocationTargetException {
+        o = initializeAndUnproxy(o);
         try {
             if (o == null) return null;
             return getGetMethod(o.getClass(), f).invoke(o);

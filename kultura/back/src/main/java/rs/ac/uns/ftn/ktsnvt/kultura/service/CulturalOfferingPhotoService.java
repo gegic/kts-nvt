@@ -49,13 +49,10 @@ public class CulturalOfferingPhotoService {
         this.photosConfig = photosConfig;
     }
 
+    @Transactional
     public Page<CulturalOfferingPhotoDto> readAllByCulturalOfferingId(long culturalOfferingId, Pageable p) {
         return culturalOfferingPhotoRepository.findAllByCulturalOfferingId(culturalOfferingId, p)
                 .map(culturalOfferingPhoto -> mapper.fromEntity(culturalOfferingPhoto, CulturalOfferingPhotoDto.class));
-    }
-
-    public Optional<CulturalOfferingPhotoDto> readById(long id) {
-        return culturalOfferingPhotoRepository.findById(id).map(culturalOfferingPhoto -> mapper.fromEntity(culturalOfferingPhoto, CulturalOfferingPhotoDto.class));
     }
 
     @Transactional
@@ -103,7 +100,7 @@ public class CulturalOfferingPhotoService {
     }
 
     public void delete(long id) {
-        if (!culturalOfferingRepository.existsById(id)) {
+        if (!culturalOfferingPhotoRepository.existsById(id)) {
             throw new ResourceNotFoundException("A photo with the given id " + id + " was not found.");
         }
         File photo = new File(photosConfig.getPath() + id + ".png");
@@ -117,7 +114,7 @@ public class CulturalOfferingPhotoService {
         List<CulturalOfferingPhoto> photos = culturalOfferingPhotoRepository.findAllByCulturalOfferingId(culturalOfferingId);
         for (CulturalOfferingPhoto photo : photos) {
             new File(photosConfig.getPath() + photo.getId() + ".png").delete();
-            new File(photosConfig.getPath() + "thumbnail" + photo.getId() + ".png").delete();
+            new File(photosConfig.getPath() + "thumbnail/" + photo.getId() + ".png").delete();
         }
 
         culturalOfferingPhotoRepository.deleteAll(photos);

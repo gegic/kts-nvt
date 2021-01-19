@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.ktsnvt.kultura.config.PhotosConfig;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
@@ -22,13 +23,16 @@ import java.util.List;
 @Service
 public class CulturalOfferingMainPhotoService {
 
-    private CulturalOfferingMainPhotoRepository repository;
-    private Mapper mapper;
+    private final CulturalOfferingMainPhotoRepository repository;
+    private final Mapper mapper;
+    private final PhotosConfig photosConfig;
     @Autowired
     public CulturalOfferingMainPhotoService(CulturalOfferingMainPhotoRepository repository,
-                                            Mapper mapper) {
+                                            Mapper mapper,
+                                            PhotosConfig photosConfig) {
         this.repository = repository;
         this.mapper = mapper;
+        this.photosConfig = photosConfig;
     }
 
     public CulturalOfferingPhotoDto addPhoto(MultipartFile photoFile) {
@@ -58,8 +62,8 @@ public class CulturalOfferingMainPhotoService {
         photo = repository.save(photo);
 
         try {
-            savePhoto("/main", bufferedImage, photo);
-            savePhoto("./photos/main/thumbnail", thumbnail, photo);
+            savePhoto(photosConfig.getPath() + "main", bufferedImage, photo);
+            savePhoto(photosConfig.getPath() + "main/thumbnail", thumbnail, photo);
         } catch (IOException e) {
             repository.delete(photo);
             System.out.println("Exception:" + e);
@@ -86,9 +90,9 @@ public class CulturalOfferingMainPhotoService {
             token = "";
         }
         List<CulturalOfferingMainPhoto> photos = repository.getNullOffering(token);
-        photos.parallelStream().map(p -> new File("./photos/main/thumbnail/" + p.getId() + ".png"))
+        photos.parallelStream().map(p -> new File(photosConfig.getPath() + "main/thumbnail/" + p.getId() + ".png"))
                 .forEach(File::delete);
-        photos.parallelStream().map(p -> new File("./photos/main/" + p.getId() + ".png"))
+        photos.parallelStream().map(p -> new File(photosConfig.getPath() + "main/" + p.getId() + ".png"))
                 .forEach(File::delete);
         repository.deleteAll(photos);
     }
@@ -97,8 +101,8 @@ public class CulturalOfferingMainPhotoService {
     public void deletePhoto(CulturalOfferingMainPhoto photo) {
 
         if (photo!=null){
-            new File("./photos/main/thumbnail/" + photo.getId() + ".png").delete();
-            new File("./photos/main/" + photo.getId() + ".png").delete();
+            new File(photosConfig.getPath() + "main/thumbnail/" + photo.getId() + ".png").delete();
+            new File(photosConfig.getPath() + "main/" + photo.getId() + ".png").delete();
 
             repository.delete(photo);
         }
