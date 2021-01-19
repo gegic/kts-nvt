@@ -51,7 +51,7 @@ public class UsersController {
     }
 
     @PostMapping
-    ResponseEntity<UserDto> add(@Valid @RequestBody UserDto userDto) {
+    ResponseEntity<UserDto> add(@Validated(UserDto.PostGroup.class) @RequestBody UserDto userDto) {
         UserDto saved = this.userService.create(userDto);
         return ResponseEntity.created(URI.create("/api/user/" + saved.getId())).body(saved);
     }
@@ -66,7 +66,7 @@ public class UsersController {
     //    @PreAuthorize("userDto.id == authentication.principal.id || hasAnyRole('ADMIN', 'MODERATOR')")
     @PreAuthorize("hasRole('ADMIN') or (#userDto.id == authentication.principal.id)")
     @PutMapping
-    ResponseEntity<UserDto> update(@Valid @RequestBody UserDto userDto) {
+    ResponseEntity<UserDto> update(@Validated(UserDto.PutGroup.class) @RequestBody UserDto userDto) {
         return ResponseEntity.ok(this.userService.update(userDto));
     }
 

@@ -84,21 +84,26 @@ public class UserService implements UserDetailsService {
 
     public UserDto update(UserDto userDto) {
         User existingUser = userRepository.findById(userDto.getId()).orElse(null);
+
+
         if (existingUser == null) {
             throw new ResourceNotFoundException("User with given id doesn't exist");
         }
-        User updated = mapper.toExistingEntity(userDto, existingUser);
+
+        String oldEmail = existingUser.getEmail();
+
+        existingUser = mapper.toExistingEntity(userDto, existingUser);
 
         if (userDto.getPassword() != null) {
             existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
             existingUser.setLastPasswordChange(LocalDateTime.now());
         }
 
-        boolean emailChanged = userDto.getEmail() != null && !userDto.getEmail().equals(existingUser.getEmail());
+        boolean emailChanged = userDto.getEmail() != null && !userDto.getEmail().equals(oldEmail);
         if(emailChanged) {
             existingUser.setVerified(false);
         }
-        User finalUser = userRepository.save(updated);
+        User finalUser = userRepository.save(existingUser);
         if(emailChanged){
             sendMail(finalUser);
         }
