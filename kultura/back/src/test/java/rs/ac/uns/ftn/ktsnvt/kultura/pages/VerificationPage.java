@@ -10,19 +10,18 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 @Getter
 public class VerificationPage {
-    
-    private WebDriver driver;
-    
-    @FindBy(id = "verify")
-    private WebElement verifyBtn;
-    
-    public VerificationPage(WebDriver driver) {
-        this.driver = driver;
-    }
-    
-    
-    public void ensureIsNotVisibleVerifiedP() {
-        (new WebDriverWait(driver, 10))
-                .until(ExpectedConditions.visibilityOfElementLocated(By.id("verified")));
-    }
+
+  private final WebDriver driver;
+
+  @FindBy(id = "verify")
+  private WebElement verifyBtn;
+
+  public VerificationPage(WebDriver driver) {
+    this.driver = driver;
+  }
+
+  public void ensureIsNotVisibleVerifiedP() {
+    (new WebDriverWait(driver, 10))
+        .until(ExpectedConditions.visibilityOfElementLocated(By.id("verified")));
+  }
 }

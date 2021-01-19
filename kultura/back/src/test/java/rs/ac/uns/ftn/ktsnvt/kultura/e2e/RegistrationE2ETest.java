@@ -117,7 +117,7 @@ public class RegistrationE2ETest {
     justWait(300);
     String toast = registrationPage.ensureIsDisplayedToast();
     assertEquals(
-            "Please enter only the first and the last name with capital first letters (Fields can't be empty).",
+        "Please enter only the first and the last name with capital first letters (Fields can't be empty).",
         toast);
     assertEquals(BASE_URL + "/register/name", driver.getCurrentUrl());
   }
@@ -139,7 +139,7 @@ public class RegistrationE2ETest {
 
     String toast = registrationPage.ensureIsDisplayedToast();
     assertEquals(
-            "Please enter only the first and the last name with capital first letters (Fields can't be empty).",
+        "Please enter only the first and the last name with capital first letters (Fields can't be empty).",
         toast);
     assertEquals(BASE_URL + "/register/name", driver.getCurrentUrl());
   }

@@ -11,32 +11,27 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 @Getter
 public class RegistrationPage {
 
-    private WebDriver driver;
+  private final WebDriver driver;
+  @FindBy(id = "email")
+  private WebElement emailInput;
+  @FindBy(id = "proceed")
+  private WebElement proceedBtn;
+  @FindBy(id = "firstName")
+  private WebElement firstNameInput;
+  @FindBy(id = "lastName")
+  private WebElement lastNameInput;
+  @FindBy(id = "repeatPassword")
+  private WebElement repeatPasswordInput;
+  @FindBy(id = "password")
+  private WebElement passwordInput;
 
-    public RegistrationPage(WebDriver driver) {
-        this.driver = driver;
-    }
+  public RegistrationPage(WebDriver driver) {
+    this.driver = driver;
+  }
 
-    @FindBy(id = "email")
-    private WebElement emailInput;
-
-    @FindBy(id = "proceed")
-    private WebElement proceedBtn;
-
-    @FindBy(id = "firstName")
-    private WebElement firstNameInput;
-
-    @FindBy(id = "lastName")
-    private WebElement lastNameInput;
-    
-    @FindBy(id = "repeatPassword")
-    private WebElement repeatPasswordInput;
-    
-    @FindBy(id = "password")
-    private WebElement passwordInput;
-
-    public String ensureIsDisplayedToast() {
-        return (new WebDriverWait(driver, 30)).until(ExpectedConditions.presenceOfElementLocated(By.id("toast-container"))).getText();
-    }
-
+  public String ensureIsDisplayedToast() {
+    return (new WebDriverWait(driver, 30))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("toast-container")))
+        .getText();
+  }
 }

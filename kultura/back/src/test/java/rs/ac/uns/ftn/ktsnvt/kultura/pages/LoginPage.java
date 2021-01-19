@@ -11,26 +11,27 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 @Getter
 public class LoginPage {
 
-    private WebDriver driver;
+  private final WebDriver driver;
 
-    @FindBy(id = "email")
-    private WebElement email;
+  @FindBy(id = "email")
+  private WebElement email;
 
-    @FindBy(id = "password")
-    private WebElement password;
+  @FindBy(id = "password")
+  private WebElement password;
 
-    @FindBy(id = "submit")
-    private WebElement nextBtn;
+  @FindBy(id = "submit")
+  private WebElement nextBtn;
 
-    @FindBy(id = "login")
-    private WebElement loginBtn;
+  @FindBy(id = "login")
+  private WebElement loginBtn;
 
-    public LoginPage(WebDriver driver) {
-        this.driver = driver;
-    }
+  public LoginPage(WebDriver driver) {
+    this.driver = driver;
+  }
 
-    public String ensureIsDisplayedToast() {
-        return (new WebDriverWait(driver, 30)).until(ExpectedConditions.presenceOfElementLocated(By.id("toast-container"))).getText();
-    }
-
+  public String ensureIsDisplayedToast() {
+    return (new WebDriverWait(driver, 30))
+        .until(ExpectedConditions.presenceOfElementLocated(By.id("toast-container")))
+        .getText();
+  }
 }
