@@ -36,11 +36,6 @@ public class CulturalOfferingPhotosController {
         return ResponseEntity.ok(photoDtos);
     }
 
-    @GetMapping(path="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CulturalOfferingPhotoDto> getById(@PathVariable long id) {
-        return ResponseEntity.of(this.culturalOfferingPhotoService.readById(id));
-    }
-
     @PreAuthorize("hasRole('MODERATOR')")
     @PostMapping(path="/cultural-offering/{culturalOfferingId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<CulturalOfferingPhotoDto> add(@RequestParam("photo") MultipartFile photoFile,

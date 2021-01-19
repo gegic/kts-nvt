@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
@@ -48,8 +51,73 @@ public class CategoryServiceUnitTest {
     @MockBean
     private CategoryRepository categoryRepository;
 
-    @Autowired
+    @MockBean
     private Mapper mapper;
+
+    @Before
+    public void setupMapper() {
+        Mockito.when(mapper.fromDto(Mockito.any(CategoryDto.class), Mockito.eq(Category.class))).thenAnswer(i -> {
+            CategoryDto dto = i.getArgument(0);
+            Category category = new Category();
+            if (dto.getId() != null) {
+                category.setId(dto.getId());
+            }
+            category.setName(dto.getName());
+            return category;
+        });
+
+        Mockito.when(mapper.fromEntity(Mockito.any(Category.class), Mockito.eq(CategoryDto.class))).thenAnswer(i -> {
+            Category category = i.getArgument(0);
+            CategoryDto dto = new CategoryDto();
+            dto.setId(category.getId());
+            dto.setName(category.getName());
+            dto.setNumSubcategories(category.getSubcategories() == null ? 0 : category.getSubcategories().size());
+            return dto;
+        });
+
+        Mockito.when(mapper.toExistingEntity(Mockito.any(CategoryDto.class), Mockito.any(Category.class))).thenAnswer(i -> {
+            Category category = i.getArgument(1);
+            CategoryDto dto = i.getArgument(0);
+            category.setName(dto.getName());
+            return category;
+        });
+    }
+
+    @Test
+    public void testCreate() {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("Kategorija");
+        Category converted = new Category();
+        converted.setName("Kategorija");
+        Mockito.when(categoryRepository.save(Mockito.any(Category.class))).thenAnswer(i -> {
+            Category c = i.getArgument(0);
+            c.setId(1);
+            return c;
+        });
+
+        CategoryDto created = categoryService.create(categoryDto);
+
+        assertNotNull(created.getId());
+        assertEquals(categoryDto.getName(), created.getName());
+    }
+
+    @Test
+    public void testUpdate() {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(1L);
+        categoryDto.setName("Kategorija");
+        Category found = new Category();
+        found.setId(1);
+        found.setName("Kategorija");
+        Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(found));
+        Mockito.when(categoryRepository.save(Mockito.any(Category.class))).thenAnswer(i -> i.getArgument(0));
+
+
+        CategoryDto updated = categoryService.update(categoryDto);
+
+        assertEquals(found.getId(), updated.getId().longValue());
+        assertEquals(categoryDto.getName(), updated.getName());
+    }
 
     @Test(expected = NullPointerException.class)
     public void whenUpdateNullPointerException(){
@@ -89,26 +157,6 @@ public class CategoryServiceUnitTest {
 
     @Test(expected = ResourceExistsException.class)
     public void whenCreateThrowEntityExists() {
-//        Exception exception = assertThrows(EntityExistsException.class, () -> {
-//            CategoryDto category = new CategoryDto();
-//            category.setId(CategoryConstants.TEST_CATEGORY_ID1);
-//            category.setName(CategoryConstants.TEST_CATEGORY_NAME1);
-//
-//            CategoryDto category2 = new CategoryDto();
-//            category2.setId(CategoryConstants.TEST_CATEGORY_ID1);
-//            category2.setName(CategoryConstants.TEST_CATEGORY_NAME1);
-//
-//            CategoryDto returnedCategory = categoryService.create(category);
-//            CategoryDto returnedCategory2 = categoryService.create(category2);
-//
-//
-//        });
-//
-//        String expectedMessage = "A category with this ID already exists";
-//        String actualMessage = exception.getMessage();
-//
-//        assertTrue(actualMessage.contains(expectedMessage));
-
             CategoryDto category = new CategoryDto();
             category.setId(CategoryConstants.TEST_CATEGORY_ID1);
             category.setName(CategoryConstants.TEST_CATEGORY_NAME1);
@@ -123,8 +171,7 @@ public class CategoryServiceUnitTest {
             categoryService.create(category2);
     }
 
-    @Test
-//    @Test(expected = ResourceNotFoundException.class)
+    @Test(expected = ResourceNotFoundException.class)
     public void whenDeleteEntityDoesntExist(){
         Mockito.when(categoryRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
         Mockito.doNothing().when(categoryRepository).delete(Mockito.any());

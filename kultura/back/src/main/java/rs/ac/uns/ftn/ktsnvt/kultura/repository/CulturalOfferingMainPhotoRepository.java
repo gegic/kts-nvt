@@ -14,6 +14,5 @@ public interface CulturalOfferingMainPhotoRepository extends JpaRepository<Cultu
 
     @Query("select p from CulturalOfferingMainPhoto p where p.culturalOffering is null and p.token = :token")
     List<CulturalOfferingMainPhoto> getNullOffering(String token);
-    @Query("select p from CulturalOfferingMainPhoto p where p.culturalOffering is null and p.culturalOffering.id = :culturalOfferingId")
-    List<CulturalOfferingMainPhoto> getAllNullByCulturalOffering(long culturalOfferingId);
+
 }

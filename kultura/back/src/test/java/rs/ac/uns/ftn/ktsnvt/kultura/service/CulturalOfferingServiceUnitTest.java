@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -11,15 +12,18 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CulturalOfferingConstants;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -44,6 +48,8 @@ public class CulturalOfferingServiceUnitTest {
     private SubcategoryRepository subcategoryRepository;
     @MockBean
     private Mapper modelMapper;
+    @MockBean
+    private UserRepository userRepository;
     @Autowired
     private CulturalOfferingMainPhotoRepository photoRepository;
 
@@ -111,15 +117,72 @@ public class CulturalOfferingServiceUnitTest {
         return culturalOfferingDto;
     }
 
+    @Before
+    public void setupMapper() {
+        Mockito.when(modelMapper.fromDto(Mockito.any(CulturalOfferingDto.class), Mockito.eq(CulturalOffering.class))).thenAnswer(i -> {
+            CulturalOfferingDto dto = i.getArgument(0);
+            CulturalOffering offering = new CulturalOffering();
+            if (dto.getId() != null) {
+                offering.setId(dto.getId());
+            }
+            offering.setAddress(dto.getAddress());
+            offering.setBriefInfo(dto.getBriefInfo());
+            offering.setLatitude(dto.getLatitude());
+            offering.setLongitude(dto.getLongitude());
+            Category c = new Category();
+            c.setId(dto.getCategoryId());
+            c.setName(dto.getCategoryName());
+            Subcategory subcategory = new Subcategory();
+            subcategory.setCategory(c);
+            subcategory.setName(dto.getSubcategoryName());
+            subcategory.setId(dto.getSubcategoryId());
+            offering.setSubcategory(subcategory);
+            offering.setName(dto.getName());
+            offering.setId(dto.getId());
+            return offering;
+        });
+
+        Mockito.when(modelMapper.fromEntity(Mockito.any(CulturalOffering.class), Mockito.eq(CulturalOfferingDto.class))).thenAnswer(i -> {
+            CulturalOffering culturalOffering = i.getArgument(0);
+            CulturalOfferingDto dto = new CulturalOfferingDto();
+
+            dto.setAddress(culturalOffering.getAddress());
+            dto.setBriefInfo(culturalOffering.getBriefInfo());
+            dto.setLatitude(culturalOffering.getLatitude());
+            dto.setLongitude(culturalOffering.getLongitude());
+            dto.setSubcategoryId(culturalOffering.getSubcategory().getId());
+            dto.setName(culturalOffering.getName());
+            dto.setId(culturalOffering.getId());
+
+            dto.setNumSubscribed(culturalOffering.getSubscribedUsers().size());
+            return dto;
+        });
+
+        Mockito.when(modelMapper.toExistingEntity(Mockito.any(CulturalOfferingDto.class), Mockito.any(CulturalOffering.class))).thenAnswer(i -> {
+            CulturalOffering offering = i.getArgument(1);
+            CulturalOfferingDto dto = i.getArgument(0);
+            offering.setAddress(dto.getAddress());
+            offering.setBriefInfo(dto.getBriefInfo());
+            offering.setLatitude(dto.getLatitude());
+            offering.setLongitude(dto.getLongitude());
+            Category c = new Category();
+            c.setId(dto.getCategoryId());
+            c.setName(dto.getCategoryName());
+            Subcategory subcategory = new Subcategory();
+            subcategory.setCategory(c);
+            subcategory.setName(dto.getSubcategoryName());
+            subcategory.setId(dto.getSubcategoryId());
+            offering.setSubcategory(subcategory);
+            offering.setName(dto.getName());
+            offering.setId(dto.getId());
+            return offering;
+        });
+    }
+
+
     @Test(expected = ResourceExistsException.class)
     public void whenCreateThrowEntityExists() {
         CulturalOfferingDto existingDto = getExistingCulturalOfferingDto();
-        CulturalOffering existing = getExistingCulturalOffering();
-        Mockito.when(modelMapper.fromDto(existingDto, CulturalOffering.class))
-                .thenReturn(existing);
-
-        Mockito.when(culturalOfferingRepository.existsById(CulturalOfferingConstants.EXISTING_ID1))
-                .thenReturn(true);
 
         Mockito.when(culturalOfferingRepository.existsById(CulturalOfferingConstants.EXISTING_ID1))
                 .thenReturn(true);
@@ -145,29 +208,6 @@ public class CulturalOfferingServiceUnitTest {
                 }
         );
 
-        Mockito.when(modelMapper.fromEntity(Mockito.any(CulturalOffering.class), Mockito.eq(CulturalOfferingDto.class)))
-                .thenAnswer(i -> {
-                    CulturalOffering c = i.getArgument(0);
-                    return new CulturalOfferingDto(
-                            c.getId(),
-                            c.getName(),
-                            c.getBriefInfo(),
-                            c.getLatitude(),
-                            c.getLongitude(),
-                            c.getAddress(),
-                            null,
-                            c.getOverallRating(),
-                            c.getNumReviews(),
-                            c.getLastChange(),
-                            c.getAdditionalInfo(),
-                            c.getSubcategory().getId(),
-                            c.getSubcategory().getName(),
-                            c.getSubcategory().getCategory().getId(),
-                            c.getSubcategory().getCategory().getName(),
-                            0,
-                            null
-                    );
-                });
         List<CulturalOfferingDto> list = culturalOfferingService.findByBounds(9, 14, -4, 17, -1);
 
         assertEquals(1, list.size());
@@ -203,35 +243,6 @@ public class CulturalOfferingServiceUnitTest {
         CulturalOfferingDto newDto = getTestCulturalOfferingDto();
         newDto.setId(CulturalOfferingConstants.EXISTING_ID1);
 
-        Mockito.when(modelMapper.fromEntity(Mockito.any(CulturalOffering.class), Mockito.eq(CulturalOfferingDto.class)))
-                .thenAnswer(i -> {
-                    CulturalOffering c = i.getArgument(0);
-                    return new CulturalOfferingDto(
-                            c.getId(),
-                            c.getName(),
-                            c.getBriefInfo(),
-                            c.getLatitude(),
-                            c.getLongitude(),
-                            c.getAddress(),
-                            null,
-                            c.getOverallRating(),
-                            c.getNumReviews(),
-                            c.getLastChange(),
-                            c.getAdditionalInfo(),
-                            c.getSubcategory().getId(),
-                            c.getSubcategory().getName(),
-                            c.getSubcategory().getCategory().getId(),
-                            c.getSubcategory().getCategory().getName(),
-                            c.getSubscribedUsers().size(),
-                            null
-                    );
-                });
-        Mockito.when(modelMapper.toExistingEntity(Mockito.any(), Mockito.any())).thenAnswer((i)-> {
-            CulturalOffering c = getTestCulturalOffering();
-            c.setId(CategoryConstants.EXISTING_ID1);
-            return c;
-        });
-
         Mockito.when(culturalOfferingRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(getExistingCulturalOffering()));
         Mockito.when(culturalOfferingRepository.save(Mockito.any())).thenAnswer(i->i.getArgument(0));
 
@@ -251,29 +262,6 @@ public class CulturalOfferingServiceUnitTest {
         CulturalOfferingDto newDto = getTestCulturalOfferingDto();
         newDto.setId(null);
 
-        Mockito.when(modelMapper.fromEntity(Mockito.any(CulturalOffering.class), Mockito.eq(CulturalOfferingDto.class)))
-                .thenAnswer(i -> {
-                    CulturalOffering c = i.getArgument(0);
-                    return new CulturalOfferingDto(
-                            c.getId(),
-                            c.getName(),
-                            c.getBriefInfo(),
-                            c.getLatitude(),
-                            c.getLongitude(),
-                            c.getAddress(),
-                            null,
-                            c.getOverallRating(),
-                            c.getNumReviews(),
-                            c.getLastChange(),
-                            c.getAdditionalInfo(),
-                            c.getSubcategory().getId(),
-                            c.getSubcategory().getName(),
-                            c.getSubcategory().getCategory().getId(),
-                            c.getSubcategory().getCategory().getName(),
-                            c.getSubscribedUsers().size(),
-                            null
-                    );
-                });
         Mockito.when(modelMapper.toExistingEntity(Mockito.any(), Mockito.any())).thenAnswer((i)-> i.<CulturalOffering>getArgument(1));
 
         Mockito.when(culturalOfferingRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
@@ -286,34 +274,49 @@ public class CulturalOfferingServiceUnitTest {
     public void whenUpdateNotFoundException(){
         CulturalOfferingDto newDto = getTestCulturalOfferingDto();
 
-        Mockito.when(modelMapper.fromEntity(Mockito.any(CulturalOffering.class), Mockito.eq(CulturalOfferingDto.class)))
-                .thenAnswer(i -> {
-                    CulturalOffering c = i.getArgument(0);
-                    return new CulturalOfferingDto(
-                            c.getId(),
-                            c.getName(),
-                            c.getBriefInfo(),
-                            c.getLatitude(),
-                            c.getLongitude(),
-                            c.getAddress(),
-                            null,
-                            c.getOverallRating(),
-                            c.getNumReviews(),
-                            c.getLastChange(),
-                            c.getAdditionalInfo(),
-                            c.getSubcategory().getId(),
-                            c.getSubcategory().getName(),
-                            c.getSubcategory().getCategory().getId(),
-                            c.getSubcategory().getCategory().getName(),
-                            c.getSubscribedUsers().size(),
-                            null
-                    );
-                });
         Mockito.when(modelMapper.toExistingEntity(Mockito.any(), Mockito.any())).thenAnswer((i)-> i.<CulturalOffering>getArgument(1));
 
         Mockito.when(culturalOfferingRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
         Mockito.when(culturalOfferingRepository.save(Mockito.any())).thenAnswer(i->i.getArgument(0));
 
         culturalOfferingService.update(newDto);
+    }
+
+    @Test
+    public void testSubscribe() {
+        CulturalOffering culturalOffering = getExistingCulturalOffering();
+        Mockito.when(culturalOfferingRepository.findById(CulturalOfferingConstants.EXISTING_ID1)).thenReturn(Optional.ofNullable(culturalOffering));
+
+        User u = new User();
+        u.setId(1);
+        u.setEmail("mail@mail.mail");
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(u));
+
+        Mockito.when(culturalOfferingRepository.save(Mockito.any(CulturalOffering.class))).thenAnswer(i -> i.getArgument(0));
+
+        CulturalOfferingDto dto = culturalOfferingService.subscribe(1, 1);
+
+        assertEquals(CulturalOfferingConstants.EXISTING_ID1, dto.getId());
+        assertTrue(dto.getSubscribed());
+        assertEquals(1, dto.getNumSubscribed().longValue());
+    }
+
+    @Test
+    public void testUnsubscribe() {
+        CulturalOffering culturalOffering = getExistingCulturalOffering();
+
+        User u = new User();
+        u.setId(1);
+        u.setEmail("mail@mail.mail");
+        culturalOffering.getSubscribedUsers().add(u);
+        Mockito.when(culturalOfferingRepository.findById(CulturalOfferingConstants.EXISTING_ID1)).thenReturn(Optional.ofNullable(culturalOffering));
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(u));
+
+        Mockito.when(culturalOfferingRepository.save(Mockito.any(CulturalOffering.class))).thenAnswer(i -> i.getArgument(0));
+
+        CulturalOfferingDto dto = culturalOfferingService.unsubscribe(1, 1);
+
+        assertEquals(CulturalOfferingConstants.EXISTING_ID1, dto.getId());
+        assertEquals(0, dto.getNumSubscribed().longValue());
     }
 }

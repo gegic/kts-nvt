@@ -21,8 +21,8 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
-    private CategoryRepository categoryRepository;
-    private Mapper mapper;
+    private final CategoryRepository categoryRepository;
+    private final Mapper mapper;
 
     @Autowired
     public CategoryService(CategoryRepository categoryRepository, Mapper mapper) {
@@ -35,10 +35,12 @@ public class CategoryService {
         return categoryRepository.findAll(p).map(c -> mapper.fromEntity(c, CategoryDto.class));
     }
 
+    @Transactional
     public Optional<CategoryDto> readById(long id) {
         return categoryRepository.findById(id).map(c -> mapper.fromEntity(c, CategoryDto.class));
     }
 
+    @Transactional
     public CategoryDto create(CategoryDto c) {
         if(c.getId() != null && categoryRepository.existsById(c.getId()))
             throw new ResourceExistsException("A category with this ID(" + c.getId() + ") already exists!" );
@@ -54,18 +56,20 @@ public class CategoryService {
         ResourceNotFoundException exc = new ResourceNotFoundException("A category with ID " + c.getId() + " doesn't exist!");
 
         Category toUpdate = categoryRepository.findById(c.getId()).orElseThrow(() -> exc );
-        mapper.toExistingEntity(c, toUpdate);
+        toUpdate = mapper.toExistingEntity(c, toUpdate);
 
         toUpdate = categoryRepository.save(toUpdate);
 
         return mapper.fromEntity(toUpdate, CategoryDto.class);
     }
 
+    @Transactional(dontRollbackOn = {ResourceExistsException.class})
     public void delete(long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category with given id not found"));
 
-        if (category.getSubcategories().size() > 0) {
+        if (category.getSubcategories() != null &&
+                category.getSubcategories().size() > 0) {
             throw new ResourceExistsException("There are subcategories associated with this category");
         }
 

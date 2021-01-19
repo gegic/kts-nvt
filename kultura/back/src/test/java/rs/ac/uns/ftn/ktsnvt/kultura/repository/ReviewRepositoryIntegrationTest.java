@@ -11,7 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.ReviewConstants;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewNumbersDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Review;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -39,5 +42,17 @@ public class ReviewRepositoryIntegrationTest {
         Page<Review> reviewPage =reviewRepository.findAllByCulturalOfferingId(nonExistId, Pageable.unpaged());
 
         assertTrue(reviewPage.isEmpty());
+    }
+
+    @Test
+    public void findAndGroupByRating() {
+        long culturalOfferingId = 2;
+
+        List<ReviewNumbersDto> reviewNumbersList = reviewRepository.findAndGroupByRating(culturalOfferingId);
+        ReviewNumbersDto culturalRating = reviewNumbersList.get(0);
+
+        assertEquals(1, reviewNumbersList.size());
+        assertEquals(1, culturalRating.getNumReviews());
+        assertEquals(3, culturalRating.getRating());
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import rs.ac.uns.ftn.ktsnvt.kultura.config.PhotosConfig;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewPhotoDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.ReviewPhoto;
@@ -23,13 +24,16 @@ import java.util.List;
 @Service
 public class ReviewPhotoService {
 
-    private ReviewPhotoRepository repository;
-    private Mapper mapper;
+    private final ReviewPhotoRepository repository;
+    private final Mapper mapper;
+    private final PhotosConfig photosConfig;
     @Autowired
     public ReviewPhotoService(ReviewPhotoRepository repository,
-                              Mapper mapper) {
+                              Mapper mapper,
+                              PhotosConfig photosConfig) {
         this.repository = repository;
         this.mapper = mapper;
+        this.photosConfig = photosConfig;
     }
 
     public List<ReviewPhotoDto> addPhotos(MultipartFile[] photoFile) {
@@ -67,8 +71,8 @@ public class ReviewPhotoService {
         photo = repository.save(photo);
 
         try {
-            savePhoto("./photos/review", bufferedImage, photo);
-            savePhoto("./photos/review/thumbnail", thumbnail, photo);
+            savePhoto(photosConfig.getPath() + "review", bufferedImage, photo);
+            savePhoto(photosConfig.getPath() + "review/thumbnail", thumbnail, photo);
         } catch (IOException e) {
             repository.delete(photo);
             System.out.println("Exception:" + e);
@@ -95,10 +99,10 @@ public class ReviewPhotoService {
         } catch (NullPointerException e) {
             token = "";
         }
-        List<ReviewPhoto> photos = repository.getNullOffering(token);
-        photos.parallelStream().map(p -> new File("./photos/review/thumbnail/" + p.getId() + ".png"))
+        List<ReviewPhoto> photos = repository.getNullReview(token);
+        photos.parallelStream().map(p -> new File(photosConfig.getPath() + "review/thumbnail/" + p.getId() + ".png"))
                 .forEach(File::delete);
-        photos.parallelStream().map(p -> new File("./photos/review/" + p.getId() + ".png"))
+        photos.parallelStream().map(p -> new File(photosConfig.getPath() + "review/" + p.getId() + ".png"))
                 .forEach(File::delete);
 
         repository.deleteAll(photos);
@@ -107,9 +111,9 @@ public class ReviewPhotoService {
     @Transactional
     public void deleteForReview(long reviewId) {
         List<ReviewPhoto> photos = repository.getAllByReviewId(reviewId);
-        photos.parallelStream().map(p -> new File("./photos/review/thumbnail/" + p.getId() + ".png"))
+        photos.parallelStream().map(p -> new File(photosConfig.getPath() + "review/thumbnail/" + p.getId() + ".png"))
                 .forEach(File::delete);
-        photos.parallelStream().map(p -> new File("./photos/review/" + p.getId() + ".png"))
+        photos.parallelStream().map(p -> new File(photosConfig.getPath() + "review/" + p.getId() + ".png"))
                 .forEach(File::delete);
 
         repository.deleteAll(photos);
