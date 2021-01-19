@@ -39,8 +39,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
-import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.MODERATOR_EMAIL;
-import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.MODERATOR_PASSWORD;
+import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.*;
 
 @RunWith(SpringRunner.class)
 @Rollback(false)
@@ -135,6 +134,62 @@ public class ReviewControllerIntegrationTest {
     }
 
     @Test
+    public void whenReadByUser(){
+        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<ReviewDto> response = restTemplate.exchange(
+                "/api/reviews/cultural-offering/" + ReviewConstants.EXISTING_CULTURAL_OFFERING_ID +
+                        "/user/" + ReviewConstants.EXISTING_USER_ID,
+                HttpMethod.GET, httpEntity, ReviewDto.class);
+
+        ReviewDto result = response.getBody();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(result.getUserId(), ReviewConstants.EXISTING_USER_ID);
+        assertEquals(result.getCulturalOfferingId(), ReviewConstants.EXISTING_CULTURAL_OFFERING_ID);
+
+    }
+
+    @Test
+    public void whenReadByInvalidUser(){
+        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<ReviewDto> response = restTemplate.exchange(
+                "/api/reviews/cultural-offering/" + ReviewConstants.EXISTING_CULTURAL_OFFERING_ID +
+                "/user/" + ReviewConstants.NON_EXISTING_USER_ID,
+                HttpMethod.GET, httpEntity, ReviewDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void whenReadByInvalidCulturalOffering(){
+        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<ReviewDto> response = restTemplate.exchange(
+                "/api/reviews/cultural-offering/" + ReviewConstants.NON_EXISTING_CULTURAL_OFFERING_ID +
+                        "/user/" + ReviewConstants.EXISTING_USER_ID,
+                HttpMethod.GET, httpEntity, ReviewDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
     public void whenReadByIdNotFound(){
         this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
 
@@ -152,6 +207,85 @@ public class ReviewControllerIntegrationTest {
         assertNull(result);
         this.accessToken = null;
     }
+
+    @Test
+    @Transactional
+    public void testCreate(){
+        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
+        ReviewDto review = createTestReviewDto();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(review, headers);
+
+        ResponseEntity<ReviewDto> response = restTemplate.exchange(
+                "/api/reviews", HttpMethod.POST, httpEntity, ReviewDto.class);
+
+        ReviewDto createdReview = response.getBody();
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(review.getComment(), createdReview.getComment());
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteByModerator(){
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<ReviewDto> response = restTemplate.exchange(
+                "/api/reviews/" + ReviewConstants.EXISTING_ID,
+                HttpMethod.DELETE, httpEntity, ReviewDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteByUser(){
+        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<ReviewDto> response = restTemplate.exchange(
+                "/api/reviews/" + ReviewConstants.EXISTING_ID,
+                HttpMethod.DELETE, httpEntity, ReviewDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+//    @Test
+//    @Transactional
+//    public void testUpdate(){
+//        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
+//
+//        ReviewDto review = new ReviewDto();
+//        review.setId(ReviewConstants.EXISTING_ID);
+//        review.setComment(ReviewConstants.TEST_COMMENT);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+//        headers.add("Authorization", "Bearer " + this.accessToken);
+//        HttpEntity<Object> httpEntity = new HttpEntity<>(review, headers);
+//
+//        ResponseEntity<ReviewDto> response = restTemplate.exchange(
+//                "/api/reviews", HttpMethod.PUT, httpEntity, ReviewDto.class);
+//
+//        ReviewDto updatedReview = response.getBody();
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals(updatedReview.getId(), ReviewConstants.EXISTING_ID);
+//        assertEquals(review.getComment(), updatedReview.getComment());
+//    }
+
 
 
     private ReviewDto createTestReviewDto(){

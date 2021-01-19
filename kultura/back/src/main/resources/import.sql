@@ -87,6 +87,7 @@ INSERT INTO review (id, comment, rating, time_added, cultural_offering_id, user_
 INSERT INTO review (id, comment, rating, time_added, cultural_offering_id, user_id) VALUES (2, 'Komentar', 4, NOW(), 1, @Id2);
 INSERT INTO review (id, comment, rating, time_added, cultural_offering_id, user_id) VALUES (3, 'Komentar', 5, NOW(), 1, @Id1);
 
+INSERT INTO review (comment, rating, time_added, cultural_offering_id, user_id) VALUES ('Komentar2', '4', UTC_TIMESTAMP(), 2, 3);
 INSERT INTO review (comment, rating, time_added, cultural_offering_id, user_id) VALUES ('Komentar', '3', UTC_TIMESTAMP(), 2, 3);
 
 

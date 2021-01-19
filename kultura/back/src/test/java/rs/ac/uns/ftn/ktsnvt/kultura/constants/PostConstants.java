@@ -24,4 +24,5 @@ public class PostConstants {
 
     public static final Long TEST_CULTURAL_OFFERING_ID = 1L;
 
+    public static final Long NON_EXISTING_ID = 42L;
 }

@@ -17,12 +17,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
-import rs.ac.uns.ftn.ktsnvt.kultura.constants.CulturalOfferingConstants;
-import rs.ac.uns.ftn.ktsnvt.kultura.constants.PostConstants;
-import rs.ac.uns.ftn.ktsnvt.kultura.constants.SubcategoryConstants;
+import org.springframework.transaction.annotation.Transactional;
+import rs.ac.uns.ftn.ktsnvt.kultura.constants.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.PostDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.SubcategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.auth.LoginDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
@@ -32,7 +31,6 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.SubcategoryService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.LoginUtil;
 
-import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 
@@ -109,6 +107,7 @@ public class SubcategoryControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void whenCreateSubcategory(){
         SubcategoryDto newSubcategory = createTestSubcategoryDto();
 
@@ -126,9 +125,6 @@ public class SubcategoryControllerIntegrationTest {
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(newSubcategory.getName(), createdSubcategory.getName());
-        this.accessToken = null;
-
-        this.subcategoryService.delete(createdSubcategory.getId());
     }
 
 
@@ -219,6 +215,40 @@ public class SubcategoryControllerIntegrationTest {
         subcategoryDto.setName(SubcategoryConstants.EXISTING_NAME1);
 
         return subcategoryDto;
+    }
+
+    @Test
+    @Transactional
+    public void testDelete(){
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<ReviewDto> response = restTemplate.exchange(
+                "/api/subcategories/" + SubcategoryConstants.EXISTING_ID1,
+                HttpMethod.DELETE, httpEntity, ReviewDto.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    @Transactional
+    public void testDeleteNonExistingId(){
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<ReviewDto> response = restTemplate.exchange(
+                "/api/subcategories/" + SubcategoryConstants.NON_EXISTING_ID,
+                HttpMethod.DELETE, httpEntity, ReviewDto.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
 }

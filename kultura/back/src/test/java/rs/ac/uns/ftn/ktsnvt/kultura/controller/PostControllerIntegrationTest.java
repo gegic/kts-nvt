@@ -165,6 +165,7 @@ public class PostControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void whenCreatePost() {
         PostDto post = createTestPostDto();
 
@@ -189,6 +190,7 @@ public class PostControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void whenUpdatePost() throws Exception {
         PostDto oldValues = postService.readById(PostConstants.EXISTING_ID1).orElseThrow(() -> new Exception("Test invalid!"));
 

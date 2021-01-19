@@ -63,6 +63,7 @@ public class CategoriesControllerIntegrationTest {
     private String accessToken;
 
     @Test
+    @Transactional
     public void whenCreateCategory() {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(CategoryConstants.TEST_CATEGORY_NAME2);
@@ -108,7 +109,7 @@ public class CategoriesControllerIntegrationTest {
     }
 
     @Test
-    public void whenUpdateReturnResourceNotFoundException(){
+    public void whenUpdateNonExisting(){
         CategoryDto cat = new CategoryDto();
         cat.setId(CategoryConstants.NON_EXISTING_ID);
         cat.setName(CategoryConstants.NON_EXISTING_NAME);
@@ -128,6 +129,7 @@ public class CategoriesControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void whenUpdateCategory() throws Exception {
         // oldValues
         CategoryDto oldValues = categoryService.readById(CategoryConstants.EXISTING_ID1).orElse(null);
@@ -200,6 +202,46 @@ public class CategoriesControllerIntegrationTest {
     }
 
     @Test
+    public void testGetById() {
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ParameterizedTypeReference<CategoryDto> responseType = new ParameterizedTypeReference<CategoryDto>() {};
+
+        ResponseEntity<CategoryDto> responseEntity =
+                restTemplate.exchange("/api/categories/" + CategoryConstants.EXISTING_ID1
+                        , HttpMethod.GET, httpEntity, responseType);
+
+        CategoryDto category = responseEntity.getBody();
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(CategoryConstants.EXISTING_ID1, category.getId());
+        assertEquals(CategoryConstants.EXISTING_NAME1, category.getName());
+    }
+
+    @Test
+    public void testGetById_NonExistingId() {
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        ParameterizedTypeReference<CategoryDto> responseType = new ParameterizedTypeReference<CategoryDto>() {};
+
+        ResponseEntity<CategoryDto> responseEntity =
+                restTemplate.exchange("/api/categories/" + CategoryConstants.NON_EXISTING_ID
+                        , HttpMethod.GET, httpEntity, responseType);
+
+        CategoryDto category = responseEntity.getBody();
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
     public void testGetAll() {
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
@@ -222,6 +264,7 @@ public class CategoriesControllerIntegrationTest {
 
         this.accessToken = null;
     }
+
 
 
 

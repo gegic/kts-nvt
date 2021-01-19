@@ -26,5 +26,9 @@ public class ReviewConstants {
 
     public static final Long TEST_USER_ID = 3L;
 
+    public static final Long NON_EXISTING_USER_ID = 42L;
+
+    public static final Long NON_EXISTING_CULTURAL_OFFERING_ID = 42L;
+
 
 }
