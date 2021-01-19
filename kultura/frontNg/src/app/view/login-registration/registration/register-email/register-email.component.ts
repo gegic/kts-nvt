@@ -26,7 +26,7 @@ export class RegisterEmailComponent implements OnInit {
 
   onClickProceed(): void {
     if (!this.emailControl.valid) {
-      this.messageService.add({severity: 'error', summary: 'Email not valid', detail: 'Email should be formatted properly.'});
+      this.messageService.add({id: 'toast-container', severity: 'error', summary: 'Email not valid', detail: 'Email should be formatted properly.'});
       return;
     }
 
@@ -35,7 +35,7 @@ export class RegisterEmailComponent implements OnInit {
     this.registerService.checkExistence(email)
       .subscribe(
         data => {
-          this.messageService.add({severity: 'error', summary: 'Email already exists',
+          this.messageService.add({id: 'toast-container', severity: 'error', summary: 'Email already exists',
             detail: 'An account with this email already exists.'});
           this.emailControl.reset();
         },

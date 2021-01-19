@@ -9,25 +9,31 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 @Getter
-public class LoginPage {
+public class RegistrationPage {
 
     private WebDriver driver;
 
-    @FindBy(id = "email")
-    private WebElement email;
-
-    @FindBy(id = "password")
-    private WebElement password;
-
-    @FindBy(id = "submit")
-    private WebElement nextBtn;
-
-    @FindBy(id = "login")
-    private WebElement loginBtn;
-
-    public LoginPage(WebDriver driver) {
+    public RegistrationPage(WebDriver driver) {
         this.driver = driver;
     }
+
+    @FindBy(id = "email")
+    private WebElement emailInput;
+
+    @FindBy(id = "proceed")
+    private WebElement proceedBtn;
+
+    @FindBy(id = "firstName")
+    private WebElement firstNameInput;
+
+    @FindBy(id = "lastName")
+    private WebElement lastNameInput;
+    
+    @FindBy(id = "repeatPassword")
+    private WebElement repeatPasswordInput;
+    
+    @FindBy(id = "password")
+    private WebElement passwordInput;
 
     public String ensureIsDisplayedToast() {
         return (new WebDriverWait(driver, 30)).until(ExpectedConditions.presenceOfElementLocated(By.id("toast-container"))).getText();
