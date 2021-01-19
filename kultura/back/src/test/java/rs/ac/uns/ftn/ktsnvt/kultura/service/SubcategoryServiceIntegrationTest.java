@@ -15,23 +15,27 @@ import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.SubcategoryConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.SubcategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants.PAGE_SIZE;
 
 @RunWith(SpringRunner.class)
 @Rollback(false)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class SubcategoryServiceIntegrationTest {
 
     @Autowired
@@ -40,88 +44,93 @@ public class SubcategoryServiceIntegrationTest {
     private Mapper mapper;
     @Autowired
     private SubcategoryService subcategoryService;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @PersistenceContext
+    private EntityManager em;
 
 
     @Test
     @Transactional
     public void testFindAllByCategoryId(){
 
-        Pageable pageRequest = PageRequest.of(0, PAGE_SIZE);
+        Pageable pageRequest = PageRequest.of(0, Integer.MAX_VALUE);
 
         Page<SubcategoryDto> returnedSubcategories = subcategoryService
-                .findAllByCategoryId(SubcategoryConstants.EXISTING_CATEGORY_ID1, pageRequest);
+                .findAllByCategoryId(1L, pageRequest);
 
-        assertEquals(SubcategoryConstants.DB_COUNT, returnedSubcategories.getContent().size());
+        long dbSize = subcategoryRepository.findAll().stream().filter(s -> s.getCategory().getId() == 1L).count();
+
+        assertEquals(dbSize, returnedSubcategories.getTotalElements());
     }
 
     @Test
     @Transactional
     public void testFindById(){
-        Optional<SubcategoryDto> subcategory = subcategoryService.findById(SubcategoryConstants.EXISTING_ID1);
+        Optional<SubcategoryDto> subcategory = subcategoryService.findById(1L);
 
-        assertEquals(SubcategoryConstants.EXISTING_CATEGORY_ID1, (Long)subcategory.get().getCategoryId());
-        assertEquals(SubcategoryConstants.EXISTING_ID1, (Long)subcategory.get().getId());
-        assertEquals(SubcategoryConstants.EXISTING_NAME1, subcategory.get().getName());
-
+        assertEquals(1L, subcategory.get().getId().longValue());
     }
 
     @Test
     @Transactional
     //@Rollback(true)
     public void testCreate(){
-        SubcategoryDto newSubcategory = createTestSubcategoryDto();
+        SubcategoryDto newSubcategory = new SubcategoryDto();
+        newSubcategory.setCategoryId(1L);
+        newSubcategory.setName("PotkategorijaNova");
+        long oldDb = subcategoryRepository.count();
 
-        Pageable pageRequest = PageRequest.of(0, PAGE_SIZE);
 
         SubcategoryDto createdSubcategory = subcategoryService.create(newSubcategory);
 
-        assertThat(createdSubcategory).isNotNull();
-
-        // Validate that new category is in the database
-        List<SubcategoryDto> subcategories = subcategoryService
-                .findAllByCategoryId(SubcategoryConstants.EXISTING_CATEGORY_ID1,pageRequest).getContent();
-        assertThat(subcategories).hasSize(SubcategoryConstants.DB_COUNT + 1);
-        assertEquals(createdSubcategory.getCategoryId(), SubcategoryConstants.TEST_CATEGORY_ID);
-        assertEquals(createdSubcategory.getName(), SubcategoryConstants.TEST_NAME);
-
-        subcategoryService.delete(createdSubcategory.getId());
+        long newDb = subcategoryRepository.count();
+        assertNotNull(createdSubcategory);
+        assertEquals(oldDb + 1, newDb);
+        assertEquals(newSubcategory.getName(), createdSubcategory.getName());
+        Subcategory s = subcategoryRepository.findById(createdSubcategory.getId()).get();
+        s.setCategory(null);
+        subcategoryRepository.delete(s);
     }
 
     @Test
     @Transactional
-    //@Rollback(true)
     public void testUpdate() {
-        SubcategoryDto oldValues = subcategoryService.findById(SubcategoryConstants.EXISTING_ID1).get();
 
-
-        SubcategoryDto dbSubcategory = subcategoryService.findById(SubcategoryConstants.EXISTING_ID1).get();
-
-        dbSubcategory.setName(SubcategoryConstants.TEST_NAME);
+        Subcategory old = subcategoryRepository.findById(1L).get();
+        em.detach(old);
 
         SubcategoryDto dbSubcategoryDto = new SubcategoryDto();
-        dbSubcategoryDto.setId(dbSubcategory.getId());
-        dbSubcategoryDto.setName(dbSubcategory.getName());
-        dbSubcategoryDto.setCategoryId(dbSubcategory.getCategoryId());
+        dbSubcategoryDto.setId(old.getId());
+        dbSubcategoryDto.setName("PROMIJENJENO IME");
+        dbSubcategoryDto.setCategoryId(old.getCategory().getId());
 
-        SubcategoryDto returnedSubcategory;
+        SubcategoryDto returnedSubcategory = subcategoryService.update(dbSubcategoryDto);
 
-        returnedSubcategory = subcategoryService.update(dbSubcategoryDto);
-        assertThat(returnedSubcategory).isNotNull();
+        assertNotNull(returnedSubcategory);
 
-        //verify that database contains updated data
-        assertThat(returnedSubcategory.getName()).isEqualTo(SubcategoryConstants.TEST_NAME);
+        assertEquals(dbSubcategoryDto.getName(), returnedSubcategory.getName());
 
-        subcategoryService.update(oldValues);
+        subcategoryRepository.save(old);
     }
 
-    private SubcategoryDto createTestSubcategoryDto() {
-        SubcategoryDto subcategoryDto = new SubcategoryDto();
+    @Test
+    @Transactional
+    public void testDelete() {
+        Subcategory newSubcategory = new Subcategory();
+        Category c = categoryRepository.findById(1L).get();
+        c.getSubcategories().add(newSubcategory);
+        newSubcategory.setCategory(c);
+        newSubcategory.setName("PotkategorijaNova");
+        newSubcategory = subcategoryRepository.save(newSubcategory);
 
-        subcategoryDto.setCategoryId(SubcategoryConstants.TEST_CATEGORY_ID);
-        subcategoryDto.setName(SubcategoryConstants.TEST_NAME);
+        long oldDb = subcategoryRepository.count();
 
-        return subcategoryDto;
+        subcategoryService.delete(newSubcategory.getId());
+
+        long newDb = subcategoryRepository.count();
+
+        assertEquals(oldDb - 1, newDb);
     }
-
 
 }

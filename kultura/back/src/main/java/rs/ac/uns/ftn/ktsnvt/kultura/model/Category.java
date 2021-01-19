@@ -22,12 +22,21 @@ public class Category {
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
-    @Setter
     private Set<Subcategory> subcategories = new HashSet<>();
 
     @Getter
     @Setter
     @Column(unique = true)
     private String name;
+
+    public void setSubcategories(Set<Subcategory> subcategories) {
+        subcategories.forEach(this::addSubcategory);
+    }
+
+    public void addSubcategory(Subcategory s) { s.setCategory(this); }
+    public void removeSubcategory(Subcategory s) { s.setCategory(null); }
+
+    protected void internalAddSubcategory(Subcategory s) { subcategories.add(s); }
+    protected void internalRemoveSubcategory(Subcategory s) { subcategories.remove(s); }
 
 }

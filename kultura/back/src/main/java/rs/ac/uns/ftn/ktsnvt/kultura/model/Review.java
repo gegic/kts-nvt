@@ -31,9 +31,8 @@ public class Review {
     @Setter
     private LocalDateTime timeAdded = LocalDateTime.now();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @Getter
-    @Setter
     private CulturalOffering culturalOffering;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -45,4 +44,10 @@ public class Review {
     @Getter
     @Setter
     private Set<ReviewPhoto> photos = new HashSet<>();
+
+    public void setCulturalOffering(CulturalOffering culturalOffering) {
+        if (this.culturalOffering != null) { this.culturalOffering.internalRemoveReview(this); }
+        this.culturalOffering = culturalOffering;
+        if (culturalOffering != null) { culturalOffering.internalAddReview(this); }
+    }
 }

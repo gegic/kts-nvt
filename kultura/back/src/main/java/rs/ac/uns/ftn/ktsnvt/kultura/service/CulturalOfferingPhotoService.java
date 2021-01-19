@@ -100,14 +100,15 @@ public class CulturalOfferingPhotoService {
     }
 
     public void delete(long id) {
-        if (!culturalOfferingPhotoRepository.existsById(id)) {
-            throw new ResourceNotFoundException("A photo with the given id " + id + " was not found.");
-        }
+        CulturalOfferingPhoto offeringPhoto = culturalOfferingPhotoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("A photo with the given id " + id + " was not found."));
+
         File photo = new File(photosConfig.getPath() + id + ".png");
         File thumbnail = new File(photosConfig.getPath() + "thumbnail/" + id + ".png");
         photo.delete();
         thumbnail.delete();
-        culturalOfferingPhotoRepository.deleteById(id);
+        offeringPhoto.getCulturalOffering().getCulturalOfferingPhotos().remove(offeringPhoto);
+        culturalOfferingPhotoRepository.delete(offeringPhoto);
     }
 
     public void deleteByCulturalOffering(long culturalOfferingId) {
@@ -115,6 +116,7 @@ public class CulturalOfferingPhotoService {
         for (CulturalOfferingPhoto photo : photos) {
             new File(photosConfig.getPath() + photo.getId() + ".png").delete();
             new File(photosConfig.getPath() + "thumbnail/" + photo.getId() + ".png").delete();
+            photo.getCulturalOffering().getCulturalOfferingPhotos().remove(photo);
         }
 
         culturalOfferingPhotoRepository.deleteAll(photos);

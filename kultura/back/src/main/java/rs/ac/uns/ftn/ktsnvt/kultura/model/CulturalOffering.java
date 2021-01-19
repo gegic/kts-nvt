@@ -86,7 +86,7 @@ public class CulturalOffering {
     @Setter
     private Set<Post> posts = new HashSet<>();
     
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "subscription",
             uniqueConstraints = @UniqueConstraint(columnNames = {"cultural_offering_id", "user_id"}),
             joinColumns = @JoinColumn(name = "cultural_offering_id", referencedColumnName = "id"),
@@ -106,4 +106,41 @@ public class CulturalOffering {
         }
         this.photo = photo;
     }
+
+    public void setSubcategory(Subcategory subcategory) {
+        if (this.subcategory != null) { this.subcategory.internalRemoveCulturalOffering(this); }
+        this.subcategory = subcategory;
+        if (subcategory != null) { subcategory.internalAddCulturalOffering(this); }
+    }
+
+    public void setReviews(Set<Review> reviews) {
+        reviews.forEach(this::addReview);
+    }
+
+    public void addReview(Review s) { s.setCulturalOffering(this); }
+    public void removeReview(Review s) { s.setCulturalOffering(null); }
+
+    protected void internalAddReview(Review s) { reviews.add(s); }
+    protected void internalRemoveReview(Review s) { reviews.remove(s); }
+
+    public void setPosts(Set<Post> posts) {
+        posts.forEach(this::addPost);
+    }
+    
+    public void addPost(Post s) { s.setCulturalOffering(this); }
+    public void removePost(Post s) { s.setCulturalOffering(null); }
+    
+    protected void internalAddPost(Post s) { posts.add(s); }
+    protected void internalRemovePost(Post s) { posts.remove(s); }
+
+    public void setCulturalOfferingPhotos(Set<CulturalOfferingPhoto> posts) {
+        posts.forEach(this::addCulturalOfferingPhoto);
+    }
+
+    public void addCulturalOfferingPhoto(CulturalOfferingPhoto s) { s.setCulturalOffering(this); }
+    public void removeCulturalOfferingPhoto(CulturalOfferingPhoto s) { s.setCulturalOffering(null); }
+
+    protected void internalAddCulturalOfferingPhoto(CulturalOfferingPhoto s) { culturalOfferingPhotos.add(s); }
+    protected void internalRemoveCulturalOfferingPhoto(CulturalOfferingPhoto s) { culturalOfferingPhotos.remove(s); }
+
 }

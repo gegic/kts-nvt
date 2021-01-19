@@ -52,6 +52,8 @@ public class PostService {
     }
 
     public void delete(long id) {
-        postRepository.deleteById(id);
+        Post p = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post with the given id not found"));
+        p.getCulturalOffering().getPosts().remove(p);
+        postRepository.delete(p);
     }
 }

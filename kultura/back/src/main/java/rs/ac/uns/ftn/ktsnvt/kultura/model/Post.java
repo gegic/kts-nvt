@@ -24,7 +24,12 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
-    @Setter
     private CulturalOffering culturalOffering;
+
+    public void setCulturalOffering(CulturalOffering culturalOffering) {
+        if (this.culturalOffering != null) { this.culturalOffering.internalAddPost(this); }
+        this.culturalOffering = culturalOffering;
+        if (culturalOffering != null) { culturalOffering.internalRemovePost(this); }
+    }
 
 }

@@ -123,7 +123,8 @@ public class ReviewService {
         } else {
             culturalOffering.setOverallRating(newOverallRating);
         }
-
+        culturalOffering.setNumReviews(newNumReviews);
+        culturalOffering.getReviews().remove(review);
         Set<ReviewPhoto> photos = review.getPhotos();
 
         for (ReviewPhoto photo : photos) {
@@ -134,7 +135,6 @@ public class ReviewService {
             photoRepository.delete(photo);
         }
 
-        culturalOffering.setNumReviews(newNumReviews);
         reviewRepository.deleteById(id);
         culturalOfferingRepository.save(culturalOffering);
     }
