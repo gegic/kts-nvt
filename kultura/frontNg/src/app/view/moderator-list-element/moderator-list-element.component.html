@@ -4,10 +4,10 @@
       <ngx-avatar class="my-avatar" [name]="moderator.firstName+' '+ moderator.lastName"> </ngx-avatar>
     </div>
     <div class="p-col p-ml-4">
-      <h4 class="p-text-bold p-m-0">
+      <h4 class="p-text-bold p-m-0" [id] = "'p'+moderator.firstName+moderator.lastName">
         {{moderator.firstName}} {{moderator.lastName}}
       </h4>
-      <p class=" p-m-0">
+      <p class=" p-m-0" [id] = "'p'+moderator.email">
        Mail address: {{moderator.email}}
       </p>
     </div>
@@ -15,11 +15,13 @@
       <div class="p-d-block button-group p-mb-3">
         <button class="p-button p-button-rounded p-button-icon p-button-danger"
                 icon="pi pi-trash"
+                [id] = "'delete'+moderator.email"
                 (click)="onClickDelete()"
                 pButton
         ></button>
         <button class="p-button blue-button p-button-rounded p-button-icon p-ml-3"
                 icon="pi pi-pencil"
+                [id] = "'edit'+moderator.email"
                 (click)="onClickEdit()"
                 pButton
         ></button>

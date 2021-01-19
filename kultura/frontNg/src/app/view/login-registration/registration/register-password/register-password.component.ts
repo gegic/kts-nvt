@@ -36,7 +36,7 @@ export class RegisterPasswordComponent implements OnInit {
   onClickSignUp(): void {
     let password: string;
     if (this.passwordGroup.invalid) {
-      this.messageService.add({severity: 'error',
+      this.messageService.add({id: 'toast-container', severity: 'error',
         detail: 'Password has to contain at least one uppercase, one lowercase letter and one digit. ' +
           'It has to be at least 8 characters long'});
       return;
@@ -44,7 +44,7 @@ export class RegisterPasswordComponent implements OnInit {
     password = this.passwordGroup.get('password')?.value;
     const repeatPassword: string = this.passwordGroup.get('repeatPassword')?.value;
     if (password !== repeatPassword) {
-      this.messageService.add({severity: 'error',
+      this.messageService.add({id: 'toast-container', severity: 'error',
         detail: 'Repeated password has to match the original password.'});
       return;
     }
@@ -57,7 +57,7 @@ export class RegisterPasswordComponent implements OnInit {
           this.router.navigate(['../success'], {relativeTo: this.activatedRoute});
         },
         () => {
-          this.messageService.add({severity: 'error', summary: 'Unexpected error', detail: 'An unexpected error occurred.'});
+          this.messageService.add({id: 'toast-container', severity: 'error', summary: 'Unexpected error', detail: 'An unexpected error occurred.'});
           this.router.navigate(['/register']);
         }
       );

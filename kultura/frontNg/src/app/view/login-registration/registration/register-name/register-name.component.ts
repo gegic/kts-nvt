@@ -31,7 +31,7 @@ export class RegisterNameComponent implements OnInit {
 
   onClickProceed(): void {
     if (this.nameGroup.invalid) {
-      this.messageService.add({severity: 'error', detail: 'Please enter only the first and the last name with capital first letters.'});
+      this.messageService.add({id: 'toast-container', severity: 'error', detail: 'Please enter only the first and the last name with capital first letters (Fields can\'t be empty).'});
       return;
     }
     this.registerService.firstName = this.nameGroup.get('firstName')?.value;
