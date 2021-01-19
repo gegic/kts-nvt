@@ -23,13 +23,13 @@ public class UserDto {
     }
 
     private Long id;
-    @Email(message = "You entered an invalid email address.", groups = PostGroup.class)
+    @Email(message = "You entered an invalid email address.", groups = {PostGroup.class, PutGroup.class})
     @NotNull(groups = PostGroup.class)
     private String email;
 
     @Ignore(ignoreType = IgnoreType.ENTITY_TO_DTO)
-    @Size(min=8, max=50, message = "A password should be between 8 and 50 characters long.", groups = PostGroup.class)
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$", groups = PostGroup.class)
+    @Size(min=8, max=50, message = "A password should be between 8 and 50 characters long.", groups = {PostGroup.class, PutGroup.class})
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$", groups = {PostGroup.class, PutGroup.class})
     @NotNull(groups = PostGroup.class)
     private String password;
 

@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.e2e;
 
 public class E2EConstants {
 
+    public static final Long ADMIN_ID = 1L;
     public static final String ADMIN_EMAIL = "admin@mail.com";
     public static final String ADMIN_PASSWORD = "admin123";
 

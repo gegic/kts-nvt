@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Injectable} from '@angular/core';
-import {AbstractControl, Form, FormControl, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, Form, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {User} from 'src/app/core/models/user';
 import {UserService} from 'src/app/core/services/users/users.service';
 import {MessageService} from 'primeng/api';
@@ -19,11 +19,17 @@ const DIGIT_REGEX: RegExp = /(?=.*\d)/;
 
 export class UserEditComponent implements OnInit {
 
-
   user?: User;
 
   passwordControl: FormControl = new FormControl('', [this.containDigit(), this.containCapital(), this.containSmall(), this.sizeValidator('New password', 8, 50), this.emptyField('New password')]);
-  confirmPasswordControl: FormControl = new FormControl('', [this.samePasswords(this.passwordControl)]);
+  confirmPasswordControl: FormControl = new FormControl('');
+
+  passwordFormControl: FormGroup = new FormGroup({
+    password: this.passwordControl,
+    confirmPassword: this.confirmPasswordControl
+  }, [
+    this.samePasswords()
+  ]);
 
   name: FormControl = new FormControl('', [this.emptyField('First name')]);
   lastName: FormControl = new FormControl('', [this.emptyField('Last name')]);
@@ -39,17 +45,17 @@ export class UserEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = Object.assign(new User(), this.authService.user.getValue());
+
   }
 
 
   updatePassword(): void {
-    if (this.passwordControl.invalid) {
-      console.log(this.passwordControl.errors);
-      this.messageService.add({severity: 'error', detail: this.passwordControl.errors?.msg});
-      return;
-    }
-    if (this.confirmPasswordControl.invalid) {
-      this.messageService.add({severity: 'error', detail: this.confirmPasswordControl.errors?.msg});
+    if (this.passwordFormControl.invalid) {
+      if (this.passwordControl?.invalid) {
+        this.messageService.add({severity: 'error', detail: this.passwordControl.errors?.msg});
+        return;
+      }
+      this.messageService.add({severity: 'error', detail: this.passwordFormControl.errors?.msg});
       return;
     }
     const user = this.user;
@@ -158,9 +164,12 @@ export class UserEditComponent implements OnInit {
       control.value ? null : {msg: field + ' must not be empty.'};
   }
 
-  samePasswords(val: FormControl): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null =>
-      control.value === val.value ? null : {msg: 'Passwords must be same.'};
+  samePasswords(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const password = control.get('password');
+      const confirmPassword = control.get('confirmPassword');
+      return password?.value === confirmPassword?.value ? null : {msg: 'Passwords must be same.'};
+    };
   }
 
   containCapital(): ValidatorFn {
