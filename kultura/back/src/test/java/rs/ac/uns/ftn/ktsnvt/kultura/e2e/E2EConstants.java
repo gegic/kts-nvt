@@ -16,4 +16,5 @@ public class E2EConstants {
     public static final String NEW_PASSWORD_BAD_FORMAT0_1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     public static final String NEW_PASSWORD_BAD_FORMAT1 = "aaaaaaaa";
     public static final String NEW_PASSWORD_BAD_FORMAT2 = "Aaaaaaaa";
+
 }

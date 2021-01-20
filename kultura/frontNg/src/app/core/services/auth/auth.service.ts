@@ -43,8 +43,8 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.user.getValue();
   }
-  
-  updateUserData(user: User): void{
+
+  updateUserData(user: User): void {
     this.user.next(user);
     localStorage.setItem('user', JSON.stringify(user));
   }
