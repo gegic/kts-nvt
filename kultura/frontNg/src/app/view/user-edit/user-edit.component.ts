@@ -83,7 +83,7 @@ export class UserEditComponent implements OnInit {
     }
 
     user.firstName = this.name.value;
-    this.commitUpdate(user, 'first name', this.name);
+    this.commitUpdate(user, 'First name', this.name);
   }
 
   updateLastName(): void {
@@ -98,7 +98,7 @@ export class UserEditComponent implements OnInit {
     }
 
     user.lastName = this.lastName.value;
-    this.commitUpdate(user, 'last name', this.lastName);
+    this.commitUpdate(user, 'Last name', this.lastName);
   }
 
   updateEmail(): void {

@@ -3,14 +3,13 @@
     font-size: 20px;
 }
 
-// .colored-card{
-//     border-bottom: $primaryColor 1px solid;
-//     border-right: $primaryColor 1px solid;
-// }
-
 .right-side-info {
   background-color: #FCF7F8;
   border-radius: 30px;
   border: 1px solid rgba(0, 0, 0, .2);
   padding: 4vh;
+}
+
+::ng-deep .p-card {
+  border-radius: 1em;
 }
