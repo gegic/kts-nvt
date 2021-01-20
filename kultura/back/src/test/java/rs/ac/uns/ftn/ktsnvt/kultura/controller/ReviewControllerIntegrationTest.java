@@ -212,7 +212,11 @@ public class ReviewControllerIntegrationTest {
     @Transactional
     public void testCreate(){
         this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
-        ReviewDto review = createTestReviewDto();
+        ReviewDto review = new ReviewDto();
+        review.setUserId(3L);
+        review.setCulturalOfferingId(1L);
+        review.setRating(3);
+        review.setComment("KOMENTARCIC");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -226,65 +230,49 @@ public class ReviewControllerIntegrationTest {
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(review.getComment(), createdReview.getComment());
+
+        reviewService.delete(createdReview.getId());
     }
 
     @Test
-    @Transactional
     public void testDeleteByModerator(){
+        ReviewDto review = createTestReviewDto();
+
+        review = reviewService.create(review);
         this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.accessToken);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<ReviewDto> response = restTemplate.exchange(
-                "/api/reviews/" + ReviewConstants.EXISTING_ID,
+                "/api/reviews/" + review.getId(),
                 HttpMethod.DELETE, httpEntity, ReviewDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
-    @Transactional
     public void testDeleteByUser(){
+        ReviewDto review = createTestReviewDto();
+
+        review = reviewService.create(review);
+
         this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Authorization", "Bearer " + this.accessToken);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<ReviewDto> response = restTemplate.exchange(
-                "/api/reviews/" + ReviewConstants.EXISTING_ID,
-                HttpMethod.DELETE, httpEntity, ReviewDto.class);
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "/api/reviews/" + review.getId(),
+                HttpMethod.DELETE, httpEntity, Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-//    @Test
-//    @Transactional
-//    public void testUpdate(){
-//        this.accessToken = LoginUtil.login(restTemplate, USER_EMAIL, USER_PASSWORD);
-//
-//        ReviewDto review = new ReviewDto();
-//        review.setId(ReviewConstants.EXISTING_ID);
-//        review.setComment(ReviewConstants.TEST_COMMENT);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-//        headers.add("Authorization", "Bearer " + this.accessToken);
-//        HttpEntity<Object> httpEntity = new HttpEntity<>(review, headers);
-//
-//        ResponseEntity<ReviewDto> response = restTemplate.exchange(
-//                "/api/reviews", HttpMethod.PUT, httpEntity, ReviewDto.class);
-//
-//        ReviewDto updatedReview = response.getBody();
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(updatedReview.getId(), ReviewConstants.EXISTING_ID);
-//        assertEquals(review.getComment(), updatedReview.getComment());
-//    }
 
 
 
@@ -294,7 +282,7 @@ public class ReviewControllerIntegrationTest {
         reviewDto.setComment(ReviewConstants.TEST_COMMENT);
         reviewDto.setRating(ReviewConstants.TEST_RATING);
         reviewDto.setCulturalOfferingId(ReviewConstants.TEST_CULTURAL_OFFERING_ID);
-        reviewDto.setUserId(ReviewConstants.TEST_USER_ID);
+        reviewDto.setUserId(3L);
 
         return reviewDto;
     }

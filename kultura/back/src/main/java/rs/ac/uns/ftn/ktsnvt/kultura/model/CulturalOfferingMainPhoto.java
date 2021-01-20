@@ -15,11 +15,10 @@ public class CulturalOfferingMainPhoto extends AbstractPhoto{
     @Setter
     String token;
 
-
     public long getId() {
         return this.id;
     }
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -49,6 +48,9 @@ public class CulturalOfferingMainPhoto extends AbstractPhoto{
     }
 
     public void removeCulturalOffering() {
+        if (this.culturalOffering == null) {
+            return;
+        }
         this.culturalOffering.setPhoto(null);
         this.culturalOffering = null;
     }

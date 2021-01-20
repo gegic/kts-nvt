@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.config.PhotosConfig;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewPhotoDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.ReviewPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.ReviewPhotoRepository;
@@ -110,7 +111,7 @@ public class ReviewPhotoService {
 
     @Transactional
     public void deleteForReview(long reviewId) {
-        List<ReviewPhoto> photos = repository.getAllByReviewId(reviewId);
+        List<ReviewPhoto> photos = repository.findByReviewId(reviewId);
         photos.parallelStream().map(p -> new File(photosConfig.getPath() + "review/thumbnail/" + p.getId() + ".png"))
                 .forEach(File::delete);
         photos.parallelStream().map(p -> new File(photosConfig.getPath() + "review/" + p.getId() + ".png"))

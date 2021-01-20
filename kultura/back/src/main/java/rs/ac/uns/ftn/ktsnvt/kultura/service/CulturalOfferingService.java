@@ -216,6 +216,7 @@ public class CulturalOfferingService {
         return modelMapper.fromEntity(culturalOffering, CulturalOfferingDto.class);
     }
 
+    @Transactional
     public void delete(long id) {
         CulturalOffering co = culturalOfferingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cultural offering with given id not found."));

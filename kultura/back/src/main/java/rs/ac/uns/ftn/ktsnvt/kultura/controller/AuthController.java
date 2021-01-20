@@ -30,7 +30,6 @@ public class AuthController {
     UserService userService;
     @Autowired
     AuthenticationManager authenticationManager;
-
     @Autowired
     Mapper mapper;
 

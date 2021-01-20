@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
-import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.config.PhotosConfig;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewPhotoDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Review;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.ReviewPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
@@ -25,10 +22,8 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.ReviewRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.security.Token;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -117,6 +112,6 @@ public class ReviewPhotoServiceIntegrationTest {
 
         photoService.deleteForReview(1L);
 
-        assertTrue(photoRepository.getAllByReviewId(1L).isEmpty());
+        assertTrue(photoRepository.findByReviewId(1L).isEmpty());
     }
 }

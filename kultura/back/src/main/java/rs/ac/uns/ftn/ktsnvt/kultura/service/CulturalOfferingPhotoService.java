@@ -99,26 +99,39 @@ public class CulturalOfferingPhotoService {
         ImageIO.write(bufferedImage, "png", output);
     }
 
+    @Transactional
     public void delete(long id) {
         CulturalOfferingPhoto offeringPhoto = culturalOfferingPhotoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("A photo with the given id " + id + " was not found."));
 
         File photo = new File(photosConfig.getPath() + id + ".png");
         File thumbnail = new File(photosConfig.getPath() + "thumbnail/" + id + ".png");
+        if (!photo.exists()) {
+            throw new ResourceNotFoundException("Photo not found");
+        } else if (!thumbnail.exists()) {
+            throw new ResourceNotFoundException("Thumbnail not found");
+        }
         photo.delete();
         thumbnail.delete();
-        offeringPhoto.getCulturalOffering().getCulturalOfferingPhotos().remove(offeringPhoto);
+        CulturalOffering co = offeringPhoto.getCulturalOffering();
+        co.removeCulturalOfferingPhoto(offeringPhoto);
+        culturalOfferingRepository.save(co);
         culturalOfferingPhotoRepository.delete(offeringPhoto);
     }
 
+    @Transactional
     public void deleteByCulturalOffering(long culturalOfferingId) {
         List<CulturalOfferingPhoto> photos = culturalOfferingPhotoRepository.findAllByCulturalOfferingId(culturalOfferingId);
+        CulturalOffering co = culturalOfferingRepository.findById(culturalOfferingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Offering not found"));
         for (CulturalOfferingPhoto photo : photos) {
-            new File(photosConfig.getPath() + photo.getId() + ".png").delete();
-            new File(photosConfig.getPath() + "thumbnail/" + photo.getId() + ".png").delete();
-            photo.getCulturalOffering().getCulturalOfferingPhotos().remove(photo);
+            File photoFile = new File(photosConfig.getPath() + photo.getId() + ".png");
+            File thumbnailFile = new File(photosConfig.getPath() + "thumbnail/" + photo.getId() + ".png");
+            photoFile.delete();
+            thumbnailFile.delete();
+            co.removeCulturalOfferingPhoto(photo);
         }
-
+        culturalOfferingRepository.save(co);
         culturalOfferingPhotoRepository.deleteAll(photos);
     }
 }

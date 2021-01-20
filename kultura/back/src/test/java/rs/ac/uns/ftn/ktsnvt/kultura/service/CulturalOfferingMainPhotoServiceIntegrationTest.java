@@ -21,6 +21,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.security.Token;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -92,6 +93,7 @@ public class CulturalOfferingMainPhotoServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void deletePhoto() throws IOException {
         File f = ResourceUtils.getFile("src/test/resources/test_photo.png");
         MultipartFile multipartFile = new MockMultipartFile("photo", Files.readAllBytes(f.toPath()));

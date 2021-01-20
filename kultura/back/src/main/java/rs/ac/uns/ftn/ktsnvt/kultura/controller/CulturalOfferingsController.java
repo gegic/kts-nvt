@@ -26,8 +26,8 @@ import java.util.List;
 @RequestMapping(path = "/api/cultural-offerings", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CulturalOfferingsController {
 
-    private CulturalOfferingService culturalOfferingService;
-    private CulturalOfferingMainPhotoService photoService;
+    private final CulturalOfferingService culturalOfferingService;
+    private final CulturalOfferingMainPhotoService photoService;
 
     @Autowired
     public CulturalOfferingsController(CulturalOfferingService culturalOfferingService,

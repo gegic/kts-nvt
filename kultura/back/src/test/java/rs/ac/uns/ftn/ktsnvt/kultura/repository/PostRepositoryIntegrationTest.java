@@ -26,10 +26,10 @@ public class PostRepositoryIntegrationTest {
 
     @Test
     public void findAllByCulturalOfferingIdWhenExist(){
-        int numberOfPostsForCulturalOffer = 2;
+        int numberOfPostsForCulturalOffer = 16;
         Page<Post> postPage = postRepository.findAllByCulturalOfferingId(PostConstants.TEST_CULTURAL_OFFERING_ID, Pageable.unpaged());
 
-        assertEquals(postPage.getContent().size(), numberOfPostsForCulturalOffer);
+        assertEquals(numberOfPostsForCulturalOffer, postPage.getContent().size());
 
         assertFalse(postPage.get().anyMatch(post ->
                 post.getCulturalOffering().getId()!=PostConstants.TEST_CULTURAL_OFFERING_ID));

@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.config.PhotosConfig;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
@@ -24,15 +27,18 @@ import java.util.List;
 public class CulturalOfferingMainPhotoService {
 
     private final CulturalOfferingMainPhotoRepository repository;
+    private final CulturalOfferingRepository culturalOfferingRepository;
     private final Mapper mapper;
     private final PhotosConfig photosConfig;
     @Autowired
     public CulturalOfferingMainPhotoService(CulturalOfferingMainPhotoRepository repository,
                                             Mapper mapper,
-                                            PhotosConfig photosConfig) {
+                                            PhotosConfig photosConfig,
+                                            CulturalOfferingRepository culturalOfferingRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.photosConfig = photosConfig;
+        this.culturalOfferingRepository = culturalOfferingRepository;
     }
 
     public CulturalOfferingPhotoDto addPhoto(MultipartFile photoFile) {
@@ -101,10 +107,17 @@ public class CulturalOfferingMainPhotoService {
     public void deletePhoto(CulturalOfferingMainPhoto photo) {
 
         if (photo!=null){
-            new File(photosConfig.getPath() + "main/thumbnail/" + photo.getId() + ".png").delete();
-            new File(photosConfig.getPath() + "main/" + photo.getId() + ".png").delete();
+            File thumbnailFile = new File(photosConfig.getPath() + "main/thumbnail/" + photo.getId() + ".png");
+            File photoFile = new File(photosConfig.getPath() + "main/" + photo.getId() + ".png");
+            thumbnailFile.delete();
+            photoFile.delete();
+            CulturalOffering co = photo.getCulturalOffering();
+            photo.removeCulturalOffering();
 
             repository.delete(photo);
+            if (co != null) {
+                culturalOfferingRepository.save(co);
+            }
         }
     }
     

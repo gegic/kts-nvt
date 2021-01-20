@@ -11,5 +11,5 @@ public interface ReviewPhotoRepository extends JpaRepository<ReviewPhoto, Long> 
     @Query("select p from ReviewPhoto p where p.review is null and p.token = :token")
     List<ReviewPhoto> getNullReview(String token);
 
-    List<ReviewPhoto> getAllByReviewId(long reviewId);
+    List<ReviewPhoto> findByReviewId(long reviewId);
 }

@@ -71,7 +71,6 @@ public class PostControllerIntegrationTest {
 
     @Test
     public void whenGetPostsByCulturalOfferingId(){
-        Pageable pageRequest = PageRequest.of(0, 3);
 
         this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
 
@@ -91,7 +90,6 @@ public class PostControllerIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         posts.forEach(p->assertEquals(CulturalOfferingConstants.EXISTING_ID1, p.getCulturalOfferingId()));
-        assertEquals(PostConstants.DB_COUNT, posts.size());
 
         this.accessToken = null;
     }

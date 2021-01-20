@@ -1,7 +1,7 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.repository;
 
+import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +27,7 @@ public class AuthorityRepositoryIntegrationTest {
     AuthorityRepository authorityRepository;
 
     @Test
-    void findByAuthorityRoleUser() {
+    public void findByAuthorityRoleUser() {
         Authority a = authorityRepository.findByAuthority(AuthorityConstants.roleUser);
         assertEquals(AuthorityConstants.roleUser, a.getAuthority());
     }

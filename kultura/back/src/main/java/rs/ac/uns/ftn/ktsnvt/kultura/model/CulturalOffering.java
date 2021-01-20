@@ -45,7 +45,7 @@ public class CulturalOffering {
     private String address;
 
     @Getter
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne
     private CulturalOfferingMainPhoto photo;
 
     @Getter

@@ -18,7 +18,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.constants.CulturalOfferingConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
@@ -42,6 +44,8 @@ public class CulturalOfferingServiceIntegrationTest {
     private CulturalOfferingService culturalOfferingService;
     @Autowired
     private CulturalOfferingRepository culturalOfferingRepository;
+    @Autowired
+    private CulturalOfferingMainPhotoRepository photoRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -326,6 +330,9 @@ public class CulturalOfferingServiceIntegrationTest {
         assertEquals(culturalOfferingDto.getName(), created.getName());
         assertEquals(culturalOfferingDto.getPhotoId(), created.getPhotoId());
 
+        CulturalOfferingMainPhoto photo = photoRepository.findById(3L).get();
+        photo.removeCulturalOffering();
+        photoRepository.save(photo);
         culturalOfferingRepository.deleteById(created.getId());
     }
 

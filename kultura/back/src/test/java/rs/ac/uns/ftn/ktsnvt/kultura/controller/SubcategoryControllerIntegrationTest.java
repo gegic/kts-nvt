@@ -25,7 +25,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.ReviewDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.SubcategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.auth.LoginDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.SubcategoryService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
@@ -52,7 +54,8 @@ public class SubcategoryControllerIntegrationTest {
     private SubcategoryService subcategoryService;
     @Autowired
     private TestRestTemplate restTemplate;
-
+    @Autowired
+    private CategoryRepository categoryRepository;
     // JWT token za pristup REST servisima. Bice dobijen pri logovanju
     private String accessToken;
 
@@ -125,6 +128,8 @@ public class SubcategoryControllerIntegrationTest {
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(newSubcategory.getName(), createdSubcategory.getName());
+
+        subcategoryRepository.deleteById(createdSubcategory.getId());
     }
 
 
@@ -218,8 +223,12 @@ public class SubcategoryControllerIntegrationTest {
     }
 
     @Test
-    @Transactional
     public void testDelete(){
+        SubcategoryDto s = new SubcategoryDto();
+        s.setCategoryId(1L);
+        s.setName("Potkategorijcica");
+        s = subcategoryService.create(s);
+
         this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
@@ -228,7 +237,7 @@ public class SubcategoryControllerIntegrationTest {
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<ReviewDto> response = restTemplate.exchange(
-                "/api/subcategories/" + SubcategoryConstants.EXISTING_ID1,
+                "/api/subcategories/" + s.getId(),
                 HttpMethod.DELETE, httpEntity, ReviewDto.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());

@@ -58,7 +58,8 @@ public class AuthControllerIntegrationTest {
                 restTemplate.postForEntity("/auth/login",
                         new LoginDto(ADMIN_EMAIL, ADMIN_PASSWORD),
                         String.class);
-        JsonNode parent= null;
+
+        JsonNode parent;
         String token = "";
         assertNotNull(responseEntity.getBody());
         try {

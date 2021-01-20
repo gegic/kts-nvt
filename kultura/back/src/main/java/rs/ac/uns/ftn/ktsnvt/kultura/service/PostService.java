@@ -8,7 +8,9 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.PostDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.PostRepository;
 
 import javax.transaction.Transactional;
@@ -20,12 +22,17 @@ public class PostService {
 
 
     private final PostRepository postRepository;
+    private final CulturalOfferingRepository culturalOfferingRepository;
     private final Mapper mapper;
 
     @Autowired
-    public PostService(PostRepository postRepository, Mapper mapper) {
+    public PostService(PostRepository postRepository,
+                       Mapper mapper,
+                       CulturalOfferingRepository culturalOfferingRepository) {
         this.postRepository = postRepository;
         this.mapper = mapper;
+        this.culturalOfferingRepository = culturalOfferingRepository;
+
     }
 
     public Page<PostDto> readAllByCulturalOfferingId(long culturalOfferingId, Pageable p) {
@@ -51,9 +58,12 @@ public class PostService {
         return mapper.fromEntity(postRepository.save(mapper.fromDto(p, Post.class)), PostDto.class);
     }
 
+    @Transactional
     public void delete(long id) {
         Post p = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post with the given id not found"));
-        p.getCulturalOffering().getPosts().remove(p);
+        CulturalOffering co = p.getCulturalOffering();
+        co.removePost(p);
+        culturalOfferingRepository.save(co);
         postRepository.delete(p);
     }
 }

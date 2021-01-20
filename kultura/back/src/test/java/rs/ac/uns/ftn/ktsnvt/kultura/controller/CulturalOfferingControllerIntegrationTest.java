@@ -18,6 +18,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.constants.CulturalOfferingConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.LoginUtil;
 
@@ -33,10 +34,12 @@ import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.*;
 @Rollback(false)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CulturalOfferingControllerIntegrationTest {
     @Autowired
     private CulturalOfferingService culturalOfferingService;
+
+    @Autowired
+    private CulturalOfferingRepository culturalOfferingRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -235,7 +238,7 @@ public class CulturalOfferingControllerIntegrationTest {
         culturalOfferingDto.setLongitude(CulturalOfferingConstants.TEST_LONGITUDE1);
         culturalOfferingDto.setSubcategoryId(CulturalOfferingConstants.TEST_SUBCATEGORY_ID1);
         culturalOfferingDto.setName(CulturalOfferingConstants.TEST_NAME1);
-        culturalOfferingDto.setPhotoId(CulturalOfferingConstants.PHOTO_ID);
+        culturalOfferingDto.setPhotoId(3L);
 
         return culturalOfferingDto;
     }

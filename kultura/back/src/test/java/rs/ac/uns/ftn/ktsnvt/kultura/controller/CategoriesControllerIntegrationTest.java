@@ -29,6 +29,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.dto.auth.LoginDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CategoryService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.LoginUtil;
@@ -39,19 +40,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.*;
 
 @RunWith(SpringRunner.class)
 @Rollback(false)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class CategoriesControllerIntegrationTest {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -63,7 +65,6 @@ public class CategoriesControllerIntegrationTest {
     private String accessToken;
 
     @Test
-    @Transactional
     public void whenCreateCategory() {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(CategoryConstants.TEST_CATEGORY_NAME2);
@@ -129,7 +130,6 @@ public class CategoriesControllerIntegrationTest {
     }
 
     @Test
-    @Transactional
     public void whenUpdateCategory() throws Exception {
         // oldValues
         CategoryDto oldValues = categoryService.readById(CategoryConstants.EXISTING_ID1).orElse(null);
@@ -213,8 +213,8 @@ public class CategoriesControllerIntegrationTest {
         ParameterizedTypeReference<CategoryDto> responseType = new ParameterizedTypeReference<CategoryDto>() {};
 
         ResponseEntity<CategoryDto> responseEntity =
-                restTemplate.exchange("/api/categories/" + CategoryConstants.EXISTING_ID1
-                        , HttpMethod.GET, httpEntity, responseType);
+                restTemplate.exchange("/api/categories/" + CategoryConstants.EXISTING_ID1,
+                        HttpMethod.GET, httpEntity, responseType);
 
         CategoryDto category = responseEntity.getBody();
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -234,8 +234,8 @@ public class CategoriesControllerIntegrationTest {
         ParameterizedTypeReference<CategoryDto> responseType = new ParameterizedTypeReference<CategoryDto>() {};
 
         ResponseEntity<CategoryDto> responseEntity =
-                restTemplate.exchange("/api/categories/" + CategoryConstants.NON_EXISTING_ID
-                        , HttpMethod.GET, httpEntity, responseType);
+                restTemplate.exchange("/api/categories/" + CategoryConstants.NON_EXISTING_ID,
+                        HttpMethod.GET, httpEntity, responseType);
 
         CategoryDto category = responseEntity.getBody();
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
@@ -249,7 +249,7 @@ public class CategoriesControllerIntegrationTest {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Authorization", "Bearer " + this.accessToken);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-        //mora ovako jer ne moze se pozvati .class nad generickim ovim djavolom od Pagea, tugica
+        // mora ovako jer ne moze se pozvati .class nad generickim ovim djavolom od Pagea, tugica
         ParameterizedTypeReference<HelperPage<CategoryDto>> responseType = new ParameterizedTypeReference<HelperPage<CategoryDto>>() {};
         // posaljemo zahtev koji ima i zaglavlje u kojem je JWT token
         ResponseEntity<HelperPage<CategoryDto>> responseEntity =
@@ -265,8 +265,26 @@ public class CategoriesControllerIntegrationTest {
         this.accessToken = null;
     }
 
+    @Test
+    public void testDelete() {
 
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("NOvaKateGorija");
 
+        categoryDto = categoryService.create(categoryDto);
 
+        long oldDb = categoryRepository.count();
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        restTemplate.exchange("/api/categories/" + categoryDto.getId(), HttpMethod.DELETE, httpEntity, Void.class);
+
+        long newDb = categoryRepository.count();
+
+        assertEquals(oldDb - 1, newDb);
+    }
 
 }
