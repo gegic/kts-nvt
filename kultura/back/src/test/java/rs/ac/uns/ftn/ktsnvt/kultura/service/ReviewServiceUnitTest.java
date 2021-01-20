@@ -212,6 +212,8 @@ public class ReviewServiceUnitTest {
         reviews.add(r);
         reviews.add(r1);
 
+        Mockito.when(culturalOfferingRepository.findById(Mockito.anyLong())).thenReturn(java.util.Optional.of(co));
+
         Mockito.when(reviewRepository.findAllByCulturalOfferingId(1L)).thenReturn(reviews);
 
         Mockito.doNothing().when(reviewRepository).deleteAll(Mockito.anyIterable());

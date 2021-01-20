@@ -40,14 +40,19 @@ public class Review {
     @Setter
     private User user;
 
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @Getter
     @Setter
     private Set<ReviewPhoto> photos = new HashSet<>();
 
     public void setCulturalOffering(CulturalOffering culturalOffering) {
-        if (this.culturalOffering != null) { this.culturalOffering.internalRemoveReview(this); }
+        if (this.culturalOffering != null) {
+            this.culturalOffering.internalRemoveReview(this);
+        }
         this.culturalOffering = culturalOffering;
-        if (culturalOffering != null) { culturalOffering.internalAddReview(this); }
+        if (culturalOffering != null) {
+
+            culturalOffering.internalAddReview(this);
+        }
     }
 }

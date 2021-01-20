@@ -21,7 +21,6 @@ public class CulturalOfferingPhoto extends AbstractPhoto {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
-    @Setter
     private CulturalOffering culturalOffering;
 
     public long getId() {
@@ -55,7 +54,6 @@ public class CulturalOfferingPhoto extends AbstractPhoto {
     public void setTimeAdded(LocalDateTime timeAdded) {
         this.timeAdded = timeAdded;
     }
-
 
     public void setCulturalOffering(CulturalOffering culturalOffering) {
         if (this.culturalOffering != null) { this.culturalOffering.internalAddCulturalOfferingPhoto(this); }

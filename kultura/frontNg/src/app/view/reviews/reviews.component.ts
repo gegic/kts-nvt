@@ -41,9 +41,7 @@ export class ReviewsComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.detailsService.culturalOffering.subscribe(val => {
         if (!!val) {
-          this.reviewService.reviews = [];
-          this.reviewService.reviewNumbers = new ReviewNumbers();
-          this.getReviews();
+          this.resetReviews();
         }
       })
     );

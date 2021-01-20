@@ -46,8 +46,6 @@ public class PostServiceIntegrationTest {
     private CulturalOfferingRepository repository;
     @Autowired
     private Mapper mapper;
-    @PersistenceContext
-    EntityManager em;
 
     private PostDto createTestPostDto() {
         PostDto postDto = new PostDto();
@@ -115,12 +113,11 @@ public class PostServiceIntegrationTest {
     @Test
     @Transactional
     public void testUpdate() {
-        Post oldPost = postRepository.getOne(1L);
-        em.detach(oldPost);
-
+        Post post = postRepository.findById(1L).get();
+        String oldContent = post.getContent();
         PostDto updatePost = new PostDto();
         updatePost.setId(1L);
-        updatePost.setTimeAdded(oldPost.getTimeAdded());
+        updatePost.setTimeAdded(post.getTimeAdded());
         updatePost.setContent("NOVI KONTENT");
 
         PostDto updatedPost = postService.update(updatePost);
@@ -129,7 +126,8 @@ public class PostServiceIntegrationTest {
         assertEquals(1L, updatedPost.getId().longValue());
         assertEquals("NOVI KONTENT", updatedPost.getContent());
 
-        postRepository.save(oldPost);
+        post.setContent(oldContent);
+        postRepository.save(post);
     }
 
     @Test

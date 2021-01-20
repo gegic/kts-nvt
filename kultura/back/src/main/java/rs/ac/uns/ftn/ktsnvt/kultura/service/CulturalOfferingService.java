@@ -152,7 +152,7 @@ public class CulturalOfferingService {
         CulturalOfferingMainPhoto photo = toUpdate.getPhoto();
         if (p != null && p.getId() != photo.getId()) {
             mainPhotoService.deletePhoto(photo);
-            p.setCulturalOffering(toUpdate);
+            toUpdate.setPhoto(p);
         }
         toUpdate = culturalOfferingRepository.save(toUpdate);
 

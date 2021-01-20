@@ -268,8 +268,7 @@ public class UserServiceUnitTest {
                     u.getLastName(),
                     u.getLastPasswordChange(),
                     u.isVerified(),
-                    u.getAuthorities(),
-                    null
+                    u.getAuthorities()
             );
         });
 

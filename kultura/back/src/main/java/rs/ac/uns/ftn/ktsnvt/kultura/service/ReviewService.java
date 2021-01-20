@@ -58,17 +58,16 @@ public class ReviewService {
     @Transactional
     public ReviewDto create(ReviewDto p) {
         Review r = mapper.fromDto(p, Review.class);
-        float overallRating = r.getCulturalOffering().getOverallRating();
-        int numReviews = r.getCulturalOffering().getNumReviews();
-        float ratingSum = overallRating * numReviews;
-        overallRating = (ratingSum + p.getRating()) / ++numReviews;
-        r.getCulturalOffering().setOverallRating(overallRating);
-        r.getCulturalOffering().setNumReviews(numReviews);
+
+        CulturalOffering c = r.getCulturalOffering();
+        c.addReview(r);
+        c.addRating(r);
 
         Set<ReviewPhoto> newPhotos = r.getPhotos();
         for (ReviewPhoto photo : newPhotos) {
             photo.setReview(r);
         }
+        culturalOfferingRepository.save(c);
         r = reviewRepository.save(r);
         return mapper.fromEntity(r, ReviewDto.class);
     }
@@ -78,14 +77,12 @@ public class ReviewService {
         Review existing = this.reviewRepository.findById(p.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Review with the given id not found."));
         Review r = mapper.fromDto(p, Review.class);
-        float overallRating = existing.getCulturalOffering().getOverallRating();
-        int numReviews = existing.getCulturalOffering().getNumReviews();
-        float newOverallRating = ((overallRating * numReviews) - existing.getRating() + p.getRating()) / numReviews;
 
-        existing.getCulturalOffering().setOverallRating(newOverallRating);
+        CulturalOffering c = existing.getCulturalOffering();
+        c.ratingChanged(existing.getRating(), r.getRating());
+
         existing.setComment(r.getComment());
         existing.setRating(r.getRating());
-
         Set<ReviewPhoto> existingPhotos = existing.getPhotos();
         Set<ReviewPhoto> newPhotos = r.getPhotos();
 
@@ -102,8 +99,10 @@ public class ReviewService {
         for (ReviewPhoto photo : newPhotos) {
             photo.setReview(existing);
         }
-
-        return mapper.fromEntity(reviewRepository.save(r), ReviewDto.class);
+        c.reviewUpdated(r);
+        Review review = reviewRepository.save(r);
+        culturalOfferingRepository.save(c);
+        return mapper.fromEntity(review, ReviewDto.class);
     }
 
     @Transactional
@@ -113,18 +112,8 @@ public class ReviewService {
 
         CulturalOffering culturalOffering = review.getCulturalOffering();
 
-        int numReviews = culturalOffering.getNumReviews();
-        float overallRating = culturalOffering.getOverallRating();
-
-        int newNumReviews = numReviews - 1;
-        float newOverallRating = (overallRating * numReviews - review.getRating()) / newNumReviews;
-        if (Float.isNaN(newOverallRating)) {
-            culturalOffering.setOverallRating(0f);
-        } else {
-            culturalOffering.setOverallRating(newOverallRating);
-        }
-        culturalOffering.setNumReviews(newNumReviews);
-        culturalOffering.getReviews().remove(review);
+        culturalOffering.removeReview(review);
+        culturalOffering.removeRating(review);
         Set<ReviewPhoto> photos = review.getPhotos();
 
         for (ReviewPhoto photo : photos) {
@@ -154,6 +143,8 @@ public class ReviewService {
     @Transactional
     public void deleteByCulturalOfferingId(long culturalOfferingId) {
 
+        CulturalOffering culturalOffering = culturalOfferingRepository.findById(culturalOfferingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cultural offering not found"));
         List<Review> reviews = reviewRepository.findAllByCulturalOfferingId(culturalOfferingId);
 
         for (Review r : reviews) {
@@ -163,7 +154,10 @@ public class ReviewService {
                 new File(photosConfig.getPath() + "review/" + photo.getId() + ".png").delete();
             }
             photoRepository.deleteAll(photos);
+            culturalOffering.removeReview(r);
+            culturalOffering.removeRating(r);
         }
+        culturalOfferingRepository.save(culturalOffering);
         reviewRepository.deleteAll(reviews);
 
     }

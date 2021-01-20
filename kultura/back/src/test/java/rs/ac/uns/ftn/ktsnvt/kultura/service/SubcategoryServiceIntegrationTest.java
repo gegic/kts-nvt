@@ -46,8 +46,6 @@ public class SubcategoryServiceIntegrationTest {
     private SubcategoryService subcategoryService;
     @Autowired
     private CategoryRepository categoryRepository;
-    @PersistenceContext
-    private EntityManager em;
 
 
     @Test
@@ -97,13 +95,14 @@ public class SubcategoryServiceIntegrationTest {
     @Transactional
     public void testUpdate() {
 
-        Subcategory old = subcategoryRepository.findById(1L).get();
-        em.detach(old);
+        Subcategory s = subcategoryRepository.findById(1L).get();
+
+        String oldName = s.getName();
 
         SubcategoryDto dbSubcategoryDto = new SubcategoryDto();
-        dbSubcategoryDto.setId(old.getId());
+        dbSubcategoryDto.setId(1L);
         dbSubcategoryDto.setName("PROMIJENJENO IME");
-        dbSubcategoryDto.setCategoryId(old.getCategory().getId());
+        dbSubcategoryDto.setCategoryId(1L);
 
         SubcategoryDto returnedSubcategory = subcategoryService.update(dbSubcategoryDto);
 
@@ -111,7 +110,9 @@ public class SubcategoryServiceIntegrationTest {
 
         assertEquals(dbSubcategoryDto.getName(), returnedSubcategory.getName());
 
-        subcategoryRepository.save(old);
+        s = subcategoryRepository.findById(1L).get();
+        s.setName(oldName);
+        subcategoryRepository.save(s);
     }
 
     @Test

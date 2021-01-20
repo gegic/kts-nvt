@@ -53,8 +53,6 @@ public class CulturalOfferingServiceUnitTest {
     private UserRepository userRepository;
     @Autowired
     private CulturalOfferingMainPhotoRepository photoRepository;
-    @PersistenceContext
-    EntityManager em;
 
 
     public void setUp() {

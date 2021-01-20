@@ -50,20 +50,7 @@ public class ReviewServiceIntegrationTest {
     CulturalOfferingRepository culturalOfferingRepository;
     @Autowired
     UserRepository userRepository;
-    @PersistenceContext
-    EntityManager em;
 
-
-    private ReviewDto createTestReviewDto(){
-        ReviewDto reviewDto = new ReviewDto();
-
-        reviewDto.setComment(ReviewConstants.TEST_COMMENT);
-        reviewDto.setRating(ReviewConstants.TEST_RATING);
-        reviewDto.setCulturalOfferingId(ReviewConstants.TEST_CULTURAL_OFFERING_ID);
-        reviewDto.setUserId(ReviewConstants.TEST_USER_ID);
-
-        return reviewDto;
-    }
 
     @Test
     @Transactional
@@ -87,6 +74,7 @@ public class ReviewServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void testCreate(){
         ReviewDto newReview = new ReviewDto();
         newReview.setComment("KOMENT");
@@ -100,13 +88,17 @@ public class ReviewServiceIntegrationTest {
         assertNotNull(createdReview);
 
         long newDb = reviewRepository.count();
-        List<Review> reviews = reviewRepository.findAll();
         assertEquals(oldDb + 1, newDb);
         assertEquals(newReview.getComment(), createdReview.getComment());
         assertEquals(newReview.getCulturalOfferingId(), createdReview.getCulturalOfferingId());
         assertEquals(newReview.getUserId(), createdReview.getUserId());
 
-        reviewRepository.deleteById(createdReview.getId());
+        Review r = reviewRepository.findById(createdReview.getId()).get();
+        CulturalOffering culturalOffering = r.getCulturalOffering();
+        culturalOffering.removeReview(r);
+        culturalOffering.removeRating(r);
+        culturalOfferingRepository.save(culturalOffering);
+        reviewRepository.delete(r);
     }
 
     @Test(expected = DataIntegrityViolationException.class)
@@ -122,15 +114,15 @@ public class ReviewServiceIntegrationTest {
     @Test
     @Transactional
     public void testUpdateReview() {
-        Review old = reviewRepository.findById(1L).get();
-        em.detach(old);
-        CulturalOffering oldCulturalOffering = old.getCulturalOffering();
-        em.detach(oldCulturalOffering);
+        Review review = reviewRepository.findById(1L).get();
+        int oldRating = review.getRating();
+        String oldComment = review.getComment();
+        CulturalOffering culturalOffering = review.getCulturalOffering();
         ReviewDto toUpdate = new ReviewDto();
         toUpdate.setId(1L);
         toUpdate.setRating(4);
-        toUpdate.setCulturalOfferingId(oldCulturalOffering.getId());
-        toUpdate.setUserId(old.getUser().getId());
+        toUpdate.setCulturalOfferingId(culturalOffering.getId());
+        toUpdate.setUserId(review.getUser().getId());
         toUpdate.setComment("NOVI KOMENTAR");
 
         ReviewDto updated = reviewService.update(toUpdate);
@@ -138,8 +130,12 @@ public class ReviewServiceIntegrationTest {
         assertEquals(1L, updated.getId().longValue());
         assertEquals(toUpdate.getComment(), updated.getComment());
 
-        culturalOfferingRepository.save(oldCulturalOffering);
-        reviewRepository.save(old);
+        culturalOffering.ratingChanged(4, oldRating);
+        review.setRating(oldRating);
+        review.setComment(oldComment);
+        culturalOffering.reviewUpdated(review);
+        culturalOfferingRepository.save(culturalOffering);
+        reviewRepository.save(review);
 
     }
 
@@ -174,16 +170,10 @@ public class ReviewServiceIntegrationTest {
     @Test
     @Transactional
     public void testFindByCulturalOfferingAndUser() {
-        Review newReview = new Review();
-        newReview.setComment("KOMENT");
-        newReview.setCulturalOffering(culturalOfferingRepository.getOne(1L));
-        newReview.setUser(userRepository.getOne(3L));
-        newReview.setRating(4);
-        Review r = reviewRepository.save(newReview);
 
-        ReviewDto dto = reviewService.findByCulturalOfferingAndUser(1L, 3L).get();
+        ReviewDto dto = reviewService.findByCulturalOfferingAndUser(2L, 3L).get();
 
-        assertEquals(1L, dto.getCulturalOfferingId().longValue());
+        assertEquals(2L, dto.getCulturalOfferingId().longValue());
         assertEquals(3L, dto.getUserId().longValue());
     }
 
@@ -202,11 +192,18 @@ public class ReviewServiceIntegrationTest {
     @Test
     @Transactional
     public void testDeleteByCulturalOfferingId() {
+        CulturalOffering culturalOffering = culturalOfferingRepository.getOne(1L);
         Review newReview = new Review();
         newReview.setComment("KOMENT");
-        newReview.setCulturalOffering(culturalOfferingRepository.getOne(1L));
-        newReview.setUser(userRepository.getOne(3L));
         newReview.setRating(4);
+        newReview.setCulturalOffering(culturalOfferingRepository.getOne(1L));
+        float overallRating = culturalOffering.getOverallRating();
+        int numReviews = culturalOffering.getNumReviews();
+        float ratingSum = overallRating * numReviews;
+        overallRating = (ratingSum + newReview.getRating()) / ++numReviews;
+        culturalOffering.setOverallRating(overallRating);
+        culturalOffering.setNumReviews(numReviews);
+        newReview.setUser(userRepository.getOne(3L));
         Review r = reviewRepository.save(newReview);
 
         reviewService.deleteByCulturalOfferingId(1L);

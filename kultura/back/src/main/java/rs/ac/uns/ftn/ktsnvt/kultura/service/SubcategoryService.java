@@ -54,9 +54,12 @@ public class SubcategoryService {
     @Transactional
     public SubcategoryDto update(SubcategoryDto subcategoryDto) {
         Subcategory toUpdate = mapper.fromDto(subcategoryDto, Subcategory.class);
-        if (!subcategoryRepository.existsById(toUpdate.getId())) throw new ResourceNotFoundException("Subcategory not found");
+        Optional<Subcategory> optionalSubcategory = subcategoryRepository.findById(toUpdate.getId());
+        if (!optionalSubcategory.isPresent()) throw new ResourceNotFoundException("Subcategory not found");
 
-        return mapper.fromEntity(subcategoryRepository.save(toUpdate), SubcategoryDto.class);
+        Subcategory existing = optionalSubcategory.get();
+        existing.setName(toUpdate.getName());
+        return mapper.fromEntity(subcategoryRepository.save(existing), SubcategoryDto.class);
     }
 
 

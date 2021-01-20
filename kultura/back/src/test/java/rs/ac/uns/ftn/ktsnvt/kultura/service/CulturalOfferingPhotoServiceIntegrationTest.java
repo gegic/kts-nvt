@@ -11,6 +11,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.config.PhotosConfig;
@@ -52,6 +53,7 @@ public class CulturalOfferingPhotoServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void create() throws IOException {
         File f = ResourceUtils.getFile("src/test/resources/test_photo.png");
         MultipartFile multipartFile = new MockMultipartFile("photo", Files.readAllBytes(f.toPath()));
@@ -69,6 +71,7 @@ public class CulturalOfferingPhotoServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void delete() throws IOException {
         File f = ResourceUtils.getFile("src/test/resources/test_photo.png");
         MultipartFile multipartFile = new MockMultipartFile("photo", Files.readAllBytes(f.toPath()));
@@ -84,6 +87,7 @@ public class CulturalOfferingPhotoServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void deleteByCulturalOffering() throws IOException {
         File f = ResourceUtils.getFile("src/test/resources/test_photo.png");
         MultipartFile multipartFile = new MockMultipartFile("photo", Files.readAllBytes(f.toPath()));

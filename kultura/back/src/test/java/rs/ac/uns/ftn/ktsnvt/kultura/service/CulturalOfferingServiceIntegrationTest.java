@@ -46,8 +46,6 @@ public class CulturalOfferingServiceIntegrationTest {
     private UserRepository userRepository;
     @Autowired
     private Mapper modelMapper;
-    @PersistenceContext
-    EntityManager em;
 
 
     @Test
@@ -355,9 +353,8 @@ public class CulturalOfferingServiceIntegrationTest {
     @Test
     @Transactional
     public void testSubscribe() {
-        CulturalOffering old = culturalOfferingRepository.findById(1L).get();
-        em.detach(old);
-        long oldSubscribers = old.getSubscribedUsers() == null ? 0 : old.getSubscribedUsers().size();
+        CulturalOffering co = culturalOfferingRepository.findById(1L).get();
+        long oldSubscribers = co.getSubscribedUsers() == null ? 0 : co.getSubscribedUsers().size();
 
         CulturalOfferingDto dto = culturalOfferingService.subscribe(1, 1);
 
@@ -365,8 +362,8 @@ public class CulturalOfferingServiceIntegrationTest {
         assertEquals(oldSubscribers + 1, dto.getNumSubscribed().longValue());
         assertTrue(newOffering.getSubscribedUsers().stream().anyMatch(u -> u.getId() == 1L));
 
-        newOffering.getSubscribedUsers().removeIf(u -> u.getId() == 1);
-        culturalOfferingRepository.save(old);
+        co.getSubscribedUsers().removeIf(u -> u.getId() == 1L);
+        culturalOfferingRepository.save(co);
     }
 
     @Test

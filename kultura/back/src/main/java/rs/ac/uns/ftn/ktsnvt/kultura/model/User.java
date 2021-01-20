@@ -52,9 +52,6 @@ public class User implements UserDetails {
     @Setter
     private Set<Authority> authorities = new HashSet<>();
 
-    @ManyToMany(mappedBy = "subscribedUsers")
-    private Set<CulturalOffering> subscriptions;
-
     @Override
     public boolean isAccountNonExpired() {
         return true;

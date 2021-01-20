@@ -45,7 +45,7 @@ public class CulturalOffering {
     private String address;
 
     @Getter
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     private CulturalOfferingMainPhoto photo;
 
     @Getter
@@ -68,22 +68,18 @@ public class CulturalOffering {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
-    @Setter
     private Subcategory subcategory;
 
-    @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @Getter
-    @Setter
     private Set<Review> reviews = new HashSet<>();
 
-    @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @Getter
-    @Setter
     private Set<CulturalOfferingPhoto> culturalOfferingPhotos = new HashSet<>();
 
-    @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "culturalOffering", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @Getter
-    @Setter
     private Set<Post> posts = new HashSet<>();
     
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -120,8 +116,38 @@ public class CulturalOffering {
     public void addReview(Review s) { s.setCulturalOffering(this); }
     public void removeReview(Review s) { s.setCulturalOffering(null); }
 
-    protected void internalAddReview(Review s) { reviews.add(s); }
-    protected void internalRemoveReview(Review s) { reviews.remove(s); }
+    protected void internalAddReview(Review s) {
+        reviews.add(s);
+    }
+
+    public void addRating(Review s) {
+        float overallRating = this.getOverallRating();
+        int numReviews = this.getNumReviews();
+
+        int newNumReviews = numReviews + 1;
+
+        float newOverallRating = (overallRating * numReviews + s.getRating()) / newNumReviews;
+        this.setOverallRating(newOverallRating);
+        this.setNumReviews(newNumReviews);
+    }
+
+    protected void internalRemoveReview(Review s) {
+        reviews.remove(s);
+    }
+
+    public void removeRating(Review s) {
+        int numReviews = this.getNumReviews();
+        float overallRating = this.getOverallRating();
+
+        int newNumReviews = numReviews - 1;
+        float newOverallRating = (overallRating * numReviews - s.getRating()) / newNumReviews;
+        if (Float.isNaN(newOverallRating)) {
+            this.setOverallRating(0f);
+        } else {
+            this.setOverallRating(newOverallRating);
+        }
+        this.setNumReviews(newNumReviews);
+    }
 
     public void setPosts(Set<Post> posts) {
         posts.forEach(this::addPost);
@@ -143,4 +169,16 @@ public class CulturalOffering {
     protected void internalAddCulturalOfferingPhoto(CulturalOfferingPhoto s) { culturalOfferingPhotos.add(s); }
     protected void internalRemoveCulturalOfferingPhoto(CulturalOfferingPhoto s) { culturalOfferingPhotos.remove(s); }
 
+    public void ratingChanged(int oldValue, int newValue) {
+        float overallRating = this.getOverallRating();
+        int numReviews = this.getNumReviews();
+        float newOverallRating = ((overallRating * numReviews - oldValue) + newValue) / numReviews;
+
+        this.setOverallRating(newOverallRating);
+    }
+
+    public void reviewUpdated(Review review) {
+        this.reviews.removeIf(r -> r.getId() == review.getId());
+        this.reviews.add(review);
+    }
 }

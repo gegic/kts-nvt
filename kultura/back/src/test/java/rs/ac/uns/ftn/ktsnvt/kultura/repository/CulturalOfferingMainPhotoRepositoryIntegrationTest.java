@@ -30,7 +30,7 @@ public class CulturalOfferingMainPhotoRepositoryIntegrationTest {
         photo.setToken(TOKEN);
         photo.setWidth(100);
         photo.setHeight(100);
-        photo.setCulturalOffering(null);
+        photo.removeCulturalOffering();
         photo = photoRepository.save(photo);
 
 

@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 public class CulturalOfferingMainPhoto extends AbstractPhoto{
     @Getter
-    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     private CulturalOffering culturalOffering;
     @Getter
@@ -47,5 +46,14 @@ public class CulturalOfferingMainPhoto extends AbstractPhoto{
 
     public void setTimeAdded(LocalDateTime timeAdded) {
         this.timeAdded = timeAdded;
+    }
+
+    public void removeCulturalOffering() {
+        this.culturalOffering.setPhoto(null);
+        this.culturalOffering = null;
+    }
+
+    void setCulturalOffering(CulturalOffering c) {
+        this.culturalOffering = c;
     }
 }
