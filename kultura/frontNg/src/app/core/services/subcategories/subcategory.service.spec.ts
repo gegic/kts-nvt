@@ -1,6 +1,6 @@
 import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
-import { SubcategoryService } from './subcategory.service';
+import {SubcategoryService} from './subcategory.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {HttpClient} from '@angular/common/http';
 import {CategoryService} from '../category/category.service';
@@ -25,7 +25,7 @@ describe('SubcategoryService', () => {
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(service).toBeDefined();
   });
 
   it('getSubcategories() should query url and get subcategories', fakeAsync(() => {
@@ -78,7 +78,8 @@ describe('SubcategoryService', () => {
   }));
 
   it('delete() should query url and delete a subcategory', () => {
-    service.delete(1).subscribe(res => { });
+    service.delete(1).subscribe(res => {
+    });
 
     const req = httpMock.expectOne(`/api/subcategories/1`);
     expect(req.request.method).toBe('DELETE');

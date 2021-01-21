@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { User } from '../../models/user';
+import {Injectable} from '@angular/core';
+import {User} from '../../models/user';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
@@ -8,14 +8,15 @@ import {Observable} from 'rxjs';
 })
 export class UserService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
 
 
   update(user: User): Observable<any> {
     return this.httpClient.put('/api/users', user);
   }
 
-  getById(id: number): Observable<any>{
+  getById(id: number): Observable<any> {
     return this.httpClient.get(`/api/users/${id}`);
   }
 }

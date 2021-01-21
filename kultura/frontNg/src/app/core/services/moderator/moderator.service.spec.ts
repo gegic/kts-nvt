@@ -24,7 +24,7 @@ describe('ModeratorService', () => {
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(service).toBeDefined();
   });
 
   it('getModerators() should query url and get all moderators', fakeAsync(() => {
@@ -186,7 +186,8 @@ describe('ModeratorService', () => {
   }));
 
   it('delete() should query url and delete a moderator', () => {
-    service.delete(1).subscribe(res => { });
+    service.delete(1).subscribe(res => {
+    });
 
     const req = httpMock.expectOne(`/api/users/1`);
     expect(req.request.method).toBe('DELETE');

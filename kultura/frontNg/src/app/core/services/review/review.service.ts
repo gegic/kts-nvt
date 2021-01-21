@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Review} from '../../models/review';
@@ -12,7 +12,8 @@ export class ReviewService {
   reviews: Review[] = [];
   reviewNumbers: ReviewNumbers = new ReviewNumbers();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
 
   getReviews(culturalOfferingId: number, page: number): Observable<any> {
     return this.httpClient.get(`/api/reviews/cultural-offering/${culturalOfferingId}?page=${page}`);

@@ -1,8 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Page} from '../../models/Page';
-import {Moderator} from '../../models/moderator';
 import {Category} from '../../models/category';
 import {Subcategory} from '../../models/subcategory';
 

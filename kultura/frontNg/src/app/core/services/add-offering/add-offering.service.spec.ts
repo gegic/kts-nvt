@@ -26,7 +26,7 @@ describe('AddOfferingService', () => {
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(service).toBeDefined();
   });
 
   it('getCategories() should query url and get all categories', fakeAsync(() => {
@@ -131,7 +131,8 @@ describe('AddOfferingService', () => {
   });
 
   it('deletePhotos() should query url and delete a photos', () => {
-    service.deletePhotos(1).subscribe(res => { });
+    service.deletePhotos(1).subscribe(res => {
+    });
 
     const req = httpMock.expectOne(`/api/cultural-offering/photo/1`);
     expect(req.request.method).toBe('DELETE');

@@ -1,5 +1,4 @@
-
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CulturalOfferingMarker} from '../../models/culturalOfferingMarker';
 import {LoadLevel} from '../../models/loadLevel';
@@ -22,7 +21,8 @@ export class MapService {
   zoom = new BehaviorSubject<number>(0);
   loadLevel = new BehaviorSubject<LoadLevel>(LoadLevel.NONE);
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+  }
 
   loadMarkers(latitudeStart: number,
               latitudeEnd: number,

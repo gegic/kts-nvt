@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {CulturalOfferingPhoto} from '../../models/culturalOfferingPhoto';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
@@ -10,7 +10,8 @@ export class PhotoService {
 
   photos: CulturalOfferingPhoto[] = [];
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+  }
 
   getPhotos(culturalOfferingId: number, page: number): Observable<any> {
     return this.httpClient.get(`/api/photos/cultural-offering/${culturalOfferingId}?page=${page}`);

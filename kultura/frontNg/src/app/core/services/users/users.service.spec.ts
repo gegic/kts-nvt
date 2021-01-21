@@ -1,6 +1,6 @@
 import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
-import { UserService } from './users.service';
+import {UserService} from './users.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../models/user';
@@ -51,21 +51,21 @@ describe('UserServiceService', () => {
 
     expect(user).toBeDefined();
     expect(user.id).toEqual(1);
-    expect(user.firstName).toEqual('Firstname4');
-    expect(user.lastName).toEqual('Lastname4');
+    expect(user.firstName).toEqual('Firstname');
+    expect(user.lastName).toEqual('Lastname');
     expect(user.email).toEqual('test4@mail.com');
   }));
 
   it('update()  should query url and updated a user', fakeAsync(() => {
     let updatedUser: User = new User();
     updatedUser.firstName = 'Firstname';
-    updatedUser.lastName = 'NewLastname';
+    updatedUser.lastName = 'Lastname';
     updatedUser.email = 'test4@mail.com';
     updatedUser.id = 1;
 
     const mockUser: User = new User();
     mockUser.firstName = 'Firstname';
-    mockUser.lastName = 'Lastname';
+    mockUser.lastName = 'NewLastname';
     mockUser.email = 'test4@mail.com';
     mockUser.id = 1;
 
@@ -80,7 +80,7 @@ describe('UserServiceService', () => {
 
     expect(updatedUser).toBeDefined();
     expect(updatedUser.id).toEqual(1);
-    expect(updatedUser.firstName).toEqual('Firstname4');
+    expect(updatedUser.firstName).toEqual('Firstname');
     expect(updatedUser.lastName).toEqual('NewLastname');
     expect(updatedUser.email).toEqual('test4@mail.com');
   }));

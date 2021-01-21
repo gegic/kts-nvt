@@ -1,6 +1,6 @@
 import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
-import { CulturalOfferingDetailsService } from './cultural-offering-details.service';
+import {CulturalOfferingDetailsService} from './cultural-offering-details.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {HttpClient} from '@angular/common/http';
 import {CulturalOffering} from '../../models/cultural-offering';
@@ -23,7 +23,7 @@ describe('CulturalOfferingDetailsService', () => {
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(service).toBeDefined();
   });
 
   it('getOffering()  should query url and save a culturalOffering', fakeAsync(() => {
