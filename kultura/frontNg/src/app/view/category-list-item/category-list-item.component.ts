@@ -53,6 +53,7 @@ export class CategoryListItemComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.categoryService.delete(this.category?.id ?? 0).subscribe(() => {
         this.messageService.add({
+          id: 'toast-container',
           severity: 'success',
           summary: 'Deleted successfully',
           detail: 'The category was deleted successfully'
@@ -61,6 +62,7 @@ export class CategoryListItemComponent implements OnInit, OnDestroy {
       },
         er => {
           this.messageService.add({
+            id: 'toast-container',
             severity: 'error',
             summary: 'Deletion unsuccessful',
             detail: 'This category has subcategories associated with it. Firstly delete all its subcategories in order to be able to delete it.'

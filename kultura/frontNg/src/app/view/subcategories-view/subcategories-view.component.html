@@ -1,7 +1,8 @@
 <div class="card">
   <p-toolbar styleClass="p-mb-4">
     <ng-template pTemplate="left">
-      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+      <button id="newSubcategory" pButton pRipple label="New" icon="pi pi-plus"
+              class="p-button-success p-mr-2" (click)="openNew()"></button>
     </ng-template>
   </p-toolbar>
 
@@ -35,13 +36,15 @@
         <td>{{subcategory.name}}</td>
         <td>{{subcategory.numOfferings}}</td>
         <td>
-          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editSubcategory(subcategory)"></button>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteSubcategory(subcategory)"></button>
+          <button [id] = "'edit'+subcategory.name" pButton pRipple icon="pi pi-pencil" class="p-button-rounded
+          p-button-success p-mr-2" (click)="editSubcategory(subcategory)"></button>
+          <button [id] = "'delete'+subcategory.name" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                  (click)="deleteSubcategory(subcategory)"></button>
         </td>
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <div class="p-d-flex p-ai-center p-jc-between">
+      <div id="subcategoriesNumberText" class="p-d-flex p-ai-center p-jc-between">
         In total there are {{ totalElements }} subcategories for
         <ng-container *ngIf="category && category.name">{{category.name}}</ng-container>.
       </div>
@@ -56,10 +59,10 @@
     <div>
       <form (ngSubmit)="saveSubcategory()">
         <span class="p-float-label p-mt-5">
-          <input type="text" id="email" name="email" autocomplete="off" [formControl]="nameControl" pInputText>
-          <label for="email">Name</label>
+          <input type="text" id="subcategoryName" name="save" autocomplete="off" [formControl]="nameControl" pInputText>
+          <label for="subcategoryName">Name</label>
         </span>
-        <button type="submit" class="p-button blue-button p-d-block p-ml-auto p-mt-4" label="Save" pButton></button>
+        <button id="saveSubcategory" type="submit" class="p-button blue-button p-d-block p-ml-auto p-mt-4" label="Save" pButton></button>
       </form>
     </div>
   </p-dialog>
