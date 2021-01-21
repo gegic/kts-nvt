@@ -8,6 +8,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -55,7 +57,7 @@ public class UserEditE2ETest {
 
     }
 
-    private static void login(String email, String adminPassword) throws InterruptedException {
+    private static void login(String email, String password) throws InterruptedException {
         loginPage = PageFactory.initElements(driver, LoginPage.class);
 
         driver.get("http://localhost:4200/login");
@@ -66,7 +68,7 @@ public class UserEditE2ETest {
         loginPage.getNextBtn().click();
         justWait(300);
         loginPage = PageFactory.initElements(driver, LoginPage.class);
-        loginPage.getPassword().sendKeys(adminPassword);
+        loginPage.getPassword().sendKeys(password);
         loginPage.getLoginBtn().click();
         justWait(300);
     }
@@ -114,10 +116,16 @@ public class UserEditE2ETest {
         justWait();
         userEditPage.getEmail().sendKeys(E2EConstants.ADMIN_EMAIL);
         userEditPage.getSubmitEmail().click();
-        justWait(10000);
+        ensureIsDisplayedToast();
         verify();
         login(E2EConstants.ADMIN_EMAIL, ADMIN_PASSWORD);
 
+    }
+
+    public static String ensureIsDisplayedToast() {
+        return (new WebDriverWait(driver, 30))
+                .until(ExpectedConditions.presenceOfElementLocated(By.className("p-toast-detail")))
+                .getText();
     }
 
     @Test
@@ -360,7 +368,7 @@ public class UserEditE2ETest {
         justWait();
         userEditPage.getEmail().sendKeys(E2EConstants.EMAIL);
         userEditPage.getSubmitEmail().click();
-        justWait(10000);
+        ensureIsDisplayedToast();
         userEditPage = PageFactory.initElements(driver, UserEditPage.class);
         justWait();
 

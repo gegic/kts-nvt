@@ -5,11 +5,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.pages.LoginPage;
-import rs.ac.uns.ftn.ktsnvt.kultura.pages.UserEditPage;
-import rs.ac.uns.ftn.ktsnvt.kultura.service.UserService;
+import rs.ac.uns.ftn.ktsnvt.kultura.pages.ReviewPage;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,7 +14,7 @@ public class ReviewE2ETest {
 
     private static WebDriver driver;
 
-    private static UserEditPage userEditPage;
+    private static ReviewPage reviewPage;
 
     private static LoginPage loginPage;
 
@@ -28,26 +25,30 @@ public class ReviewE2ETest {
     }
 
     @BeforeClass
-    public void setUp() throws InterruptedException {
+    public static void setUp() throws InterruptedException {
 
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         driver = new ChromeDriver();
 
         driver.manage().window().maximize();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
+        reviewPage = PageFactory.initElements(driver, ReviewPage.class);
         loginPage = PageFactory.initElements(driver, LoginPage.class);
 
+
+//        login(E2EConstants.USER_EMAIL, E2EConstants.USER_PASSWORD);
+    }
+
+    private static void login(String userEmail, String userPassword) throws InterruptedException {
         driver.get("http://localhost:4200/login");
+        justWait(300);
 
-        justWait();
-
-        loginPage.getEmail().sendKeys(E2EConstants.ADMIN_EMAIL);
-        loginPage.getNextBtn().click();
-        justWait();
         loginPage = PageFactory.initElements(driver, LoginPage.class);
-        loginPage.getPassword().sendKeys(E2EConstants.ADMIN_PASSWORD);
+        loginPage.getEmail().sendKeys(userEmail);
+        loginPage.getNextBtn().click();
+        justWait(300);
+        loginPage.getPassword().sendKeys(userPassword);
         loginPage.getLoginBtn().click();
-        justWait();
+        justWait(200);
     }
 
     @AfterClass
@@ -57,306 +58,64 @@ public class ReviewE2ETest {
 
 
     @Test
-    public void ChangeNameTestSuccess() throws InterruptedException {
+    public void ChangeReviewSuccess() throws InterruptedException {
 
+        login(E2EConstants.USER_EMAIL, E2EConstants.USER_PASSWORD);
+        driver.get("http://localhost:4200/cultural-offering/1/reviews");
+        justWait(300);
+        reviewPage = PageFactory.initElements(driver, ReviewPage.class);
+        reviewPage.getReviewButton().click();
+        justWait(200);
+        reviewPage.getCommentReview().clear();
+        reviewPage.getCommentReview().sendKeys(E2EConstants.REVIEW_COMMENT);
+        reviewPage.getSubmitBtn().click();
+        justWait(100);
+        logout();
 
+        login(E2EConstants.USER1_EMAIL, E2EConstants.USER1_PASSWORD);
 
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("http://localhost:4200/cultural-offering/1/reviews");
+
+        reviewPage = PageFactory.initElements(driver, ReviewPage.class);
         justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getName().sendKeys(E2EConstants.NAME);
-        userEditPage.getSubmitName().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        justWait();
-        assertEquals(E2EConstants.NAME, userEditPage.getNameVal().getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
+        driver.findElements(By.xpath("//p")).forEach(el-> System.out.println(el.getText()));
+        assertEquals(1, driver.findElements(By.xpath("//p[contains(text(),'0 people subscribed.')]")).size());
+        assertEquals(1, driver.findElements(By.xpath("//p[contains(text(),'" + E2EConstants.REVIEW_COMMENT + "')]")).size());
+        assertEquals(E2EConstants.USER_NAME, driver.findElement(By.xpath("//p[contains(text(),'" + E2EConstants.REVIEW_COMMENT + "')]/parent::div/preceding-sibling::div[3]/div/h4")).getText());
+        logout();
     }
+
 
     @Test
-    public void ChangeNameTestFail() throws InterruptedException {
+    public void PostReviewSuccess() throws InterruptedException {
 
-        driver.get("http://localhost:4200/login");
+        login(E2EConstants.USER1_EMAIL, E2EConstants.USER1_PASSWORD);
+        driver.get("http://localhost:4200/cultural-offering/1/reviews");
+        justWait();
+        reviewPage = PageFactory.initElements(driver, ReviewPage.class);
+        reviewPage.getCommentReview().sendKeys(E2EConstants.REVIEW_COMMENT);
+        reviewPage.getSubmitBtn().click();
+        justWait(100);
+        logout();
 
-        justWait();
+        login(E2EConstants.USER1_EMAIL, E2EConstants.USER1_PASSWORD);
 
-        loginPage.getEmail().sendKeys(E2EConstants.ADMIN_EMAIL);
-        loginPage.getNextBtn().click();
-        justWait();
-        loginPage = PageFactory.initElements(driver, LoginPage.class);
-        loginPage.getPassword().sendKeys(E2EConstants.ADMIN_PASSWORD);
-        loginPage.getLoginBtn().click();
-        justWait();
+        driver.get("http://localhost:4200/cultural-offering/1/reviews");
 
-        driver.get("http://localhost:4200/user-edit");
+        reviewPage = PageFactory.initElements(driver, ReviewPage.class);
         justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getName().sendKeys("");
-        userEditPage.getSubmitName().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        assertEquals("First name must not be empty.", driver.findElement(By.className("p-toast-detail")).getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
+        assertEquals(1, driver.findElements(By.xpath("//p[text()='" + E2EConstants.REVIEW_COMMENT + "']")).size());
+        logout();
     }
 
-    @Test
-    public void ChangeLastNameTestSuccess() throws InterruptedException {
-
-        driver.get("http://localhost:4200/login");
-
-        justWait();
-
-        loginPage.getEmail().sendKeys(E2EConstants.ADMIN_EMAIL);
-        loginPage.getNextBtn().click();
-        justWait();
-        loginPage = PageFactory.initElements(driver, LoginPage.class);
-        loginPage.getPassword().sendKeys(E2EConstants.ADMIN_PASSWORD);
-        loginPage.getLoginBtn().click();
-        justWait();
-
-        driver.get("http://localhost:4200/user-edit");
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getLastName().sendKeys(E2EConstants.LASTNAME);
-        userEditPage.getSubmitLastName().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        justWait();
-        assertEquals(E2EConstants.LASTNAME, userEditPage.getLastNameVal().getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
-    }
-
-    @Test
-    public void ChangeLastNameTestFail() throws InterruptedException {
-
-        driver.get("http://localhost:4200/login");
-
-        justWait();
-
-        loginPage.getEmail().sendKeys(E2EConstants.ADMIN_EMAIL);
-        loginPage.getNextBtn().click();
-        justWait();
-        loginPage = PageFactory.initElements(driver, LoginPage.class);
-        loginPage.getPassword().sendKeys(E2EConstants.ADMIN_PASSWORD);
-        loginPage.getLoginBtn().click();
-        justWait();
-
-        driver.get("http://localhost:4200/user-edit");
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getLastName().sendKeys("");
-        userEditPage.getSubmitLastName().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        assertEquals("Last name must not be empty.", driver.findElement(By.className("p-toast-detail")).getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
-    }
-
-    @Test
-    public void ChangePasswordTestSuccess() throws InterruptedException {
-        // TODO zavrsiti test
-        driver.get("http://localhost:4200/login");
-
-        justWait();
-
-        loginPage.getEmail().sendKeys(E2EConstants.ADMIN_EMAIL);
-        loginPage.getNextBtn().click();
-        justWait();
-        loginPage = PageFactory.initElements(driver, LoginPage.class);
-        loginPage.getPassword().sendKeys(E2EConstants.ADMIN_PASSWORD);
-        loginPage.getLoginBtn().click();
-        justWait();
-
-        driver.get("http://localhost:4200/user-edit");
-        justWait();
-        userEditPage.getPasswordTab().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getPassword().sendKeys(E2EConstants.NEW_PASSWORD);
-        userEditPage.getConfirmPassword().sendKeys(E2EConstants.NEW_PASSWORD);
-        userEditPage.getSubmitPassword().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        justWait();
-        assertEquals("http://localhost:4200/login", driver.getCurrentUrl());
-
-
-        UserDto userDto = new UserDto();
-        userDto.setId(E2EConstants.ADMIN_ID);
-        userDto.setPassword(E2EConstants.ADMIN_PASSWORD);
-    }
-
-    @Test
-    public void ChangePasswordTestFail() throws InterruptedException {
-
-
-
-        driver.get("http://localhost:4200/login");
-
-        justWait();
-
-        loginPage.getEmail().sendKeys(E2EConstants.ADMIN_EMAIL);
-        loginPage.getNextBtn().click();
-        justWait();
-        loginPage = PageFactory.initElements(driver, LoginPage.class);
-        loginPage.getPassword().sendKeys(E2EConstants.ADMIN_PASSWORD);
-        loginPage.getLoginBtn().click();
-        justWait();
-
-        driver.get("http://localhost:4200/user-edit");
-        justWait();
-        userEditPage.getPasswordTab().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getPassword().sendKeys("");
-        userEditPage.getSubmitPassword().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        assertEquals("New password must not be empty.", driver.findElement(By.className("p-toast-detail")).getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
-
-
-
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getPassword().sendKeys(E2EConstants.NEW_PASSWORD_BAD_FORMAT0);
-        userEditPage.getSubmitPassword().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        assertEquals("New password length must be between 8 and 50 characters.", driver.findElement(By.className("p-toast-detail")).getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
-        userEditPage.getPassword().clear();
-
-
-
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getPassword().sendKeys(E2EConstants.NEW_PASSWORD_BAD_FORMAT0_1);
-        userEditPage.getSubmitPassword().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        assertEquals("New password length must be between 8 and 50 characters.", driver.findElement(By.className("p-toast-detail")).getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
-        userEditPage.getPassword().clear();
-
-
-
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getPassword().sendKeys(E2EConstants.NEW_PASSWORD_BAD_FORMAT1);
-        userEditPage.getSubmitPassword().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        assertEquals("Password must contain capital letter.", driver.findElement(By.className("p-toast-detail")).getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
-        userEditPage.getPassword().clear();
-
-
-
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getPassword().sendKeys(E2EConstants.NEW_PASSWORD_BAD_FORMAT2);
-        userEditPage.getSubmitPassword().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        assertEquals("Password must contain digit.", driver.findElement(By.className("p-toast-detail")).getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
-        userEditPage.getPassword().clear();
-
-
-
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getPassword().sendKeys(E2EConstants.NEW_PASSWORD);
-        userEditPage.getConfirmPassword().sendKeys(E2EConstants.NEW_PASSWORD_BAD_FORMAT0);
-        userEditPage.getSubmitPassword().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        assertEquals("Passwords must be same.", driver.findElement(By.className("p-toast-detail")).getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
-        userEditPage.getPassword().clear();
-
-
-    }
-
-    @Test
-    public void ChangeEmailTestFail() throws InterruptedException {
-        UserDto userDto = new UserDto();
-        userDto.setId(E2EConstants.ADMIN_ID);
-        userDto.setEmail(E2EConstants.ADMIN_EMAIL);
-
-        driver.get("http://localhost:4200/login");
-
-        justWait();
-
-        loginPage.getEmail().sendKeys(E2EConstants.ADMIN_EMAIL);
-        loginPage.getNextBtn().click();
-        justWait();
-        loginPage = PageFactory.initElements(driver, LoginPage.class);
-        loginPage.getPassword().sendKeys(E2EConstants.ADMIN_PASSWORD);
-        loginPage.getLoginBtn().click();
-        justWait();
-
-        driver.get("http://localhost:4200/user-edit");
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getEmail().clear();
-        userEditPage.getEmail().sendKeys("");
-        justWait();
-        userEditPage.getSubmitEmail().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        assertEquals("E-mail must not be empty.", driver.findElement(By.className("p-toast-detail")).getText());
-        justWait();
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
-
-
-        driver.get("http://localhost:4200/user-edit");
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getEmail().sendKeys(E2EConstants.EMAIL_BAD_FORMAT);
-        userEditPage.getSubmitEmail().click();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        justWait();
-        assertEquals("E-mail is not valid.", driver.findElement(By.className("p-toast-detail")).getText());
-        assertEquals("http://localhost:4200/user-edit", driver.getCurrentUrl());
-
-    }
-
-    @Test
-    public void ChangeEmailTestSuccess() throws InterruptedException {
-        UserDto userDto = new UserDto();
-        userDto.setId(E2EConstants.ADMIN_ID);
-        userDto.setEmail(E2EConstants.ADMIN_EMAIL);
-
-        driver.get("http://localhost:4200/login");
-
-        justWait();
-
-        loginPage.getEmail().sendKeys(E2EConstants.ADMIN_EMAIL);
-        loginPage.getNextBtn().click();
-        justWait();
-        loginPage = PageFactory.initElements(driver, LoginPage.class);
-        loginPage.getPassword().sendKeys(E2EConstants.ADMIN_PASSWORD);
-        loginPage.getLoginBtn().click();
-        justWait();
-
-        driver.get("http://localhost:4200/user-edit");
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        userEditPage.getEmail().sendKeys(E2EConstants.EMAIL);
-        userEditPage.getSubmitEmail().click();
-        justWait();
-        justWait();
-        userEditPage = PageFactory.initElements(driver, UserEditPage.class);
-        justWait();
-        assertEquals("http://localhost:4200/login", driver.getCurrentUrl());
-
+    private static void logout() throws InterruptedException {
+        driver.findElement(By.id("user-menu")).click();
+        driver.findElement(By.xpath("//*[text()='Logout']")).click();
+        justWait(100);
     }
 
 
-    private void justWait() throws InterruptedException {
+    private static void justWait() throws InterruptedException {
         synchronized (driver) {
             driver.wait(1000);
         }
