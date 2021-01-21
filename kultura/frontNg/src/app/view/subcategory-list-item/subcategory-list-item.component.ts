@@ -40,7 +40,7 @@ export class SubcategoryListItemComponent implements OnInit {
   deletionConfirmed(): void {
     this.subcategoryService.delete(this.subcategory?.id ?? 0).subscribe(() => {
       this.messageService.add({
-        id: 'toast-container',
+        id: 'subcategory-deleted-message',
         severity: 'success',
         summary: 'Deleted successfully',
         detail: 'The subcategory was deleted successfully'

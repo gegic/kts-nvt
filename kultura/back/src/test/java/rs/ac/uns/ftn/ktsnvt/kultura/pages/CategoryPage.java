@@ -77,6 +77,12 @@ public class CategoryPage {
                 .getText();
     }
 
+    public String ensureIsDisplayedCustom(String id) {
+        return (new WebDriverWait(driver, 30))
+                .until(ExpectedConditions.presenceOfElementLocated(By.id(id)))
+                .getText();
+    }
+
 
 
 }

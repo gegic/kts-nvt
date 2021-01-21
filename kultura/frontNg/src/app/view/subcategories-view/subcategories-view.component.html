@@ -44,7 +44,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <div class="p-d-flex p-ai-center p-jc-between">
+      <div id="subcategoriesNumberText" class="p-d-flex p-ai-center p-jc-between">
         In total there are {{ totalElements }} subcategories for
         <ng-container *ngIf="category && category.name">{{category.name}}</ng-container>.
       </div>

@@ -102,8 +102,9 @@ export class SubcategoriesViewComponent implements OnInit, OnDestroy {
   saveSubcategory(): void {
     if (!this.nameControl.valid) {
       this.messageService.add(
-        {severity: 'error', summary: 'Required', detail: 'Name is required.'}
+        {id: 'toast-container', severity: 'error', summary: 'Required', detail: 'Name is required.'}
       );
+      return;
     }
     const name = this.nameControl.value;
     let s: Subcategory;
