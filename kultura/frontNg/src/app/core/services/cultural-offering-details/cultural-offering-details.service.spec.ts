@@ -1,16 +1,87 @@
-import { TestBed } from '@angular/core/testing';
+import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
 import { CulturalOfferingDetailsService } from './cultural-offering-details.service';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {HttpClient} from '@angular/common/http';
+import {CulturalOffering} from '../../models/cultural-offering';
 
 describe('CulturalOfferingDetailsService', () => {
   let service: CulturalOfferingDetailsService;
+  let httpMock: HttpTestingController;
+  let httpClient: HttpClient;
+  let injector;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [CulturalOfferingDetailsService]
+    });
     service = TestBed.inject(CulturalOfferingDetailsService);
+    injector = getTestBed();
+    httpClient = TestBed.inject(HttpClient);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('getOffering()  should query url and save a culturalOffering', fakeAsync(() => {
+    let culturalOffering: CulturalOffering = {
+      id: 0,
+      name: '',
+      briefInfo: '',
+      latitude: 0,
+      longitude: 0,
+      address: '',
+      overallRating: 0,
+      numReviews: 0,
+      subcategoryId: 0,
+      subcategoryName: '',
+      numSubscribed: 0,
+      categoryName: '',
+      categoryId: 0,
+    };
+
+    const mockCulturalOffering: CulturalOffering =
+      {
+        id: 1,
+        name: 'CulturalOffering',
+        briefInfo: 'CulturalOfferingInfo',
+        latitude: 10,
+        longitude: 5,
+        address: '9336 Civic Center Dr, Beverly Hills, CA 90210, USA',
+        overallRating: 54,
+        numReviews: 0,
+        subcategoryId: 1,
+        subcategoryName: 'subcategory',
+        numSubscribed: 0,
+        categoryName: 'Category1',
+        categoryId: 1,
+      };
+
+    service.getCulturalOffering(1).subscribe(data => culturalOffering = data);
+
+
+    const req = httpMock.expectOne('/api/cultural-offerings/1');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockCulturalOffering);
+
+    tick();
+
+    expect(culturalOffering).toBeDefined();
+    expect(culturalOffering.id).toEqual(1);
+    expect(culturalOffering.name).toEqual('CulturalOffering');
+    expect(culturalOffering.briefInfo).toEqual('CulturalOfferingInfo');
+    expect(culturalOffering.latitude).toEqual(10);
+    expect(culturalOffering.longitude).toEqual(5);
+    expect(culturalOffering.address).toEqual('9336 Civic Center Dr, Beverly Hills, CA 90210, USA');
+    expect(culturalOffering.overallRating).toEqual(54);
+    expect(culturalOffering.numReviews).toEqual(0);
+    expect(culturalOffering.subcategoryId).toEqual(1);
+    expect(culturalOffering.subcategoryName).toEqual('subcategory');
+    expect(culturalOffering.numSubscribed).toEqual(0);
+    expect(culturalOffering.categoryName).toEqual('Category1');
+    expect(culturalOffering.categoryId).toEqual(1);
+  }));
 });
