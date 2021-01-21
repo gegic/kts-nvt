@@ -94,7 +94,7 @@ export class CategoriesViewComponent implements OnInit, OnDestroy {
   saveCategory(): void {
     if (!this.nameControl.valid) {
       this.messageService.add(
-        {severity: 'error', summary: 'Required', detail: 'Name is required.'}
+        {id: 'toast-container', severity: 'error', summary: 'Required', detail: 'Name is required.'}
       );
     }
     const name = this.nameControl.value;
@@ -115,7 +115,7 @@ export class CategoriesViewComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       o.subscribe(() => {
         this.messageService.add(
-          {severity: 'success', summary: 'Created', detail: 'Category was created.'}
+          {id: 'toast-container', severity: 'success', summary: 'Created', detail: 'Category was created.'}
         );
         this.resetCategories();
         this.isAddDialogOpen = false;
@@ -124,7 +124,7 @@ export class CategoriesViewComponent implements OnInit, OnDestroy {
       },
       () => {
         this.messageService.add(
-          {severity: 'error', summary: 'Already exists', detail: 'A category with this name already exists'}
+          {id: 'toast-container', severity: 'error', summary: 'Already exists', detail: 'A category with this name already exists'}
         );
         this.isAddDialogOpen = false;
         this.nameControl.reset();

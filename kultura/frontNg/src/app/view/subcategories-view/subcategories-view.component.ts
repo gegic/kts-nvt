@@ -78,7 +78,7 @@ export class SubcategoriesViewComponent implements OnInit, OnDestroy {
           this.messageService.add({
             severity: 'success',
             summary: 'Deleted successfully',
-            detail: 'The category was deleted successfully'
+            detail: 'The subcategory was deleted successfully'
           });
           this.resetSubcategories();
         },
@@ -124,7 +124,7 @@ export class SubcategoriesViewComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       o.subscribe(() => {
           this.messageService.add(
-            {severity: 'success', summary: 'Saved', detail: 'Subcategory was successfully saved.'}
+            {id: 'toast-container', severity: 'success', summary: 'Saved', detail: 'Subcategory was successfully saved.'}
           );
           this.resetSubcategories();
           this.isSubcategoryDialogOpen = false;
@@ -137,7 +137,7 @@ export class SubcategoriesViewComponent implements OnInit, OnDestroy {
         },
         () => {
           this.messageService.add(
-            {severity: 'error', summary: 'Already exists', detail: 'A category with this name already exists'}
+            {id: 'toast-container', severity: 'error', summary: 'Already exists', detail: 'A subcategory with this name already exists'}
           );
           this.isSubcategoryDialogOpen = false;
           this.nameControl.reset();
