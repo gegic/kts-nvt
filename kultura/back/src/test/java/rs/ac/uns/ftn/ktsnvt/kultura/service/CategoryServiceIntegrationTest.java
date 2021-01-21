@@ -74,6 +74,7 @@ public class CategoryServiceIntegrationTest {
         assertEquals(CategoryConstants.EXISTING_NAME1, cat.get().getName());
 
     }
+
     @Test
     public void testReadByIdDoesntExist(){
         Optional<CategoryDto> cat = categoryService.readById(CategoryConstants.NON_EXISTING_ID);

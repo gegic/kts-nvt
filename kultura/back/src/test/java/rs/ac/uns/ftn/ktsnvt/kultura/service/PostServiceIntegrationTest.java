@@ -17,6 +17,8 @@ import rs.ac.uns.ftn.ktsnvt.kultura.constants.CulturalOfferingConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.PostConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.PostDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
@@ -146,5 +148,46 @@ public class PostServiceIntegrationTest {
         long newDb = postRepository.count();
 
         assertEquals(oldDb - 1, newDb);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void deleteNotFound() {
+        postService.delete(45L);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void updateNotFound() {
+        PostDto updatePost = new PostDto();
+        updatePost.setId(45L);
+        updatePost.setContent("NOVI KONTENT");
+
+        postService.update(updatePost);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void saveExists() {
+        PostDto savePost = new PostDto();
+        savePost.setId(1L);
+        savePost.setContent("NOVI KONTENT");
+        savePost.setCulturalOfferingId(1L);
+
+        postService.save(savePost);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void saveOfferingNotFound() {
+        PostDto savePost = new PostDto();
+        savePost.setContent("NOVI KONTENT");
+        savePost.setCulturalOfferingId(54L);
+
+        postService.save(savePost);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void saveOfferingNull() {
+        PostDto savePost = new PostDto();
+        savePost.setContent("NOVI KONTENT");
+
+        postService.save(savePost);
     }
 }

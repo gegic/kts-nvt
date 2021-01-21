@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.PostDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
@@ -55,6 +56,16 @@ public class PostService {
     }
 
     public PostDto save(PostDto p) {
+        if (p.getId() != null)
+            throw new IllegalArgumentException("Id has to be null in order for post to be added.");
+
+        if (p.getCulturalOfferingId() == null) {
+            throw new NullPointerException("Cultural offering id is null");
+        }
+
+        if (!this.culturalOfferingRepository.existsById(p.getCulturalOfferingId())) {
+            throw new ResourceNotFoundException("Cultural offering with given id not found");
+        }
         return mapper.fromEntity(postRepository.save(mapper.fromDto(p, Post.class)), PostDto.class);
     }
 

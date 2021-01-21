@@ -89,13 +89,19 @@ public class CulturalOfferingControllerIntegrationTest {
 
     @Test
     public void whenCreateCulturalOffering() {
-        CulturalOfferingDto newCulturalOffering = getTestCulturalOfferingDto();
-
+        CulturalOfferingDto culturalOfferingDto = new CulturalOfferingDto();
+        culturalOfferingDto.setAddress(CulturalOfferingConstants.TEST_ADDRESS1);
+        culturalOfferingDto.setBriefInfo(CulturalOfferingConstants.TEST_BRIEF_INFO1);
+        culturalOfferingDto.setLatitude(CulturalOfferingConstants.TEST_LATITUDE1);
+        culturalOfferingDto.setLongitude(CulturalOfferingConstants.TEST_LONGITUDE1);
+        culturalOfferingDto.setSubcategoryId(CulturalOfferingConstants.TEST_SUBCATEGORY_ID1);
+        culturalOfferingDto.setName(CulturalOfferingConstants.TEST_NAME1);
+        culturalOfferingDto.setPhotoId(3L);
         this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.accessToken);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(newCulturalOffering, headers);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(culturalOfferingDto, headers);
 
         ResponseEntity<CulturalOfferingDto> response = restTemplate.exchange(
                 "/api/cultural-offerings", HttpMethod.POST, httpEntity, CulturalOfferingDto.class);
@@ -103,7 +109,7 @@ public class CulturalOfferingControllerIntegrationTest {
         CulturalOfferingDto createdCulturalOffering = response.getBody();
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(newCulturalOffering.getName(), newCulturalOffering.getName());
+        assertEquals(culturalOfferingDto.getName(), culturalOfferingDto.getName());
 
         this.accessToken = null;
         culturalOfferingService.delete(createdCulturalOffering.getId());

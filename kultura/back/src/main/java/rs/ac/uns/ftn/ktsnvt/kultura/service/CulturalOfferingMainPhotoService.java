@@ -42,6 +42,11 @@ public class CulturalOfferingMainPhotoService {
     }
 
     public CulturalOfferingPhotoDto addPhoto(MultipartFile photoFile) {
+
+        if (photoFile == null) {
+            throw new NullPointerException();
+        }
+
         CulturalOfferingMainPhoto photo = new CulturalOfferingMainPhoto();
         BufferedImage bufferedImage;
         BufferedImage thumbnail;
@@ -118,6 +123,8 @@ public class CulturalOfferingMainPhotoService {
             if (co != null) {
                 culturalOfferingRepository.save(co);
             }
+        } else {
+            throw new NullPointerException("Photo is null");
         }
     }
     

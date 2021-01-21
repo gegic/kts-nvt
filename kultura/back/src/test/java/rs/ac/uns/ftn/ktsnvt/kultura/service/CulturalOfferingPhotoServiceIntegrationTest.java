@@ -16,6 +16,7 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.ktsnvt.kultura.config.PhotosConfig;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingPhotoRepository;
@@ -105,6 +106,22 @@ public class CulturalOfferingPhotoServiceIntegrationTest {
         assertFalse(new File(photosConfig.getPath() + p1.getId() + ".png").exists());
         assertFalse(new File(photosConfig.getPath() + "thumbnail/" + p2.getId() + ".png").exists());
         assertFalse(new File(photosConfig.getPath() + p2.getId() + ".png").exists());
+    }
 
+    @Test(expected = ResourceNotFoundException.class)
+    public void deleteCulturalOfferingNotFound() {
+        photoService.deleteByCulturalOffering(45L);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void deletePhotoNotFound() {
+        photoService.delete(45L);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void createCulturalOfferingNotFound() throws IOException {
+        File f = ResourceUtils.getFile("src/test/resources/test_photo.png");
+        MultipartFile multipartFile = new MockMultipartFile("photo", Files.readAllBytes(f.toPath()));
+        photoService.create(multipartFile, 45L);
     }
 }

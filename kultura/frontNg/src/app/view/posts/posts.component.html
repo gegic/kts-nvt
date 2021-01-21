@@ -36,7 +36,14 @@
         <h3 class="p-mt-0 p-mb-3 p-text-normal">
           Announce some news...
         </h3>
-        <textarea [maxLength]="1000" [rows]="5" [(ngModel)]="newPostContent" [autoResize]="true" placeholder="Start typing..." pInputTextarea>
+        <textarea [maxLength]="1000"
+                  [rows]="5"
+                  [(ngModel)]="newPostContent"
+                  [autoResize]="true"
+                  placeholder="Start typing..."
+                  id="new-post-input"
+                  pInputTextarea
+        >
         </textarea>
         <div class="p-text-right">
           <button class="p-button p-button-text p-button-plain"

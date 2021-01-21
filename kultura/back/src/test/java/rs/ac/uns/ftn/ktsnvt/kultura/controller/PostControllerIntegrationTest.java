@@ -163,7 +163,6 @@ public class PostControllerIntegrationTest {
     }
 
     @Test
-    @Transactional
     public void whenCreatePost() {
         PostDto post = createTestPostDto();
 

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
+import lombok.NonNull;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -106,11 +107,6 @@ public class CulturalOfferingPhotoService {
 
         File photo = new File(photosConfig.getPath() + id + ".png");
         File thumbnail = new File(photosConfig.getPath() + "thumbnail/" + id + ".png");
-        if (!photo.exists()) {
-            throw new ResourceNotFoundException("Photo not found");
-        } else if (!thumbnail.exists()) {
-            throw new ResourceNotFoundException("Thumbnail not found");
-        }
         photo.delete();
         thumbnail.delete();
         CulturalOffering co = offeringPhoto.getCulturalOffering();
@@ -121,6 +117,11 @@ public class CulturalOfferingPhotoService {
 
     @Transactional
     public void deleteByCulturalOffering(long culturalOfferingId) {
+        if (!culturalOfferingRepository.existsById(culturalOfferingId)) {
+            throw new ResourceNotFoundException(String
+                    .format("The cultural offering with the given id %d doesn't exist", culturalOfferingId));
+        }
+
         List<CulturalOfferingPhoto> photos = culturalOfferingPhotoRepository.findAllByCulturalOfferingId(culturalOfferingId);
         CulturalOffering co = culturalOfferingRepository.findById(culturalOfferingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Offering not found"));

@@ -23,6 +23,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.PostRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
 
@@ -44,6 +45,9 @@ public class PostServiceUnitTest {
 
     @Autowired
     PostService postService;
+
+    @MockBean
+    CulturalOfferingRepository culturalOfferingRepository;
 
     @MockBean
     Mapper mapper;
@@ -151,12 +155,14 @@ public class PostServiceUnitTest {
     public void testSave() {
         PostDto post = new PostDto();
         post.setContent("KONTENT");
+        post.setCulturalOfferingId(1L);
         Mockito.when(postRepository.save(Mockito.any(Post.class)))
                 .thenAnswer(i -> {
                     Post p = i.getArgument(0);
                     p.setId(1L);
                     return p;
                 });
+        Mockito.when(culturalOfferingRepository.existsById(1L)).thenReturn(true);
 
         PostDto saved = postService.save(post);
 

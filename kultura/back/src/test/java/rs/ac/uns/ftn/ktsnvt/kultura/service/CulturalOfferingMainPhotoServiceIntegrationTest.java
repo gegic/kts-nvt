@@ -108,4 +108,14 @@ public class CulturalOfferingMainPhotoServiceIntegrationTest {
         assertFalse(new File(photosConfig.getPath() + "main/thumbnail/" + p.getId() + ".png").exists());
         assertFalse(new File(photosConfig.getPath() + "main/" + p.getId() + ".png").exists());
     }
+
+    @Test(expected = NullPointerException.class)
+    public void deletePhotoNull() {
+        photoService.deletePhoto(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void addPhotoNull() {
+        photoService.addPhoto(null);
+    }
 }
