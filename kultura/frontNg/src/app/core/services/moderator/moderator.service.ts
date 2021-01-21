@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {Page} from '../../models/Page';
 import {Moderator} from '../../models/moderator';
-import {User} from '../../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -16,18 +14,18 @@ export class ModeratorService {
   }
 
   public getModerators(page: number): Observable<any> {
-    return this.httpClient.get( `/api/users/moderators?page=${page}`);
+    return this.httpClient.get(`/api/users/moderators?page=${page}`);
   }
 
   public getModeratorById(id: number): Observable<Moderator> {
     return this.httpClient.get('/api/users/' + id);
   }
 
-  public createModerator(moderator: Moderator): Observable<any>{
-    return  this.httpClient.post('/api/users/moderator', moderator);
+  public createModerator(moderator: Moderator): Observable<any> {
+    return this.httpClient.post('/api/users/moderator', moderator);
   }
 
-  public updateModerator(moderator: Moderator): Observable<any>{
+  public updateModerator(moderator: Moderator): Observable<any> {
     return this.httpClient.put('/api/users', moderator);
   }
 

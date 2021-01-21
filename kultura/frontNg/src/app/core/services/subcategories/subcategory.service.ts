@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 
@@ -7,7 +7,8 @@ import {HttpClient} from '@angular/common/http';
 })
 export class SubcategoryService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
 
   public getSubcategories(categoryId: number | undefined): Observable<any> {
     return this.httpClient.get(`/api/subcategories/category/${categoryId}`);

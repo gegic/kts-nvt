@@ -4,7 +4,6 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {CulturalOffering} from '../../models/cultural-offering';
 import {Category} from '../../models/category';
 import {Subcategory} from '../../models/subcategory';
-import * as L from 'leaflet';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +30,8 @@ export class CulturalOfferingsService {
   categories?: Category[] = [];
   subcategories?: Subcategory[] = [];
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {
+  }
 
   getCulturalOfferings(page: number, sort: string, userId?: number): Observable<any> {
     let apiUrl = `/api/cultural-offerings?page=${page}&sort=${sort}&no-reviews=${this.noReviews}`;

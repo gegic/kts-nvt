@@ -1,7 +1,6 @@
 import {Authority} from './authority';
-import {Moment} from 'moment-timezone';
 
-export class Moderator{
+export class Moderator {
   id ?: string;
   email ?: string;
   password ?: string;

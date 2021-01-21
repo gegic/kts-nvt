@@ -1,5 +1,3 @@
-import {Moment} from 'moment-timezone';
-
 export class CulturalOffering {
   id = -1;
   name = '';

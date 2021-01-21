@@ -1,6 +1,6 @@
 import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
-import { PostsService } from './posts.service';
+import {PostsService} from './posts.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {HttpClient} from '@angular/common/http';
 import {Post} from '../../models/post';
@@ -24,7 +24,7 @@ describe('PostsService', () => {
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    expect(service).toBeDefined();
   });
 
   it('getPosts() should query url and get all posts', fakeAsync(() => {
@@ -72,7 +72,10 @@ describe('PostsService', () => {
   }));
 
   it('createPost()  should query url and save a post', fakeAsync(() => {
-    let newPost: Post = {};
+    let newPost: Post = {
+      content: 'Mnogooo dobro mestooo xD',
+      culturalOfferingId: 1,
+    };
 
     const mockPost: Post =
       {
@@ -125,7 +128,8 @@ describe('PostsService', () => {
   }));
 
   it('delete() should query url and delete a moderator', () => {
-    service.deletePost(1).subscribe(res => { });
+    service.deletePost(1).subscribe(res => {
+    });
 
     const req = httpMock.expectOne(`/api/posts/1`);
     expect(req.request.method).toBe('DELETE');
