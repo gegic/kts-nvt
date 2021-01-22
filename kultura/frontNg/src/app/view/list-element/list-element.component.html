@@ -4,10 +4,10 @@
       <img class="thumbnail-img" [src]="getThumbnailUrl()" alt="thumbnail">
     </div>
     <div class="p-col-12 p-sm-4 p-lg-6 p-ml-4">
-      <h5 class="p-text-normal p-m-0">
+      <h5 class="p-text-normal p-m-0 category-subcategory">
         {{culturalOffering.categoryName}} > {{culturalOffering.subcategoryName}}
       </h5>
-      <h2 class="p-text-bold p-m-0">
+      <h2 class="p-text-bold p-m-0 offering-name">
         {{culturalOffering.name}}
       </h2>
       <p class="p-text-light p-m-0">
@@ -21,6 +21,7 @@
           <button class="p-button p-button-rounded p-button-icon p-button-danger"
                   icon="pi pi-trash"
                   (click)="onClickDelete($event)"
+                  [id]="'delete-num' + index"
                   pButton
           ></button>
           <button class="p-button blue-button p-button-rounded p-button-icon p-ml-3"
@@ -50,7 +51,7 @@
       </div>
       <div class="p-d-inline-flex p-ml-auto">
         <i class="pi pi-star"></i>
-        <small class="p-ml-1 p-text-light">{{reviews}}</small>
+        <small class="p-ml-1 p-text-light review">{{reviews}}</small>
       </div>
     </div>
   </div>

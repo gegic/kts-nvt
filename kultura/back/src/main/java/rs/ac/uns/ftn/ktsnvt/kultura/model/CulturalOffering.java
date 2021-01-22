@@ -45,7 +45,7 @@ public class CulturalOffering {
     private String address;
 
     @Getter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private CulturalOfferingMainPhoto photo;
 
     @Getter
@@ -104,6 +104,13 @@ public class CulturalOffering {
     }
 
     public void setSubcategory(Subcategory subcategory) {
+        if (this.subcategory != null) { this.subcategory.internalRemoveCulturalOffering(this); }
+        this.subcategory = subcategory;
+        if (subcategory != null) { subcategory.internalAddCulturalOffering(this); }
+
+    }
+
+    public void externalSetSubcategory(Subcategory subcategory) {
         if (this.subcategory != null) { this.subcategory.internalRemoveCulturalOffering(this); }
         this.subcategory = subcategory;
         if (subcategory != null) { subcategory.internalAddCulturalOffering(this); }

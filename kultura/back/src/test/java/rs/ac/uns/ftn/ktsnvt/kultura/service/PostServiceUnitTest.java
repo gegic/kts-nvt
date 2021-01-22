@@ -60,6 +60,12 @@ public class PostServiceUnitTest {
             if (dto.getId() != null) {
                 post.setId(dto.getId());
             }
+            if (dto.getCulturalOfferingId() != null) {
+                CulturalOffering co = new CulturalOffering();
+                co.setId(dto.getCulturalOfferingId());
+                co.setName("name");
+                post.setCulturalOffering(co);
+            }
             post.setContent(dto.getContent());
             return post;
         });

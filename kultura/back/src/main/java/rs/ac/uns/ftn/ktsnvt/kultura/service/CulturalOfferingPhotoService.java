@@ -78,7 +78,7 @@ public class CulturalOfferingPhotoService {
 
         photo.setWidth(width);
         photo.setHeight(height);
-        photo.setCulturalOffering(culturalOffering);
+        photo.externalSetCulturalOffering(culturalOffering);
 
         photo = culturalOfferingPhotoRepository.save(photo);
 

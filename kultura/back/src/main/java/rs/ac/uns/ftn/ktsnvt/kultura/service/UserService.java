@@ -130,12 +130,12 @@ public class UserService implements UserDetailsService {
     }
 
     public void sendMail(User user) {
-        String link = String
-                .format("<br>Nalog je potrebno verifikovati klikom na " +
-                        "<a href=\"http:/localhost:4200/verify/%s\">ovaj link</a>.", user.getId());
-        String body = String.format("Pozdrav,<br>%s, uspešno ste kreirali nalog.", user.getFirstName()) + link;
+        String body = String
+                .format("Greetings,<br>%s, your registration has been successful." +
+                        "<br>You can verify your account by clicking on " +
+                        "<a href=\"http:/localhost:4200/verify/%s\">this link</a>.", user.getFirstName(), user.getId());
         try {
-            this.smtpServer.sendEmail(user.getEmail(), "Uspešno kreiran nalog", body);
+            this.smtpServer.sendEmail(user.getEmail(), "Kultura Registration", body);
         } catch (Exception e) {
             e.printStackTrace();
         }

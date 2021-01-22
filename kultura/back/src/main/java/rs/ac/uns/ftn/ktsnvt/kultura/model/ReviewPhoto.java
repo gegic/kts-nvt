@@ -50,4 +50,6 @@ public class ReviewPhoto extends AbstractPhoto {
     public void setTimeAdded(LocalDateTime timeAdded) {
         this.timeAdded = timeAdded;
     }
+
+
 }

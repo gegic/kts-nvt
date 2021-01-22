@@ -25,6 +25,7 @@
                 (click)="openFilterDialog()"
                 pButton
                 pRipple
+                id="filter-btn"
         ></button>
         <button class="p-button p-button-text p-button-plain"
                 label="RESET"
@@ -32,13 +33,15 @@
                 pButton
                 pRipple
                 *ngIf="filterSet"
+                id="reset-filter-btn"
         ></button>
       </div>
     </div>
     <div *ngIf="culturalOfferings.length > 0; else noOfferings">
-      <app-list-element *ngFor="let culturalOffering of culturalOfferings"
+      <app-list-element *ngFor="let culturalOffering of culturalOfferings; let index = index;"
                         [culturalOffering]="culturalOffering"
                         (offeringDeleted)="onOfferingDeleted()"
+                        [index]="index"
       >
       </app-list-element>
     </div>
@@ -86,7 +89,11 @@
           </div>
           <hr class="p-mb-4">
           <div class="p-field-checkbox">
-            <p-checkbox [binary]="true" inputId="noReviews" [(ngModel)]="onlyReviews"></p-checkbox>
+            <p-checkbox [binary]="true"
+                        inputId="noReviews"
+                        [(ngModel)]="onlyReviews"
+                        id="only-reviews-cbx"
+            ></p-checkbox>
             <label for="noReviews">Only with reviews</label>
           </div>
         </div>
@@ -107,6 +114,7 @@
                          (clear)="resetSubcategories()"
                          (scrollToEnd)="getCategories()"
                          (ngModelChange)="categoryChosen($event.id)"
+                         id="category"
               ></ng-select>
             </div>
             <div class="p-col-6">
@@ -119,6 +127,7 @@
                          [loading]="subcategoriesLoading"
                          (scrollToEnd)="getSubcategories()"
                          [disabled]="!filter.category"
+                         id="subcategory"
               ></ng-select>
             </div>
           </div>
@@ -178,7 +187,12 @@
 
     </div>
     <p-footer>
-      <button class="p-button blue-button" label="Save filter" (click)="saveFilter()" pButton></button>
+      <button class="p-button blue-button"
+              label="Save filter"
+              (click)="saveFilter()"
+              pButton
+              id="save-filter-btn"
+      ></button>
     </p-footer>
   </p-dialog>
 </div>

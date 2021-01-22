@@ -46,6 +46,10 @@ public class Review {
     private Set<ReviewPhoto> photos = new HashSet<>();
 
     public void setCulturalOffering(CulturalOffering culturalOffering) {
+        this.culturalOffering = culturalOffering;
+    }
+
+    public void externalSetCulturalOffering(CulturalOffering culturalOffering) {
         if (this.culturalOffering != null) {
             this.culturalOffering.internalRemoveReview(this);
         }
@@ -54,5 +58,6 @@ public class Review {
 
             culturalOffering.internalAddReview(this);
         }
+
     }
 }

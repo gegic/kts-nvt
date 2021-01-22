@@ -11,6 +11,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Post;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.PostRepository;
 
@@ -25,14 +26,17 @@ public class PostService {
     private final PostRepository postRepository;
     private final CulturalOfferingRepository culturalOfferingRepository;
     private final Mapper mapper;
+    private final SMTPServer smtpServer;
 
     @Autowired
     public PostService(PostRepository postRepository,
                        Mapper mapper,
-                       CulturalOfferingRepository culturalOfferingRepository) {
+                       CulturalOfferingRepository culturalOfferingRepository,
+                       SMTPServer smtpServer) {
         this.postRepository = postRepository;
         this.mapper = mapper;
         this.culturalOfferingRepository = culturalOfferingRepository;
+        this.smtpServer = smtpServer;
 
     }
 
@@ -66,7 +70,10 @@ public class PostService {
         if (!this.culturalOfferingRepository.existsById(p.getCulturalOfferingId())) {
             throw new ResourceNotFoundException("Cultural offering with given id not found");
         }
-        return mapper.fromEntity(postRepository.save(mapper.fromDto(p, Post.class)), PostDto.class);
+        Post post = postRepository.save(mapper.fromDto(p, Post.class));
+        CulturalOffering co = post.getCulturalOffering();
+        co.getSubscribedUsers().parallelStream().forEach(u -> sendMail(u, co));
+        return mapper.fromEntity(post, PostDto.class);
     }
 
     @Transactional
@@ -76,5 +83,19 @@ public class PostService {
         co.removePost(p);
         culturalOfferingRepository.save(co);
         postRepository.delete(p);
+    }
+
+    private void sendMail(User user, CulturalOffering co) {
+        String body = String
+                .format("<Greetings,<br>There is a new announcement " +
+                        "regarding a cultural offering (%s) you're subscribed to. " +
+                        "You can access it by clicking " +
+                        "<a href=\"http:/localhost:4200/cultural-offering/%s/posts\">on this link</a>.",
+                        co.getName(), co.getId());
+        try {
+            this.smtpServer.sendEmail(user.getEmail(), "New announcement", body);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

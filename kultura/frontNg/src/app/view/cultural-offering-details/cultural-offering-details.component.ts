@@ -85,6 +85,7 @@ export class CulturalOfferingDetailsComponent implements OnInit, OnDestroy {
         rejectLabel: 'Close',
         header: 'Deletion',
         icon: 'pi pi-trash',
+        acceptButtonStyleClass: 'confirm-deletion',
         accept: () => this.deletionConfirmed()
       });
   }
@@ -119,7 +120,8 @@ export class CulturalOfferingDetailsComponent implements OnInit, OnDestroy {
       this.messageService.add({
         severity: 'success',
         summary: 'Deleted successfully',
-        detail: 'The cultural offering was deleted successfully'
+        detail: 'The cultural offering was deleted successfully',
+        id: 'deletion-successful'
       });
     }));
   }

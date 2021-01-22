@@ -127,11 +127,13 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClickAnnounce(): void {
+    this.newPostContent = this.newPostContent.trim();
     if (!this.newPostContent) {
       this.messageService.add({
         severity: 'error',
         summary: 'Empty announcement',
-        detail: 'Announcement cannot be empty.'
+        detail: 'Announcement cannot be empty.',
+        id: 'add-empty-toast'
       });
     }
     if (!this.culturalOffering) {
@@ -159,10 +161,10 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getPosts();
   }
 
-  getMenuItems(post: Post): MenuItem[] {
+  getMenuItems(post: Post, index: number): MenuItem[] {
     return [
-      {label: 'Edit', icon: 'pi pi-pencil', command: () => this.editPost(post)},
-      {label: 'Delete', icon: 'pi pi-trash', command: () => this.deletePost(post)},
+      {label: 'Edit', icon: 'pi pi-pencil', command: () => this.editPost(post), id: 'edit-num' + index},
+      {label: 'Delete', icon: 'pi pi-trash', command: () => this.deletePost(post), id: 'delete-num' + index},
     ];
   }
 
@@ -179,6 +181,15 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.editingPost) {
       return;
     }
+    this.editContent = this.editContent.trim();
+    if (!this.editContent) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Empty announcement',
+        detail: 'Announcement cannot be empty.',
+        id: 'edit-empty-toast'
+      });
+    }
     const postToUpdate = new Post();
     postToUpdate.id = this.editingPost.id;
     postToUpdate.content = this.editContent;
@@ -189,7 +200,8 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.messageService.add({
           severity: 'success',
           summary: 'Post updated',
-          detail: 'The post was updated successfully.'
+          detail: 'The post was updated successfully.',
+          id: 'edited-toast'
         });
         this.editContent = '';
         this.isEditDialogOpen = false;
@@ -206,6 +218,7 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
         rejectLabel: 'Close',
         header: 'Deletion',
         icon: 'pi pi-trash',
+        acceptButtonStyleClass: 'confirm-delete',
         accept: () => this.postDeletionConfirmed(post)
       });
   }
@@ -220,7 +233,8 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
           this.messageService.add({
             severity: 'success',
             summary: 'Post deleted',
-            detail: 'The post was deleted successfully.'
+            detail: 'The post was deleted successfully.',
+            id: 'deleted-toast'
           });
           this.resetPosts();
         }

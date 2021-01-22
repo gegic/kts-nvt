@@ -17,6 +17,8 @@ export class ListElementComponent implements OnInit, OnDestroy {
 
   @Input()
   culturalOffering!: CulturalOffering;
+  @Input()
+  index = 0;
   @Output()
   offeringDeleted: EventEmitter<any> = new EventEmitter<any>();
 
@@ -46,6 +48,7 @@ export class ListElementComponent implements OnInit, OnDestroy {
         rejectLabel: 'Close',
         header: 'Deletion',
         icon: 'pi pi-trash',
+        acceptButtonStyleClass: 'confirm-deletion',
         accept: () => this.deletionConfirmed()
       });
   }
@@ -85,7 +88,8 @@ export class ListElementComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'success',
           summary: 'Deleted successfully',
-          detail: 'The cultural offering was deleted successfully'
+          detail: 'The cultural offering was deleted successfully',
+          id: 'deletion-successful'
         });
         this.offeringDeleted.emit();
       })

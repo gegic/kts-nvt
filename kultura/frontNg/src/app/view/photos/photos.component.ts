@@ -96,8 +96,9 @@ export class PhotosComponent implements OnInit, OnDestroy {
           this.isOpenAddDialog = false;
           this.messageService.add({
             severity: 'success',
-            summary: 'Added',
-            detail: 'A photo was added successfully'
+            summary: 'Photo uploaded',
+            detail: 'The photo was uploaded successfully.',
+            id: 'upload-success'
           });
           this.uploadLoading = false;
           this.resetPhotos();
@@ -137,6 +138,7 @@ export class PhotosComponent implements OnInit, OnDestroy {
         rejectLabel: 'Close',
         header: 'Deletion',
         icon: 'pi pi-trash',
+        acceptButtonStyleClass: 'confirm-delete',
         accept: () => this.photoDeletionConfirmed(photo)
       });
   }
@@ -150,7 +152,8 @@ export class PhotosComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'success',
           summary: 'Photo deleted',
-          detail: 'The photo was deleted successfully.'
+          detail: 'The photo was deleted successfully.',
+          id: 'deletion-successful'
         });
         this.galleriaVisible = false;
         this.resetPhotos();

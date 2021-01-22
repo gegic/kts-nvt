@@ -56,8 +56,18 @@ public class CulturalOfferingPhoto extends AbstractPhoto {
     }
 
     public void setCulturalOffering(CulturalOffering culturalOffering) {
-        if (this.culturalOffering != null) { this.culturalOffering.internalAddCulturalOfferingPhoto(this); }
         this.culturalOffering = culturalOffering;
-        if (culturalOffering != null) { culturalOffering.internalRemoveCulturalOfferingPhoto(this); }
+    }
+
+    public void externalSetCulturalOffering(CulturalOffering culturalOffering) {
+        if (this.culturalOffering != null) {
+            this.culturalOffering.internalRemoveCulturalOfferingPhoto(this);
+        }
+        this.culturalOffering = culturalOffering;
+        if (culturalOffering != null) {
+
+            culturalOffering.internalAddCulturalOfferingPhoto(this);
+        }
+
     }
 }

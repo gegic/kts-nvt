@@ -37,17 +37,21 @@
                   icon="pi pi-trash"
                   label="Delete"
                   pButton
-                  (click)="onClickDelete()"></button>
+                  (click)="onClickDelete()"
+                  id="delete-btn"
+          ></button>
           <button class="p-button blue-button p-d-none p-d-lg-inline"
                   icon="pi pi-pencil"
                   label="Edit"
                   (click)="onClickEdit()"
-                  pButton></button>
+                  pButton
+          ></button>
 
           <button class="p-button p-button-danger p-button-icon p-button-rounded p-mr-3 p-d-inline p-d-lg-none"
                   icon="pi pi-trash"
                   pButton
-                  (click)="onClickDelete()"></button>
+                  (click)="onClickDelete()"
+          ></button>
           <button class="p-button blue-button p-button-icon p-button-rounded p-d-inline p-d-lg-none"
                   icon="pi pi-pencil"
                   (click)="onClickEdit()"

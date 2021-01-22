@@ -75,7 +75,7 @@ public class SubcategoryService {
         if (s.getCulturalOfferings() != null && s.getCulturalOfferings().size() > 0) {
             throw new ResourceExistsException("There are cultural offerings associated to this subcategory.");
         }
-        s.setCategory(null);
+        s.externalSetCategory(null);
         subcategoryRepository.deleteById(id);
     }
 }

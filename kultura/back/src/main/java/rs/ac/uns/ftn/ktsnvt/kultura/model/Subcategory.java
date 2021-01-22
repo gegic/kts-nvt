@@ -24,7 +24,6 @@ public class Subcategory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
-    @Setter
     private Category category;
 
     @Getter
@@ -32,11 +31,15 @@ public class Subcategory {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "subcategory", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "subcategory", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @Getter
     private Set<CulturalOffering> culturalOfferings = new HashSet<>();
 
     public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void externalSetCategory(Category category) {
         if (this.category != null) { this.category.internalRemoveSubcategory(this); }
         this.category = category;
         if (category != null) { category.internalAddSubcategory(this); }
@@ -46,8 +49,8 @@ public class Subcategory {
         culturalOfferings.forEach(this::addCulturalOffering);
     }
 
-    public void addCulturalOffering(CulturalOffering s) { s.setSubcategory(this); }
-    public void removeCulturalOffering(CulturalOffering s) { s.setSubcategory(null); }
+    public void addCulturalOffering(CulturalOffering s) { s.externalSetSubcategory(this); }
+    public void removeCulturalOffering(CulturalOffering s) { s.externalSetSubcategory(null); }
 
     protected void internalAddCulturalOffering(CulturalOffering s) { culturalOfferings.add(s); }
     protected void internalRemoveCulturalOffering(CulturalOffering s) { culturalOfferings.remove(s); }

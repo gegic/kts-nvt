@@ -16,55 +16,32 @@ public class PostsPage {
   @FindBy(id = "new-post-input")
   private WebElement newPostInput;
 
-  @FindBy(id = "email")
-  private WebElement emailInput;
+  @FindBy(id = "announce-button")
+  private WebElement announceBtn;
 
-  @FindBy(id = "firstName")
-  private WebElement firstName;
+  @FindBy(id = "post-num0")
+  private WebElement newestPost;
 
-  @FindBy(id = "lastName")
-  private WebElement lastNameInput;
+  @FindBy(id = "options-num0")
+  private WebElement newestOptionsBtn;
 
-  @FindBy(id = "password")
-  private WebElement passwordInput;
+  @FindBy(id = "edit-num0")
+  private WebElement newestOpenEditBtn;
 
-  @FindBy(id = "repeatPassword")
-  private WebElement repeatPasswordInput;
+  @FindBy(id = "delete-num0")
+  private WebElement newestOpenDeleteBtn;
 
-  @FindBy(id = "addModerator")
-  private WebElement addModeratorBtn;
+  @FindBy(id = "confirm-edit")
+  private WebElement confirmEditingBtn;
 
-  @FindBy(className = "p-confirm-dialog-accept")
-  private WebElement confirmationService;
+  @FindBy(className = "confirm-delete")
+  private WebElement confirmDeletionBtn;
+
+  @FindBy(id = "edit-area")
+  private WebElement editArea;
 
   public PostsPage(WebDriver driver) {
     this.driver = driver;
   }
 
-  public WebElement deleteBtnModerator(String email) {
-    return driver.findElement(By.id("delete" + email));
-  }
-
-  public WebElement editBtnModerator(String email) {
-    return driver.findElement(By.id("edit" + email));
-  }
-
-  public WebElement getElementById(String id) {
-    return driver.findElement(By.id(id));
-  }
-
-  public void ensureIsNonDisplayed(String id) {
-    (new WebDriverWait(driver, 30))
-        .until(ExpectedConditions.invisibilityOfElementLocated(By.id(id)));
-  }
-
-  public void ensureIsDisplayed(String id) {
-    (new WebDriverWait(driver, 30)).until(ExpectedConditions.visibilityOfElementLocated(By.id(id)));
-  }
-
-  public String ensureIsDisplayedToast() {
-    return (new WebDriverWait(driver, 30))
-        .until(ExpectedConditions.presenceOfElementLocated(By.id("toast-container")))
-        .getText();
-  }
 }

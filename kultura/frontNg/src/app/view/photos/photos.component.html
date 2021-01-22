@@ -8,7 +8,9 @@
               class="p-button blue-button p-d-block p-ml-auto"
               label="Add a photo"
               (click)="isOpenAddDialog = true"
-              pButton></button>
+              id="add-photo-btn"
+              pButton
+      ></button>
     </div>
     <div *ngIf="photos.length > 0; else noPhotos">
       <div (scrolled)="onScrollDown()"
@@ -21,6 +23,7 @@
                (mouseenter)="onPhotoHoverStart(photo)"
                (mouseleave)="onPhotoHoverEnd(photo)"
                (click)="imageClick(index)"
+               [id]="'photo-num' + index"
           >
             <div *ngIf="photo.hovering" class="maximize-wrap p-m-1 p-p-1">
               <i class="pi pi-window-maximize img-maximize"></i>
@@ -47,6 +50,7 @@
                   [customUpload]="true"
                   (uploadHandler)="onClickUpload($event)"
                   accept="image/*"
+                  id="file-upload"
                   #upload
     ></p-fileUpload>
   </p-dialog>
@@ -69,6 +73,7 @@
 
   <button class="delete-button p-button-rounded p-button-text"
           icon="pi pi-trash"
+          id="delete-photo"
           *ngIf="galleriaVisible"
           (click)="onClickDelete()"
           pRipple

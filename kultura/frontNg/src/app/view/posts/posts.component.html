@@ -49,6 +49,7 @@
           <button class="p-button p-button-text p-button-plain"
                   icon="pi pi-caret-right"
                   label="Announce"
+                  id="announce-button"
                   (click)="onClickAnnounce()"
                   pButton>
           </button>
@@ -59,18 +60,19 @@
       </p-card>
       <div infinite-scroll
            (scrolled)="onScrollDown()">
-        <p-card class="post-card p-pt-0" *ngFor="let post of posts">
+        <p-card class="post-card p-pt-0" *ngFor="let post of posts; let index = index;">
           <div class="p-text-light time p-d-flex post-header">
             <p class="p-mb-0">{{ relativeTimeAdded(post.timeAdded) }}</p>
-            <p-menu [model]="getMenuItems(post)" [popup]="true" #menu></p-menu>
+            <p-menu [model]="getMenuItems(post, index)" [popup]="true" #menu></p-menu>
             <button class="p-ml-auto options-button p-button p-button-icon p-button-text"
                     icon="pi pi-ellipsis-h"
                     *ngIf="getUserRole() === 'MODERATOR'"
                     (click)="menu.toggle($event)"
+                    [id]="'options-num' + index"
                     pButton
             ></button>
           </div>
-          <p class="p-mt-0 p-mb-2">{{ post.content }}</p>
+          <p class="p-mt-0 p-mb-2" [id]="'post-num' + index">{{ post.content }}</p>
         </p-card>
         <div class="p-text-center">
           <p-progressSpinner *ngIf="isPostsLoading"></p-progressSpinner>
@@ -85,12 +87,19 @@
             [blockScroll]="true"
             [modal]="true"
   >
-    <textarea style="width: 500px" [maxLength]="1000" [rows]="5" [(ngModel)]="editContent" [autoResize]="true" pInputTextarea>
-        </textarea>
+    <textarea style="width: 500px"
+              [maxLength]="1000"
+              [rows]="5"
+              [(ngModel)]="editContent"
+              [autoResize]="true"
+              id="edit-area"
+              pInputTextarea
+    ></textarea>
     <div class="p-text-right">
       <button class="p-button p-button-text p-button-plain"
               icon="pi pi-caret-right"
               label="Edit"
+              id="confirm-edit"
               (click)="onClickEdit()"
               pButton>
       </button>

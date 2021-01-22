@@ -16,17 +16,26 @@ import validate = WebAssembly.validate;
 import {ActivatedRoute, Router} from '@angular/router';
 import {CulturalOffering} from '../../core/models/cultural-offering';
 
-interface IErrorDict {
+interface Dictionary {
   [key: string]: string;
 }
 
-const errorDict: IErrorDict = {
+const errorDict: Dictionary = {
   name: 'Name is required and can contain only letters, digits and spaces',
   briefInfo: 'Brief info is required and it can contain a maximum of 200 characters.',
   additionalInfo: 'Additional info can contain 1000 characters at most.',
   address: 'Address is required',
   selectedCategory: 'Category is required.',
   selectedSubcategory: 'Subcategory is required'
+};
+
+const idDict: Dictionary = {
+  name: 'name-error',
+  briefInfo: 'brief-info-error',
+  additionalInfo: 'additional-info-error',
+  address: 'address-error',
+  selectedCategory: 'category-error',
+  selectedSubcategory: 'subcategory-error'
 };
 
 @Component({
@@ -44,8 +53,8 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
       briefInfo: new FormControl(undefined, [Validators.required, Validators.maxLength(200)]),
       additionalInfo: new FormControl(undefined, Validators.maxLength(1000)),
       address: new FormControl(undefined, Validators.required),
-      selectedSubcategory: new FormControl(undefined, Validators.required),
-      selectedCategory: new FormControl(undefined, Validators.required)
+      selectedCategory: new FormControl(undefined, Validators.required),
+      selectedSubcategory: new FormControl(undefined, Validators.required)
     }
   );
 
@@ -238,7 +247,8 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
         {
           severity: 'error',
           summary: 'Photo is missing',
-          detail: 'A cultural offering has to have a main photo.'
+          detail: 'A cultural offering has to have a main photo.',
+          id: 'photo-error'
         }
       );
       return;
@@ -249,7 +259,9 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
           this.messageService.add(
             {
               severity: 'error',
-              detail: errorDict[c]
+              summary: 'Offering wasn\'t saved',
+              detail: errorDict[c],
+              id: idDict[c]
             }
           );
           return;
@@ -271,7 +283,8 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'success',
               summary: 'Successfully added',
-              detail: 'The cultural offering was added successfully'
+              detail: 'The cultural offering was added successfully',
+              id: 'offering-added-toast'
             });
             this.router.navigate([`/cultural-offering/${data.id}`]);
           }
@@ -284,7 +297,8 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'success',
               summary: 'Successfully edited',
-              detail: 'The cultural offering was edited successfully'
+              detail: 'The cultural offering was edited successfully',
+              id: 'offering-edited-toast'
             });
             this.router.navigate([`/cultural-offering/${data.id}`]);
           }

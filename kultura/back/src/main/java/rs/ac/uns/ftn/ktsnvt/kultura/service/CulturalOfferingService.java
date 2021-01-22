@@ -10,9 +10,11 @@ import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOffering;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingMainPhotoRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
+import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
 import javax.persistence.EntityExistsException;
@@ -29,12 +31,14 @@ import java.util.stream.Collectors;
 public class CulturalOfferingService {
 
     private final CulturalOfferingRepository culturalOfferingRepository;
+    private final CulturalOfferingMainPhotoRepository mainPhotoRepository;
     private final CulturalOfferingMainPhotoService mainPhotoService;
     private final CulturalOfferingPhotoService culturalOfferingPhotoService;
     private final ReviewService reviewService;
     private final UserRepository userRepository;
+    private final SubcategoryRepository subcategoryRepository;
     private final Mapper modelMapper;
-
+    private final SMTPServer smtpServer;
 
     @Autowired
     public CulturalOfferingService(CulturalOfferingRepository culturalOfferingRepository,
@@ -42,13 +46,19 @@ public class CulturalOfferingService {
                                    CulturalOfferingMainPhotoService mainPhotoService,
                                    CulturalOfferingPhotoService culturalOfferingPhotoService,
                                    UserRepository userRepository,
-                                   ReviewService reviewService) {
+                                   ReviewService reviewService,
+                                   SMTPServer smtpServer,
+                                   CulturalOfferingMainPhotoRepository mainPhotoRepository,
+                                   SubcategoryRepository subcategoryRepository) {
         this.culturalOfferingRepository = culturalOfferingRepository;
         this.modelMapper = modelMapper;
         this.mainPhotoService = mainPhotoService;
         this.culturalOfferingPhotoService = culturalOfferingPhotoService;
         this.reviewService = reviewService;
         this.userRepository = userRepository;
+        this.smtpServer = smtpServer;
+        this.mainPhotoRepository = mainPhotoRepository;
+        this.subcategoryRepository = subcategoryRepository;
     }
 
 
@@ -123,13 +133,23 @@ public class CulturalOfferingService {
     @Transactional
     public CulturalOfferingDto create(@NotNull CulturalOfferingDto c) {
         CulturalOffering culturalOffering = modelMapper.fromDto(c, CulturalOffering.class);
+        CulturalOfferingMainPhoto photo = culturalOffering.getPhoto();
+        Subcategory subcategory = culturalOffering.getSubcategory();
 
-        if (c.getId() != null &&
-                culturalOfferingRepository.existsById(c.getId())) throw new ResourceExistsException("The cultural offering you are trying to create already exists!");
+        culturalOffering.setPhoto(null);
+        culturalOffering.externalSetSubcategory(null);
+        if (culturalOffering.getId() > 0 &&
+                culturalOfferingRepository.existsById(c.getId()))
+            throw new ResourceExistsException("The cultural offering you are trying to create already exists!");
 
-        culturalOffering = culturalOfferingRepository.save(culturalOffering);
+        CulturalOffering newCulturalOffering = culturalOfferingRepository.save(culturalOffering);
+        newCulturalOffering.externalSetSubcategory(subcategory);
+        newCulturalOffering.setPhoto(photo);
 
-        return modelMapper.fromEntity(culturalOffering, CulturalOfferingDto.class);
+        newCulturalOffering = culturalOfferingRepository.save(newCulturalOffering);
+        mainPhotoRepository.save(photo);
+        subcategoryRepository.save(subcategory);
+        return modelMapper.fromEntity(newCulturalOffering, CulturalOfferingDto.class);
     }
 
     @Transactional
@@ -153,10 +173,14 @@ public class CulturalOfferingService {
         if (p != null && p.getId() != photo.getId()) {
             mainPhotoService.deletePhoto(photo);
             toUpdate.setPhoto(p);
+            mainPhotoRepository.save(p);
         }
-        toUpdate = culturalOfferingRepository.save(toUpdate);
+        CulturalOffering co = culturalOfferingRepository.save(toUpdate);
+        if (co.getSubscribedUsers() != null) {
+            co.getSubscribedUsers().parallelStream().forEach(u -> sendMailChange(u, co));
+        }
 
-        return modelMapper.fromEntity(toUpdate, CulturalOfferingDto.class);
+        return modelMapper.fromEntity(co, CulturalOfferingDto.class);
     }
 
 
@@ -184,7 +208,7 @@ public class CulturalOfferingService {
 
     @Transactional
     public CulturalOfferingDto subscribe(long culturalOfferingId,
-                          long userId) {
+                                         long userId) {
         CulturalOffering culturalOffering = this.culturalOfferingRepository.findById(culturalOfferingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cultural offering with given id was not found."));
 
@@ -197,12 +221,13 @@ public class CulturalOfferingService {
 
         CulturalOfferingDto dto = modelMapper.fromEntity(culturalOffering, CulturalOfferingDto.class);
         dto.setSubscribed(true);
+        sendMailSubscribed(user, culturalOffering);
         return dto;
     }
 
     @Transactional
     public CulturalOfferingDto unsubscribe(long culturalOfferingId,
-                            long userId) {
+                                           long userId) {
         CulturalOffering culturalOffering = this.culturalOfferingRepository.findById(culturalOfferingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cultural offering with given id was not found."));
 
@@ -212,6 +237,8 @@ public class CulturalOfferingService {
         culturalOffering.getSubscribedUsers().remove(user);
 
         culturalOfferingRepository.save(culturalOffering);
+        sendMailUnsubscribed(user, culturalOffering);
+
 
         return modelMapper.fromEntity(culturalOffering, CulturalOfferingDto.class);
     }
@@ -225,5 +252,41 @@ public class CulturalOfferingService {
         reviewService.deleteByCulturalOfferingId(co.getId());
 
         culturalOfferingRepository.deleteById(id);
+    }
+
+    private void sendMailChange(User user, CulturalOffering co) {
+        String body = String
+                .format("<Greetings,<br>A cultural offering you're subscribed to, " +
+                                "%s has been changed. " +
+                                "You can access it by clicking " +
+                                "<a href=\"http:/localhost:4200/cultural-offering/%s\">on this link</a>.",
+                        co.getName(), co.getId());
+        this.sendMail(user, co, "Cultural offering changed", body);
+    }
+
+    private void sendMailSubscribed(User user, CulturalOffering co) {
+        String body = String
+                .format("<Greetings,<br>You've successfully subscribed to " +
+                                "%s. You can access it by clicking " +
+                                "<a href=\"http:/localhost:4200/cultural-offering/%s\">on this link</a>.",
+                        co.getName(), co.getId());
+        this.sendMail(user, co, "Subscribed to " + co.getName(), body);
+    }
+
+    private void sendMailUnsubscribed(User user, CulturalOffering co) {
+        String body = String
+                .format("<Greetings,<br>You've successfully unsubscribed from " +
+                                "%s. You can access it by clicking " +
+                                "<a href=\"http:/localhost:4200/cultural-offering/%s\">on this link</a>.",
+                        co.getName(), co.getId());
+        this.sendMail(user, co, "Unsubscribed from " + co.getName(), body);
+    }
+
+    private void sendMail(User user, CulturalOffering co, String subject, String body) {
+        try {
+            this.smtpServer.sendEmail(user.getEmail(), subject, body);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

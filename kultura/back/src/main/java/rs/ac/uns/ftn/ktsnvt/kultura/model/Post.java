@@ -27,9 +27,21 @@ public class Post {
     private CulturalOffering culturalOffering;
 
     public void setCulturalOffering(CulturalOffering culturalOffering) {
-        if (this.culturalOffering != null) { this.culturalOffering.internalAddPost(this); }
         this.culturalOffering = culturalOffering;
-        if (culturalOffering != null) { culturalOffering.internalRemovePost(this); }
     }
+
+    public void externalSetCulturalOffering(CulturalOffering culturalOffering) {
+        if (this.culturalOffering != null) {
+            this.culturalOffering.internalRemovePost(this);
+        }
+        this.culturalOffering = culturalOffering;
+        if (culturalOffering != null) {
+
+            culturalOffering.internalAddPost(this);
+        }
+
+    }
+
+
 
 }

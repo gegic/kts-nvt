@@ -34,4 +34,15 @@ public class LoginPage {
         .until(ExpectedConditions.presenceOfElementLocated(By.id("toast-container")))
         .getText();
   }
+
+  public WebElement ensureDisplayed(WebElement element) throws InterruptedException {
+    return this.ensureDisplayed(element, 400);
+  }
+  public WebElement ensureDisplayed(WebElement element, long timeout) throws InterruptedException {
+    WebElement webElement = new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOf(element));
+    synchronized (driver) {
+      driver.wait(timeout);
+    }
+    return webElement;
+  }
 }
