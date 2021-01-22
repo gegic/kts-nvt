@@ -47,7 +47,8 @@
   <div class="p-col-3 p-sm-4 p-justify-end p-col-align-center p-p-0">
     <div *ngIf="isLoggedIn(); else signIn">
       <p-menu class="user-menu" [model]="menuItems" [popup]="true" #menu></p-menu>
-      <ngx-avatar class="ng-avatar"
+      <ngx-avatar id="user-menu"
+                  class="ng-avatar"
                   bgColor="#275DAD"
                   [name]="name"
                   [size]="35"

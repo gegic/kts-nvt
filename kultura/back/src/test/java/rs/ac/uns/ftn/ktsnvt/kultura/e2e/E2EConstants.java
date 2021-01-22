@@ -16,4 +16,16 @@ public class E2EConstants {
     public static final String NEW_PASSWORD_BAD_FORMAT0_1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     public static final String NEW_PASSWORD_BAD_FORMAT1 = "aaaaaaaa";
     public static final String NEW_PASSWORD_BAD_FORMAT2 = "Aaaaaaaa";
+
+    public static final String USER_EMAIL = "user@mail.com";
+    public static final String USER_PASSWORD = "admin123";
+
+    public static final String USER1_EMAIL = "john@mail.com";
+    public static final String USER1_PASSWORD = "admin123";
+
+
+    public static final String REVIEW_COMMENT = "Lorem ipsum alea iakta est.";
+    public static final String REVIEW_COMMENT1 = "Lorem ipsum alea iakta est. Veni vidi vici.";
+    public static final String USER_NAME = "User Prezime";
+    public static final String USER_NAME1 = "John Smith";
 }

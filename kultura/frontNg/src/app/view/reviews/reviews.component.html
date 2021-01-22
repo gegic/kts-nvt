@@ -72,6 +72,7 @@
           <ng-template #userAddReview>
             <p *ngIf="!!userReview.id">Click on the button below to view and edit your review.</p>
             <button class="p-button blue-button"
+                    id="review-button"
                     [label]="!userReview.id ? 'Write a review' : 'Edit review'"
                     (click)="onWriteReviewClick()"
                     pButton
@@ -112,6 +113,7 @@
     </div>
     <h4 class="p-mb-1 p-text-bold">Comment</h4>
     <textarea [maxLength]="150"
+              id="review-comment"
               [(ngModel)]="userReview.comment"
               style="width: 100%; max-width: 50vw; min-width: 25vw; min-height: 60px; max-height: 100px"
               placeholder="Tell us your comments..."
@@ -138,6 +140,7 @@
       </div>
     </ng-template>
     <button class="p-button blue-button p-mt-2 send-review"
+            id="review-submit"
             [label]="!userReview.id ? 'Send' : 'Edit'"
             (click)="onClickSend()"
             pButton
