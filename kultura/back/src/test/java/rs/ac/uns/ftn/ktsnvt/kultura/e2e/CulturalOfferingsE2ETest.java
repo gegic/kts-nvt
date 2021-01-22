@@ -40,7 +40,7 @@ public class CulturalOfferingsE2ETest {
 
     loginPage.getLoginBtn().click();
 
-    utils.waitFor(2000);
+    utils.ensureLoggedIn();
   }
 
   @AfterClass

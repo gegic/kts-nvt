@@ -37,10 +37,12 @@ export class ListViewComponent implements OnInit, OnDestroy {
     rating: any[],
     category?: Category,
     subcategory?: Subcategory,
-    noReviews: boolean
+    noReviews: boolean,
+    mySubscriptions: boolean
   } = {
     rating: [1, 5],
-    noReviews: true
+    noReviews: true,
+    mySubscriptions: false
   };
   relativeLocation?: [number, number];
   absoluteLocation?: [number, number];
@@ -135,6 +137,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
     this.filterSet = false;
     this.filter.rating = [0, 5];
     this.filter.noReviews = true;
+    this.filter.mySubscriptions = false;
     this.filter.category = undefined;
     this.filter.subcategory = undefined;
     this.filterByLocation = false;
@@ -149,6 +152,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
   restoreFilter(): void {
     this.filter.rating = [this.culturalOfferingsService.rating.min, this.culturalOfferingsService.rating.max];
     this.filter.noReviews = this.culturalOfferingsService.noReviews;
+    this.filter.mySubscriptions = this.culturalOfferingsService.mySubscriptions;
     this.filter.category = this.culturalOfferingsService.selectedCategory;
     this.filter.subcategory = this.culturalOfferingsService.selectedSubcategory;
     this.filterByLocation = this.culturalOfferingsService.filterByLocation;
@@ -166,6 +170,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
       min: this.filter.rating[0], max: this.filter.rating[1]
     };
     this.culturalOfferingsService.noReviews = this.filter.noReviews;
+    this.culturalOfferingsService.mySubscriptions = this.filter.mySubscriptions;
     this.culturalOfferingsService.selectedCategory = this.filter.category;
     this.culturalOfferingsService.selectedSubcategory = this.filter.subcategory;
     this.culturalOfferingsService.filterByLocation = this.filterByLocation;
@@ -303,6 +308,14 @@ export class ListViewComponent implements OnInit, OnDestroy {
 
   set onlyReviews(val: boolean) {
     this.filter.noReviews = !val;
+  }
+
+  get onlySubscriptions(): boolean {
+    return this.filter.mySubscriptions;
+  }
+
+  set onlySubscriptions(val: boolean) {
+    this.filter.mySubscriptions = val;
   }
 
   get subcategories(): Subcategory[] {

@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   menuItems: MenuItem[] = [
     {label: 'Edit account', icon: 'pi pi-fw pi-user-edit', routerLink: ['/user-edit']},
-    {label: 'Logout', icon: 'pi pi-fw pi-power-off', command: e => this.onClickLogout()}
+    {label: 'Logout', icon: 'pi pi-fw pi-power-off', command: e => this.onClickLogout(), id: 'logout-btn'}
   ];
 
   constructor(private authService: AuthService,
@@ -54,6 +54,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   getUserRole(): string {
     return this.authService.getUserRole();
+  }
+
+  isLinkActive(url: string): boolean {
+    const queryParamsIndex = this.router.url.indexOf('?');
+    let baseUrl = queryParamsIndex === -1 ? this.router.url : this.router.url.slice(0, queryParamsIndex);
+    if (baseUrl === url) {
+      return true;
+    }
+    if (baseUrl.startsWith('/')) {
+      baseUrl = baseUrl.slice(1);
+    }
+    if (baseUrl === url) {
+      return true;
+    }
+    if (baseUrl.endsWith('/')) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+    return baseUrl === url;
   }
 
   get name(): string {

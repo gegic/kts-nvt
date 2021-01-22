@@ -51,12 +51,13 @@ public class CulturalOfferingsController {
              @RequestParam(defaultValue = "180", name = "lng-end") float longitudeEnd,
              @RequestParam(defaultValue = "-90", name = "lat-start") float latitudeStart,
              @RequestParam(defaultValue = "90", name = "lat-end") float latitudeEnd,
-             @RequestParam(defaultValue = "-1", name = "user") long userId) {
+             @RequestParam(defaultValue = "-1", name = "user") long userId,
+             @RequestParam(defaultValue = "false", name = "my-subscriptions") boolean mySubscriptions) {
 
         Pageable p = PageableExtractor.extract(page, size, sort);
         return ResponseEntity.ok(this.culturalOfferingService.readAll(p,
                 searchQuery, ratingMin, ratingMax, noReviews, categoryId, subcategoryId,
-                latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, userId));
+                latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, userId, mySubscriptions));
     }
 
     @GetMapping(path = "/bounds")

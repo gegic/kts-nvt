@@ -7,10 +7,10 @@ import {LoadLevel} from '../../core/models/loadLevel';
 import {CulturalOffering} from '../../core/models/cultural-offering';
 import {CulturalOfferingMarker} from '../../core/models/culturalOfferingMarker';
 import {inOutAnimation} from './view-offering-button-animation';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../../core/services/auth/auth.service';
 import {User} from '../../core/models/user';
-import {Subscription} from "rxjs";
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-map-view',
@@ -25,16 +25,27 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   viewOfferings = false;
   private map: L.Map | null = null;
   private tileLayer: L.TileLayer | null = null;
+  private queryCenter?: {lat: number, lng: number};
 
   @ViewChild('map')
   mapElement!: ElementRef<HTMLElement>;
 
   constructor(private mapService: MapService,
               private router: Router,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    document.body.style.overflow = 'hidden';
+    this.activatedRoute.queryParams.subscribe(val => {
+      if (val.lat && val.lng) {
+        this.queryCenter = {
+          lat: val.lat,
+          lng: val.lng
+        };
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -49,9 +60,20 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.mapElement) {
       return;
     }
-    this.map = L.map(this.mapElement.nativeElement, mapOptions).setView([0, 0], 2);
-    this.map.locate();
+    this.map = L.map(this.mapElement.nativeElement, mapOptions).setView(
+      new L.LatLng(this.queryCenter?.lat ?? 0,
+      this.queryCenter?.lng ?? 0),
+      !!this.queryCenter ? 15 : 2,
+      {animate: false});
+
+    this.mapService.zoom.next(this.map?.getZoom() ?? 0);
+
+    if (!this.queryCenter) {
+      this.map.locate();
+    }
     this.onLocate();
+    this.setRouteQueryParams();
+
     const options = {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -72,9 +94,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.onZoomLoad();
     this.onMove();
-    this.map.on('click', event => {
-      console.log(event);
-    });
 
     this.subscriptions.push(
       this.mapService.zoom
@@ -159,11 +178,13 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private onZoomLoad(): void {
     this.map?.on('zoomend', ev => {
       this.mapService.zoom.next(ev.target.getZoom());
+      this.setRouteQueryParams();
     });
   }
 
   private onMove(): void {
     this.map?.on('moveend', ev => {
+      this.setRouteQueryParams();
       if (this.mapService.zoom.getValue() >= ZOOM_REGULAR) {
         this.loadRegular(ev.target);
       }
@@ -173,11 +194,33 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private onLocate(): void {
     this.map?.on('locationfound', ev => {
       this.map?.setView(ev.latlng, 8, {animate: false});
+      this.setRouteQueryParams(ev.latlng);
     });
   }
 
   getUserRole(): string {
     return this.authService.getUserRole();
+  }
+
+  setRouteQueryParams(passedCenter?: L.LatLng): void {
+    let center: L.LatLng;
+    if (!!passedCenter) {
+      center = passedCenter;
+    } else {
+      center = this.map?.getCenter() ?? new L.LatLng(0, 0);
+    }
+
+    this.queryCenter = {
+      lat: center.lat,
+      lng: center.lng
+    };
+    this.router.navigate(
+      ['.'],
+      {
+        relativeTo: this.activatedRoute,
+        queryParams: this.queryCenter,
+        replaceUrl: true
+      });
   }
 
   get showRegularOfferings(): boolean {
@@ -187,5 +230,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.mapService.clearMarkers();
     this.subscriptions.forEach(s => s.unsubscribe());
+    document.body.style.overflow = 'auto';
   }
 }

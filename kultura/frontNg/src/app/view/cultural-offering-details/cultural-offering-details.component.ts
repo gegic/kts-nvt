@@ -126,6 +126,11 @@ export class CulturalOfferingDetailsComponent implements OnInit, OnDestroy {
     }));
   }
 
+  onClickViewMap(): void {
+    this.router.navigate([''],
+      {queryParams: {lat: this.culturalOffering?.latitude ?? 0, lng: this.culturalOffering?.longitude ?? 0}});
+  }
+
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }

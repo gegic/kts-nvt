@@ -25,6 +25,7 @@ export class CulturalOfferingsService {
   longitudeEnd?: number;
   absoluteAddress = '';
   absolutePosition?: [number, number];
+  mySubscriptions = false;
 
 
   categories?: Category[] = [];
@@ -53,6 +54,7 @@ export class CulturalOfferingsService {
     }
     if (!!userId) {
       apiUrl += `&user=${userId}`;
+      apiUrl += `&my-subscriptions=${this.mySubscriptions}`;
     }
     return this.httpClient.get(apiUrl);
   }

@@ -13,6 +13,7 @@ import {User} from '../../../../core/models/user';
 export class EnterEmailComponent implements OnInit {
 
   emailControl: FormControl;
+  loading = false;
 
   constructor(private loginService: LoginService,
               private router: Router,
@@ -25,15 +26,17 @@ export class EnterEmailComponent implements OnInit {
   }
 
   onClickProceed(): void {
+    this.loading = true;
     this.loginService.checkExistence(this.emailControl.value)
       .subscribe(
         (data: {value: string}) => {
+          this.loading = false;
           this.loginService.email = this.emailControl.value;
           this.loginService.name = data.value;
           this.router.navigate(['./password'], {relativeTo: this.activatedRoute});
         },
         err => {
-          console.log(err);
+          this.loading = false;
           this.emailControl.reset();
           this.messageService.add({id: 'toast-container', severity: 'error', summary: 'Email not found', detail: 'A user with this email doesn\'t exist.'});
         }

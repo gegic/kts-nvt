@@ -34,14 +34,14 @@ public class SearchFilterE2ETest {
 
         driver.get("http://localhost:4200/login");
 
-        loginPage.ensureDisplayed(loginPage.getEmail()).sendKeys("moderator@mail.com");
+        loginPage.ensureDisplayed(loginPage.getEmail()).sendKeys("user@mail.com");
         loginPage.getNextBtn().click();
 
         loginPage.ensureDisplayed(loginPage.getPassword()).sendKeys("admin123");
 
         loginPage.getLoginBtn().click();
 
-        utils.waitFor(2000);
+        utils.ensureLoggedIn();
     }
 
     @AfterClass
@@ -305,6 +305,41 @@ public class SearchFilterE2ETest {
                     int split = catSub.indexOf(">");
                     return catSub.substring(split, catSub.length() - 1).trim().equalsIgnoreCase(subcategoryName);
                 }));
+
+        jse.executeScript("window.scrollTo(0, -document.body.scrollHeight)");
+
+        utils.ensureDisplayed(listViewPage.getResetFilterBtn()).click();
+
+        utils.waitFor(1000);
+    }
+
+    @Test
+    public void testFilterOnlyMySubscriptions() throws InterruptedException {
+        driver.get("http://localhost:4200/list-view");
+
+        ListViewPage listViewPage = PageFactory.initElements(driver, ListViewPage.class);
+
+        utils.ensureDisplayed(listViewPage.getFilterButton()).click();
+
+        utils.ensureDisplayed(listViewPage.getOnlySubscriptionsCbx()).click();
+        listViewPage.getSaveFilterBtn().click();
+
+        utils.ensureDisplayed(listViewPage.getFilterButton());
+
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+
+        int oldNumOfferings = 0;
+        int newNumOfferings = listViewPage.getCategoriesSubcategories().size();
+
+        while (newNumOfferings > oldNumOfferings) {
+            jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+            utils.waitFor(3000);
+
+            oldNumOfferings = newNumOfferings;
+            newNumOfferings = listViewPage.getUnsubscribeButtons().size();
+        }
+
+        assertEquals(0, listViewPage.getSubscribeButtons().size());
 
         jse.executeScript("window.scrollTo(0, -document.body.scrollHeight)");
 

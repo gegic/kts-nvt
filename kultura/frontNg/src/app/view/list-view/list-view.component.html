@@ -96,6 +96,19 @@
             ></p-checkbox>
             <label for="noReviews">Only with reviews</label>
           </div>
+          <div class="p-d-flex p-ai-center p-mt-4">
+            <h3 class="p-text-normal p-my-0">Subscriptions</h3>
+          </div>
+          <hr class="p-mb-4">
+          <div class="p-field-checkbox">
+            <p-checkbox [binary]="true"
+                        inputId="only-subscriptions"
+                        [(ngModel)]="onlySubscriptions"
+                        id="only-subscriptions-cbx"
+                        [disabled]="!isLoggedIn()"
+            ></p-checkbox>
+            <label for="only-subscriptions">Only my subscriptions</label>
+          </div>
         </div>
         <div class="p-col-12 p-md-4 p-px-3">
           <div class="p-d-flex p-ai-center">
