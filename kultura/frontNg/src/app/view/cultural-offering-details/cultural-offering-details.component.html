@@ -17,7 +17,15 @@
         <ng-template #categorySkeleton>
           <p-skeleton></p-skeleton>
         </ng-template>
-        <div class="p-d-inline-flex p-mt-4 p-mb-0">
+        <div class="p-mt-3">
+          <button class="p-button p-button-text p-button-plain p-d-inline-flex small-button"
+                  icon="pi pi-map-marker"
+                  label="VIEW ON MAP"
+                  (click)="onClickViewMap()"
+                  pButton
+          ></button>
+        </div>
+        <div class="p-d-inline-flex p-my-0">
           <i class="pi pi-star"></i>
           <small class="p-ml-1 p-text-light" *ngIf="!isOfferingLoading && !!culturalOffering; else reviewsSkeleton">{{reviews}}</small>
           <ng-template #reviewsSkeleton>

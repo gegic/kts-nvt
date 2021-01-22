@@ -15,8 +15,8 @@
   <div class="p-col-5 p-sm-4 p-text-center p-p-0">
     <ng-container *ngIf="getUserRole() !== 'ADMIN'; else adminNavbar">
       <button class="p-button-text topnav-button p-px-4"
-              [routerLinkActiveOptions]="{exact: true}"
               routerLinkActive="activated"
+              [class.activated]="isLinkActive('')"
               [routerLink]="''"
               icon="pi pi-map"
               pButton

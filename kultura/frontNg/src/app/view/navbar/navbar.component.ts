@@ -56,6 +56,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
     return this.authService.getUserRole();
   }
 
+  isLinkActive(url: string): boolean {
+    const queryParamsIndex = this.router.url.indexOf('?');
+    let baseUrl = queryParamsIndex === -1 ? this.router.url : this.router.url.slice(0, queryParamsIndex);
+    if (baseUrl === url) {
+      return true;
+    }
+    if (baseUrl.startsWith('/')) {
+      baseUrl = baseUrl.slice(1);
+    }
+    if (baseUrl === url) {
+      return true;
+    }
+    if (baseUrl.endsWith('/')) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+    return baseUrl === url;
+  }
+
   get name(): string {
     return `${this.authService.user.getValue()?.firstName} ${this.authService.user.getValue()?.lastName}`;
   }

@@ -10,7 +10,7 @@ import {inOutAnimation} from './view-offering-button-animation';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthService} from '../../core/services/auth/auth.service';
 import {User} from '../../core/models/user';
-import {Subscription} from "rxjs";
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-map-view',
@@ -37,6 +37,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    document.body.style.overflow = 'hidden';
     this.activatedRoute.queryParams.subscribe(val => {
       if (val.lat && val.lng) {
         this.queryCenter = {
@@ -59,10 +60,19 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.mapElement) {
       return;
     }
-    this.map = L.map(this.mapElement.nativeElement, mapOptions).setView([0, 0], 2);
-    this.setRouteQueryParams();
-    this.map.locate();
+    this.map = L.map(this.mapElement.nativeElement, mapOptions).setView(
+      new L.LatLng(this.queryCenter?.lat ?? 0,
+      this.queryCenter?.lng ?? 0),
+      !!this.queryCenter ? 15 : 2,
+      {animate: false});
+
+    this.mapService.zoom.next(this.map?.getZoom() ?? 0);
+
+    if (!this.queryCenter) {
+      this.map.locate();
+    }
     this.onLocate();
+    this.setRouteQueryParams();
 
     const options = {
       maxZoom: 19,
@@ -220,5 +230,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.mapService.clearMarkers();
     this.subscriptions.forEach(s => s.unsubscribe());
+    document.body.style.overflow = 'auto';
   }
 }

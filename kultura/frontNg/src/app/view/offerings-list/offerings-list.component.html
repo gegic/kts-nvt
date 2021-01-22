@@ -1,19 +1,29 @@
 <div>
-  <div class="sidebar-header p-grid p-ai-center p-m-0 p-p-0">
-    <div class="p-col p-pl-4 p-text-center p-pb-sm-1 p-text-md-left">
-      <h3 class="p-text-light no-wrap">
-        Cultural offerings
-      </h3>
-    </div>
+  <div class="sidebar-header p-grid p-ai-center p-m-0 p-p-0 p-d-flex">
+<!--    <div class="p-col p-pl-4 p-text-center p-pb-sm-1 p-text-md-left p-d-none p-d-lg-inline">-->
+<!--      <h3 class="p-text-light no-wrap p-my-0">-->
+<!--        Cultural offerings-->
+<!--      </h3>-->
+<!--    </div>-->
     <div class="p-col p-text-center p-pr-4">
       <button type="button"
-              class="collapse-button p-button-text"
+              class="collapse-button p-button-text p-d-none p-d-lg-inline"
               icon="pi pi-angle-up"
               label="Collapse"
               (click)="onClickCollapse()"
-              pButton>
-      </button>
+              pButton
+      ></button>
+      <button type="button"
+              class="collapse-button p-button-text p-button-icon p-button-rounded p-d-inline p-d-lg-none"
+              icon="pi pi-angle-up"
+              (click)="onClickCollapse()"
+              pButton
+      ></button>
     </div>
   </div>
-  <app-offering-item *ngFor="let marker of markers" [culturalOfferingMarker]="marker"></app-offering-item>
+  <p-virtualScroller [value]="markers" scrollHeight="84.5vh">
+    <ng-template pTemplate="item" let-marker>
+      <app-offering-item [culturalOfferingMarker]="marker"></app-offering-item>
+    </ng-template>
+  </p-virtualScroller>
 </div>

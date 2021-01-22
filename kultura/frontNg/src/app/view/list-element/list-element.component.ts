@@ -39,6 +39,11 @@ export class ListElementComponent implements OnInit, OnDestroy {
     this.router.navigate([`/cultural-offering/${this.culturalOffering.id}`]);
   }
 
+  onClickViewMap(): void {
+    this.router.navigate([''],
+      {queryParams: {lat: this.culturalOffering.latitude, lng: this.culturalOffering.longitude}});
+  }
+
   onClickDelete(event: any): void {
     event.stopPropagation();
     this.confirmationService.confirm(

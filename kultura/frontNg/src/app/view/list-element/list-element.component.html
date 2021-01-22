@@ -13,12 +13,20 @@
       <p class="p-text-light p-m-0">
         {{culturalOffering.numSubscribed}} people subscribed.
       </p>
-      <small class="p-mt-1">{{culturalOffering.numPhotos}} photos.</small>
+      <div>
+        <small class="p-mt-1 p-d-inline-flex">{{culturalOffering.numPhotos}} photos.</small>
+      </div>
     </div>
     <div class="p-col-12 p-sm-4 p-lg-3 p-text-right p-as-end">
+      <button class="p-button p-button-text p-button-plain p-d-inline-flex small-button"
+              icon="pi pi-map-marker"
+              label="VIEW ON MAP"
+              (click)="onClickViewMap()"
+              pButton
+      ></button>
       <div class="p-d-block p-mb-3">
         <div *ngIf="getUserRole() === 'MODERATOR'; else subscribeButton">
-          <button class="p-button p-button-rounded p-button-icon p-button-danger"
+          <button class="p-button p-button-rounded p-button-icon p-button-danger p-ml-3"
                   icon="pi pi-trash"
                   (click)="onClickDelete($event)"
                   [id]="'delete-num' + index"
@@ -49,7 +57,7 @@
             </ng-template>
         </ng-template>
       </div>
-      <div class="p-d-inline-flex p-ml-auto">
+      <div class="p-d-inline-block p-ml-auto">
         <i class="pi pi-star"></i>
         <small class="p-ml-1 p-text-light review">{{reviews}}</small>
       </div>

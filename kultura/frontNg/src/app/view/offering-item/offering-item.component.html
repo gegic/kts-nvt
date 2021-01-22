@@ -14,14 +14,14 @@
               culturalOfferingMarker?.culturalOffering?.name
             }}
           </h5>
-          <h5 class="p-mt-1 p-mb-2 p-text-normal">
+          <h5 class="p-mt-1 p-mb-2 p-text-normal p-d-none p-d-lg-inline">
             {{
               addressLength > 25 ?
               (culturalOfferingMarker?.culturalOffering?.address | slice:0:25) + '...' :
               culturalOfferingMarker?.culturalOffering?.address
             }}
           </h5>
-          <div class="h-100 p-grid p-p-0 p-m-0 p-ai-end">
+          <div class="h-100 p-grid p-p-0 p-m-0 p-ai-end p-d-none p-d-md-inline">
             <div class="p-grid p-p-0 p-m-0">
               <div class="p-col-4 p-d-inline-flex p-pl-0">
                 <i class="pi pi-star"></i>
@@ -39,7 +39,7 @@
           </div>
         </div>
       <div class="p-col-4 p-m-0 p-pb-0 p-pl-0 p-pr-3 p-pt-3 p-text-right">
-        <div class="p-d-inline">
+        <div class="p-d-none p-d-md-inline">
           <small class="p-text-light">
             {{ numSubscribers }}
           </small>
@@ -55,7 +55,7 @@
       </div>
       </div>
     </div>
-    <div class="p-col-fixed p-p-0 p-m-0" style="width: 100px">
+    <div class="p-col-fixed p-p-0 p-m-0 p-d-none p-d-lg-block" style="width: 100px">
       <img class="main-photo" [src]="photoUrl" alt="Main photo">
     </div>
   </div>
