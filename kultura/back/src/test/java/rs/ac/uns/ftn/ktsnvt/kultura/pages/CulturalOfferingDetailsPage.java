@@ -14,7 +14,14 @@ public class CulturalOfferingDetailsPage {
     @FindBy(className = "confirm-deletion")
     WebElement confirmDeletionBtn;
 
+    @FindBy(id = "subscribe-btn")
+    WebElement subscribeBtn;
+
+    @FindBy(id = "unsubscribe-btn")
+    WebElement unsubscribeBtn;
+
     private final WebDriver driver;
+
 
     public CulturalOfferingDetailsPage(WebDriver driver) {
         this.driver = driver;

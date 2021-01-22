@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   menuItems: MenuItem[] = [
     {label: 'Edit account', icon: 'pi pi-fw pi-user-edit', routerLink: ['/user-edit']},
-    {label: 'Logout', icon: 'pi pi-fw pi-power-off', command: e => this.onClickLogout()}
+    {label: 'Logout', icon: 'pi pi-fw pi-power-off', command: e => this.onClickLogout(), id: 'logout-btn'}
   ];
 
   constructor(private authService: AuthService,

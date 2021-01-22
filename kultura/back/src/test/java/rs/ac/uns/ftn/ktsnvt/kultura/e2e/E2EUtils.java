@@ -20,6 +20,10 @@ public class E2EUtils {
         }
     }
 
+    public WebElement ensureLoggedIn() throws InterruptedException {
+        return this.ensureDisplayed("avatar");
+    }
+
     public void ensureNotDisplayed(String id) {
         (new WebDriverWait(driver, 30))
                 .until(ExpectedConditions.invisibilityOfElementLocated(By.id(id)));

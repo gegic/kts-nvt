@@ -46,7 +46,7 @@ public class PostE2ETest {
 
     loginPage.getLoginBtn().click();
 
-    utils.waitFor(1000);
+    utils.ensureLoggedIn();
   }
 
   @AfterClass

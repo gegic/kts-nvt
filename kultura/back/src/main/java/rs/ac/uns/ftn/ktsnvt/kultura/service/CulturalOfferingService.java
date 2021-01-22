@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
@@ -73,37 +74,73 @@ public class CulturalOfferingService {
                                              float latitudeEnd,
                                              float longitudeStart,
                                              float longitudeEnd,
-                                             long userId) {
+                                             long userId,
+                                             boolean mySubscriptions) {
+
+        // this could've been done using the entitymanager
         Page<CulturalOffering> found;
-        if (subcategoryId != -1) {
-            if (noReviews) {
-                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
-                        categoryId, subcategoryId,
-                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+        if (userId != -1 && mySubscriptions) {
+            if (subcategoryId != -1) {
+                if (noReviews) {
+                    found = culturalOfferingRepository.searchAllNoReviewsSubscriptions(p, searchQuery, ratingMin, ratingMax,
+                            categoryId, subcategoryId,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, userId);
+                } else {
+                    found = culturalOfferingRepository.searchAllSubscriptions(p, searchQuery, ratingMin, ratingMax,
+                            categoryId, subcategoryId,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, userId);
+                }
+            } else if (categoryId != -1) {
+                if (noReviews) {
+                    found = culturalOfferingRepository.searchAllNoReviewsSubscriptions(p, searchQuery, ratingMin, ratingMax,
+                            categoryId,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, userId);
+                } else {
+                    found = culturalOfferingRepository.searchAllSubscriptions(p, searchQuery, ratingMin, ratingMax,
+                            categoryId,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, userId);
+                }
             } else {
-                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
-                        categoryId, subcategoryId,
-                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
-            }
-        } else if (categoryId != -1) {
-            if (noReviews) {
-                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
-                        categoryId,
-                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
-            } else {
-                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
-                        categoryId,
-                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+                if (noReviews) {
+                    found = culturalOfferingRepository.searchAllNoReviewsSubscriptions(p, searchQuery, ratingMin, ratingMax,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, userId);
+                } else {
+                    found = culturalOfferingRepository.searchAllSubscriptions(p, searchQuery, ratingMin, ratingMax,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd, userId);
+                }
             }
         } else {
-            if (noReviews) {
-                found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
-                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+            if (subcategoryId != -1) {
+                if (noReviews) {
+                    found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                            categoryId, subcategoryId,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+                } else {
+                    found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                            categoryId, subcategoryId,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+                }
+            } else if (categoryId != -1) {
+                if (noReviews) {
+                    found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                            categoryId,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+                } else {
+                    found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                            categoryId,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+                }
             } else {
-                found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
-                        latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+                if (noReviews) {
+                    found = culturalOfferingRepository.searchAllNoReviews(p, searchQuery, ratingMin, ratingMax,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+                } else {
+                    found = culturalOfferingRepository.searchAll(p, searchQuery, ratingMin, ratingMax,
+                            latitudeStart, latitudeEnd, longitudeStart, longitudeEnd);
+                }
             }
         }
+
         Page<CulturalOfferingDto> foundDtos;
         if (userId == -1) {
             foundDtos = found.map(co -> modelMapper.fromEntity(co, CulturalOfferingDto.class));

@@ -78,7 +78,8 @@ public class CulturalOfferingServiceIntegrationTest {
                         90,
                         -180,
                         180,
-                        -1
+                        -1,
+                        false
                         );
 
         assertEquals(2, returnedCulturalOfferings.getContent().size());
@@ -103,7 +104,8 @@ public class CulturalOfferingServiceIntegrationTest {
                         90,
                         -180,
                         180,
-                        -1
+                        -1,
+                        false
                 );
 
         assertEquals(1, returnedCulturalOfferings.getContent().size());
@@ -129,7 +131,8 @@ public class CulturalOfferingServiceIntegrationTest {
                         90,
                         -180,
                         180,
-                        -1
+                        -1,
+                        false
                 );
 
         assertEquals(1, returnedCulturalOfferings.getContent().size());
@@ -156,7 +159,8 @@ public class CulturalOfferingServiceIntegrationTest {
                         90,
                         -180,
                         180,
-                        -1
+                        -1,
+                        false
                 );
 
         returnedCulturalOfferings.forEach(c -> {
@@ -182,7 +186,8 @@ public class CulturalOfferingServiceIntegrationTest {
                         90,
                         -180,
                         180,
-                        -1
+                        -1,
+                        false
                 );
 
         returnedCulturalOfferings.forEach(c -> {
@@ -208,7 +213,8 @@ public class CulturalOfferingServiceIntegrationTest {
                         90,
                         -180,
                         180,
-                        -1
+                        -1,
+                        false
                 );
         assertTrue(returnedCulturalOfferings.isEmpty());
     }
@@ -231,7 +237,8 @@ public class CulturalOfferingServiceIntegrationTest {
                         43,
                         20,
                         21,
-                        -1
+                        -1,
+                        false
                 );
         assertFalse(returnedCulturalOfferings.isEmpty());
         returnedCulturalOfferings.forEach(c -> {
@@ -258,7 +265,8 @@ public class CulturalOfferingServiceIntegrationTest {
                         21,
                         20,
                         21,
-                        -1
+                        -1,
+                        false
                 );
         assertTrue(returnedCulturalOfferings.isEmpty());
     }
@@ -281,8 +289,10 @@ public class CulturalOfferingServiceIntegrationTest {
                         90,
                         -180,
                         180,
-                        -1
+                        -1,
+                        false
                 );
+
         assertFalse(returnedCulturalOfferings.isEmpty());
         returnedCulturalOfferings.forEach(c -> {
             assertTrue(c.getOverallRating() > 2.4f &&
