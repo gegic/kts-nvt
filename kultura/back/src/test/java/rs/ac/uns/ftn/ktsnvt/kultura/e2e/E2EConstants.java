@@ -27,4 +27,5 @@ public class E2EConstants {
     public static final String REVIEW_COMMENT = "Lorem ipsum alea iakta est.";
     public static final String REVIEW_COMMENT1 = "Lorem ipsum alea iakta est. Veni vidi vici.";
     public static final String USER_NAME = "User Prezime";
+    public static final String USER_NAME1 = "John Smith";
 }

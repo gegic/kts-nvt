@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.ktsnvt.kultura.e2e;
 
 import org.junit.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
@@ -40,15 +41,15 @@ public class ReviewE2ETest {
 
     private static void login(String userEmail, String userPassword) throws InterruptedException {
         driver.get("http://localhost:4200/login");
-        justWait(300);
+        justWait(1300);
 
         loginPage = PageFactory.initElements(driver, LoginPage.class);
         loginPage.getEmail().sendKeys(userEmail);
         loginPage.getNextBtn().click();
-        justWait(300);
+        justWait(1300);
         loginPage.getPassword().sendKeys(userPassword);
         loginPage.getLoginBtn().click();
-        justWait(200);
+        justWait(1200);
     }
 
     @AfterClass
@@ -66,6 +67,7 @@ public class ReviewE2ETest {
         reviewPage = PageFactory.initElements(driver, ReviewPage.class);
         reviewPage.getReviewButton().click();
         justWait(200);
+        driver.findElement(By.xpath("//h4[contains(text(),'Rating')]/following-sibling::p-rating/div/span[contains(@class, 'p-rating-icon')][5]")).click();
         reviewPage.getCommentReview().clear();
         reviewPage.getCommentReview().sendKeys(E2EConstants.REVIEW_COMMENT);
         reviewPage.getSubmitBtn().click();
@@ -76,12 +78,18 @@ public class ReviewE2ETest {
 
         driver.get("http://localhost:4200/cultural-offering/1/reviews");
 
+
+
         reviewPage = PageFactory.initElements(driver, ReviewPage.class);
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,2000)");
+
         justWait();
-        driver.findElements(By.xpath("//p")).forEach(el-> System.out.println(el.getText()));
-        assertEquals(1, driver.findElements(By.xpath("//p[contains(text(),'0 people subscribed.')]")).size());
+
         assertEquals(1, driver.findElements(By.xpath("//p[contains(text(),'" + E2EConstants.REVIEW_COMMENT + "')]")).size());
         assertEquals(E2EConstants.USER_NAME, driver.findElement(By.xpath("//p[contains(text(),'" + E2EConstants.REVIEW_COMMENT + "')]/parent::div/preceding-sibling::div[3]/div/h4")).getText());
+        assertEquals(1, driver.findElements(By.xpath("//p[contains(text(),'" + E2EConstants.REVIEW_COMMENT + "')]/parent::div/preceding-sibling::div[3]/div/p-rating/div/span[contains(@ng-reflect-ng-class,'pi-star-o')]")).size());
         logout();
     }
 
@@ -91,25 +99,35 @@ public class ReviewE2ETest {
 
         login(E2EConstants.USER1_EMAIL, E2EConstants.USER1_PASSWORD);
         driver.get("http://localhost:4200/cultural-offering/1/reviews");
-        justWait();
+        justWait(300);
         reviewPage = PageFactory.initElements(driver, ReviewPage.class);
-        reviewPage.getCommentReview().sendKeys(E2EConstants.REVIEW_COMMENT);
+        reviewPage.getReviewButton().click();
+        justWait(200);
+
+        driver.findElement(By.xpath("//h4[contains(text(),'Rating')]/following-sibling::p-rating/div/span[contains(@class, 'p-rating-icon')][4]")).click();
+        reviewPage.getCommentReview().clear();
+        reviewPage.getCommentReview().sendKeys(E2EConstants.REVIEW_COMMENT1);
         reviewPage.getSubmitBtn().click();
         justWait(100);
         logout();
 
-        login(E2EConstants.USER1_EMAIL, E2EConstants.USER1_PASSWORD);
+        login(E2EConstants.USER_EMAIL, E2EConstants.USER_PASSWORD);
 
         driver.get("http://localhost:4200/cultural-offering/1/reviews");
 
         reviewPage = PageFactory.initElements(driver, ReviewPage.class);
         justWait();
-        assertEquals(1, driver.findElements(By.xpath("//p[text()='" + E2EConstants.REVIEW_COMMENT + "']")).size());
+
+        assertEquals(1, driver.findElements(By.xpath("//p[contains(text(),'" + E2EConstants.REVIEW_COMMENT1 + "')]")).size());
+        assertEquals(E2EConstants.USER_NAME1, driver.findElement(By.xpath("//p[contains(text(),'" + E2EConstants.REVIEW_COMMENT1 + "')]/parent::div/preceding-sibling::div[3]/div/h4")).getText());
+        assertEquals(2, driver.findElements(By.xpath("//p[contains(text(),'" + E2EConstants.REVIEW_COMMENT1 + "')]/parent::div/preceding-sibling::div[3]/div/p-rating/div/span[contains(@ng-reflect-ng-class,'pi-star-o')]")).size());
         logout();
     }
 
     private static void logout() throws InterruptedException {
+        justWait(100);
         driver.findElement(By.id("user-menu")).click();
+        justWait(100);
         driver.findElement(By.xpath("//*[text()='Logout']")).click();
         justWait(100);
     }

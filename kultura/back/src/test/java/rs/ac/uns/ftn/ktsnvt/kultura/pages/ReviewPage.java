@@ -7,6 +7,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import rs.ac.uns.ftn.ktsnvt.kultura.e2e.E2EConstants;
+
+import java.util.Collection;
 
 @Getter
 public class ReviewPage {
@@ -24,8 +27,6 @@ public class ReviewPage {
 
   @FindBy(id = "review-submit")
   private WebElement submitBtn;
-
-
 
   public ReviewPage(WebDriver driver) {
     this.driver = driver;
