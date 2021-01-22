@@ -12,7 +12,14 @@
       <div class="p-grid p-px-5">
         <div class="p-col-12">
             <span class="p-float-label">
-              <input type="text" id="email" name="email" autocomplete="off" [formControl]="emailControl" pInputText>
+              <input type="text"
+                     id="email"
+                     name="email"
+                     autocomplete="off"
+                     [formControl]="emailControl"
+                     pInputText
+                     [autofocus]="true"
+              >
               <label for="email">Email</label>
             </span>
         </div>
@@ -35,7 +42,11 @@
                   id="submit"
                   [disabled]="!emailControl.value"
                   pButton
+                  *ngIf="!loading; else spinner"
           ></button>
+          <ng-template #spinner>
+            <p-progressSpinner [style]="{width: '30px', height: '30px'}"></p-progressSpinner>
+          </ng-template>
         </div>
       </div>
     </form>

@@ -53,6 +53,9 @@ public class CulturalOfferingDto {
     @Computed(element = "subscribedUsers", functionName = "size")
     private Integer numSubscribed;
 
+    @Computed(element = "culturalOfferingPhotos", functionName = "size")
+    private Integer numPhotos;
+
     @Ignore(ignoreType = IgnoreType.BOTH)
     private Boolean subscribed;
 }

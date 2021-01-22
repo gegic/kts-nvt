@@ -28,6 +28,9 @@ public class ListViewPage {
     @FindBy(id = "only-reviews-cbx")
     WebElement onlyReviewsCbx;
 
+    @FindBy(id = "only-subscriptions-cbx")
+    WebElement onlySubscriptionsCbx;
+
     @FindBy(id = "category")
     WebElement categorySelect;
 
@@ -57,6 +60,12 @@ public class ListViewPage {
 
     @FindBy(className = "review")
     List<WebElement> reviews;
+
+    @FindBy(className = "subscribe-btn")
+    List<WebElement> subscribeButtons;
+
+    @FindBy(className = "unsubscribe-btn")
+    List<WebElement> unsubscribeButtons;
 
 
     private final WebDriver driver;

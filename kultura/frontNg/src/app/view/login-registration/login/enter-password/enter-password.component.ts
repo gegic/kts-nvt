@@ -17,6 +17,7 @@ import {useAnimation} from '@angular/animations';
 export class EnterPasswordComponent implements OnInit {
 
   passwordControl: FormControl;
+  loading = false;
 
   constructor(private loginService: LoginService,
               private router: Router,
@@ -38,9 +39,12 @@ export class EnterPasswordComponent implements OnInit {
       return;
     }
     this.loginService.password = this.passwordControl.value;
+    this.loading = true;
     this.loginService.login()
       .subscribe(
         (data: {token: string, user: User}) => {
+          this.loading = false;
+
           if (!data.user.verified) {
             this.messageService.add({id: 'toast-container', severity: 'error', detail: 'Your account is not verified.'});
             return;
@@ -49,6 +53,7 @@ export class EnterPasswordComponent implements OnInit {
           this.router.navigateByUrl('/');
         },
         () => {
+          this.loading = false;
           this.messageService.add({id: 'toast-container', severity: 'error', detail: 'Your password is incorrect'});
           this.passwordControl.reset();
         }

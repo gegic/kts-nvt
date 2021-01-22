@@ -31,7 +31,7 @@
           ></button>
         </div>
         <ng-template #subscribeButton>
-            <button class="p-button blue-button"
+            <button class="p-button blue-button subscribe-btn"
                     *ngIf="!culturalOffering.subscribed || !isLoggedIn(); else unsubscribeButton"
                     label="Subscribe"
                     icon="pi pi-bell"
@@ -39,7 +39,7 @@
                     pButton
             ></button>
             <ng-template #unsubscribeButton>
-              <button class="p-button p-button-text p-button-plain"
+              <button class="p-button p-button-text p-button-plain unsubscribe-btn"
                       *ngIf="!!culturalOffering.subscribed || !isLoggedIn()"
                       label="Unsubscribe"
                       icon="pi pi-bell"
