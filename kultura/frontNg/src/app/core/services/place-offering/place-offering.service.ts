@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Place} from '../../models/place';
 
-declare class ToAddressJson {
+export declare class ToAddressJson {
   'display_name': string;
 }
 
@@ -29,19 +29,8 @@ export class PlaceOfferingService {
   constructor(private httpClient: HttpClient) {
   }
 
-  setPlace(latLng: L.LatLng): void {
-    this.httpClient.get(this.reverseGeocoding(latLng))
-      .subscribe(
-        data => {
-          const jsonv2 = data as ToAddressJson;
-          if (!jsonv2.display_name) {
-            this.place.next(new Place(null, true));
-          } else {
-            this.place.next(new Place(jsonv2.display_name, false));
-          }
-          this.latLng.next(latLng);
-        }
-      );
+  getAddress(latLng: L.LatLng): Observable<any> {
+    return this.httpClient.get(this.reverseGeocoding(latLng));
   }
 
   getRecommendations(address: string): Observable<any> {

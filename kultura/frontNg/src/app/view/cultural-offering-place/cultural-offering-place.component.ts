@@ -1,9 +1,10 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
 import {MapOptions} from '../../core/models/mapOptions';
-import {PlaceOfferingService} from '../../core/services/place-offering/place-offering.service';
+import {PlaceOfferingService, ToAddressJson} from '../../core/services/place-offering/place-offering.service';
 import {DynamicDialogRef} from 'primeng/dynamicdialog';
 import {MessageService} from 'primeng/api';
+import {Place} from '../../core/models/place';
 
 declare function require(name: string): any;
 
@@ -77,7 +78,17 @@ export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, On
   }
 
   private setCoordinates(latLng: L.LatLng): void {
-    this.placeOfferingService.setPlace(latLng);
+    this.placeOfferingService.getAddress(latLng).subscribe(
+      data => {
+        const jsonv2 = data as ToAddressJson;
+        if (!jsonv2.display_name) {
+          this.placeOfferingService.place.next(new Place(null, true));
+        } else {
+          this.placeOfferingService.place.next(new Place(jsonv2.display_name, false));
+        }
+        this.placeOfferingService.latLng.next(latLng);
+      }
+    );
     this.currentMarker = new L.Marker(latLng);
     this.map?.addLayer(this.currentMarker);
   }
