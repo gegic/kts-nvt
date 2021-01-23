@@ -36,14 +36,17 @@ export class AuthGuard implements CanActivate {
     if (!isAuthenticated && accessRoles.includes('UNREGISTERED')) {
       return true;
     } else if (!isAuthenticated && !accessRoles.includes('UNREGISTERED')) {
+      this.router.navigate(['login']);
       return false;
     } else {
       const auth = this.authorize(accessRoles, user) ?? false;
       if (!auth) {
         if (user.getRole() === 'ADMIN') {
           this.router.navigate(['moderators']);
+          return false;
         } else {
           this.router.navigate(['']);
+          return false;
         }
       }
     }
