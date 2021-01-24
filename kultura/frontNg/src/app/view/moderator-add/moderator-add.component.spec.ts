@@ -62,14 +62,14 @@ describe('ModeratorAddComponent', () => {
     fixture = TestBed.createComponent(ModeratorAddComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
-
+    moderatorService = TestBed.inject(ModeratorService);
     messageService =  TestBed.inject(MessageService);
     dialogService =  TestBed.inject(DialogService);
-
     fixture.detectChanges();
+    component.ngOnInit();
   });
 
-  it('should create', () => {
+  it('should create add moderator', () => {
     expect(component).toBeTruthy();
   });
 
@@ -97,7 +97,7 @@ describe('ModeratorAddComponent', () => {
     expect(errorMsg).toBeDefined();*/
   });
 
-  it('should be initialized', () => {
+  it('should be initialized  add moderator', () => {
     fixture = TestBed.createComponent(ModeratorAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -112,14 +112,6 @@ describe('ModeratorAddComponent', () => {
   });
 
   it('should be invalid form when submitted and first name is empty', () => {
-    fixture = TestBed.createComponent(ModeratorAddComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    router = TestBed.inject(Router);
-    moderatorService = TestBed.inject(ModeratorService);
-    messageService =  TestBed.inject(MessageService);
-    dialogService =  TestBed.inject(DialogService);
-    component.ngOnInit();
 
     component.moderatorForm.controls.firstName.setValue('');
     component.moderatorForm.controls.lastName.setValue('Miric');
@@ -136,14 +128,6 @@ describe('ModeratorAddComponent', () => {
   });
 
   it('should add moderator successfully when submitted', fakeAsync(() => {
-    fixture = TestBed.createComponent(ModeratorAddComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    router = TestBed.inject(Router);
-    moderatorService = TestBed.inject(ModeratorService);
-    messageService =  TestBed.inject(MessageService);
-    dialogService =  TestBed.inject(DialogService);
-    component.ngOnInit();
 
     component.moderatorForm.controls.firstName.setValue('Mitar');
     component.moderatorForm.controls.lastName.setValue('Miric');
@@ -157,14 +141,6 @@ describe('ModeratorAddComponent', () => {
   }));
 
   it('should be invalid form when submitted and passwords incorrect', fakeAsync(() => {
-    fixture = TestBed.createComponent(ModeratorAddComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    router = TestBed.inject(Router);
-    moderatorService = TestBed.inject(ModeratorService);
-    messageService =  TestBed.inject(MessageService);
-    dialogService =  TestBed.inject(DialogService);
-    component.ngOnInit();
 
     component.moderatorForm.controls.firstName.setValue('Mitar');
     component.moderatorForm.controls.lastName.setValue('Miric');
@@ -178,14 +154,6 @@ describe('ModeratorAddComponent', () => {
   }));
 
   it('should be invalid form when submitted and mail incorrect', fakeAsync(() => {
-    fixture = TestBed.createComponent(ModeratorAddComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    router = TestBed.inject(Router);
-    moderatorService = TestBed.inject(ModeratorService);
-    messageService =  TestBed.inject(MessageService);
-    dialogService =  TestBed.inject(DialogService);
-    component.ngOnInit();
 
     component.moderatorForm.controls.firstName.setValue('Mitar');
     component.moderatorForm.controls.lastName.setValue('Miric');
@@ -206,14 +174,7 @@ describe('ModeratorAddComponent', () => {
         message: 'Email already exists.',
       }))
     };
-    fixture = TestBed.createComponent(ModeratorAddComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    router = TestBed.inject(Router);
-    moderatorService = TestBed.inject(ModeratorService);
-    messageService =  TestBed.inject(MessageService);
-    dialogService =  TestBed.inject(DialogService);
-    moderatorService = TestBed.inject(ModeratorService);
+
     component.ngOnInit();
 
     component.moderatorForm.controls.firstName.setValue('Mitar');
