@@ -25,7 +25,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   viewOfferings = false;
   private map: L.Map | null = null;
   private tileLayer: L.TileLayer | null = null;
-  private queryCenter?: {lat: number, lng: number};
+  queryCenter?: {lat: number, lng: number};
 
   @ViewChild('map')
   mapElement!: ElementRef<HTMLElement>;
@@ -46,6 +46,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
         };
       }
     });
+    this.mapService.zoom.next(!!this.queryCenter ? 15 : 2);
   }
 
   ngAfterViewInit(): void {
@@ -63,7 +64,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.map = L.map(this.mapElement.nativeElement, mapOptions).setView(
       new L.LatLng(this.queryCenter?.lat ?? 0,
       this.queryCenter?.lng ?? 0),
-      !!this.queryCenter ? 15 : 2,
+      this.mapService.zoom.getValue(),
       {animate: false});
 
     this.mapService.zoom.next(this.map?.getZoom() ?? 0);

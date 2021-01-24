@@ -3,7 +3,6 @@ import {LoginService} from '../../../../core/services/login/login.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Route, Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
-import {User} from '../../../../core/models/user';
 
 @Component({
   selector: 'app-enter-email',

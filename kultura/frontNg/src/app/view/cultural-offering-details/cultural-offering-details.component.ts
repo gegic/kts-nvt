@@ -7,6 +7,7 @@ import {AuthService} from '../../core/services/auth/auth.service';
 import {CulturalOfferingsService} from '../../core/services/cultural-offerings/cultural-offerings.service';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {distinctUntilChanged} from 'rxjs/operators';
+import {Title} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-cultural-offering-details',
@@ -48,7 +49,8 @@ export class CulturalOfferingDetailsComponent implements OnInit, OnDestroy {
               private culturalOfferingsService: CulturalOfferingsService,
               private router: Router,
               private confirmationService: ConfirmationService,
-              private messageService: MessageService) {
+              private messageService: MessageService,
+              private titleService: Title) {
   }
 
   ngOnInit(): void {
@@ -72,6 +74,8 @@ export class CulturalOfferingDetailsComponent implements OnInit, OnDestroy {
     this.detailsService.getCulturalOffering(id, userId).pipe(distinctUntilChanged()).subscribe(
       data => {
         this.detailsService.culturalOffering.next(data);
+        const newTitle = `${data.name} | kultura`;
+        this.titleService.setTitle(newTitle);
         this.isOfferingLoading = false;
       }
     );
@@ -151,6 +155,7 @@ export class CulturalOfferingDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.titleService.setTitle('kultura');
     this.detailsService.culturalOffering.next(undefined);
     this.subscriptions.forEach(s => s.unsubscribe());
   }
