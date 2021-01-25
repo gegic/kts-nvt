@@ -93,9 +93,6 @@ public class AuthController {
             userService.create(userDto);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            System.out.println("=====================================================================================");
-            e.printStackTrace();
-            System.out.println("=====================================================================================");
             return ResponseEntity.badRequest().build();
         }
     }
