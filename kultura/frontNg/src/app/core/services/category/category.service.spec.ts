@@ -272,11 +272,11 @@ describe('CategoryService', () => {
     expect(req.request.method).toBe('POST');
 
     req.flush('Something went wrong', {
-      status: 404,
-      statusText: 'Network error'
+      status: 409,
+      statusText: 'Conflict'
     });
 
-    expect(error.statusText).toEqual('Network error');
-    expect(error.status).toEqual(404);
+    expect(error.statusText).toEqual('Conflict');
+    expect(error.status).toEqual(409);
   });
 });

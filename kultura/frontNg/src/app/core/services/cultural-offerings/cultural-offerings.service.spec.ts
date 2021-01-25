@@ -340,10 +340,10 @@ describe('CulturalOfferingsService', () => {
 
     req.flush('Something went wrong', {
       status: 404,
-      statusText: 'Network error'
+      statusText: 'Not Found'
     });
 
-    expect(error.statusText).toEqual('Network error');
+    expect(error.statusText).toEqual('Not Found');
     expect(error.status).toEqual(404);
   });
 });
