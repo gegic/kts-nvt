@@ -7,19 +7,18 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CardModule} from 'primeng/card';
 import createSpy = jasmine.createSpy;
+import Spy = jasmine.Spy;
 
 describe('LoginComponent', () => {
   let component: LoginRegisterComponent;
   let fixture: ComponentFixture<LoginRegisterComponent>;
   let titleService: Title;
+  let spySetTitle: Spy;
   beforeEach(async () => {
-    const title = {
-      setTitle: createSpy('setTitle')
-    };
     await TestBed.configureTestingModule({
       declarations: [ LoginRegisterComponent ],
       imports: [RouterTestingModule, BrowserAnimationsModule, CardModule],
-      providers: [{provider: Title, useValue: title}]
+      providers: [Title]
     })
     .compileComponents();
   });
@@ -29,6 +28,7 @@ describe('LoginComponent', () => {
     fixture = TestBed.createComponent(LoginRegisterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    spySetTitle = spyOn(titleService, 'setTitle');
   });
 
   it('should create', () => {
@@ -41,7 +41,7 @@ describe('LoginComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(titleService.setTitle).toHaveBeenCalledWith('kultura - Log In or Sign up');
+    expect(spySetTitle).toHaveBeenCalledWith('kultura - Log In or Sign up');
   }));
 
   it('should show animation only if route has data with animations', () => {
@@ -57,6 +57,6 @@ describe('LoginComponent', () => {
     tick();
     fixture.detectChanges();
 
-    expect(titleService.setTitle).toHaveBeenCalledWith('kultura');
+    expect(spySetTitle).toHaveBeenCalledWith('kultura');
   }));
 });

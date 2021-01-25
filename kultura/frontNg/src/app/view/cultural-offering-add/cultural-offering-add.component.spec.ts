@@ -57,7 +57,6 @@ describe('CulturalOfferingAddComponent', () => {
     const activatedRouteMock = {
       snapshot: {
         data: {mode: 'add'},
-        // params: {id: 1}
       }
     };
 

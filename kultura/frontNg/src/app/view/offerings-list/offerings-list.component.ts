@@ -7,16 +7,12 @@ import {CulturalOfferingMarker} from '../../core/models/culturalOfferingMarker';
   templateUrl: './offerings-list.component.html',
   styleUrls: ['./offerings-list.component.scss']
 })
-export class OfferingsListComponent implements OnInit {
+export class OfferingsListComponent {
 
   @Output()
   clickCollapse: EventEmitter<any> = new EventEmitter<undefined>();
 
   constructor(private mapService: MapService) { }
-
-  ngOnInit(): void {
-
-  }
 
   onClickCollapse(): void {
     this.clickCollapse.emit();

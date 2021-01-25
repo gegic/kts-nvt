@@ -7,7 +7,7 @@ import {Router} from '@angular/router';
   templateUrl: './offering-item.component.html',
   styleUrls: ['./offering-item.component.scss']
 })
-export class OfferingItemComponent implements OnInit {
+export class OfferingItemComponent {
 
   @Input()
   culturalOfferingMarker?: CulturalOfferingMarker;
@@ -16,9 +16,6 @@ export class OfferingItemComponent implements OnInit {
   card?: ElementRef;
 
   constructor(private router: Router) {}
-
-  ngOnInit(): void {
-  }
 
   get photoUrl(): string {
     return `/photos/main/thumbnail/${this.culturalOfferingMarker?.culturalOffering.photoId ?? -1}.png`;

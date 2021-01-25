@@ -34,7 +34,6 @@ export class CulturalOfferingPlaceComponent implements AfterViewInit, OnDestroy 
       shadowUrl: 'assets/marker-shadow.png'
     });
 
-
     const mapOptions = new MapOptions();
 
     if (!this.mapElement) {

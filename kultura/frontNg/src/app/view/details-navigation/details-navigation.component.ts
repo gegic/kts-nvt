@@ -7,18 +7,7 @@ import {filter} from 'rxjs/operators';
   templateUrl: './details-navigation.component.html',
   styleUrls: ['./details-navigation.component.scss']
 })
-export class DetailsNavigationComponent implements OnInit {
+export class DetailsNavigationComponent {
   @Input()
   navigationItems: {label: string, link: string, icon?: string}[] = [];
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  isActive(link: string): boolean {
-
-    return false;
-  }
-
 }

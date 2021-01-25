@@ -65,7 +65,7 @@ describe('RegisterService', () => {
     service.getIdByMail('user@mail.com').subscribe(data => idResult = data);
 
 
-    const req = httpMock.expectOne('/auth/exists/email/1');
+    const req = httpMock.expectOne('/auth/exists/email/id/user@mail.com');
     expect(req.request.method).toBe('GET');
     req.flush(mockResult);
 

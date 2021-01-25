@@ -1,11 +1,21 @@
 import {TestBed} from '@angular/core/testing';
 import {AppComponent} from './app.component';
+import {RouterTestingModule} from '@angular/router/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {ToastModule} from 'primeng/toast';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
         AppComponent
+      ],
+      imports: [
+        RouterTestingModule,
+        HttpClientTestingModule,
+        ToastModule,
+        ConfirmDialogModule
       ],
     }).compileComponents();
   });
