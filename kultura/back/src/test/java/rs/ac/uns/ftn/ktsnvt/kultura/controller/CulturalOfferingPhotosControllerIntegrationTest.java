@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,23 +16,15 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponentsBuilder;
 import rs.ac.uns.ftn.ktsnvt.kultura.config.PhotosConfig;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingPhotoDto;
-import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
-import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingPhotoRepository;
-import rs.ac.uns.ftn.ktsnvt.kultura.service.CategoryService;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingPhotoService;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.LoginUtil;
 
-import javax.transaction.Transactional;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 

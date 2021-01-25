@@ -76,7 +76,7 @@ public class RegistrationE2ETest {
     registrationPage.getEmailInput().sendKeys("newUser");
     registrationPage.getProceedBtn().click();
 
-    justWait(300);
+    justWait(1000);
     String toast = registrationPage.ensureIsDisplayedToast();
 
     assertEquals("Email not valid\n" + "Email should be formatted properly.", toast);
@@ -92,7 +92,7 @@ public class RegistrationE2ETest {
     registrationPage.getEmailInput().sendKeys("admin@mail.com");
     registrationPage.getProceedBtn().click();
 
-    justWait(300);
+    justWait(1500);
     String toast = registrationPage.ensureIsDisplayedToast();
 
     assertEquals("Email already exists\n" + "An account with this email already exists.", toast);
@@ -114,7 +114,7 @@ public class RegistrationE2ETest {
     registrationPage.getFirstNameInput().sendKeys("sad");
     registrationPage.getLastNameInput().sendKeys("story");
     registrationPage.getProceedBtn().click();
-    justWait(300);
+    justWait(1000);
     String toast = registrationPage.ensureIsDisplayedToast();
     assertEquals(
         "Please enter only the first and the last name with capital first letters (Fields can't be empty).",
@@ -135,7 +135,7 @@ public class RegistrationE2ETest {
     registrationPage = PageFactory.initElements(driver, RegistrationPage.class);
 
     registrationPage.getProceedBtn().click();
-    justWait(300);
+    justWait(1000);
 
     String toast = registrationPage.ensureIsDisplayedToast();
     assertEquals(
@@ -166,7 +166,7 @@ public class RegistrationE2ETest {
     registrationPage.getRepeatPasswordInput().sendKeys("Asd");
 
     registrationPage.getProceedBtn().click();
-    justWait(300);
+    justWait(1000);
     String toast = registrationPage.ensureIsDisplayedToast();
     assertEquals(
         "Password has to contain at least one uppercase, one lowercase letter and one digit. It has to be at least 8 characters long",
@@ -197,7 +197,7 @@ public class RegistrationE2ETest {
     registrationPage.getRepeatPasswordInput().sendKeys("aaaaasd1");
 
     registrationPage.getProceedBtn().click();
-    justWait(300);
+    justWait(1000);
     String toast = registrationPage.ensureIsDisplayedToast();
     assertEquals(
         "Password has to contain at least one uppercase, one lowercase letter and one digit. It has to be at least 8 characters long",
@@ -228,7 +228,7 @@ public class RegistrationE2ETest {
     registrationPage.getRepeatPasswordInput().sendKeys("aaaaasdAAA");
 
     registrationPage.getProceedBtn().click();
-    justWait(300);
+    justWait(1000);
     String toast = registrationPage.ensureIsDisplayedToast();
     assertEquals(
         "Password has to contain at least one uppercase, one lowercase letter and one digit. It has to be at least 8 characters long",
@@ -259,10 +259,12 @@ public class RegistrationE2ETest {
     registrationPage.getRepeatPasswordInput().sendKeys("MitarMiric1234");
 
     registrationPage.getProceedBtn().click();
-    justWait(300);
+    justWait(1000);
+  
+  
     String toast = registrationPage.ensureIsDisplayedToast();
     assertEquals("Repeated password has to match the original password.", toast);
-    justWait(300);
+    justWait(200);
     assertEquals(BASE_URL + "/register/password", driver.getCurrentUrl());
   }
 

@@ -64,11 +64,11 @@ public class UserEditE2ETest {
 
         justWait(300);
 
-        loginPage.getEmail().sendKeys(email);
+        loginPage.getEmail().sendKeys("moderator3@mail.com");
         loginPage.getNextBtn().click();
         justWait(300);
         loginPage = PageFactory.initElements(driver, LoginPage.class);
-        loginPage.getPassword().sendKeys(password);
+        loginPage.getPassword().sendKeys("admin123");
         loginPage.getLoginBtn().click();
         justWait(300);
     }
