@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LoginService} from '../../../../core/services/login/login.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import {FormControl} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MessageService} from 'primeng/api';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-enter-email',
   templateUrl: './enter-email.component.html',
   styleUrls: ['./enter-email.component.scss']
 })
-export class EnterEmailComponent implements OnInit {
-
+export class EnterEmailComponent implements OnDestroy{
+  private subscription?: Subscription;
   emailControl: FormControl;
   loading = false;
 
@@ -21,12 +22,9 @@ export class EnterEmailComponent implements OnInit {
     this.emailControl = new FormControl();
   }
 
-  ngOnInit(): void {
-  }
-
   onClickProceed(): void {
     this.loading = true;
-    this.loginService.checkExistence(this.emailControl.value)
+    this.subscription = this.loginService.checkExistence(this.emailControl.value)
       .subscribe(
         (data: {value: string}) => {
           this.loading = false;
@@ -34,7 +32,7 @@ export class EnterEmailComponent implements OnInit {
           this.loginService.name = data.value;
           this.router.navigate(['./password'], {relativeTo: this.activatedRoute});
         },
-        err => {
+        () => {
           this.loading = false;
           this.emailControl.reset();
           this.messageService.add({id: 'toast-container', severity: 'error', summary: 'Email not found', detail: 'A user with this email doesn\'t exist.'});
@@ -44,7 +42,12 @@ export class EnterEmailComponent implements OnInit {
 
   onClickNewAccount(): void {
     this.loginService.reset();
-    this.router.navigateByUrl('/register');
+    this.router.navigate(['/register']);
   }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
 
 }

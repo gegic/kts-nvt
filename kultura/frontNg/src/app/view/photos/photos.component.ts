@@ -5,6 +5,7 @@ import {CulturalOfferingPhoto} from '../../core/models/culturalOfferingPhoto';
 import {Confirmation, ConfirmationService, MessageService} from 'primeng/api';
 import {Observable, Subscription} from 'rxjs';
 import {AuthService} from '../../core/services/auth/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-photos',
@@ -30,7 +31,8 @@ export class PhotosComponent implements OnInit, OnDestroy {
               private photoService: PhotoService,
               private messageService: MessageService,
               private confirmationService: ConfirmationService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private router: Router) { }
 
   ngOnInit(): void {
     this.subscriptions.push(
@@ -38,6 +40,8 @@ export class PhotosComponent implements OnInit, OnDestroy {
         .subscribe(val => {
         if (!!val) {
           this.resetPhotos();
+        } else {
+          this.router.navigate(['']);
         }
       })
     );

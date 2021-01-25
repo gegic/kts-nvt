@@ -17,7 +17,6 @@ export class RegisterSuccessComponent implements OnInit {
         !this.registerService.firstName ||
         !this.registerService.lastName ||
         !this.registerService.password) {
-      console.log(this.registerService);
       this.router.navigate(['/login']);
     }
   }
