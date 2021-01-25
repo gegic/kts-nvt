@@ -46,6 +46,7 @@ public class LoginE2ETest {
     loginPage.getPassword().sendKeys("admin123");
     loginPage.getLoginBtn().click();
     justWait();
+    justWait();
     assertEquals("http://localhost:4200/moderators", driver.getCurrentUrl());
   }
 

@@ -7,7 +7,7 @@
        (scrolled)="onScrollDown()"
        infinite-scroll
   >
-    <app-moderator-list-element *ngFor="let moderator of moderators"
+    <app-moderator-list-element class="moderator" *ngFor="let moderator of moderators"
                                 [moderator]="moderator"
                                 (moderatorDeleted)="moderatorDeletionConfirmed()"
     >

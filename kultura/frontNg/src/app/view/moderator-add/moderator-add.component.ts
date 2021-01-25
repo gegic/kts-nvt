@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ModeratorService} from '../../core/services/moderator/moderator.service';
 import {MessageService} from 'primeng/api';
-import {RegisterService} from '../../core/services/register/register.service';
 import {Moderator} from '../../core/models/moderator';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
@@ -27,8 +26,7 @@ export class ModeratorAddComponent implements OnInit, OnDestroy {
     }
   );
 
-  constructor(private registerService: RegisterService,
-              private moderatorService: ModeratorService,
+  constructor(private moderatorService: ModeratorService,
               private messageService: MessageService,
               private router: Router) {
   }

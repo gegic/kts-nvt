@@ -4,10 +4,10 @@
       <ngx-avatar class="my-avatar" [name]="moderator.firstName+' '+ moderator.lastName"> </ngx-avatar>
     </div>
     <div class="p-col p-ml-4">
-      <h4 class="p-text-bold p-m-0" [id] = "'p'+moderator.firstName+moderator.lastName">
+      <h4 class="p-text-bold p-m-0 name" [id] = "'p'+moderator.firstName+moderator.lastName">
         {{moderator.firstName}} {{moderator.lastName}}
       </h4>
-      <p class=" p-m-0" [id] = "'p'+moderator.email">
+      <p class=" p-m-0 email" [id] = "'p'+moderator.email">
        Mail address: {{moderator.email}}
       </p>
     </div>

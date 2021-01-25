@@ -31,7 +31,7 @@ export class ModeratorEditComponent implements OnInit, OnDestroy {
               private moderatorService: ModeratorService,
               private messageService: MessageService,
               private registerService: RegisterService,
-              private router: Router) { }
+              private router: Router) { } // ma dobro no eto
 
   ngOnInit(): void {
     this.subscriptions.push(
