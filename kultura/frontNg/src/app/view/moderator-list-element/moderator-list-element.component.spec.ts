@@ -85,7 +85,6 @@ describe('ModeratorListElementComponent', () => {
     navigateSpy = spyOn(router, 'navigate');
     // onClickEdit = spyOn(component, 'onClickEdit').and.returnValue(navigateSpy());
     fixture.detectChanges();
-    fixture.detectChanges();
   });
 
   it('should create', () => {
