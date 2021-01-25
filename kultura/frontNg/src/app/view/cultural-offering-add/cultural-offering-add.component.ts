@@ -233,7 +233,7 @@ export class CulturalOfferingAddComponent implements OnInit, OnDestroy {
           this.fileLoading = false;
           this.photo = data;
         },
-        err => {
+        () => {
           this.fileLoading = false;
           this.messageService.add({severity: 'error', detail: 'Photo couldn\'t be uploaded due to an unknown reason.'});
         }
