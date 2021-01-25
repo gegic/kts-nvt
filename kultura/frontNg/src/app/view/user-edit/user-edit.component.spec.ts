@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
 
 import {UserEditComponent} from './user-edit.component';
 import {UserService} from '../../core/services/users/users.service';
@@ -66,8 +66,11 @@ describe('UserEditComponent', () => {
     expect(component).toBeDefined();
   });
 
-  it('should have updated name', () => {
+  it('should have updated name', fakeAsync(() => {
     component.name.setValue('Marques');
+    tick();
+    fixture.detectChanges();
+
     component.updateName();
     fixture.detectChanges();
     expect(userService.update).toHaveBeenCalled();
@@ -76,10 +79,13 @@ describe('UserEditComponent', () => {
     expect(component.name.value).toEqual(null);
     expect(component.user.firstName).toEqual('Marques');
     expect(fixture.debugElement.query(By.css('#name-val')).nativeElement.textContent).toContain('Marques');
-  });
+  }));
 
-  it('should have updated last name', () => {
+  it('should have updated last name', fakeAsync(() => {
     component.lastName.setValue('Queensberry');
+    tick();
+    fixture.detectChanges();
+
     component.updateLastName();
     fixture.detectChanges();
     expect(userService.update).toHaveBeenCalled();
@@ -88,10 +94,13 @@ describe('UserEditComponent', () => {
     expect(component.lastName.value).toEqual(null);
     expect(component.user.lastName).toEqual('Queensberry');
     expect(fixture.debugElement.query(By.css('#lastName-val')).nativeElement.textContent).toContain('Queensberry');
-  });
+  }));
 
-  it('should have updated e-mail', () => {
+  it('should have updated e-mail', fakeAsync(() => {
     component.email.setValue('marques@mail.com');
+    tick();
+    fixture.detectChanges();
+
     component.updateEmail();
     fixture.detectChanges();
     expect(userService.update).toHaveBeenCalled();
@@ -101,7 +110,7 @@ describe('UserEditComponent', () => {
     expect(component.email.value).toEqual(null);
     expect(component.user.email).toEqual('marques@mail.com');
     expect(fixture.debugElement.query(By.css('#email-val')).nativeElement.textContent).toContain('marques@mail.com');
-  });
+  }));
 
   it('should have invalid name', () => {
     component.name.setValue('');
@@ -125,13 +134,16 @@ describe('UserEditComponent', () => {
     expect(message).toEqual('error');
     expect(component.email.invalid).toBeTruthy();
   });
-  it('should have invalid e-mail format', () => {
+  it('should have invalid e-mail format', fakeAsync(() => {
     component.email.setValue('a@.com');
+    tick();
+    fixture.detectChanges();
+
     component.updateEmail();
     expect(messageService.add).toHaveBeenCalled();
     expect(message).toEqual('error');
     expect(component.email.invalid).toBeTruthy();
-  });
+  }));
 
 
   it('should have empty password', () => {
@@ -141,59 +153,81 @@ describe('UserEditComponent', () => {
     expect(message).toEqual('error');
     expect(component.email.invalid).toBeTruthy();
   });
-  it('should have short password', () => {
+  it('should have short password', fakeAsync(() => {
     component.passwordControl.setValue('aaa');
+    tick();
+    fixture.detectChanges();
+
     component.updatePassword();
     expect(messageService.add).toHaveBeenCalled();
     expect(message).toEqual('error');
     expect(component.email.invalid).toBeTruthy();
-  });
-  it('should have too long password', () => {
+  }));
+  it('should have too long password', fakeAsync(() => {
     component.passwordControl.setValue('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    tick();
+    fixture.detectChanges();
+
     component.updatePassword();
     expect(messageService.add).toHaveBeenCalled();
     expect(message).toEqual('error');
     expect(component.email.invalid).toBeTruthy();
-  });
-  it('should have password without capital letters', () => {
+  }));
+  it('should have password without capital letters', fakeAsync(() => {
     component.passwordControl.setValue('aaaaaaaa');
+    tick();
+    fixture.detectChanges();
+
     component.updatePassword();
     expect(messageService.add).toHaveBeenCalled();
     expect(message).toEqual('error');
     expect(component.email.invalid).toBeTruthy();
-  });
-  it('should have password without digits', () => {
+  }));
+  it('should have password without digits', fakeAsync(() => {
     component.passwordControl.setValue('Aaaaaaaa');
+    tick();
+    fixture.detectChanges();
+
     component.updatePassword();
     expect(messageService.add).toHaveBeenCalled();
     expect(message).toEqual('error');
     expect(component.email.invalid).toBeTruthy();
-  });
-  it('should have empty confirm password field', () => {
+  }));
+  it('should have empty confirm password field', fakeAsync(() => {
     component.passwordControl.setValue('Aaaaaaa1');
+    tick();
+    fixture.detectChanges();
+
     component.updatePassword();
     expect(messageService.add).toHaveBeenCalled();
     expect(message).toEqual('error');
-  });
+  }));
 
 
-  it('should have different passwords', () => {
+  it('should have different passwords', fakeAsync(() => {
     component.passwordControl.setValue('Aaaaaaa1');
+    tick();
+    fixture.detectChanges();
+
     component.confirmPasswordControl.setValue('Aaaaaaaa');
     component.updatePassword();
     expect(messageService.add).toHaveBeenCalled();
     expect(message).toEqual('error');
-  });
+  }));
 
-  it('should update password', () => {
+  it('should update password', fakeAsync(() => {
     component.passwordControl.setValue('Aaaaaaa1');
+    tick();
     component.confirmPasswordControl.setValue('Aaaaaaa1');
     component.updatePassword();
+
+    tick();
+    fixture.detectChanges();
     expect(messageService.add).toHaveBeenCalled();
     expect(message).toEqual('info');
     expect(authService.logout).toHaveBeenCalled();
 
-  });
+  }));
 });
 
 function getOldUser(): User {
