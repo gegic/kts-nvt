@@ -77,7 +77,7 @@ describe('ModeratorsViewComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch the categories list on init', fakeAsync (() => {
+  it('should fetch the moderators list on init', fakeAsync (() => {
     component.ngOnInit();
     expect(moderatorService.getModerators).toHaveBeenCalled();
 

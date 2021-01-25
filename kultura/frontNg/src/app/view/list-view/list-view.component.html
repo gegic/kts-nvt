@@ -38,7 +38,7 @@
       </div>
     </div>
     <div *ngIf="culturalOfferings.length > 0; else noOfferings">
-      <app-list-element *ngFor="let culturalOffering of culturalOfferings; let index = index;"
+      <app-list-element class='culturalOffer' *ngFor="let culturalOffering of culturalOfferings; let index = index;"
                         [culturalOffering]="culturalOffering"
                         (offeringDeleted)="onOfferingDeleted()"
                         [index]="index"
