@@ -2,7 +2,7 @@ import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
 import {UserService} from './users.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {User} from '../../models/user';
 
 describe('UserServiceService', () => {
@@ -84,4 +84,27 @@ describe('UserServiceService', () => {
     expect(updatedUser.lastName).toEqual('NewLastname');
     expect(updatedUser.email).toEqual('test4@mail.com');
   }));
+
+  it('should throw error', () => {
+    let error: HttpErrorResponse;
+    const mockUser: User = new User();
+    mockUser.firstName = 'Firstname';
+    mockUser.lastName = 'Lastname';
+    mockUser.email = 'test4@mail.com';
+    mockUser.id = 1;
+
+    service.update(mockUser).subscribe(null, e => {
+      error = e;
+    });
+    const req = httpMock.expectOne('/api/users');
+    expect(req.request.method).toBe('PUT');
+
+    req.flush('Something went wrong', {
+      status: 404,
+      statusText: 'Network error'
+    });
+
+    expect(error.statusText).toEqual('Network error');
+    expect(error.status).toEqual(404);
+  });
 });

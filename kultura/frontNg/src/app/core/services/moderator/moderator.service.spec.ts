@@ -2,7 +2,7 @@ import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
 import {ModeratorService} from './moderator.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Moderator} from '../../models/moderator';
 
 describe('ModeratorService', () => {
@@ -192,6 +192,31 @@ describe('ModeratorService', () => {
     const req = httpMock.expectOne(`/api/users/1`);
     expect(req.request.method).toBe('DELETE');
     req.flush({});
+  });
+
+  it('should throw error', () => {
+    let error: HttpErrorResponse;
+    const mockModerator: Moderator =
+      {
+        id: '1',
+        email: 'test4@mail.com',
+        firstName: 'Firstname4',
+        lastName: 'Lastname4',
+        password: 'Admin123'
+      };
+    service.createModerator(mockModerator).subscribe(null, e => {
+      error = e;
+    });
+    const req = httpMock.expectOne('/api/users/moderator');
+    expect(req.request.method).toBe('POST');
+
+    req.flush('Something went wrong', {
+      status: 404,
+      statusText: 'Network error'
+    });
+
+    expect(error.statusText).toEqual('Network error');
+    expect(error.status).toEqual(404);
   });
 
 });

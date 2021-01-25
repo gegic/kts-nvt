@@ -2,8 +2,9 @@ import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
 import {CulturalOfferingDetailsService} from './cultural-offering-details.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {CulturalOffering} from '../../models/cultural-offering';
+import {Subcategory} from '../../models/subcategory';
 
 describe('CulturalOfferingDetailsService', () => {
   let service: CulturalOfferingDetailsService;
@@ -84,4 +85,22 @@ describe('CulturalOfferingDetailsService', () => {
     expect(culturalOffering.categoryName).toEqual('Category1');
     expect(culturalOffering.categoryId).toEqual(1);
   }));
+
+  it('should throw error', () => {
+    let error: HttpErrorResponse;
+
+    service.getCulturalOffering(1, 1).subscribe(null, e => {
+      error = e;
+    });
+    const req = httpMock.expectOne('/api/cultural-offerings/1?user=1');
+    expect(req.request.method).toBe('GET');
+
+    req.flush('Something went wrong', {
+      status: 404,
+      statusText: 'Network error'
+    });
+
+    expect(error.statusText).toEqual('Network error');
+    expect(error.status).toEqual(404);
+  });
 });

@@ -2,9 +2,10 @@ import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
 import {CategoryService} from './category.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Category} from '../../models/category';
 import {Subcategory} from '../../models/subcategory';
+import {Moderator} from '../../models/moderator';
 
 describe('CategoryService', () => {
   let injector;
@@ -253,5 +254,29 @@ describe('CategoryService', () => {
     const req = httpMock.expectOne(`/api/subcategories/1`);
     expect(req.request.method).toBe('DELETE');
     req.flush({});
+  });
+
+  it('should throw error', () => {
+    let error: HttpErrorResponse;
+    const mockSubcategory: Subcategory =
+      {
+        id: 1,
+        name: 'SubcategoryUpdated',
+        categoryId: 1,
+        numOfferings: 0
+      };
+    service.create(mockSubcategory).subscribe(null, e => {
+      error = e;
+    });
+    const req = httpMock.expectOne('/api/categories');
+    expect(req.request.method).toBe('POST');
+
+    req.flush('Something went wrong', {
+      status: 404,
+      statusText: 'Network error'
+    });
+
+    expect(error.statusText).toEqual('Network error');
+    expect(error.status).toEqual(404);
   });
 });
