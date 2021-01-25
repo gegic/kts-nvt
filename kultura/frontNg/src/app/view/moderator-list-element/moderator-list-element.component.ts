@@ -51,7 +51,7 @@ export class ModeratorListElementComponent implements OnInit, OnDestroy {
   }
 
   onClickEdit(): void{
-    this.router.navigate([`/edit-moderator/${this.moderator?.id ?? 0}`]).then(r => console.log('EDIT'));
+    this.router.navigate([`/edit-moderator/${this.moderator?.id ?? 0}`]);
   }
 
   ngOnDestroy(): void {

@@ -17,8 +17,7 @@ export class ModeratorsViewComponent implements OnInit, OnDestroy {
   totalPages = 0;
   isModeratorsLoading = false;
 
-  constructor(private moderatorService: ModeratorService,
-              private messageService: MessageService) {
+  constructor(private moderatorService: ModeratorService) {
   }
 
   ngOnInit(): void {

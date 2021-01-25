@@ -10,6 +10,7 @@ import {of, throwError} from 'rxjs';
 import {DialogModule} from 'primeng/dialog';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CardModule} from 'primeng/card';
+import {PasswordModule} from 'primeng/password';
 
 describe('ModeratorAddComponent', () => {
   let component: ModeratorAddComponent;
@@ -53,7 +54,7 @@ describe('ModeratorAddComponent', () => {
         { provide: DialogService, useValue: dialogServiceMocked},
         {provide: ConfirmationService, useValue: ConfirmationService},
         {provide: Router, useValue: routerMock}],
-      imports: [DialogModule, ReactiveFormsModule, FormsModule, CardModule]
+      imports: [DialogModule, ReactiveFormsModule, FormsModule, CardModule, PasswordModule]
     })
       .compileComponents();
   });
@@ -74,14 +75,6 @@ describe('ModeratorAddComponent', () => {
   });
 
   it('should be invalid form when submitted and last name is empty', () => {
-    fixture = TestBed.createComponent(ModeratorAddComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    router = TestBed.inject(Router);
-    moderatorService = TestBed.inject(ModeratorService);
-    messageService =  TestBed.inject(MessageService);
-    dialogService =  TestBed.inject(DialogService);
-    component.ngOnInit();
 
     component.moderatorForm.controls.firstName.setValue('Miar');
     component.moderatorForm.controls.lastName.setValue('');
@@ -93,19 +86,9 @@ describe('ModeratorAddComponent', () => {
     expect(component.moderatorForm.invalid).toBeTruthy();
     expect(moderatorService.createModerator).toHaveBeenCalledTimes(0);
 
-    /*const errorMsg = fixture.debugElement.query(By.css('#toast-container'));
-    expect(errorMsg).toBeDefined();*/
   });
 
   it('should be initialized  add moderator', () => {
-    fixture = TestBed.createComponent(ModeratorAddComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    router = TestBed.inject(Router);
-    moderatorService = TestBed.inject(ModeratorService);
-    messageService =  TestBed.inject(MessageService);
-    dialogService =  TestBed.inject(DialogService);
-    component.ngOnInit();
 
     expect(component.moderatorForm).toBeDefined();
     expect(component.moderatorForm.invalid).toBeTruthy();
@@ -122,9 +105,6 @@ describe('ModeratorAddComponent', () => {
 
     expect(component.moderatorForm.invalid).toBeTruthy();
     expect(moderatorService.createModerator).toHaveBeenCalledTimes(0);
-
-    /*const errorMsg = fixture.debugElement.query(By.css('#toast-container'));
-    expect(errorMsg).toBeDefined();*/
   });
 
   it('should add moderator successfully when submitted', fakeAsync(() => {
