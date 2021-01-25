@@ -2,7 +2,7 @@ import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
 import {LoginService} from './login.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {PlaceOfferingService} from '../place-offering/place-offering.service';
 import {User} from '../../models/user';
 
@@ -91,5 +91,24 @@ describe('LoginService', () => {
     expect(service.email).toEqual('');
     expect(service.password).toEqual('');
     expect(service.name).toEqual('');
+  });
+
+  it('should throw error', () => {
+    let error: HttpErrorResponse;
+
+    service.checkExistence('admin@admin.com').subscribe(null, e => {
+      error = e;
+    });
+    const req = httpMock
+      .expectOne('/auth/exists/email/admin@admin.com');
+    expect(req.request.method).toBe('GET');
+
+    req.flush('Something went wrong', {
+      status: 404,
+      statusText: 'Not Found'
+    });
+
+    expect(error.statusText).toEqual('Not Found');
+    expect(error.status).toEqual(404);
   });
 });

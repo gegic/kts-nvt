@@ -2,7 +2,7 @@ import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
 import {VerifyService} from './verify.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {User} from '../../models/user';
 
 describe('VerifyService', () => {
@@ -73,4 +73,23 @@ describe('VerifyService', () => {
     expect(verified).toEqual(true);
 
   }));
+
+  it('should throw error', () => {
+    let error: HttpErrorResponse;
+
+    service.verify('1').subscribe(null, e => {
+      error = e;
+    });
+
+    const req = httpMock.expectOne('/auth/verify/1');
+    expect(req.request.method).toBe('GET');
+
+    req.flush('Something went wrong', {
+      status: 404,
+      statusText: 'Not Found'
+    });
+
+    expect(error.statusText).toEqual('Not Found');
+    expect(error.status).toEqual(404);
+  });
 });

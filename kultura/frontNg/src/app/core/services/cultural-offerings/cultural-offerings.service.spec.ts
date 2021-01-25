@@ -2,7 +2,7 @@ import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
 import {CulturalOfferingsService} from './cultural-offerings.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {CulturalOffering} from '../../models/cultural-offering';
 import {MapService} from '../map/map.service';
 import {Category} from '../../models/category';
@@ -327,6 +327,25 @@ describe('CulturalOfferingsService', () => {
     expect(subcategories[2].categoryId).toEqual(1);
     expect(subcategories[2].numOfferings).toEqual(0);
   }));
+
+  it('should throw error', () => {
+    let error: HttpErrorResponse;
+
+    service.getCulturalOfferings(1,  'a').subscribe(null, e => {
+      error = e;
+    });
+    const req = httpMock
+      .expectOne('/api/cultural-offerings?page=1&sort=a&no-reviews=true&search=&rating-min=1&rating-max=5');
+    expect(req.request.method).toBe('GET');
+
+    req.flush('Something went wrong', {
+      status: 404,
+      statusText: 'Not Found'
+    });
+
+    expect(error.statusText).toEqual('Not Found');
+    expect(error.status).toEqual(404);
+  });
 });
 
 

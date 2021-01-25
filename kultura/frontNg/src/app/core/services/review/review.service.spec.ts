@@ -2,7 +2,7 @@ import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 
 import {ReviewService} from './review.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Review} from '../../models/review';
 
 describe('ReviewService', () => {
@@ -388,6 +388,35 @@ describe('ReviewService', () => {
     const req = httpMock.expectOne(`/api/reviews/clear-photos`);
     expect(req.request.method).toBe('DELETE');
     req.flush({});
+  });
+
+  it('should throw error', () => {
+    let error: HttpErrorResponse;
+    const mockReview: Review =
+      {
+        id: 1,
+        rating: 3,
+        comment: 'Nije ovo lose',
+        culturalOfferingId: 1,
+        userId: 1,
+        userFirstName: 'Firstname1',
+        userLastName: 'Lastname1',
+        userEmail: 'mail1@mail.com'
+      };
+
+    service.add(mockReview).subscribe(null, e => {
+      error = e;
+    });
+    const req = httpMock.expectOne('/api/reviews');
+    expect(req.request.method).toBe('POST');
+
+    req.flush('Something went wrong', {
+      status: 409,
+      statusText: 'Conflict'
+    });
+
+    expect(error.statusText).toEqual('Conflict');
+    expect(error.status).toEqual(409);
   });
 
 });

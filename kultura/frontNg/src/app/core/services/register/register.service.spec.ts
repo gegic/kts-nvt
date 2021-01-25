@@ -3,8 +3,9 @@ import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 import {RegisterService} from './register.service';
 import {User} from '../../models/user';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {UserService} from '../users/users.service';
+import {Post} from '../../models/post';
 
 describe('RegisterService', () => {
   let service: RegisterService;
@@ -65,7 +66,7 @@ describe('RegisterService', () => {
     service.getIdByMail('user@mail.com').subscribe(data => idResult = data);
 
 
-    const req = httpMock.expectOne('/auth/exists/email/1');
+    const req = httpMock.expectOne('/auth/exists/email/id/user@mail.com');
     expect(req.request.method).toBe('GET');
     req.flush(mockResult);
 
@@ -89,4 +90,23 @@ describe('RegisterService', () => {
 
     }
   ));
+
+  it('should throw error', () => {
+    let error: HttpErrorResponse;
+    const mockResult = '1';
+
+    service.getIdByMail(mockResult).subscribe(null, e => {
+      error = e;
+    });
+    const req = httpMock.expectOne('/auth/exists/email/id/1');
+    expect(req.request.method).toBe('GET');
+
+    req.flush('Something went wrong', {
+      status: 404,
+      statusText: 'Not Found'
+    });
+
+    expect(error.statusText).toEqual('Not Found');
+    expect(error.status).toEqual(404);
+  });
 });

@@ -3,7 +3,7 @@ import {fakeAsync, getTestBed, TestBed, tick} from '@angular/core/testing';
 import {PhotoService} from './photo.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {CulturalOfferingDetailsService} from '../cultural-offering-details/cultural-offering-details.service';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {CulturalOfferingPhoto} from '../../models/culturalOfferingPhoto';
 import {Form} from '@angular/forms';
 
@@ -74,6 +74,25 @@ describe('PhotoService', () => {
 
     const req = httpMock.expectOne('/api/photos/1');
     expect(req.request.method).toEqual('DELETE');
+  });
+
+  it('should throw error', () => {
+    let error: HttpErrorResponse;
+
+    service.delete(1).subscribe(null, e => {
+      error = e;
+    });
+    const req = httpMock
+      .expectOne('/api/photos/1');
+    expect(req.request.method).toBe('DELETE');
+
+    req.flush('Something went wrong', {
+      status: 404,
+      statusText: 'Not Found'
+    });
+
+    expect(error.statusText).toEqual('Not Found');
+    expect(error.status).toEqual(404);
   });
 });
 
