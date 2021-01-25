@@ -47,7 +47,7 @@ public class LoginE2ETest {
     loginPage.getLoginBtn().click();
     justWait();
     justWait();
-    assertEquals("http://localhost:4200/moderators", driver.getCurrentUrl());
+    assertEquals("http://localhost:4200/", driver.getCurrentUrl());
   }
 
   @Test
@@ -65,7 +65,8 @@ public class LoginE2ETest {
     loginPage.getPassword().sendKeys("admin123");
     loginPage.getLoginBtn().click();
     justWait();
-    assertEquals("http://localhost:4200/", driver.getCurrentUrl());
+    justWait();
+    assertEquals(true, driver.getCurrentUrl().startsWith("http://localhost:4200/?lat="));
   }
 
   @Test
@@ -83,7 +84,8 @@ public class LoginE2ETest {
     loginPage.getPassword().sendKeys("admin123");
     loginPage.getLoginBtn().click();
     justWait();
-    assertEquals("http://localhost:4200/", driver.getCurrentUrl());
+    justWait();
+    assertEquals(true, driver.getCurrentUrl().startsWith("http://localhost:4200/?lat="));
   }
 
   @Test
@@ -125,7 +127,7 @@ public class LoginE2ETest {
 
   private void justWait() throws InterruptedException {
     synchronized (driver) {
-      driver.wait(500);
+      driver.wait(1000);
     }
   }
 }
