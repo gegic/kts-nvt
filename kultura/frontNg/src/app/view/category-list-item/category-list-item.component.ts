@@ -22,8 +22,7 @@ export class CategoryListItemComponent implements OnInit, OnDestroy {
   @Output()
   clickSubcategories: EventEmitter<Category> = new EventEmitter<Category>();
 
-  constructor(private router: Router,
-              private categoryService: CategoryService,
+  constructor(private categoryService: CategoryService,
               private messageService: MessageService,
               private confirmationService: ConfirmationService) { }
 

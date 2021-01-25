@@ -130,11 +130,4 @@ describe('CategoriesViewComponent', () => {
     expect(categoryService.create).toHaveBeenCalledWith(cat);
   }));
 
-  // a helper function to tell Angular that an event on the HTML page has happened
-  // tslint:disable-next-line:typedef
-  function newEvent(eventName: string, bubbles = false, cancelable = false) {
-    const evt = document.createEvent('CustomEvent');  // MUST be 'CustomEvent'
-    evt.initCustomEvent(eventName, bubbles, cancelable, null);
-    return evt;
-  }
 });
