@@ -80,7 +80,6 @@ describe('SubcategoryService', () => {
   it('delete() should query url and delete a subcategory', () => {
     service.delete(1).subscribe(res => {
     });
-
     const req = httpMock.expectOne(`/api/subcategories/1`);
     expect(req.request.method).toBe('DELETE');
     req.flush({});

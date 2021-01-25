@@ -13,7 +13,7 @@ declare function require(name: string): any;
   templateUrl: './cultural-offering-place.component.html',
   styleUrls: ['./cultural-offering-place.component.scss']
 })
-export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CulturalOfferingPlaceComponent implements AfterViewInit, OnDestroy {
 
   private map: L.Map | null = null;
   private tileLayer: L.TileLayer | null = null;
@@ -27,9 +27,6 @@ export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, On
               private messageService: MessageService) {
   }
 
-  ngOnInit(): void {
-  }
-
   ngAfterViewInit(): void {
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: 'assets/marker-icon-2x.png',
@@ -37,15 +34,12 @@ export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, On
       shadowUrl: 'assets/marker-shadow.png'
     });
 
-
     const mapOptions = new MapOptions();
 
     if (!this.mapElement) {
       return;
     }
     this.map = new L.Map(this.mapElement.nativeElement, mapOptions).setView([0, 0], 2);
-    this.map.locate();
-    this.onLocate();
     const options = {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -58,6 +52,10 @@ export class CulturalOfferingPlaceComponent implements OnInit, AfterViewInit, On
     if (!!this.latLng) {
       this.setCoordinates(this.latLng);
       this.map.setView(this.latLng, this.map.getZoom());
+      this.addMarker({latlng: this.latLng});
+    } else {
+      this.map.locate();
+      this.onLocate();
     }
 
     this.map.whenReady(() => {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {LoginService} from '../../../../core/services/login/login.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -8,13 +8,16 @@ import {MessageService} from 'primeng/api';
 import {User} from '../../../../core/models/user';
 import {tokenize} from '@angular/compiler/src/ml_parser/lexer';
 import {useAnimation} from '@angular/animations';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-enter-password',
   templateUrl: './enter-password.component.html',
   styleUrls: ['./enter-password.component.scss']
 })
-export class EnterPasswordComponent implements OnInit {
+export class EnterPasswordComponent implements OnInit, OnDestroy {
+
+  private subscription?: Subscription;
 
   passwordControl: FormControl;
   loading = false;
@@ -40,7 +43,7 @@ export class EnterPasswordComponent implements OnInit {
     }
     this.loginService.password = this.passwordControl.value;
     this.loading = true;
-    this.loginService.login()
+    this.subscription = this.loginService.login()
       .subscribe(
         (data: {token: string, user: User}) => {
           this.loading = false;
@@ -67,5 +70,9 @@ export class EnterPasswordComponent implements OnInit {
 
   get name(): string {
     return this.loginService.name;
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 }

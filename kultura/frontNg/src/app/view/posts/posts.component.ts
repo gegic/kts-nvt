@@ -51,10 +51,11 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
               private dialogService: DialogService,
               private authService: AuthService) { }
 
-  ngOnInit(): void {
-    this.subscriptions.push(this.detailsService.culturalOffering
+  ngOnInit(): void {this.subscriptions.push(this.detailsService.culturalOffering
       .pipe(distinctUntilChanged()).subscribe(val => {
-      if (!!val) {
+      if (!val || !val.id) {
+        this.router.navigate(['']);
+      } else {
         this.resetPosts();
       }
     }));
@@ -101,7 +102,7 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  relativeTimeAdded(timeAdded: Moment | undefined): string {
+  relativeTimeAdded(timeAdded?: Moment): string {
     if (!timeAdded) {
       return 'some time ago.';
     }
@@ -111,7 +112,7 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   @HostListener('window:scroll', ['$event'])
-  onScroll(event: any): void {
+  onScroll(): void {
     if (!this.briefInfoTop) {
       return;
     }
@@ -135,13 +136,14 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
         detail: 'Announcement cannot be empty.',
         id: 'add-empty-toast'
       });
+      return;
     }
     if (!this.culturalOffering) {
       return;
     }
     this.subscriptions.push(
       this.postsService.createPost(this.newPostContent, this.culturalOffering?.id ?? 0)
-        .subscribe(val => {
+        .subscribe(() => {
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
@@ -196,7 +198,7 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
     postToUpdate.timeAdded = this.editingPost.timeAdded;
     postToUpdate.culturalOfferingId = this.editingPost.culturalOfferingId;
     this.subscriptions.push(
-      this.postsService.updatePost(postToUpdate).subscribe(val => {
+      this.postsService.updatePost(postToUpdate).subscribe(() => {
         this.messageService.add({
           severity: 'success',
           summary: 'Post updated',

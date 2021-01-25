@@ -66,24 +66,6 @@ describe('UserEditComponent', () => {
     expect(component).toBeDefined();
   });
 
-  it('should display user data in table', fakeAsync(() => {
-      tick();
-      fixture.detectChanges();
-      const user: User = getOldUser();
-      const firstName = fixture.debugElement.query(By.css('#name-val'));
-      const lastName = fixture.debugElement.query(By.css('#lastName-val'));
-      const email = fixture.debugElement.query(By.css('#email-val'));
-
-      expect(firstName).toBeTruthy();
-      expect(lastName).toBeTruthy();
-      expect(email).toBeTruthy();
-
-      expect(firstName.nativeElement.textContent).toContain(user.firstName);
-      expect(lastName.nativeElement.textContent).toContain(user.lastName);
-      expect(email.nativeElement.textContent).toContain(user.email);
-    }
-    )
-  );
   it('should have updated name', () => {
     component.name.setValue('Marques');
     component.updateName();

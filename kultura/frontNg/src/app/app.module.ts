@@ -74,6 +74,7 @@ import {TabViewModule} from 'primeng/tabview';
 import {TableModule} from 'primeng/table';
 import { SubcategoriesViewComponent } from './view/subcategories-view/subcategories-view.component';
 import {ToolbarModule} from 'primeng/toolbar';
+import {FocusTrapModule} from 'primeng/focustrap';
 
 @NgModule({
   declarations: [
@@ -155,7 +156,8 @@ import {ToolbarModule} from 'primeng/toolbar';
     TabViewModule,
     TableModule,
     CheckboxModule,
-    SelectButtonModule
+    SelectButtonModule,
+    FocusTrapModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

@@ -20,12 +20,13 @@ export class RegisterVerifyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.paramMap
+    this.activatedRoute.params
       .subscribe(
         p => {
-          const id = p.get('id');
-          if (id === null) {
+          const id = p.id;
+          if (!id) {
             this.router.navigate(['/login']);
+            return;
           }
           this.id = id as string;
         }

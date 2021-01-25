@@ -184,25 +184,28 @@ describe('CulturalOfferingsService', () => {
     });
 
     const req = httpMock.expectOne('/api/cultural-offerings/subscribe/cultural-offering/1/user/1');
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method).toBe('PUT');
     req.flush(getCulturalOfferings()[0]);
 
     tick();
 
     expect(culturalOffering).toBeDefined();
     expect(culturalOffering.id).toEqual(1);
-    expect(culturalOffering.name).toEqual('CulturalOffering');
-    expect(culturalOffering.briefInfo).toEqual('CulturalOfferingInfo');
-    expect(culturalOffering.latitude).toEqual(10);
-    expect(culturalOffering.longitude).toEqual(5);
-    expect(culturalOffering.address).toEqual('9336 Civic Center Dr, Beverly Hills, CA 90210, USA');
-    expect(culturalOffering.overallRating).toEqual(54);
-    expect(culturalOffering.numReviews).toEqual(0);
-    expect(culturalOffering.subcategoryId).toEqual(1);
-    expect(culturalOffering.subcategoryName).toEqual('subcategory');
+    expect(culturalOffering.latitude).toEqual(13);
+    expect(culturalOffering.longitude).toEqual(15);
+    expect(culturalOffering.name).toEqual('My offering');
+    expect(culturalOffering.briefInfo).toEqual('Some info');
+    expect(culturalOffering.address).toEqual('Svetozara Markovica');
     expect(culturalOffering.numSubscribed).toEqual(0);
-    expect(culturalOffering.categoryName).toEqual('Category1');
+    expect(culturalOffering.subscribed).toEqual(false);
+    expect(culturalOffering.subcategoryId).toEqual(1);
     expect(culturalOffering.categoryId).toEqual(1);
+    expect(culturalOffering.subcategoryName).toEqual('Vasar');
+    expect(culturalOffering.categoryName).toEqual('Manifestacija');
+    expect(culturalOffering.overallRating).toEqual(0);
+    expect(culturalOffering.numReviews).toEqual(0);
+    expect(culturalOffering.numPhotos).toEqual(0);
+    expect(culturalOffering.photoId).toEqual(1);
 
   }));
 
@@ -214,25 +217,28 @@ describe('CulturalOfferingsService', () => {
     });
 
     const req = httpMock.expectOne('/api/cultural-offerings/unsubscribe/cultural-offering/1/user/1');
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method).toBe('PUT');
     req.flush(getCulturalOfferings()[0]);
 
     tick();
 
     expect(culturalOffering).toBeDefined();
     expect(culturalOffering.id).toEqual(1);
-    expect(culturalOffering.name).toEqual('CulturalOffering');
-    expect(culturalOffering.briefInfo).toEqual('CulturalOfferingInfo');
-    expect(culturalOffering.latitude).toEqual(10);
-    expect(culturalOffering.longitude).toEqual(5);
-    expect(culturalOffering.address).toEqual('9336 Civic Center Dr, Beverly Hills, CA 90210, USA');
-    expect(culturalOffering.overallRating).toEqual(54);
-    expect(culturalOffering.numReviews).toEqual(0);
-    expect(culturalOffering.subcategoryId).toEqual(1);
-    expect(culturalOffering.subcategoryName).toEqual('subcategory');
+    expect(culturalOffering.latitude).toEqual(13);
+    expect(culturalOffering.longitude).toEqual(15);
+    expect(culturalOffering.name).toEqual('My offering');
+    expect(culturalOffering.briefInfo).toEqual('Some info');
+    expect(culturalOffering.address).toEqual('Svetozara Markovica');
     expect(culturalOffering.numSubscribed).toEqual(0);
-    expect(culturalOffering.categoryName).toEqual('Category1');
+    expect(culturalOffering.subscribed).toEqual(false);
+    expect(culturalOffering.subcategoryId).toEqual(1);
     expect(culturalOffering.categoryId).toEqual(1);
+    expect(culturalOffering.subcategoryName).toEqual('Vasar');
+    expect(culturalOffering.categoryName).toEqual('Manifestacija');
+    expect(culturalOffering.overallRating).toEqual(0);
+    expect(culturalOffering.numReviews).toEqual(0);
+    expect(culturalOffering.numPhotos).toEqual(0);
+    expect(culturalOffering.photoId).toEqual(1);
 
   }));
 

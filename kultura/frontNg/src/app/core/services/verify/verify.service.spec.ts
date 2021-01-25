@@ -66,7 +66,6 @@ describe('VerifyService', () => {
     service.checkExistence('1').subscribe(res => {
       verified = res;
     });
-
     const req = httpMock.expectOne(`/auth/exists/verify/id/1`);
     expect(req.request.method).toBe('GET');
     req.flush(mockVerified);

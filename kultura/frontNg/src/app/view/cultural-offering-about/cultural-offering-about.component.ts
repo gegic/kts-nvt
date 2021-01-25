@@ -10,7 +10,7 @@ import {Subscription} from 'rxjs';
   templateUrl: './cultural-offering-about.component.html',
   styleUrls: ['./cultural-offering-about.component.scss']
 })
-export class CulturalOfferingAboutComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CulturalOfferingAboutComponent implements AfterViewInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
@@ -21,9 +21,6 @@ export class CulturalOfferingAboutComponent implements OnInit, AfterViewInit, On
   mapElement!: ElementRef<HTMLElement>;
 
   constructor(private detailsService: CulturalOfferingDetailsService) { }
-
-  ngOnInit(): void {
-  }
 
   ngAfterViewInit(): void {
     L.Icon.Default.mergeOptions({
