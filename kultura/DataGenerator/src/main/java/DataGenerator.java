@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 public class DataGenerator {
     public static final int MAX_OFFERINGS = 120;
-    public static final int MAX_USERS = 40;
+    public static final int MAX_USERS = 70;
     public static final int MAX_CATEGORIES = 10;
     public static final int MAX_SUBCATEGORIES = 20;
     public static final int MAX_POSTS = 35;
@@ -106,7 +106,11 @@ public class DataGenerator {
         userAuthorities.add(new UserAuthority(1, 1));
         for(int i = 1; i < MAX_USERS; ++i) {
             users.add(new User(f.internet().emailAddress(), f.bool().bool(), f.name().firstName(), f.name().lastName()));
-            userAuthorities.add(new UserAuthority(i + 1, f.number().numberBetween(2, 4)));
+            long authority = 3;
+            if (f.number().numberBetween(0, 10) == 0) {
+                authority = 2;
+            }
+            userAuthorities.add(new UserAuthority(i + 1, authority));
             usersNumber++;
         }
         for(int i = 0; i < MAX_OFFERINGS; ++i) {
