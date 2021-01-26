@@ -49,115 +49,115 @@ UPDATE cultural_offering_main_photo SET cultural_offering_id = 2 WHERE id = 2;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigab', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigab', 1, 0, 0, 3);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 3 WHERE id = 3;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigac', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigac', 1, 0, 0, 4);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 4 WHERE id = 4;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigad', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigad', 1, 0, 0, 5);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 5 WHERE id = 5;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigae', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigae', 1, 0, 0, 6);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 6 WHERE id = 6;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigaf', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigaf', 1, 0, 0, 7);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 7 WHERE id = 7;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigag', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigag', 1, 0, 0, 8);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 8 WHERE id = 8;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigah', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigah', 1, 0, 0, 9);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 9 WHERE id = 9;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigai', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigai', 1, 0, 0, 10);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 10 WHERE id = 10;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigaj', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigaj', 1, 0, 0, 11);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 11 WHERE id = 11;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigak', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigak', 1, 0, 0, 12);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 12 WHERE id = 12;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigal', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigal', 1, 0, 0, 13);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 13 WHERE id = 13;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigam', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigam', 1, 0, 0, 14);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 14 WHERE id = 14;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigan', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigan', 1, 0, 0, 15);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 15 WHERE id = 15;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigao', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigao', 1, 0, 0, 16);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 16 WHERE id = 16;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigap', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigap', 1, 0, 0, 17);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 17 WHERE id = 17;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigaq', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigaq', 1, 0, 0, 18);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 18 WHERE id = 18;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigar', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigar', 1, 0, 0, 19);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 19 WHERE id = 19;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigas', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigas', 1, 0, 0, 20);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 20 WHERE id = 20;
 
 INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
 
-INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigat', 1, 0, 0, 2);
+INSERT INTO cultural_offering (address, brief_info, latitude, longitude, name, subcategory_id, num_reviews, overall_rating, photo_id) VALUES ('Bulevar Vojvode Misica', 'Godisnji sajam knjiga', 42.988266, 20.333420, 'Sajam knjigat', 1, 0, 0, 21);
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 21 WHERE id = 21;
 

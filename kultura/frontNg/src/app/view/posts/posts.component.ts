@@ -53,9 +53,7 @@ export class PostsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {this.subscriptions.push(this.detailsService.culturalOffering
       .pipe(distinctUntilChanged()).subscribe(val => {
-      if (!val || !val.id) {
-        this.router.navigate(['']);
-      } else {
+      if (!!val && !!val.id) {
         this.resetPosts();
       }
     }));

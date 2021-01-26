@@ -40,8 +40,6 @@ export class PhotosComponent implements OnInit, OnDestroy {
         .subscribe(val => {
         if (!!val) {
           this.resetPhotos();
-        } else {
-          this.router.navigate(['']);
         }
       })
     );

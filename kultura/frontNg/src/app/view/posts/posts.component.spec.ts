@@ -110,12 +110,13 @@ describe('PostsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should redirect to homepage if no cultural offering', () => {
+  it('should not reset postsif no cultural offering', () => {
+    const spyReset = spyOn(component, 'resetPosts');
     detailsService.culturalOffering.next(undefined);
 
     component.ngOnInit();
 
-    expect(navigateSpy).toHaveBeenCalledWith(['']);
+    expect(spyReset).not.toHaveBeenCalled();
   });
 
   it('should reset posts', fakeAsync(() => {

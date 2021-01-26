@@ -7,6 +7,7 @@ import {Category} from '../../models/category';
 import {Subcategory} from '../../models/subcategory';
 import {CulturalOffering} from '../../models/cultural-offering';
 import {Moderator} from '../../models/moderator';
+import {CulturalOfferingPhoto} from '../../models/culturalOfferingPhoto';
 
 describe('AddOfferingService', () => {
   let service: AddOfferingService;
@@ -147,18 +148,22 @@ describe('AddOfferingService', () => {
       [''],
       'photo');
 
+    let addedPhoto: CulturalOfferingPhoto;
 
+    const offeringPhoto: CulturalOfferingPhoto = {
+      id: 1, culturalOfferingId: 1, hovering: false
+    };
     service.addPhoto(newPhoto).subscribe(data => {
-      newPhoto = data;
+      addedPhoto = data;
     });
     const req = httpMock.expectOne('/api/cultural-offerings/add-photo');
     expect(req.request.method).toBe('POST');
-    req.flush(mockPost);
+    req.flush(offeringPhoto);
 
     tick();
 
-    expect(newPhoto).toBeDefined();
-    expect(newPhoto.name).toEqual('photo');
+    expect(addedPhoto).toBeDefined();
+    expect(addedPhoto).toEqual(offeringPhoto);
   }));
 
   it('addOffering()  should query url and save a culturalOffering', fakeAsync(() => {

@@ -86,12 +86,14 @@ describe('PhotosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to home page if there\'s no cultural offering', () => {
+  it('should not reset photos page if there\'s no cultural offering', () => {
+    const spyReset = spyOn(component, 'resetPhotos');
+
     detailsService.culturalOffering.next(undefined);
 
     component.ngOnInit();
 
-    expect(navigateSpy).toHaveBeenCalledWith(['']);
+    expect(spyReset).not.toHaveBeenCalled();
   });
 
   it('should reset photos if there is a cultural offering', () => {
