@@ -2,7 +2,6 @@ package rs.ac.uns.ftn.ktsnvt.kultura.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
@@ -27,12 +25,13 @@ import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static rs.ac.uns.ftn.ktsnvt.kultura.constants.UserConstants.*;
 
 @RunWith(SpringRunner.class)
 @Rollback(false)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
 public class UserServiceUnitTest {
 
@@ -50,9 +49,18 @@ public class UserServiceUnitTest {
 
 
     private Authority getUserAuthority() {
+        return getAuthority(USER_AUTHORITY);
+    }
+
+    private Authority getAdminAuthority() {
+        return getAuthority(ADMIN_AUTHORITY);
+    }
+
+
+    private Authority getAuthority(String auth) {
         Authority a = new Authority();
         a.setId(1);
-        a.setAuthority(USER_AUTHORITY);
+        a.setAuthority(auth);
         return a;
     }
 
@@ -62,10 +70,42 @@ public class UserServiceUnitTest {
         newUser.setEmail(EXISTING_USER_EMAIL);
         newUser.setFirstName(EXISTING_USER_FIRST_NAME);
         newUser.setLastName(EXISTING_USER_LAST_NAME);
-        newUser.setLastPasswordChange(LocalDateTime.of(2020,7,23,0,0));
+        newUser.setLastPasswordChange(LocalDateTime.of(2020, 7, 23, 0, 0));
         newUser.setVerified(true);
         newUser.setPassword(EXISTING_USER_PASSWORD);
         Authority a = getUserAuthority();
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(a);
+        newUser.setAuthorities(authorities);
+        return newUser;
+    }
+
+    private User getAdminUser() {
+        User newUser = new User();
+        newUser.setId(ADMIN_ID);
+        newUser.setEmail(ADMIN_EMAIL);
+        newUser.setFirstName(ADMIN_NAME);
+        newUser.setLastName(ADMIN_LAST_NAME);
+        newUser.setLastPasswordChange(LocalDateTime.of(2020, 7, 23, 0, 0));
+        newUser.setVerified(true);
+        newUser.setPassword(EXISTING_USER_PASSWORD);
+        Authority a = getAdminAuthority();
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(a);
+        newUser.setAuthorities(authorities);
+        return newUser;
+    }
+
+    private User getModeratorUser() {
+        User newUser = new User();
+        newUser.setId(MODERATOR_ID);
+        newUser.setEmail(MODERATOR_EMAIL);
+        newUser.setFirstName(MODERATOR_NAME);
+        newUser.setLastName(MODERATOR_LAST_NAME);
+        newUser.setLastPasswordChange(LocalDateTime.of(2020, 7, 23, 0, 0));
+        newUser.setVerified(true);
+        newUser.setPassword(MODERATOR_PASSWORD);
+        Authority a = getAuthority(MODERATOR_AUTHORITY);
         Set<Authority> authorities = new HashSet<>();
         authorities.add(a);
         newUser.setAuthorities(authorities);
@@ -82,11 +122,12 @@ public class UserServiceUnitTest {
                 EXISTING_USER_PASSWORD,
                 EXISTING_USER_FIRST_NAME,
                 EXISTING_USER_LAST_NAME,
-                LocalDateTime.of(2020,7,23,0,0),
+                LocalDateTime.of(2020, 7, 23, 0, 0),
                 true,
                 authorities
         );
     }
+
     private UserDto getNewUserDto() {
         Authority a = getUserAuthority();
         Set<Authority> authorities = new HashSet<>();
@@ -97,14 +138,14 @@ public class UserServiceUnitTest {
                 NEW_USER_PASSWORD,
                 NEW_USER_FIRST_NAME,
                 NEW_USER_LAST_NAME,
-                LocalDateTime.of(2020,7,23,0,0),
+                LocalDateTime.of(2020, 7, 23, 0, 0),
                 false,
                 authorities
         );
     }
 
 
-    private UserDto getUpdateUserDto(){
+    private UserDto getUpdateUserDto() {
         UserDto u = getNewUserDto();
         u.setId(1L);
         return u;
@@ -112,17 +153,22 @@ public class UserServiceUnitTest {
 
     @Test
     public void testReadByAuthority() {
-        User existingUser = getFirstUser();
-        UserDto existingUserDto = getFirstUserDto();
+        Collection<User> users = new ArrayList<>();
+        users.add(getFirstUser());
+        users.add(getAdminUser());
+        users.add(getModeratorUser());
+
         Mockito.when(userRepository.findByAuthority(Mockito.anyString(), Mockito.any(Pageable.class)))
                 .thenAnswer(
                         i -> {
                             List<User> content = new ArrayList<>();
                             String auth = i.getArgument(0);
                             Pageable p = i.getArgument(1);
-                            if (existingUser.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(auth))) {
-                                content.add(existingUser);
-                            }
+                            users.forEach(u -> {
+                                if (u.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(auth))) {
+                                    content.add(u);
+                                }
+                            });
                             return (Page<User>) new HelperPage<User>(content, p);
                         }
                 );
@@ -147,6 +193,22 @@ public class UserServiceUnitTest {
         UserDto userDto = userDtoPage.getContent().get(0);
         assertEquals(1, userDtoPage.getTotalElements());
         assertTrue(userDto.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(USER_AUTHORITY)));
+
+
+        p = PageRequest.of(0, 3);
+        userDtoPage = userService.readByAuthority(p, MODERATOR_AUTHORITY);
+
+        userDto = userDtoPage.getContent().get(0);
+        assertEquals(1, userDtoPage.getTotalElements());
+        assertTrue(userDto.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(MODERATOR_AUTHORITY)));
+
+
+        p = PageRequest.of(0, 3);
+        userDtoPage = userService.readByAuthority(p, ADMIN_AUTHORITY);
+
+        userDto = userDtoPage.getContent().get(0);
+        assertEquals(1, userDtoPage.getTotalElements());
+        assertTrue(userDto.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(ADMIN_AUTHORITY)));
     }
 
     @Test
@@ -212,7 +274,7 @@ public class UserServiceUnitTest {
     }
 
     @Test
-    public void testCreateUser(){
+    public void testCreateUser() {
 
         UserDto newUser = getNewUserDto();
 
@@ -240,17 +302,17 @@ public class UserServiceUnitTest {
     }
 
     @Test(expected = ResourceExistsException.class)
-    public void testCreateExists(){
+    public void testCreateExists() {
         UserDto newUser = getUpdateUserDto();
 
         Mockito.when(userRepository.existsById(Mockito.anyLong())).thenReturn(true);
-        Mockito.when(userRepository.save(Mockito.any())).thenAnswer((i)->i.getArgument(0));
+        Mockito.when(userRepository.save(Mockito.any())).thenAnswer((i) -> i.getArgument(0));
 
         userService.create(newUser);
     }
 
     @Test
-    public void testUpdateUser(){
+    public void testUpdateUser() {
 
         UserDto updateDto = getUpdateUserDto();
 
@@ -299,18 +361,17 @@ public class UserServiceUnitTest {
     }
 
     @Test(expected = ResourceNotFoundException.class)
-    public void testUpdateNotFound(){
+    public void testUpdateNotFound() {
         Mockito.when(userRepository.findById(Mockito.anyLong())).thenAnswer(i -> Optional.empty());
         UserDto newUserDto = getNewUserDto();
         userService.update(newUserDto);
     }
 
-//
-//    @Test(expected = ResourceNotFoundException.class)
-//    public void testDeleteNotExists(){
-//
-//        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-//        Mockito.doNothing().when(userRepository).delete(Mockito.any());
-////        userService.delete(Mockito.anyLong());
-//    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void testDeleteNotExists(){
+        Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+        Mockito.doNothing().when(userRepository).delete(Mockito.any());
+        userService.delete(USER_ID);
+    }
 }

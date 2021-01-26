@@ -3,16 +3,11 @@ package rs.ac.uns.ftn.ktsnvt.kultura.service;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.annotation.Commit;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,11 +21,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.SubcategoryRepository;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import javax.validation.constraints.Null;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

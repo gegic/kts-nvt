@@ -50,5 +50,11 @@ public class RestExceptionHandler {
         ErrorMessage errorMessage = new ErrorMessage(conflict.value(), "Conflict", e.getMessage());
         return new ResponseEntity<>(errorMessage, conflict);
     }
-
+    @ExceptionHandler(value = {ForeignKeyException.class})
+    public ResponseEntity<ErrorMessage> handleForeignKeyException(
+            ForeignKeyException e) {
+        HttpStatus conflict = HttpStatus.CONFLICT;
+        ErrorMessage errorMessage = new ErrorMessage(conflict.value(), "Conflict", e.getMessage());
+        return new ResponseEntity<>(errorMessage, conflict);
+    }
 }
