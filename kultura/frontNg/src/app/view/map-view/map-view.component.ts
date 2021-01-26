@@ -145,7 +145,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
               })
             );
             m.bindPopup(m.culturalOffering.name ?? '');
-            // @ts-ignore
             m.on('mouseover', ev => {
               if (!ev.target.isVisible()) {
                 return;
