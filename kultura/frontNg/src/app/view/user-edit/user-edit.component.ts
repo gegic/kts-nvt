@@ -52,10 +52,12 @@ export class UserEditComponent implements OnInit {
   updatePassword(): void {
     if (this.passwordFormControl.invalid) {
       if (this.passwordControl?.invalid) {
-        this.messageService.add({severity: 'error', detail: this.passwordControl.errors?.msg});
+        this.messageService.add({severity: 'error',
+          summary: 'Not updated', detail: this.passwordControl.errors?.msg, id: 'password-valid-error'});
         return;
       }
-      this.messageService.add({severity: 'error', detail: this.passwordFormControl.errors?.msg});
+      this.messageService.add({severity: 'error',
+        summary: 'Not updated', detail: this.passwordFormControl.errors?.msg, id: 'password-error'});
       return;
     }
     const user = this.user;
@@ -68,12 +70,13 @@ export class UserEditComponent implements OnInit {
       this.passwordControl,
       this.confirmPasswordControl,
       true,
-      'Please log in with new password');
+      'Please log in with the new password');
   }
 
   updateName(): void {
     if (this.name.invalid) {
-      this.messageService.add({severity: 'error', detail: this.name.errors?.msg});
+      this.messageService.add({severity: 'error',
+        summary: 'Not updated', detail: this.name.errors?.msg, id: 'name-failed'});
       return;
     }
     const user = this.user;
@@ -88,7 +91,8 @@ export class UserEditComponent implements OnInit {
 
   updateLastName(): void {
     if (this.lastName.invalid) {
-      this.messageService.add({severity: 'error', detail: this.lastName.errors?.msg});
+      this.messageService.add({severity: 'error',
+        summary: 'Not updated', detail: this.lastName.errors?.msg, id: 'last-name-failed'});
       return;
     }
     const user = this.user;
@@ -105,10 +109,12 @@ export class UserEditComponent implements OnInit {
     if (this.email.invalid) {
       const errors = this.email.errors;
       if (errors?.email) {
-        this.messageService.add({severity: 'error', detail: 'E-mail is not valid.'});
+        this.messageService.add({severity: 'error',
+          summary: 'Not updated', detail: 'E-mail is not valid', id: 'email-valid-failed'});
         return;
       }
-      this.messageService.add({severity: 'error', detail: errors?.msg});
+      this.messageService.add({severity: 'error',
+        summary: 'Not updated', detail: errors?.msg, id: 'email-failed'});
       return;
     }
     const user = this.user;
@@ -136,10 +142,12 @@ export class UserEditComponent implements OnInit {
       val => {
         this.user = val;
         this.authService.updateUserData(val);
-        this.messageService.add({severity: 'success', detail: field + ' updated'});
+        this.messageService.add({severity: 'success', summary: 'Success',
+          detail: field + ' updated', id: 'update-successful'});
         if (signOutAfter) {
           this.authService.logout();
-          this.messageService.add({severity: 'info', detail: signOutMessage});
+          this.messageService.add({severity: 'info',
+            summary: 'Logged out', detail: signOutMessage, id: 'sign-out-toast'});
         }
       },
       () => {

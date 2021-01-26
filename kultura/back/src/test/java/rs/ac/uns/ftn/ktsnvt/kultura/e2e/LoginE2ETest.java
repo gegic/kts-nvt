@@ -47,7 +47,7 @@ public class LoginE2ETest {
     loginPage.getLoginBtn().click();
     justWait();
     justWait();
-    assertEquals("http://localhost:4200/", driver.getCurrentUrl());
+    assertEquals("http://localhost:4200/moderators", driver.getCurrentUrl());
   }
 
   @Test

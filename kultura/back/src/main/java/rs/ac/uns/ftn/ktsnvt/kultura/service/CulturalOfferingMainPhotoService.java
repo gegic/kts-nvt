@@ -123,8 +123,6 @@ public class CulturalOfferingMainPhotoService {
             if (co != null) {
                 culturalOfferingRepository.save(co);
             }
-        } else {
-            throw new NullPointerException("Photo is null");
         }
     }
     

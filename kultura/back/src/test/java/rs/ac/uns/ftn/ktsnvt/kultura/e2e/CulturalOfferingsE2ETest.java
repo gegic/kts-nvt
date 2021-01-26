@@ -1,10 +1,8 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.e2e;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -274,7 +272,7 @@ public class CulturalOfferingsE2ETest {
 
   @Test
   public void deleteCulturalOfferingFromDetailsView() throws InterruptedException {
-    driver.get("http://localhost:4200/cultural-offering/1");
+    driver.get("http://localhost:4200/cultural-offering/6");
 
     CulturalOfferingDetailsPage detailsPage = PageFactory.initElements(driver, CulturalOfferingDetailsPage.class);
 
@@ -347,7 +345,7 @@ public class CulturalOfferingsE2ETest {
 
     ListViewPage listViewPage = PageFactory.initElements(driver, ListViewPage.class);
 
-    utils.ensureDisplayed(listViewPage.getFirstDeleteBtn()).click();
+    utils.ensureDisplayed(listViewPage.getThirdDeleteButton()).click();
 
     utils.ensureDisplayed(listViewPage.getConfirmDeletionBtn()).click();
 

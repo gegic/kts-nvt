@@ -303,7 +303,7 @@ public class SearchFilterE2ETest {
                 .allMatch(we ->  {
                     String catSub = we.getText();
                     int split = catSub.indexOf(">");
-                    return catSub.substring(split, catSub.length() - 1).trim().equalsIgnoreCase(subcategoryName);
+                    return catSub.substring(split + 1, catSub.length()).trim().equalsIgnoreCase(subcategoryName);
                 }));
 
         jse.executeScript("window.scrollTo(0, -document.body.scrollHeight)");

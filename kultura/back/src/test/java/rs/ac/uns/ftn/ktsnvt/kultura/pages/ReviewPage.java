@@ -10,17 +10,21 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import rs.ac.uns.ftn.ktsnvt.kultura.e2e.E2EConstants;
 
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 public class ReviewPage {
 
   private final WebDriver driver;
 
-  @FindBy(id = "review-button")
+  @FindBy(className = "review-button")
   private WebElement reviewButton;
 
-  @FindBy(className = "ng-star-inserted")
-  private WebElement star;
+  @FindBy(xpath = "//h4[contains(text(),'Rating')]/following-sibling::p-rating/div/span[contains(@class, 'p-rating-icon')][5]")
+  private WebElement fourthStar;
+
+  @FindBy(xpath = "//h4[contains(text(),'Rating')]/following-sibling::p-rating/div/span[contains(@class, 'p-rating-icon')][6]")
+  private WebElement fifthStar;
 
   @FindBy(id = "review-comment")
   private WebElement commentReview;

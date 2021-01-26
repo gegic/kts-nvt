@@ -49,8 +49,8 @@ public class ListViewPage {
     @FindBy(id = "save-filter-btn")
     WebElement saveFilterBtn;
 
-    @FindBy(id = "delete-num0")
-    WebElement firstDeleteBtn;
+    @FindBy(id = "delete-num2")
+    WebElement thirdDeleteButton;
 
     @FindBy(className = "confirm-deletion")
     WebElement confirmDeletionBtn;

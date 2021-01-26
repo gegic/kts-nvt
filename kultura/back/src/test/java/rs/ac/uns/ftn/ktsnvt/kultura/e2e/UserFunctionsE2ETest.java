@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.e2e;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
@@ -25,7 +26,15 @@ public class UserFunctionsE2ETest {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         driver = new ChromeDriver();
         utils = new E2EUtils(driver);
+    }
 
+    @AfterClass
+    public static void tearDown() {
+        driver.quit();
+    }
+
+    @Before
+    public void login() throws InterruptedException {
         driver.manage().window().maximize();
         LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
 
@@ -40,12 +49,6 @@ public class UserFunctionsE2ETest {
 
         utils.ensureLoggedIn();
     }
-
-    @AfterClass
-    public static void tearDown() {
-        driver.quit();
-    }
-
     @Test
     public void subscribeAndUnsubscribe() throws InterruptedException {
         driver.get("http://localhost:4200/cultural-offering/1");
