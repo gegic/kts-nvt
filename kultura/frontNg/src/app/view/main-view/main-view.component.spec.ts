@@ -5,6 +5,7 @@ import {HomeViewComponent} from '../home-view/home-view.component';
 import {NavbarComponent} from '../navbar/navbar.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {FormsModule} from '@angular/forms';
 
 describe('MainViewComponent', () => {
   let component: MainViewComponent;
@@ -13,7 +14,7 @@ describe('MainViewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MainViewComponent, HomeViewComponent, NavbarComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule]
+      imports: [RouterTestingModule, HttpClientTestingModule, FormsModule]
     })
       .compileComponents();
   });

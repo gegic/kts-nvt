@@ -150,15 +150,15 @@ describe('AddOfferingService', () => {
 
     service.addPhoto(newPhoto).subscribe(data => {
       newPhoto = data;
-      const req = httpMock.expectOne('/api/cultural-offerings/add-photo');
-      expect(req.request.method).toBe('POST');
-      req.flush(mockPost);
-
-      tick();
-
-      expect(newPhoto).toBeDefined();
-      expect(newPhoto.name).toEqual('photo');
     });
+    const req = httpMock.expectOne('/api/cultural-offerings/add-photo');
+    expect(req.request.method).toBe('POST');
+    req.flush(mockPost);
+
+    tick();
+
+    expect(newPhoto).toBeDefined();
+    expect(newPhoto.name).toEqual('photo');
   }));
 
   it('addOffering()  should query url and save a culturalOffering', fakeAsync(() => {

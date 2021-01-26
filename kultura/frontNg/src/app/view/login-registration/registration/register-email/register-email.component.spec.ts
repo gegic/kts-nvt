@@ -11,6 +11,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MessageService} from 'primeng/api';
 import {RegisterService} from '../../../../core/services/register/register.service';
 import createSpy = jasmine.createSpy;
+import {MenuModule} from 'primeng/menu';
+import {RatingModule} from 'primeng/rating';
 
 describe('RegisterEmailComponent', () => {
   let component: RegisterEmailComponent;
@@ -32,7 +34,13 @@ describe('RegisterEmailComponent', () => {
     const activatedRouteMock = {};
     await TestBed.configureTestingModule({
       declarations: [ RegisterEmailComponent ],
-      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule],
+      imports: [
+        HttpClientTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MenuModule,
+        RatingModule
+      ],
       providers: [
         MessageService,
         {provide: RegisterService, useValue: registerServiceMock},
