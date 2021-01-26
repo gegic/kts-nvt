@@ -34,7 +34,7 @@ public class LoginE2ETest {
   @Test
   public void AdminLogInTestSuccess() throws InterruptedException {
 
-    driver.get("http://localhost:4200/login");
+    driver.get("https://localhost:4200/login");
 
     justWait();
 
@@ -47,13 +47,13 @@ public class LoginE2ETest {
     loginPage.getLoginBtn().click();
     justWait();
     justWait();
-    assertEquals("http://localhost:4200/moderators", driver.getCurrentUrl());
+    assertEquals("https://localhost:4200/moderators", driver.getCurrentUrl());
   }
 
   @Test
   public void ModeratorLogInTestSuccess() throws InterruptedException {
 
-    driver.get("http://localhost:4200/login");
+    driver.get("https://localhost:4200/login");
 
     justWait();
 
@@ -66,13 +66,13 @@ public class LoginE2ETest {
     loginPage.getLoginBtn().click();
     justWait();
     justWait();
-    assertEquals(true, driver.getCurrentUrl().startsWith("http://localhost:4200/?lat="));
+    assertEquals(true, driver.getCurrentUrl().startsWith("https://localhost:4200/?lat="));
   }
 
   @Test
   public void UserLogInTestSuccess() throws InterruptedException {
 
-    driver.get("http://localhost:4200/login");
+    driver.get("https://localhost:4200/login");
 
     justWait();
 
@@ -85,13 +85,13 @@ public class LoginE2ETest {
     loginPage.getLoginBtn().click();
     justWait();
     justWait();
-    assertEquals(true, driver.getCurrentUrl().startsWith("http://localhost:4200/?lat="));
+    assertEquals(true, driver.getCurrentUrl().startsWith("https://localhost:4200/?lat="));
   }
 
   @Test
   public void LogInTestWrongEmail() throws InterruptedException {
 
-    driver.get("http://localhost:4200/login");
+    driver.get("https://localhost:4200/login");
 
     justWait();
 
@@ -102,13 +102,13 @@ public class LoginE2ETest {
     String toast = loginPage.ensureIsDisplayedToast();
 
     assertEquals("Email not found\n" + "A user with this email doesn't exist.", toast);
-    assertEquals("http://localhost:4200/login", driver.getCurrentUrl());
+    assertEquals("https://localhost:4200/login", driver.getCurrentUrl());
   }
 
   @Test
   public void LogInTestWrongPassword() throws InterruptedException {
 
-    driver.get("http://localhost:4200/login");
+    driver.get("https://localhost:4200/login");
     justWait();
     loginPage.getEmail().sendKeys("moderator@mail.com");
     loginPage.getNextBtn().click();
@@ -122,7 +122,7 @@ public class LoginE2ETest {
     String toast = loginPage.ensureIsDisplayedToast();
 
     assertEquals("Your password is incorrect", toast);
-    assertEquals("http://localhost:4200/login/password", driver.getCurrentUrl());
+    assertEquals("https://localhost:4200/login/password", driver.getCurrentUrl());
   }
 
   private void justWait() throws InterruptedException {

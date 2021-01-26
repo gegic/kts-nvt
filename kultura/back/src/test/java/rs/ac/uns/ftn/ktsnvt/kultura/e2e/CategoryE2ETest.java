@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CategoryE2ETest {
-    public static final String BASE_URL = "http://localhost:4200";
+    public static final String BASE_URL = "https://localhost:4200";
     private static WebDriver driver;
     private static LoginPage loginPage;
     private static CategoryPage categoryPage;
@@ -27,7 +27,7 @@ public class CategoryE2ETest {
         driver.manage().window().maximize();
         loginPage = PageFactory.initElements(driver, LoginPage.class);
 
-        driver.get("http://localhost:4200/login");
+        driver.get("https://localhost:4200/login");
 
         justWait(1000);
 
@@ -53,7 +53,7 @@ public class CategoryE2ETest {
     }
 
     public void deleteCategory(String name) throws InterruptedException {
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
 
         justWait(1000);
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
@@ -74,7 +74,7 @@ public class CategoryE2ETest {
 
     public void addCategory(String name) throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         justWait(1000);
 
@@ -89,7 +89,7 @@ public class CategoryE2ETest {
     @Test
     public void addAndDeleteCategory() throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "TestCategory" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
@@ -108,7 +108,7 @@ public class CategoryE2ETest {
     @Test
     public void editCategory() throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "TestCategory" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
@@ -144,13 +144,13 @@ public class CategoryE2ETest {
     @Test
     public void addCategoryExists() throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "Institucija";
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         justWait(1000);
         //jse.executeScript("window.scrollTo(0, 0)");
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         justWait(1000);
 
         categoryPage.getNewCategoryBtn().click();
@@ -169,13 +169,13 @@ public class CategoryE2ETest {
     @Test
     public void addCategoryEmptyName() throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "";
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         justWait(1000);
 //        jse.executeScript("window.scrollTo(0, 0)");
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         justWait(1000);
 
         categoryPage.getNewCategoryBtn().click();
@@ -195,7 +195,7 @@ public class CategoryE2ETest {
     @Test
     public void editCategoryNameExists() throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "TestCategory" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
@@ -207,7 +207,7 @@ public class CategoryE2ETest {
 
         categoryPage.getSaveCategoryBtn().click();
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         justWait(1000);
         jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
         justWait(1000);
@@ -231,7 +231,7 @@ public class CategoryE2ETest {
     @Test
     public void deleteCategoryWithSubcategories() throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "Institucija";
 
@@ -252,7 +252,7 @@ public class CategoryE2ETest {
     @Test
     public void addCategoryAndSubcategories() throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "TestCategory" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
@@ -265,7 +265,7 @@ public class CategoryE2ETest {
         justWait(1000);
         categoryPage.getSaveCategoryBtn().click();
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         justWait(1000);
         jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
         justWait(1000);
@@ -306,7 +306,7 @@ public class CategoryE2ETest {
     @Test
     public void addExistingSubcategory() throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "Muzej";
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
@@ -334,7 +334,7 @@ public class CategoryE2ETest {
     @Test
     public void addSubcategoryEmptyName() throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "";
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
@@ -361,7 +361,7 @@ public class CategoryE2ETest {
     @Test
     public void deleteSubcategory() throws InterruptedException {
         justWait(1000);
-        driver.get("http://localhost:4200/categories");
+        driver.get("https://localhost:4200/categories");
         String categoryName = "TestCategory" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);

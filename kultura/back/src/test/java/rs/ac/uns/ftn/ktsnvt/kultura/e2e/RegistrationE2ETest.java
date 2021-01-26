@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 
 public class RegistrationE2ETest {
 
-  public static final String BASE_URL = "http://localhost:4200";
+  public static final String BASE_URL = "https://localhost:4200";
   private static String randomMail;
   private WebDriver driver;
   private RegistrationPage registrationPage;

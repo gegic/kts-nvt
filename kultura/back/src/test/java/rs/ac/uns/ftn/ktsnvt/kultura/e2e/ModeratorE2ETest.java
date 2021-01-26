@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static org.junit.Assert.assertEquals;
 
 public class ModeratorE2ETest {
-  public static final String BASE_URL = "http://localhost:4200";
+  public static final String BASE_URL = "https://localhost:4200";
   private static WebDriver driver;
   private static LoginPage loginPage;
   private static ModeratorPage moderatorPage;
@@ -27,7 +27,7 @@ public class ModeratorE2ETest {
     driver.manage().window().maximize();
     loginPage = PageFactory.initElements(driver, LoginPage.class);
 
-    driver.get("http://localhost:4200/login");
+    driver.get("https://localhost:4200/login");
 
     justWait(300);
 
@@ -53,7 +53,7 @@ public class ModeratorE2ETest {
   }
 
   public void deleteModerator(String mail) throws InterruptedException {
-    driver.get("http://localhost:4200/moderators");
+    driver.get("https://localhost:4200/moderators");
 
     justWait(1000);
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
@@ -70,7 +70,7 @@ public class ModeratorE2ETest {
   @Test
   public void editModerator() throws InterruptedException {
     justWait(1000);
-    driver.get("http://localhost:4200/add-moderator");
+    driver.get("https://localhost:4200/add-moderator");
     String email =
         "test_moderator" + ThreadLocalRandom.current().nextInt(0, 9999 + 1) + "@mail.com";
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
@@ -87,7 +87,7 @@ public class ModeratorE2ETest {
     moderatorPage.getAddModeratorBtn().click();
     justWait(2000);
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
-    assertEquals("http://localhost:4200/moderators", driver.getCurrentUrl());
+    assertEquals("https://localhost:4200/moderators", driver.getCurrentUrl());
     justWait(1000);
     moderatorPage.ensureIsDisplayed("p" + email);
     moderatorPage.ensureIsDisplayed("pPetterHans");
@@ -107,7 +107,7 @@ public class ModeratorE2ETest {
   @Test
   public void addAndDeleteModerator() throws InterruptedException {
     justWait(1000);
-    driver.get("http://localhost:4200/add-moderator");
+    driver.get("https://localhost:4200/add-moderator");
     String email =
         "test_moderator" + ThreadLocalRandom.current().nextInt(0, 9999 + 1) + "@mail.com";
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
@@ -123,7 +123,7 @@ public class ModeratorE2ETest {
 
     moderatorPage.getAddModeratorBtn().click();
     justWait(3000);
-    assertEquals("http://localhost:4200/moderators", driver.getCurrentUrl());
+    assertEquals("https://localhost:4200/moderators", driver.getCurrentUrl());
     justWait(1000);
     deleteModerator(email);
   }
@@ -131,7 +131,7 @@ public class ModeratorE2ETest {
   @Test
   public void addModeratorWrongEmail() throws InterruptedException {
     justWait(1000);
-    driver.get("http://localhost:4200/add-moderator");
+    driver.get("https://localhost:4200/add-moderator");
     String email = "test_moderator" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
     justWait(1000);
@@ -156,7 +156,7 @@ public class ModeratorE2ETest {
   @Test
   public void addModeratorWrongFirstName() throws InterruptedException {
     justWait(1000);
-    driver.get("http://localhost:4200/add-moderator");
+    driver.get("https://localhost:4200/add-moderator");
     String email =
         "test_moderator" + ThreadLocalRandom.current().nextInt(0, 9999 + 1) + "@mail.com";
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
@@ -182,7 +182,7 @@ public class ModeratorE2ETest {
   @Test
   public void addModeratorWrongLastName() throws InterruptedException {
     justWait(1000);
-    driver.get("http://localhost:4200/add-moderator");
+    driver.get("https://localhost:4200/add-moderator");
     String email =
         "test_moderator" + ThreadLocalRandom.current().nextInt(0, 9999 + 1) + "@mail.com";
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
@@ -208,7 +208,7 @@ public class ModeratorE2ETest {
   @Test
   public void addModeratorTooSmallPassword() throws InterruptedException {
     justWait(1000);
-    driver.get("http://localhost:4200/add-moderator");
+    driver.get("https://localhost:4200/add-moderator");
     String email =
         "test_moderator" + ThreadLocalRandom.current().nextInt(0, 9999 + 1) + "@mail.com";
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
@@ -236,7 +236,7 @@ public class ModeratorE2ETest {
   @Test
   public void addModeratorPasswordDontHaveUppercase() throws InterruptedException {
     justWait(1000);
-    driver.get("http://localhost:4200/add-moderator");
+    driver.get("https://localhost:4200/add-moderator");
     String email =
         "test_moderator" + ThreadLocalRandom.current().nextInt(0, 9999 + 1) + "@mail.com";
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
@@ -264,7 +264,7 @@ public class ModeratorE2ETest {
   @Test
   public void addModeratorPasswordDontHaveDigit() throws InterruptedException {
     justWait(1000);
-    driver.get("http://localhost:4200/add-moderator");
+    driver.get("https://localhost:4200/add-moderator");
     String email =
         "test_moderator" + ThreadLocalRandom.current().nextInt(0, 9999 + 1) + "@mail.com";
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
@@ -292,7 +292,7 @@ public class ModeratorE2ETest {
   @Test
   public void addModeratorWrongDintSamePasswords() throws InterruptedException {
     justWait(1000);
-    driver.get("http://localhost:4200/add-moderator");
+    driver.get("https://localhost:4200/add-moderator");
     String email =
         "test_moderator" + ThreadLocalRandom.current().nextInt(0, 9999 + 1) + "@mail.com";
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
@@ -318,7 +318,7 @@ public class ModeratorE2ETest {
   @Test
   public void addModeratorWrongMailAlreadyExist() throws InterruptedException {
     justWait(1000);
-    driver.get("http://localhost:4200/add-moderator");
+    driver.get("https://localhost:4200/add-moderator");
     String email = "admin@mail.com";
     moderatorPage = PageFactory.initElements(driver, ModeratorPage.class);
     justWait(1000);

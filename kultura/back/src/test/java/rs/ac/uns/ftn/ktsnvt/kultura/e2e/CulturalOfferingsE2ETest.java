@@ -16,7 +16,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 public class CulturalOfferingsE2ETest {
-  public static final String BASE_URL = "http://localhost:4200";
+  public static final String BASE_URL = "https://localhost:4200";
   private static E2EUtils utils;
   private static WebDriver driver;
   private static AddCulturalOfferingPage addCulturalOfferingPage;
@@ -29,7 +29,7 @@ public class CulturalOfferingsE2ETest {
 
     driver.manage().window().maximize();
     LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
-    driver.get("http://localhost:4200/login");
+    driver.get("https://localhost:4200/login");
 
     utils.ensureDisplayed(loginPage.getEmail()).sendKeys("moderator@mail.com");
     loginPage.getNextBtn().click();
@@ -50,7 +50,7 @@ public class CulturalOfferingsE2ETest {
   public void addOffering() throws InterruptedException, IOException {
     String photoPath = new ClassPathResource("test_photo.png").getFile().getAbsolutePath();
 
-    driver.get("http://localhost:4200/create-offering");
+    driver.get("https://localhost:4200/create-offering");
     addCulturalOfferingPage = PageFactory.initElements(driver, AddCulturalOfferingPage.class);
 
     utils.ensureDisplayed(addCulturalOfferingPage.getOfferingNameInput()).sendKeys("Festival nauke");
@@ -85,7 +85,7 @@ public class CulturalOfferingsE2ETest {
   @Test
   public void addOfferingNoPhoto() throws InterruptedException, IOException {
 
-    driver.get("http://localhost:4200/create-offering");
+    driver.get("https://localhost:4200/create-offering");
     addCulturalOfferingPage = PageFactory.initElements(driver, AddCulturalOfferingPage.class);
 
     utils.ensureDisplayed(addCulturalOfferingPage.getOfferingNameInput()).sendKeys("Festival nauke");
@@ -117,7 +117,7 @@ public class CulturalOfferingsE2ETest {
   public void addOfferingNoName() throws InterruptedException, IOException {
     String photoPath = new ClassPathResource("test_photo.png").getFile().getAbsolutePath();
 
-    driver.get("http://localhost:4200/create-offering");
+    driver.get("https://localhost:4200/create-offering");
     addCulturalOfferingPage = PageFactory.initElements(driver, AddCulturalOfferingPage.class);
 
     utils.ensureDisplayed(addCulturalOfferingPage.getCategorySelect()).click();
@@ -151,7 +151,7 @@ public class CulturalOfferingsE2ETest {
   public void addOfferingNoCategoryAndSubcategory() throws InterruptedException, IOException {
     String photoPath = new ClassPathResource("test_photo.png").getFile().getAbsolutePath();
 
-    driver.get("http://localhost:4200/create-offering");
+    driver.get("https://localhost:4200/create-offering");
     addCulturalOfferingPage = PageFactory.initElements(driver, AddCulturalOfferingPage.class);
 
     utils.ensureDisplayed(addCulturalOfferingPage.getOfferingNameInput()).sendKeys("Festival nauke");
@@ -177,7 +177,7 @@ public class CulturalOfferingsE2ETest {
   public void addOfferingNoBriefInfo() throws InterruptedException, IOException {
     String photoPath = new ClassPathResource("test_photo.png").getFile().getAbsolutePath();
 
-    driver.get("http://localhost:4200/create-offering");
+    driver.get("https://localhost:4200/create-offering");
     addCulturalOfferingPage = PageFactory.initElements(driver, AddCulturalOfferingPage.class);
 
     utils.ensureDisplayed(addCulturalOfferingPage.getOfferingNameInput()).sendKeys("Festival nauke");
@@ -212,7 +212,7 @@ public class CulturalOfferingsE2ETest {
   public void addOfferingNoAddress() throws InterruptedException, IOException {
     String photoPath = new ClassPathResource("test_photo.png").getFile().getAbsolutePath();
 
-    driver.get("http://localhost:4200/create-offering");
+    driver.get("https://localhost:4200/create-offering");
     addCulturalOfferingPage = PageFactory.initElements(driver, AddCulturalOfferingPage.class);
 
     utils.ensureDisplayed(addCulturalOfferingPage.getOfferingNameInput()).sendKeys("Festival nauke");
@@ -244,7 +244,7 @@ public class CulturalOfferingsE2ETest {
   public void addOfferingNoSubcategory() throws InterruptedException, IOException {
     String photoPath = new ClassPathResource("test_photo.png").getFile().getAbsolutePath();
 
-    driver.get("http://localhost:4200/create-offering");
+    driver.get("https://localhost:4200/create-offering");
     addCulturalOfferingPage = PageFactory.initElements(driver, AddCulturalOfferingPage.class);
 
     utils.ensureDisplayed(addCulturalOfferingPage.getOfferingNameInput()).sendKeys("Festival nauke");
@@ -272,7 +272,7 @@ public class CulturalOfferingsE2ETest {
 
   @Test
   public void deleteCulturalOfferingFromDetailsView() throws InterruptedException {
-    driver.get("http://localhost:4200/cultural-offering/6");
+    driver.get("https://localhost:4200/cultural-offering/6");
 
     CulturalOfferingDetailsPage detailsPage = PageFactory.initElements(driver, CulturalOfferingDetailsPage.class);
 
@@ -287,7 +287,7 @@ public class CulturalOfferingsE2ETest {
 
   @Test
   public void editCulturalOfferingChangeName() throws InterruptedException {
-    driver.get("http://localhost:4200/edit-offering/2");
+    driver.get("https://localhost:4200/edit-offering/2");
     addCulturalOfferingPage = PageFactory.initElements(driver, AddCulturalOfferingPage.class);
 
     WebElement nameInput = utils.ensureDisplayed(addCulturalOfferingPage.getOfferingNameInput());
@@ -307,7 +307,7 @@ public class CulturalOfferingsE2ETest {
   public void editCulturalOfferingChangePhoto() throws InterruptedException, IOException {
     String photoPath = new ClassPathResource("test_photo.png").getFile().getAbsolutePath();
 
-    driver.get("http://localhost:4200/edit-offering/2");
+    driver.get("https://localhost:4200/edit-offering/2");
     addCulturalOfferingPage = PageFactory.initElements(driver, AddCulturalOfferingPage.class);
 
     utils.ensureDisplayed(addCulturalOfferingPage.getThumbnail());
@@ -325,7 +325,7 @@ public class CulturalOfferingsE2ETest {
 
   @Test
   public void editCulturalOfferingNoName() throws InterruptedException {
-    driver.get("http://localhost:4200/edit-offering/2");
+    driver.get("https://localhost:4200/edit-offering/2");
     addCulturalOfferingPage = PageFactory.initElements(driver, AddCulturalOfferingPage.class);
 
     WebElement nameInput = utils.ensureDisplayed(addCulturalOfferingPage.getOfferingNameInput());
@@ -341,7 +341,7 @@ public class CulturalOfferingsE2ETest {
 
   @Test
   public void deleteCulturalOfferingFromListView() throws InterruptedException {
-    driver.get("http://localhost:4200/list-view");
+    driver.get("https://localhost:4200/list-view");
 
     ListViewPage listViewPage = PageFactory.initElements(driver, ListViewPage.class);
 

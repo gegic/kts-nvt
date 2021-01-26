@@ -34,12 +34,12 @@ public class VerificationE2ETest {
   @Test
   public void VerificationSuccess() throws InterruptedException {
 
-    driver.get("http://localhost:4200/verify/18");
+    driver.get("https://localhost:4200/verify/18");
     justWait();
     verificationPage.getVerifyBtn().click();
     justWait();
     verificationPage.ensureIsNotVisibleVerifiedP();
-    assertEquals("http://localhost:4200/verify/18", driver.getCurrentUrl());
+    assertEquals("https://localhost:4200/verify/18", driver.getCurrentUrl());
   }
 
   private void justWait() throws InterruptedException {

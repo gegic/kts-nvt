@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class UserFunctionsE2ETest {
-    public static final String BASE_URL = "http://localhost:4200";
+    public static final String BASE_URL = "https://localhost:4200";
     private static E2EUtils utils;
     private static WebDriver driver;
     private static CulturalOfferingDetailsPage detailsPage;
@@ -38,7 +38,7 @@ public class UserFunctionsE2ETest {
         driver.manage().window().maximize();
         LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
 
-        driver.get("http://localhost:4200/login");
+        driver.get("https://localhost:4200/login");
 
         loginPage.ensureDisplayed(loginPage.getEmail()).sendKeys("user@mail.com");
         loginPage.getNextBtn().click();
@@ -51,7 +51,7 @@ public class UserFunctionsE2ETest {
     }
     @Test
     public void subscribeAndUnsubscribe() throws InterruptedException {
-        driver.get("http://localhost:4200/cultural-offering/1");
+        driver.get("https://localhost:4200/cultural-offering/1");
         CulturalOfferingDetailsPage detailsPage = PageFactory.initElements(driver, CulturalOfferingDetailsPage.class);
 
         utils.ensureDisplayed(detailsPage.getSubscribeBtn()).click();
@@ -75,6 +75,6 @@ public class UserFunctionsE2ETest {
 
         utils.ensureDisplayed("logout-btn").click();
 
-        assertEquals("http://localhost:4200/login", driver.getCurrentUrl());
+        assertEquals("https://localhost:4200/login", driver.getCurrentUrl());
     }
 }

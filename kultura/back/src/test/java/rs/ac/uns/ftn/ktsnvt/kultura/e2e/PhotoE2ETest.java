@@ -16,7 +16,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 public class PhotoE2ETest {
-    public static final String BASE_URL = "http://localhost:4200";
+    public static final String BASE_URL = "https://localhost:4200";
     private static E2EUtils utils;
     private static WebDriver driver;
     private static PhotosPage photosPage;
@@ -30,7 +30,7 @@ public class PhotoE2ETest {
         driver.manage().window().maximize();
         LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
 
-        driver.get("http://localhost:4200/login");
+        driver.get("https://localhost:4200/login");
 
         loginPage.ensureDisplayed(loginPage.getEmail()).sendKeys("moderator@mail.com");
         loginPage.getNextBtn().click();
@@ -52,7 +52,7 @@ public class PhotoE2ETest {
 
         String path = new ClassPathResource("test_photo.png").getFile().getAbsolutePath();
 
-        driver.get("http://localhost:4200/cultural-offering/1/photos");
+        driver.get("https://localhost:4200/cultural-offering/1/photos");
 
         photosPage = PageFactory.initElements(driver, PhotosPage.class);
 
@@ -73,7 +73,7 @@ public class PhotoE2ETest {
     public void deletePhoto() throws InterruptedException, IOException {
         String path = new ClassPathResource("test_photo.png").getFile().getAbsolutePath();
 
-        driver.get("http://localhost:4200/cultural-offering/1/photos");
+        driver.get("https://localhost:4200/cultural-offering/1/photos");
 
         photosPage = PageFactory.initElements(driver, PhotosPage.class);
 

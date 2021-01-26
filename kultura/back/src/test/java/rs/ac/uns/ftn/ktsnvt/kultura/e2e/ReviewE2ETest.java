@@ -29,7 +29,7 @@ public class ReviewE2ETest {
 
         driver.manage().window().maximize();
         LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
-        driver.get("http://localhost:4200/login");
+        driver.get("https://localhost:4200/login");
 
         utils.ensureDisplayed(loginPage.getEmail()).sendKeys("user@mail.com");
         loginPage.getNextBtn().click();
@@ -47,7 +47,7 @@ public class ReviewE2ETest {
     @Test
     public void ChangeReviewSuccess() throws InterruptedException {
 
-        driver.get("http://localhost:4200/cultural-offering/1/reviews");
+        driver.get("https://localhost:4200/cultural-offering/1/reviews");
         reviewPage = PageFactory.initElements(driver, ReviewPage.class);
 
         utils.ensureDisplayed(reviewPage.getReviewButton()).click();
@@ -71,7 +71,7 @@ public class ReviewE2ETest {
     @Test
     public void PostReviewSuccess() throws InterruptedException {
 
-        driver.get("http://localhost:4200/cultural-offering/7/reviews");
+        driver.get("https://localhost:4200/cultural-offering/7/reviews");
         reviewPage = PageFactory.initElements(driver, ReviewPage.class);
 
         utils.ensureDisplayed(reviewPage.getReviewButton()).click();

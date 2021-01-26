@@ -55,7 +55,7 @@ public class UserEditE2ETest {
             return;
         }
         LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
-        driver.get("http://localhost:4200/login");
+        driver.get("https://localhost:4200/login");
 
         utils.ensureDisplayed(loginPage.getEmail()).sendKeys(userEmail);
         loginPage.getNextBtn().click();
@@ -70,7 +70,7 @@ public class UserEditE2ETest {
 
         login();
 
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         userEditPage = PageFactory.initElements(driver, UserEditPage.class);
 
         utils.ensureDisplayed(userEditPage.getName()).sendKeys(E2EConstants.NAME);
@@ -89,7 +89,7 @@ public class UserEditE2ETest {
     public void ChangeNameTestFail() throws InterruptedException {
         login();
 
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
 
         utils.ensureDisplayed(userEditPage.getName()).sendKeys("");
 
@@ -106,7 +106,7 @@ public class UserEditE2ETest {
     public void ChangeLastNameTestSuccess() throws InterruptedException {
         login();
 
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         userEditPage = PageFactory.initElements(driver, UserEditPage.class);
 
         utils.ensureDisplayed(userEditPage.getLastName()).sendKeys(E2EConstants.LASTNAME);
@@ -126,7 +126,7 @@ public class UserEditE2ETest {
     public void ChangeLastNameTestFail() throws InterruptedException {
         login();
 
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
 
         utils.ensureDisplayed(userEditPage.getLastName()).sendKeys("");
 
@@ -142,21 +142,21 @@ public class UserEditE2ETest {
     @Test
     public void ChangePasswordTestSuccess() throws InterruptedException {
         if (loggedIn) {
-            driver.get("http://localhost:4200/user-edit");
+            driver.get("https://localhost:4200/user-edit");
             userEditPage = PageFactory.initElements(driver, UserEditPage.class);
 
             utils.ensureDisplayed("avatar").click();
 
             utils.ensureDisplayed("logout-btn").click();
 
-            assertEquals("http://localhost:4200/login", driver.getCurrentUrl());
+            assertEquals("https://localhost:4200/login", driver.getCurrentUrl());
 
             loggedIn = false;
         }
         userEmail = "user3@mail.com";
         login();
 
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         userEditPage = PageFactory.initElements(driver, UserEditPage.class);
 
         utils.ensureDisplayed(userEditPage.getPasswordTab()).click();
@@ -179,7 +179,7 @@ public class UserEditE2ETest {
     @Test
     public void ChangePasswordTestFail() throws InterruptedException {
         login();
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         userEditPage = PageFactory.initElements(driver, UserEditPage.class);
         utils.ensureDisplayed(userEditPage.getPasswordTab()).click();
 
@@ -189,7 +189,7 @@ public class UserEditE2ETest {
         String toast = utils.ensureDisplayed("password-valid-error").getText();
 
         assertEquals("Not updated\nNew password must not be empty.", toast);
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         utils.ensureDisplayed(userEditPage.getPasswordTab()).click();
 
         utils.ensureDisplayed(userEditPage.getPassword()).sendKeys(E2EConstants.NEW_PASSWORD_BAD_FORMAT0);
@@ -198,14 +198,14 @@ public class UserEditE2ETest {
         toast = utils.ensureDisplayed("password-valid-error").getText();
         assertEquals("Not updated\nNew password length must be between 8 and 50 characters.", toast);
 
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         utils.ensureDisplayed(userEditPage.getPasswordTab()).click();
 
         utils.ensureDisplayed(userEditPage.getPassword()).sendKeys(E2EConstants.NEW_PASSWORD_BAD_FORMAT0_1);
         userEditPage.getSubmitPassword().click();
         toast = utils.ensureDisplayed("password-valid-error").getText();
         assertEquals("Not updated\nNew password length must be between 8 and 50 characters.", toast);
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         utils.ensureDisplayed(userEditPage.getPasswordTab()).click();
 
         userEditPage.getPassword().sendKeys(E2EConstants.NEW_PASSWORD_BAD_FORMAT1);
@@ -215,7 +215,7 @@ public class UserEditE2ETest {
         toast = utils.ensureDisplayed("password-valid-error").getText();
         assertEquals("Not updated\nPassword must contain capital letter.", toast);
 
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         utils.ensureDisplayed(userEditPage.getPasswordTab()).click();
 
         userEditPage.getPassword().sendKeys(E2EConstants.NEW_PASSWORD_BAD_FORMAT2);
@@ -224,7 +224,7 @@ public class UserEditE2ETest {
 
         toast = utils.ensureDisplayed("password-valid-error").getText();
         assertEquals("Not updated\nPassword must contain digit.", toast);
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         utils.ensureDisplayed(userEditPage.getPasswordTab()).click();
 
         userEditPage.getPassword().sendKeys(E2EConstants.NEW_PASSWORD);
@@ -240,7 +240,7 @@ public class UserEditE2ETest {
     @Test
     public void ChangeEmailTestFail() throws InterruptedException {
         login();
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         userEditPage = PageFactory.initElements(driver, UserEditPage.class);
 
         utils.ensureDisplayed(userEditPage.getEmail()).sendKeys("");
@@ -268,21 +268,21 @@ public class UserEditE2ETest {
     @Test
     public void ChangeEmailTestSuccess() throws InterruptedException {
         if (loggedIn) {
-            driver.get("http://localhost:4200/user-edit");
+            driver.get("https://localhost:4200/user-edit");
             userEditPage = PageFactory.initElements(driver, UserEditPage.class);
 
             utils.ensureDisplayed("avatar").click();
 
             utils.ensureDisplayed("logout-btn").click();
 
-            assertEquals("http://localhost:4200/login", driver.getCurrentUrl());
+            assertEquals("https://localhost:4200/login", driver.getCurrentUrl());
 
             loggedIn = false;
         }
         userEmail = "user2@mail.com";
 
         login();
-        driver.get("http://localhost:4200/user-edit");
+        driver.get("https://localhost:4200/user-edit");
         userEditPage = PageFactory.initElements(driver, UserEditPage.class);
 
         utils.ensureDisplayed(userEditPage.getEmail()).sendKeys(E2EConstants.EMAIL);

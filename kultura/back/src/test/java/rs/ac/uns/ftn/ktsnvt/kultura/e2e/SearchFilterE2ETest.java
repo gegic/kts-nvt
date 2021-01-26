@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class SearchFilterE2ETest {
-    public static final String BASE_URL = "http://localhost:4200";
+    public static final String BASE_URL = "https://localhost:4200";
     private static E2EUtils utils;
     private static WebDriver driver;
     private static ListViewPage listViewPage;
@@ -32,7 +32,7 @@ public class SearchFilterE2ETest {
         driver.manage().window().maximize();
         LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
 
-        driver.get("http://localhost:4200/login");
+        driver.get("https://localhost:4200/login");
 
         loginPage.ensureDisplayed(loginPage.getEmail()).sendKeys("user@mail.com");
         loginPage.getNextBtn().click();
@@ -51,7 +51,7 @@ public class SearchFilterE2ETest {
 
     @Test
     public void testSearch() throws InterruptedException {
-        driver.get("http://localhost:4200/list-view");
+        driver.get("https://localhost:4200/list-view");
 
         String searchQuery = "sajam";
 
@@ -83,7 +83,7 @@ public class SearchFilterE2ETest {
 
     @Test
     public void testFilterRating3() throws InterruptedException {
-        driver.get("http://localhost:4200/list-view");
+        driver.get("https://localhost:4200/list-view");
 
         ListViewPage listViewPage = PageFactory.initElements(driver, ListViewPage.class);
 
@@ -128,7 +128,7 @@ public class SearchFilterE2ETest {
 
     @Test
     public void testFilterOnlyReviews() throws InterruptedException {
-        driver.get("http://localhost:4200/list-view");
+        driver.get("https://localhost:4200/list-view");
 
         ListViewPage listViewPage = PageFactory.initElements(driver, ListViewPage.class);
 
@@ -166,7 +166,7 @@ public class SearchFilterE2ETest {
 
     @Test
     public void testFilterRating3OnlyReviews() throws InterruptedException {
-        driver.get("http://localhost:4200/list-view");
+        driver.get("https://localhost:4200/list-view");
 
         ListViewPage listViewPage = PageFactory.initElements(driver, ListViewPage.class);
 
@@ -209,7 +209,7 @@ public class SearchFilterE2ETest {
 
     @Test
     public void testFilterCategory() throws InterruptedException {
-        driver.get("http://localhost:4200/list-view");
+        driver.get("https://localhost:4200/list-view");
 
         ListViewPage listViewPage = PageFactory.initElements(driver, ListViewPage.class);
 
@@ -258,7 +258,7 @@ public class SearchFilterE2ETest {
 
     @Test
     public void testFilterSubcategory() throws InterruptedException {
-        driver.get("http://localhost:4200/list-view");
+        driver.get("https://localhost:4200/list-view");
 
         ListViewPage listViewPage = PageFactory.initElements(driver, ListViewPage.class);
 
@@ -315,7 +315,7 @@ public class SearchFilterE2ETest {
 
     @Test
     public void testFilterOnlyMySubscriptions() throws InterruptedException {
-        driver.get("http://localhost:4200/list-view");
+        driver.get("https://localhost:4200/list-view");
 
         ListViewPage listViewPage = PageFactory.initElements(driver, ListViewPage.class);
 

@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static org.junit.Assert.assertEquals;
 
 public class PostE2ETest {
-  public static final String BASE_URL = "http://localhost:4200";
+  public static final String BASE_URL = "https://localhost:4200";
   private static E2EUtils utils;
   private static WebDriver driver;
   private static PostsPage postsPage;
@@ -37,7 +37,7 @@ public class PostE2ETest {
 
     driver.manage().window().maximize();
     LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
-    driver.get("http://localhost:4200/login");
+    driver.get("https://localhost:4200/login");
 
     utils.ensureDisplayed(loginPage.getEmail()).sendKeys("moderator@mail.com");
     loginPage.getNextBtn().click();
@@ -58,7 +58,7 @@ public class PostE2ETest {
   public void addPost() throws InterruptedException {
     String postContent = "Announcing something new :D";
 
-    driver.get("http://localhost:4200/cultural-offering/1/posts");
+    driver.get("https://localhost:4200/cultural-offering/1/posts");
 
     postsPage = PageFactory.initElements(driver, PostsPage.class);
 
@@ -73,7 +73,7 @@ public class PostE2ETest {
 
   @Test
   public void deletePost() throws InterruptedException {
-    driver.get("http://localhost:4200/cultural-offering/1/posts");
+    driver.get("https://localhost:4200/cultural-offering/1/posts");
 
     postsPage = PageFactory.initElements(driver, PostsPage.class);
 
@@ -93,7 +93,7 @@ public class PostE2ETest {
 
   @Test
   public void editPost() throws InterruptedException {
-    driver.get("http://localhost:4200/cultural-offering/1/posts");
+    driver.get("https://localhost:4200/cultural-offering/1/posts");
 
     postsPage = PageFactory.initElements(driver, PostsPage.class);
 
@@ -113,7 +113,7 @@ public class PostE2ETest {
 
   @Test
   public void addEmptyPost() throws InterruptedException {
-    driver.get("http://localhost:4200/cultural-offering/1/posts");
+    driver.get("https://localhost:4200/cultural-offering/1/posts");
 
     postsPage = PageFactory.initElements(driver, PostsPage.class);
     utils.ensureDisplayed(postsPage.getAnnounceBtn()).click();
@@ -125,7 +125,7 @@ public class PostE2ETest {
 
   @Test
   public void editPostToEmpty() throws InterruptedException {
-    driver.get("http://localhost:4200/cultural-offering/1/posts");
+    driver.get("https://localhost:4200/cultural-offering/1/posts");
 
     postsPage = PageFactory.initElements(driver, PostsPage.class);
 
