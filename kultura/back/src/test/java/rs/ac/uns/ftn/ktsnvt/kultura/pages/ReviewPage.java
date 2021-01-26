@@ -37,4 +37,8 @@ public class ReviewPage {
         .until(ExpectedConditions.presenceOfElementLocated(By.id("toast-container")))
         .getText();
   }
+
+  public void ensureIsDisplayed(String id) {
+    (new WebDriverWait(driver, 30)).until(ExpectedConditions.visibilityOfElementLocated(By.id(id)));
+  }
 }

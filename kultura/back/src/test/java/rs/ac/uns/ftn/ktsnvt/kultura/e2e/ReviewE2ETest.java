@@ -4,6 +4,7 @@ import org.junit.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
 import rs.ac.uns.ftn.ktsnvt.kultura.pages.LoginPage;
@@ -12,6 +13,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.pages.ReviewPage;
 import static org.junit.Assert.assertEquals;
 
 public class ReviewE2ETest {
+    private static E2EUtils utils;
 
     private static WebDriver driver;
 
@@ -99,17 +101,23 @@ public class ReviewE2ETest {
 
         login(E2EConstants.USER1_EMAIL, E2EConstants.USER1_PASSWORD);
         driver.get("http://localhost:4200/cultural-offering/1/reviews");
-        justWait(300);
+        justWait(3000);
         reviewPage = PageFactory.initElements(driver, ReviewPage.class);
+        justWait(3000);
+        reviewPage.ensureIsDisplayed("review-button");
         reviewPage.getReviewButton().click();
-        justWait(200);
+        //driver.findElement(By.className("blue-button")).click();
+        justWait(3000);
 
         driver.findElement(By.xpath("//h4[contains(text(),'Rating')]/following-sibling::p-rating/div/span[contains(@class, 'p-rating-icon')][4]")).click();
         reviewPage.getCommentReview().clear();
         reviewPage.getCommentReview().sendKeys(E2EConstants.REVIEW_COMMENT1);
+        justWait(3000);
         reviewPage.getSubmitBtn().click();
-        justWait(100);
+        justWait(3000);
         logout();
+
+        justWait(3000);
 
         login(E2EConstants.USER_EMAIL, E2EConstants.USER_PASSWORD);
 
@@ -125,12 +133,24 @@ public class ReviewE2ETest {
     }
 
     private static void logout() throws InterruptedException {
-        justWait(100);
-        driver.findElement(By.id("user-menu")).click();
-        justWait(100);
+        justWait(3000);
+        //driver.findElement(By.cssSelector("#user-menu")).click();
+        WebElement ele = driver.findElement(By.cssSelector("#avatar"));
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click();", ele);
+        justWait(3000);
         driver.findElement(By.xpath("//*[text()='Logout']")).click();
-        justWait(100);
+        justWait(1000);
     }
+
+//    @Test
+//    public void logout() throws InterruptedException {
+//        // any page
+//        utils.ensureDisplayed("avatar").click();
+//
+//        utils.ensureDisplayed("logout-btn").click();
+//
+//    }
 
 
     private static void justWait() throws InterruptedException {
