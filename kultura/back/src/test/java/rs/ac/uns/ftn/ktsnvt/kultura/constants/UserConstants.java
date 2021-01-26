@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.constants;
 
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.UserDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Authority;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.User;
 
 import java.time.LocalDateTime;
@@ -10,18 +11,23 @@ public class UserConstants {
 
     public static final int DB_COUNT = 5;
 
-    public static final String MODERATOR_AUTHORITY = "ROLE_MODERATOR";
 
     public static final int MODERATOR_COUNT = 1;
 
     public static final String ADMIN_EMAIL = "admin@mail.com";
     public static final String ADMIN_PASSWORD = "admin123";
     public static final long ADMIN_ID = 1;
+    public static final String ADMIN_NAME = "Admin";
+    public static final String ADMIN_LAST_NAME = "Prezime";
     public static final String ADMIN_FULL_NAME = "Admin Prezime";
+    public static final String ADMIN_AUTHORITY = "ROLE_ADMIN";
 
     public static final long MODERATOR_ID = 2;
     public static final String MODERATOR_EMAIL = "moderator@mail.com";
+    public static final String MODERATOR_NAME = "Moderator";
+    public static final String MODERATOR_LAST_NAME = "Modic";
     public static final String MODERATOR_PASSWORD = "admin123";
+    public static final String MODERATOR_AUTHORITY = "ROLE_MODERATOR";
 
     public static final long USER_ID = 3;
     public static final String USER_EMAIL = "user@mail.com";

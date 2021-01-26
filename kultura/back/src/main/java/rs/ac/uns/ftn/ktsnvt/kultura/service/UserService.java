@@ -133,7 +133,7 @@ public class UserService implements UserDetailsService {
         String body = String
                 .format("Greetings,<br>%s, your registration has been successful." +
                         "<br>You can verify your account by clicking on " +
-                        "<a href=\"http:/localhost:4200/verify/%s\">this link</a>.", user.getFirstName(), user.getId());
+                        "<a href=\"http://localhost:4200/verify/%s\">this link</a>.", user.getFirstName(), user.getId());
         try {
             this.smtpServer.sendEmail(user.getEmail(), "Kultura Registration", body);
         } catch (Exception e) {
