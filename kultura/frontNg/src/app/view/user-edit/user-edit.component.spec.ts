@@ -11,7 +11,6 @@ import {BehaviorSubject, of} from 'rxjs';
 import {TabViewModule} from 'primeng/tabview';
 import {TableModule} from 'primeng/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {AvatarModule} from 'ngx-avatar';
 
 describe('UserEditComponent', () => {
   let component: UserEditComponent;
@@ -63,6 +62,7 @@ describe('UserEditComponent', () => {
   });
 
   it('should create', () => {
+    expect(component).toBeTruthy();
     expect(component).toBeDefined();
   });
 

@@ -18,7 +18,9 @@
             <p class="rating p-my-1 p-text-light">{{overallRating}}</p>
           </div>
           <div>
-            <p-rating [ngModel]="culturalOffering.overallRating"
+            <p-rating
+                      id="rating-stars"
+                      [ngModel]="culturalOffering.overallRating"
                       [readonly]="true"
                       [cancel]="false"
             ></p-rating>
@@ -109,7 +111,7 @@
   <p-dialog header="Write a review" [(visible)]="isAddDialogOpen" [modal]="true" (onHide)="clearReviewToAdd()">
     <div class="p-d-flex p-ai-center">
       <h4 class="p-mr-4 p-text-bold">Rating</h4>
-      <p-rating [(ngModel)]="userReview.rating"></p-rating>
+      <p-rating id="rating-stars-edit" [(ngModel)]="userReview.rating"></p-rating>
     </div>
     <h4 class="p-mb-1 p-text-bold">Comment</h4>
     <textarea [maxLength]="150"
