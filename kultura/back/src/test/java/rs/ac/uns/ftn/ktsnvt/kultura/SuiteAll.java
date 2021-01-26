@@ -31,6 +31,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.*;
         ReviewPhotoServiceIntegrationTest.class,
         ReviewServiceIntegrationTest.class,
         SubcategoryServiceIntegrationTest.class,
+        SubCategoryUnitTest.class,
         UserServiceIntegrationTest.class,
         UserServiceUnitTest.class,
         // repositories
