@@ -156,7 +156,7 @@ export class UserEditComponent implements OnInit {
 
   sizeValidator(field: string, min: number, max: number): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null =>
-      control.value.length >= min && control.value.length <= max ? null : {msg: field + ' length must be between ' + min + ' and ' + max + ' characters.'};
+      control.value?.length >= min && control.value?.length <= max ? null : {msg: field + ' length must be between ' + min + ' and ' + max + ' characters.'};
   }
 
   emptyField(field: string): ValidatorFn {

@@ -2,20 +2,21 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {Review} from '../../core/models/review';
 import {TimeUtil} from '../../core/timeUtil';
 import * as moment from 'moment-timezone';
-import {Confirmation, ConfirmationService, MenuItem, MessageService} from 'primeng/api';
+import {Confirmation, ConfirmationService, MenuItem} from 'primeng/api';
 import {ReviewService} from '../../core/services/review/review.service';
 import {AuthService} from '../../core/services/auth/auth.service';
 import {ReviewPhoto} from '../../core/models/reviewPhoto';
 import {ReviewGalleriaService} from '../../core/services/review-galleria/review-galleria.service';
 import {ReviewNumbers} from '../../core/models/reviewNumbers';
 import {Subscription} from 'rxjs';
+import {Menu} from 'primeng/menu';
 
 @Component({
   selector: 'app-review-element',
   templateUrl: './review-element.component.html',
   styleUrls: ['./review-element.component.scss']
 })
-export class ReviewElementComponent implements OnInit, OnDestroy {
+export class ReviewElementComponent implements OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
@@ -24,18 +25,12 @@ export class ReviewElementComponent implements OnInit, OnDestroy {
   @Output()
   reviewDeleted: EventEmitter<any> = new EventEmitter<any>();
 
+  menuItems: MenuItem[] = [{ label: 'Delete', command: () => this.deleteReview() }];
+
   constructor(private confirmationService: ConfirmationService,
               private reviewService: ReviewService,
-              private messageService: MessageService,
               private authService: AuthService,
               private reviewGalleriaService: ReviewGalleriaService) {
-  }
-
-  ngOnInit(): void {
-  }
-
-  getMenuItems(): MenuItem[] {
-    return [{ label: 'Delete', command: () => this.deleteReview() }];
   }
 
   getUserRole(): string {

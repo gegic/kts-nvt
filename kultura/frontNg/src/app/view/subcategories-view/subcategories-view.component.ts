@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {Category} from '../../core/models/category';
 import {CategoryService} from '../../core/services/category/category.service';
@@ -13,7 +13,7 @@ import {Table} from 'primeng/table';
   templateUrl: './subcategories-view.component.html',
   styleUrls: ['./subcategories-view.component.scss']
 })
-export class SubcategoriesViewComponent implements OnInit, OnDestroy {
+export class SubcategoriesViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
@@ -38,7 +38,10 @@ export class SubcategoriesViewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.category = this.config.data.category;
+    this.getSubcategories({first: 0, rows: 10});
   }
+
+  ngAfterViewInit(): void {}
 
   getSubcategories(event: LazyLoadEvent): void {
     this.isSubcategoriesLoading = true;
@@ -96,6 +99,7 @@ export class SubcategoriesViewComponent implements OnInit, OnDestroy {
   }
 
   resetSubcategories(): void {
+    this.subcategories = [];
     this.table.reset();
   }
 

@@ -26,15 +26,16 @@ describe('SubcategoriesViewComponent', () => {
   beforeEach(async () => {
     const subcategories = getSubcategories();
     const mockCategoryService = {
-      getSubcategories: createSpy('getSubcategories').and.returnValue(of(subcategories)),
-      deleteSubcategory: createSpy('deleteSubcategory').and.returnValue(of()),
-      updateSubcategory: createSpy('updateSubcategory').and.returnValue(of()),
-      createSubcategory: createSpy('createSubcategory').and.returnValue(of())
+      getSubcategories: createSpy('getSubcategories').and.returnValue(of({content: subcategories, totalElements: 2})),
+      deleteSubcategory: createSpy('deleteSubcategory').and.returnValue(of(null)),
+      updateSubcategory: createSpy('updateSubcategory').and.returnValue(of(null)),
+      createSubcategory: createSpy('createSubcategory').and.returnValue(of(null))
     };
 
     category = {
       id: 1,
-      name: 'Kategorija'
+      name: 'Kategorija',
+      numSubcategories: 2
     };
     const mockConfig = {
       data: {category}
@@ -44,7 +45,8 @@ describe('SubcategoriesViewComponent', () => {
         DialogModule,
         ToolbarModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        TableModule
       ],
       declarations: [ SubcategoriesViewComponent ],
       providers: [
@@ -75,15 +77,13 @@ describe('SubcategoriesViewComponent', () => {
     expect(component.category).toEqual(category);
   });
 
-  // it('should get subcategories', fakeAsync(() => {
-  //   component.getSubcategories({first: 0, rows: 10});
-  //
-  //   expect(component.isSubcategoriesLoading).toBeTrue();
-  //   tick();
-  //   expect(categoryService.getSubcategories).toHaveBeenCalledWith(1, 0);
-  //   expect(component.subcategories).toEqual(getSubcategories());
-  // }));
-  //
+  it('should get subcategories', fakeAsync(() => {
+    component.getSubcategories({first: 0, rows: 10});
+    tick();
+    expect(categoryService.getSubcategories).toHaveBeenCalledWith(1, 0);
+    expect(component.subcategories).toEqual(getSubcategories());
+  }));
+
   it('should open subcategories dialog', () => {
     component.openNew();
 
@@ -110,16 +110,16 @@ describe('SubcategoriesViewComponent', () => {
     expect(spyDeletionConfirmed).toHaveBeenCalledWith(getSubcategories()[0]);
   });
 
-  // it('should delete subcategory after confirmation', fakeAsync(() => {
-  //   const spyResetSubcategories = spyOn(component, 'resetSubcategories');
-  //
-  //   component.deletionConfirmed(getSubcategories()[0]);
-  //
-  //   tick();
-  //   expect(categoryService.deleteSubcategory).toHaveBeenCalledWith(1);
-  //   expect(spyAdd).toHaveBeenCalled();
-  //   expect(spyResetSubcategories).toHaveBeenCalled();
-  // }));
+  it('should delete subcategory after confirmation', fakeAsync(() => {
+    const spyResetSubcategories = spyOn(component, 'resetSubcategories');
+
+    component.deletionConfirmed(getSubcategories()[0]);
+
+    tick();
+    expect(categoryService.deleteSubcategory).toHaveBeenCalledWith(1);
+    expect(spyAdd).toHaveBeenCalled();
+    expect(spyResetSubcategories).toHaveBeenCalled();
+  }));
 
   it('should fail deleting subcategory after confirmation', fakeAsync(() => {
     const spyResetSubcategories = spyOn(component, 'resetSubcategories');
@@ -133,24 +133,61 @@ describe('SubcategoriesViewComponent', () => {
     expect(spyResetSubcategories).not.toHaveBeenCalled();
   }));
 
-  // it('should reset table', fakeAsync(() => {
-  //   component.resetSubcategories();
-  //
-  //   tick();
-  //   fixture.detectChanges();
-  //
-  //   expect((component.table as Table).value.length).toEqual(0);
-  // }));
+  it('should reset table', fakeAsync(() => {
+    const spyReset = spyOn(component.table, 'reset');
+    component.resetSubcategories();
+
+    tick();
+    fixture.detectChanges();
+
+    expect(component.subcategories.length).toEqual(0);
+    expect(spyReset).toHaveBeenCalled();
+  }));
 
   it('should save a new subcategory', fakeAsync(() => {
+    const spyReset = spyOn(component, 'resetSubcategories');
     component.nameControl.setValue('Potkategorija');
     component.saveSubcategory();
 
     tick();
     fixture.detectChanges();
 
-    expect(categoryService.createSubcategory).toHaveBeenCalledWith(jasmine.objectContaining({name: 'Potkategorija'}))
+    expect(categoryService.createSubcategory)
+      .toHaveBeenCalledWith(jasmine.objectContaining({name: 'Potkategorija'}));
+    expect(spyAdd).toHaveBeenCalled();
+    expect(spyReset).toHaveBeenCalled();
+    expect(component.isSubcategoryDialogOpen).toBeFalse();
+    expect(component.nameControl.dirty).toBeFalse();
+    expect(component.category.numSubcategories).toEqual(3);
+    expect(component.editingSubcategory).toBeUndefined();
   }));
+
+  it('should save a editing subcategory', fakeAsync(() => {
+    const spyReset = spyOn(component, 'resetSubcategories');
+    component.editingSubcategory = getSubcategories()[0];
+    component.nameControl.setValue('Potkategorija');
+    component.saveSubcategory();
+
+    tick();
+    fixture.detectChanges();
+
+    expect(categoryService.updateSubcategory)
+      .toHaveBeenCalledWith(jasmine.objectContaining({name: 'Potkategorija'}));
+    expect(spyAdd).toHaveBeenCalled();
+    expect(spyReset).toHaveBeenCalled();
+    expect(component.isSubcategoryDialogOpen).toBeFalse();
+    expect(component.nameControl.dirty).toBeFalse();
+    expect(component.category.numSubcategories).toEqual(2);
+    expect(component.editingSubcategory).toBeUndefined();
+  }));
+
+  it('should get whether there is an editing category', () => {
+    expect(component.editing).toBeFalse();
+
+    component.editingSubcategory = getSubcategories()[0];
+
+    expect(component.editing).toBeTrue();
+  });
 });
 
 function getSubcategories(): Subcategory[] {

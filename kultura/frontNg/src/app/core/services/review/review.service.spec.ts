@@ -367,19 +367,19 @@ describe('ReviewService', () => {
 
     service.addPhotos(newPhotos).subscribe(data => {
       newPhotos = data;
-      const req = httpMock.expectOne('/api/reviews/add-photos');
-      expect(req.request.method).toBe('POST');
-      req.flush(mockReviewsPhotos);
-
-      tick();
-
-      expect(newPhotos).toBeDefined();
-      expect(newPhotos.length).toEqual(4);
-      expect(newPhotos[0].name).toEqual('photo1');
-      expect(newPhotos[1].name).toEqual('photo2');
-      expect(newPhotos[2].name).toEqual('photo3');
-      expect(newPhotos[3].name).toEqual('photo4');
     });
+    const req = httpMock.expectOne('/api/reviews/add-photos');
+    expect(req.request.method).toBe('POST');
+    req.flush(mockReviewsPhotos);
+
+    tick();
+
+    expect(newPhotos).toBeDefined();
+    expect(newPhotos.length).toEqual(4);
+    expect(newPhotos[0].name).toEqual('photo1');
+    expect(newPhotos[1].name).toEqual('photo2');
+    expect(newPhotos[2].name).toEqual('photo3');
+    expect(newPhotos[3].name).toEqual('photo4');
   }));
 
   it('clearPhotos() should query url and clear a photos', () => {

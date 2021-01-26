@@ -56,13 +56,10 @@ export class CulturalOfferingDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptions.push(this.activatedRoute.params.pipe(distinctUntilChanged()).subscribe(
       val => {
-        if (!val.id) {
-          this.router.navigate(['']);
-        } else {
+        if (!!val.id) {
           this.getCulturalOffering(val.id);
         }
-      }
-    ));
+      }));
   }
 
   getUserRole(): string {

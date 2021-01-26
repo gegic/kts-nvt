@@ -9,7 +9,7 @@
   <p-table class="subcategoriesTable"  #dt
            [value]="subcategories"
            [lazy]="true"
-           [lazyLoadOnInit]="true"
+           [lazyLoadOnInit]="false"
            [totalRecords]="totalElements"
            [loading]="isSubcategoriesLoading"
            (onLazyLoad)="getSubcategories($event)"

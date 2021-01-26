@@ -95,12 +95,12 @@ describe('CulturalOfferingDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should redirect to homepage if no id', () => {
+  it('not to get cultural offering if id was not supplied', () => {
     (component as any).activatedRoute = {params: of({})};
-
+    const spyGetOffering = spyOn(component, 'getCulturalOffering');
     component.ngOnInit();
 
-    expect(navigateSpy).toHaveBeenCalledWith(['']);
+    expect(spyGetOffering).not.toHaveBeenCalled();
   });
 
   it('should get cultural offering if there is id', fakeAsync(() => {
