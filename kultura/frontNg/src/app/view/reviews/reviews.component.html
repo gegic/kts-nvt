@@ -19,10 +19,10 @@
           </div>
           <div>
             <p-rating
-                      id="rating-stars"
-                      [ngModel]="culturalOffering.overallRating"
-                      [readonly]="true"
-                      [cancel]="false"
+              id="rating-stars"
+              [ngModel]="culturalOffering.overallRating"
+              [readonly]="true"
+              [cancel]="false"
             ></p-rating>
           </div>
         </div>
@@ -32,7 +32,8 @@
               <small class="rating-number">5</small>
             </div>
             <div class="p-col">
-              <p-progressBar [showValue]="false" [value]="getReviewNumberPercentage(reviewNumbers.fiveStars)"></p-progressBar>
+              <p-progressBar [showValue]="false"
+                             [value]="getReviewNumberPercentage(reviewNumbers.fiveStars)"></p-progressBar>
             </div>
           </div>
           <div class="p-grid p-m-0 p-p-0">
@@ -40,7 +41,8 @@
               <small class="rating-number">4</small>
             </div>
             <div class="p-col">
-              <p-progressBar [showValue]="false" [value]="getReviewNumberPercentage(reviewNumbers.fourStars)"></p-progressBar>
+              <p-progressBar [showValue]="false"
+                             [value]="getReviewNumberPercentage(reviewNumbers.fourStars)"></p-progressBar>
             </div>
           </div>
           <div class="p-grid p-m-0 p-p-0">
@@ -48,7 +50,8 @@
               <small class="rating-number">3</small>
             </div>
             <div class="p-col">
-              <p-progressBar [showValue]="false" [value]="getReviewNumberPercentage(reviewNumbers.threeStars)"></p-progressBar>
+              <p-progressBar [showValue]="false"
+                             [value]="getReviewNumberPercentage(reviewNumbers.threeStars)"></p-progressBar>
             </div>
           </div>
           <div class="p-grid p-m-0 p-p-0">
@@ -56,7 +59,8 @@
               <small class="rating-number">2</small>
             </div>
             <div class="p-col">
-              <p-progressBar [showValue]="false" [value]="getReviewNumberPercentage(reviewNumbers.twoStars)"></p-progressBar>
+              <p-progressBar [showValue]="false"
+                             [value]="getReviewNumberPercentage(reviewNumbers.twoStars)"></p-progressBar>
             </div>
           </div>
           <div class="p-grid p-m-0 p-p-0">
@@ -64,7 +68,8 @@
               <small class="rating-number">1</small>
             </div>
             <div class="p-col">
-              <p-progressBar [showValue]="false" [value]="getReviewNumberPercentage(reviewNumbers.oneStar)"></p-progressBar>
+              <p-progressBar [showValue]="false"
+                             [value]="getReviewNumberPercentage(reviewNumbers.oneStar)"></p-progressBar>
             </div>
           </div>
         </div>
@@ -74,6 +79,7 @@
           <ng-template #userAddReview>
             <p *ngIf="!!userReview.id">Click on the button below to view and edit your review.</p>
             <button class="p-button blue-button review-button"
+                    id="review-button"
                     [label]="!userReview.id ? 'Write a review' : 'Edit review'"
                     (click)="onWriteReviewClick()"
                     pButton
@@ -140,7 +146,8 @@
           </div>
         </div>
         <div class="p-col p-as-center p-text-right">
-          <button class="p-button p-button-outlined blue-button-outlined blue-button-text p-button-text" (click)="onClickReupload()" label="Reupload" pButton></button>
+          <button class="p-button p-button-outlined blue-button-outlined blue-button-text p-button-text"
+                  (click)="onClickReupload()" label="Reupload" pButton></button>
         </div>
       </div>
     </ng-template>
