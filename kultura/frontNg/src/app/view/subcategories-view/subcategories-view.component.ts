@@ -82,7 +82,7 @@ export class SubcategoriesViewComponent implements OnInit, OnDestroy {
           });
           this.resetSubcategories();
         },
-        er => {
+        () => {
           this.messageService.add({
             severity: 'error',
             summary: 'Deletion unsuccessful',
