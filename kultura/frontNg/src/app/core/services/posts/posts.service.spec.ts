@@ -145,9 +145,9 @@ describe('PostsService', () => {
         content: 'Dobro mestooo xD',
         culturalOfferingId: 1,
       };
-    service.updatePost(mockPost).subscribe(null, e => {
+    service.updatePost(mockPost).subscribe({next: null, error: e => {
       error = e;
-    });
+    }});
     const req = httpMock.expectOne('/api/posts');
     expect(req.request.method).toBe('PUT');
 

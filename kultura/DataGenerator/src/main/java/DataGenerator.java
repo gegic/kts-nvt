@@ -14,11 +14,11 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public class DataGenerator {
-    public static final int MAX_OFFERINGS = 120;
-    public static final int MAX_USERS = 70;
+    public static final int MAX_OFFERINGS = 300;
+    public static final int MAX_USERS = 100;
     public static final int MAX_CATEGORIES = 10;
     public static final int MAX_SUBCATEGORIES = 20;
-    public static final int MAX_POSTS = 35;
+    public static final int MAX_POSTS = 60;
 
     private long categoriesNumber = 0;
     private long subcategoriesNumber = 0;
@@ -130,7 +130,7 @@ public class DataGenerator {
 
         for(int i = 0; i < culturalOfferingsNumber; ++i) {
             for(int j = 0; j < usersNumber; ++j) {
-                if(f.number().numberBetween(0, 5) == 0 && userAuthorities.get(j).authorityId == 3 && users.get(j).verified) {
+                if(f.number().numberBetween(0, 15) == 0 && userAuthorities.get(j).authorityId == 3 && users.get(j).verified) {
                     Review r = new Review(f.lorem().sentence(5), f.number().numberBetween(1, 6), i + 1 , j + 1);
                     culturalOfferings.get(i).addRating(r);
                     reviews.add(r);

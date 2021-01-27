@@ -265,9 +265,9 @@ describe('CategoryService', () => {
         categoryId: 1,
         numOfferings: 0
       };
-    service.create(mockSubcategory).subscribe(null, e => {
+    service.create(mockSubcategory).subscribe({next: null, error: e => {
       error = e;
-    });
+    }});
     const req = httpMock.expectOne('/api/categories');
     expect(req.request.method).toBe('POST');
 

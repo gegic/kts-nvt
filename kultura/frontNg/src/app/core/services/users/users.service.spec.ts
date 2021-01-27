@@ -93,9 +93,9 @@ describe('UserServiceService', () => {
     mockUser.email = 'test4@mail.com';
     mockUser.id = 1;
 
-    service.update(mockUser).subscribe(null, e => {
+    service.update(mockUser).subscribe({next: null, error: e => {
       error = e;
-    });
+    }});
     const req = httpMock.expectOne('/api/users');
     expect(req.request.method).toBe('PUT');
 

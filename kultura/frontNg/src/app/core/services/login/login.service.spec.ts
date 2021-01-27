@@ -96,9 +96,9 @@ describe('LoginService', () => {
   it('should throw error', () => {
     let error: HttpErrorResponse;
 
-    service.checkExistence('admin@admin.com').subscribe(null, e => {
+    service.checkExistence('admin@admin.com').subscribe({next: null, error: e => {
       error = e;
-    });
+    }});
     const req = httpMock
       .expectOne('/auth/exists/email/admin@admin.com');
     expect(req.request.method).toBe('GET');

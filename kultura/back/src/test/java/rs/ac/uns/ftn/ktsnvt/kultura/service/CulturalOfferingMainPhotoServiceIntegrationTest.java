@@ -110,11 +110,6 @@ public class CulturalOfferingMainPhotoServiceIntegrationTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void deletePhotoNull() {
-        photoService.deletePhoto(null);
-    }
-
-    @Test(expected = NullPointerException.class)
     public void addPhotoNull() {
         photoService.addPhoto(null);
     }

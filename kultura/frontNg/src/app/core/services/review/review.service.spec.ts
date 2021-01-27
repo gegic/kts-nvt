@@ -404,9 +404,9 @@ describe('ReviewService', () => {
         userEmail: 'mail1@mail.com'
       };
 
-    service.add(mockReview).subscribe(null, e => {
+    service.add(mockReview).subscribe({next: null, error: e => {
       error = e;
-    });
+    }});
     const req = httpMock.expectOne('/api/reviews');
     expect(req.request.method).toBe('POST');
 

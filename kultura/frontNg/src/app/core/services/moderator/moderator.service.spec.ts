@@ -204,9 +204,9 @@ describe('ModeratorService', () => {
         lastName: 'Lastname4',
         password: 'Admin123'
       };
-    service.createModerator(mockModerator).subscribe(null, e => {
+    service.createModerator(mockModerator).subscribe({next: null, error: e => {
       error = e;
-    });
+    }});
     const req = httpMock.expectOne('/api/users/moderator');
     expect(req.request.method).toBe('POST');
 
