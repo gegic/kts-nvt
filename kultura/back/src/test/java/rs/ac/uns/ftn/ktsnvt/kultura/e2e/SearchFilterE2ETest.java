@@ -210,50 +210,51 @@ public class SearchFilterE2ETest {
     @Test
     public void testFilterCategory() throws InterruptedException {
         driver.get("https://localhost:4200/list-view");
-
+    
         ListViewPage listViewPage = PageFactory.initElements(driver, ListViewPage.class);
-
+    
         utils.ensureDisplayed(listViewPage.getFilterButton()).click();
-
+    
         WebElement leftHandle = utils.ensureDisplayed(listViewPage.getLeftHandle());
-
+    
         Actions moveSlider = new Actions(driver);
         moveSlider.click(leftHandle).moveByOffset(25, 0).build().perform();
-
+    
         utils.ensureDisplayed(listViewPage.getCategorySelect()).click();
-
+    
         WebElement firstCategory = utils.ensureDisplayed(listViewPage.getFirstCategory());
-
+    
         String categoryName = firstCategory.getText();
-
+    
+        firstCategory.click();
+    
         listViewPage.getSaveFilterBtn().click();
-
         JavascriptExecutor jse = (JavascriptExecutor) driver;
-
+    
         utils.ensureDisplayed(listViewPage.getFilterButton());
-
+    
         int oldNumNames = 0;
         int newNumNames = listViewPage.getCategoriesSubcategories().size();
-
+    
         while (newNumNames > oldNumNames) {
             jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
             utils.waitFor(3000);
-
+        
             oldNumNames = newNumNames;
             newNumNames = listViewPage.getCategoriesSubcategories().size();
         }
-
+    
         assertTrue(listViewPage.getCategoriesSubcategories().stream()
                 .allMatch(we ->  {
                     String catSub = we.getText();
                     int split = catSub.indexOf(">");
                     return catSub.substring(0, split).trim().equalsIgnoreCase(categoryName);
                 }));
-
+    
         jse.executeScript("window.scrollTo(0, -document.body.scrollHeight)");
-
+    
         utils.ensureDisplayed(listViewPage.getResetFilterBtn()).click();
-
+    
         utils.waitFor(1000);
     }
 
