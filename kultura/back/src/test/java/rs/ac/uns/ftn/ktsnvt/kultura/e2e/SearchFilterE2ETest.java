@@ -227,6 +227,7 @@ public class SearchFilterE2ETest {
         String categoryName = firstCategory.getText();
 
         listViewPage.getSaveFilterBtn().click();
+
         JavascriptExecutor jse = (JavascriptExecutor) driver;
 
         utils.ensureDisplayed(listViewPage.getFilterButton());
