@@ -1,11 +1,15 @@
 package rs.ac.uns.ftn.ktsnvt.kultura.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.ErrorPage;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,16 +18,22 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CulturalOfferingConstants;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CulturalOfferingDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CulturalOfferingRepository;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.CulturalOfferingService;
+import rs.ac.uns.ftn.ktsnvt.kultura.utils.HelperPage;
 import rs.ac.uns.ftn.ktsnvt.kultura.utils.LoginUtil;
 
 
 import javax.persistence.EntityNotFoundException;
+
+import java.util.List;
+import java.util.TreeMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -52,7 +62,7 @@ public class CulturalOfferingControllerIntegrationTest {
 
 
     @Test
-    public void testFindById(){
+    public void testFindById() {
         Long existingId1 = CulturalOfferingConstants.EXISTING_ID1;
 
         this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
@@ -62,7 +72,7 @@ public class CulturalOfferingControllerIntegrationTest {
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<CulturalOfferingDto> response = restTemplate.exchange(
-                "/api/cultural-offerings/"+existingId1, HttpMethod.GET, httpEntity, CulturalOfferingDto.class);
+                "/api/cultural-offerings/" + existingId1, HttpMethod.GET, httpEntity, CulturalOfferingDto.class);
 
         CulturalOfferingDto culturalOfferingDto = response.getBody();
         assertNotNull(culturalOfferingDto);
@@ -71,7 +81,7 @@ public class CulturalOfferingControllerIntegrationTest {
     }
 
     @Test
-    public void testFindByIdNotFound(){
+    public void testFindByIdNotFound() {
         Long nonExistingId = CulturalOfferingConstants.TEST_ID1;
 
         this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
@@ -81,7 +91,7 @@ public class CulturalOfferingControllerIntegrationTest {
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<CulturalOfferingDto> response = restTemplate.exchange(
-                "/api/cultural-offerings/"+nonExistingId, HttpMethod.GET, httpEntity, CulturalOfferingDto.class);
+                "/api/cultural-offerings/" + nonExistingId, HttpMethod.GET, httpEntity, CulturalOfferingDto.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
@@ -113,6 +123,71 @@ public class CulturalOfferingControllerIntegrationTest {
 
         this.accessToken = null;
         culturalOfferingService.delete(createdCulturalOffering.getId());
+    }
+
+    @Test
+    public void testFindByBounds() {
+
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
+
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/api/cultural-offerings/bounds")
+                .queryParam("lat-start", "40")
+                .queryParam("lat-end", "44")
+                .queryParam("lng-start", "-180")
+                .queryParam("lng-end", "180");
+
+        System.out.println(builder.toUriString());
+
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+
+        ResponseEntity<CulturalOfferingDto[]> response = restTemplate.exchange(
+                builder.toUriString(), HttpMethod.GET, httpEntity, CulturalOfferingDto[].class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(2, response.getBody().length);
+
+    }
+
+    @Test
+    public void testSearch() {
+
+        this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
+
+
+        HttpHeaders headers = new HttpHeaders();
+
+
+
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/api/cultural-offerings")
+                .queryParam("search", "sajam")
+                .queryParam("lat-start", "40")
+                .queryParam("lat-end", "44")
+                .queryParam("lng-start", "15")
+                .queryParam("lng-end", "25")
+                .queryParam("rating-min", "2.5")
+                .queryParam("rating-max", "3.1");
+
+
+        System.out.println(builder.toUriString());
+
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        ParameterizedTypeReference<HelperPage<CulturalOfferingDto>> responseType = new ParameterizedTypeReference<HelperPage<CulturalOfferingDto>>() {
+        };
+
+        ResponseEntity<HelperPage<CulturalOfferingDto>> response = restTemplate.exchange(
+                builder.toUriString(), HttpMethod.GET, httpEntity, responseType);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().getContent().size());
+        assertEquals(2, response.getBody().getContent().get(0).getId().longValue());
+
     }
 
     @Test()
@@ -156,10 +231,10 @@ public class CulturalOfferingControllerIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertThat(updatedCulturalOffering.getName()).isEqualTo(CulturalOfferingConstants.TEST_NAME1);
-        assertEquals(updatedCulturalOffering.getBriefInfo(),CulturalOfferingConstants.TEST_BRIEF_INFO1);
-        assertEquals(updatedCulturalOffering.getLatitude(),CulturalOfferingConstants.TEST_LATITUDE1);
-        assertEquals(updatedCulturalOffering.getLongitude(),CulturalOfferingConstants.TEST_LONGITUDE1);
-        assertEquals(updatedCulturalOffering.getAddress(),CulturalOfferingConstants.TEST_ADDRESS1);
+        assertEquals(updatedCulturalOffering.getBriefInfo(), CulturalOfferingConstants.TEST_BRIEF_INFO1);
+        assertEquals(updatedCulturalOffering.getLatitude(), CulturalOfferingConstants.TEST_LATITUDE1);
+        assertEquals(updatedCulturalOffering.getLongitude(), CulturalOfferingConstants.TEST_LONGITUDE1);
+        assertEquals(updatedCulturalOffering.getAddress(), CulturalOfferingConstants.TEST_ADDRESS1);
 
         this.accessToken = null;
 
@@ -235,9 +310,9 @@ public class CulturalOfferingControllerIntegrationTest {
 //                "/api/cultural-offerings/id/"+id, HttpMethod.DELETE, httpEntity, CulturalOfferingDto.class);
 //    }
 
-    CulturalOfferingDto getTestCulturalOfferingDto(){
+    CulturalOfferingDto getTestCulturalOfferingDto() {
 
-        CulturalOfferingDto culturalOfferingDto= new CulturalOfferingDto();
+        CulturalOfferingDto culturalOfferingDto = new CulturalOfferingDto();
         culturalOfferingDto.setAddress(CulturalOfferingConstants.TEST_ADDRESS1);
         culturalOfferingDto.setBriefInfo(CulturalOfferingConstants.TEST_BRIEF_INFO1);
         culturalOfferingDto.setLatitude(CulturalOfferingConstants.TEST_LATITUDE1);
@@ -249,6 +324,19 @@ public class CulturalOfferingControllerIntegrationTest {
         return culturalOfferingDto;
     }
 
+    static class ListCulturalOfferings{
+        List<CulturalOfferingDto> culturalOfferingDtos;
 
+        ListCulturalOfferings(){
 
+        }
+
+        public List<CulturalOfferingDto> getCulturalOfferingDtos() {
+            return culturalOfferingDtos;
+        }
+
+        public void setCulturalOfferingDtos(List<CulturalOfferingDto> culturalOfferingDtos) {
+            this.culturalOfferingDtos = culturalOfferingDtos;
+        }
+    }
 }
