@@ -21,17 +21,17 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rs.ac.uns.ftn.ktsnvt.kultura.constants.CategoryConstants;
 import rs.ac.uns.ftn.ktsnvt.kultura.dto.CategoryDto;
+import rs.ac.uns.ftn.ktsnvt.kultura.dto.PostDto;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceExistsException;
 import rs.ac.uns.ftn.ktsnvt.kultura.exception.ResourceNotFoundException;
 import rs.ac.uns.ftn.ktsnvt.kultura.mapper.Mapper;
 import rs.ac.uns.ftn.ktsnvt.kultura.model.Category;
+import rs.ac.uns.ftn.ktsnvt.kultura.model.Subcategory;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.CategoryRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -155,6 +155,23 @@ public class CategoryServiceUnitTest {
 
     }
 
+    @Test
+    public void testReadById() {
+        Category cat = new Category();
+        cat.setId(1);
+        cat.setName("category");
+
+        Pageable pageRequest = PageRequest.of(0, PAGE_SIZE);
+
+        Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(cat));
+
+        CategoryDto returnedCategory = categoryService.readById(1L).get();
+
+        assertEquals(returnedCategory.getId().longValue(), cat.getId());
+        assertEquals(returnedCategory.getName(), cat.getName());
+    }
+
+
     @Test(expected = ResourceExistsException.class)
     public void whenCreateThrowEntityExists() {
             CategoryDto category = new CategoryDto();
@@ -177,4 +194,5 @@ public class CategoryServiceUnitTest {
         Mockito.doNothing().when(categoryRepository).delete(Mockito.any());
         categoryService.delete(Mockito.anyLong());
     }
+    
 }

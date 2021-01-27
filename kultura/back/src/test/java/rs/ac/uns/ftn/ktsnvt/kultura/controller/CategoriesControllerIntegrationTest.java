@@ -90,6 +90,26 @@ public class CategoriesControllerIntegrationTest {
     }
 
     @Test
+    public void whenCreateEmptyName(){
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("");
+        categoryDto.setId(CategoryConstants.TEST_CATEGORY_ID1);
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(categoryDto, headers);
+
+        ResponseEntity<CategoryDto> response = restTemplate.exchange(
+                "/api/categories", HttpMethod.POST, httpEntity, CategoryDto.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        this.accessToken = null;
+    }
+
+    @Test
     public void whenCreateReturnResourceExists(){
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(CategoryConstants.EXISTING_NAME1);
@@ -177,6 +197,26 @@ public class CategoriesControllerIntegrationTest {
                 "/api/categories", HttpMethod.PUT, httpEntity, CategoryDto.class);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+
+        this.accessToken = null;
+    }
+
+    @Test
+    public void whenUpdateEmptyName(){
+        CategoryDto cat = new CategoryDto();
+        cat.setId(CategoryConstants.EXISTING_ID1);
+        cat.setName("");
+
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(cat, headers);
+
+        ResponseEntity<CategoryDto> response = restTemplate.exchange(
+                "/api/categories", HttpMethod.PUT, httpEntity, CategoryDto.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
         this.accessToken = null;
     }
@@ -285,6 +325,27 @@ public class CategoriesControllerIntegrationTest {
         long newDb = categoryRepository.count();
 
         assertEquals(oldDb - 1, newDb);
+    }
+
+    @Test
+    public void testDeleteNonExisting() {
+
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setName("Nepostojeca kategorija");
+        categoryDto.setId(4242L);
+
+        long oldDb = categoryRepository.count();
+        this.accessToken = LoginUtil.login(restTemplate, ADMIN_EMAIL, ADMIN_PASSWORD);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        ResponseEntity<Void> responseEntity =  restTemplate.exchange(
+                "/api/categories/" + categoryDto.getId(), HttpMethod.DELETE, httpEntity, Void.class);
+
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
 }
