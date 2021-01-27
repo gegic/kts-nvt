@@ -105,7 +105,7 @@ public class DataGenerator {
         users.add(new User("admin@mail.com", true, "Admin", "Adminic"));
         userAuthorities.add(new UserAuthority(1, 1));
         for(int i = 1; i < MAX_USERS; ++i) {
-            users.add(new User(f.internet().emailAddress(), f.bool().bool(), f.name().firstName(), f.name().lastName()));
+            users.add(new User(f.internet().emailAddress(), f.number().numberBetween(0, 10) == 0, f.name().firstName(), f.name().lastName()));
             long authority = 3;
             if (f.number().numberBetween(0, 10) == 0) {
                 authority = 2;
