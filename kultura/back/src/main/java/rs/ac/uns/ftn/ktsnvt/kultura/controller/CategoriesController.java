@@ -30,7 +30,7 @@ public class CategoriesController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CategoryDto>> getAll(@RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "10") int size,
-                                                    @RequestParam(defaultValue = "id,asc") String[] sort) {
+                                                    @RequestParam(defaultValue = "id,desc") String[] sort) {
 
         Pageable p = PageableExtractor.extract(page, size, sort);
         Page<CategoryDto> categoryDtos = this.categoryService.readAll(p);

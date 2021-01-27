@@ -51,17 +51,50 @@ public class CategoryE2ETest {
             driver.wait(timeout);
         }
     }
+    
+    public void deleteSubcategory(String categoryName, String subcategoryName) throws InterruptedException {
+        justWait(1000);
+        driver.get("https://localhost:4200/categories");
+        categoryPage = PageFactory.initElements(driver, CategoryPage.class);
+        addCategory(categoryName);
+        
+        justWait(1000);
+        categoryPage.ensureIsDisplayed("p" + categoryName);
+        
+        justWait(1000);
+        categoryPage.subcategoriesBtnCategory(categoryName).click();
+        justWait(1000);
+        categoryPage.deleteBtnSubcategory(subcategoryName).click();
+        justWait(1000);
+        categoryPage.getConfirmationService().click();
+        justWait(4000);
+    }
+    
+    public void addSubcategory(String categoryName, String subcategoryName) throws InterruptedException {
+        justWait(1000);
+        driver.get("https://localhost:4200/categories");
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        categoryPage = PageFactory.initElements(driver, CategoryPage.class);
+        justWait(1000);
+        
+        categoryPage.getElementById("subcategories" + categoryName).click();
+        justWait(1000);
+        
+        categoryPage.getNewSubcategoryBtn().click();
+        justWait(1000);
+        
+        categoryPage.getSubcategoryName().sendKeys(subcategoryName);
+        justWait(1000);
+        
+        categoryPage.getElementById("saveSubcategory").click();
+        justWait(1000);
+    }
 
     public void deleteCategory(String name) throws InterruptedException {
         driver.get("https://localhost:4200/categories");
 
         justWait(1000);
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
-        justWait(1000);
-
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
-
         justWait(1000);
         categoryPage.deleteBtnCategory(name).click();
         justWait(1000);
@@ -93,9 +126,7 @@ public class CategoryE2ETest {
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "TestCategory" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
-        //skrol do vrha
         justWait(1000);
-        //jse.executeScript("window.scrollTo(0,0);");
         categoryPage.getNewCategoryBtn().click();
         justWait(1000);
         categoryPage.getName().sendKeys(name);
@@ -109,7 +140,6 @@ public class CategoryE2ETest {
     public void editCategory() throws InterruptedException {
         justWait(1000);
         driver.get("https://localhost:4200/categories");
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
         String name = "TestCategory" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         justWait(1000);
@@ -121,10 +151,7 @@ public class CategoryE2ETest {
         justWait(1000);
         categoryPage.getSaveCategoryBtn().click();
         justWait(1000);
-
-        jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
-
-        justWait(1000);
+        
         categoryPage.ensureIsDisplayed("p" + name);
         categoryPage.editBtnCategory(name).click();
         justWait(1000);
@@ -134,8 +161,6 @@ public class CategoryE2ETest {
         justWait(1000);
         categoryPage.getElementById("addCategory").click();
         justWait(1000);
-        jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
-        justWait(1000);
         categoryPage.ensureIsDisplayed("p"+name+"2");
         justWait(1000);
         deleteCategory(name+"2");
@@ -143,13 +168,13 @@ public class CategoryE2ETest {
 
     @Test
     public void addCategoryExists() throws InterruptedException {
+        addCategory("asdsadsadadasdasdsasa");
         justWait(1000);
         driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String name = "Institucija";
+        String name = "asdsadsadadasdasdsasa";
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         justWait(1000);
-        //jse.executeScript("window.scrollTo(0, 0)");
         driver.get("https://localhost:4200/categories");
         justWait(1000);
 
@@ -164,6 +189,9 @@ public class CategoryE2ETest {
         String toast = categoryPage.ensureIsDisplayedToast();
 
         assertEquals("Already exists\nA category with this name already exists", toast);
+        
+        justWait(1000);
+        deleteCategory("asdsadsadadasdasdsasa");
     }
 
     @Test
@@ -174,7 +202,6 @@ public class CategoryE2ETest {
         String name = "";
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         justWait(1000);
-//        jse.executeScript("window.scrollTo(0, 0)");
         driver.get("https://localhost:4200/categories");
         justWait(1000);
 
@@ -209,8 +236,6 @@ public class CategoryE2ETest {
         justWait(1000);
         driver.get("https://localhost:4200/categories");
         justWait(1000);
-        jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
-        justWait(1000);
         categoryPage.ensureIsDisplayed("p" + name);
         categoryPage.editBtnCategory(name).click();
         justWait(1000);
@@ -218,7 +243,7 @@ public class CategoryE2ETest {
         justWait(1000);
         categoryPage.getName().clear();
         justWait(1000);
-        categoryPage.getName().sendKeys("Institucija");
+        categoryPage.getName().sendKeys("Sed");
         justWait(1000);
         categoryPage.getElementById("addCategory").click();
         justWait(1000);
@@ -226,6 +251,7 @@ public class CategoryE2ETest {
         String toast = categoryPage.ensureIsDisplayedToast();
 
         assertEquals("Already exists\nA category with this name already exists", toast);
+        deleteCategory(name);
     }
 
     @Test
@@ -233,8 +259,15 @@ public class CategoryE2ETest {
         justWait(1000);
         driver.get("https://localhost:4200/categories");
         JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String name = "Institucija";
-
+        justWait(1000);
+        String name = "Institucijjja"+ ThreadLocalRandom.current().nextInt(0, 9999 + 1);
+        String subcategory = "Subcategory1"+ ThreadLocalRandom.current().nextInt(0, 9999 + 1);
+        addCategory(name);
+        justWait(1000);
+        addSubcategory(name, subcategory);
+        justWait(1000);
+        justWait(1000);
+        driver.get("https://localhost:4200/categories");
         justWait(1000);
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         justWait(1000);
@@ -247,6 +280,10 @@ public class CategoryE2ETest {
 
         assertEquals("Deletion unsuccessful\nThis category has subcategories associated" +
                 " with it. Firstly delete all its subcategories in order to be able to delete it.", toast);
+        
+        deleteSubcategory(name, subcategory);
+        justWait(1000);
+        deleteCategory(name);
     }
 
     @Test
@@ -267,8 +304,6 @@ public class CategoryE2ETest {
         justWait(1000);
         driver.get("https://localhost:4200/categories");
         justWait(1000);
-        jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
-        justWait(1000);
         categoryPage.ensureIsDisplayed("p" + name);
 
         categoryPage.subcategoriesBtnCategory(name).click();
@@ -277,7 +312,7 @@ public class CategoryE2ETest {
         categoryPage.getNewSubcategoryBtn().click();
         justWait(1000);
 
-        categoryPage.getSubcategoryName().sendKeys("Subcategory1");
+        categoryPage.getSubcategoryName().sendKeys("Subcatdsfsdegory14");
         justWait(1000);
 
         categoryPage.getElementById("saveSubcategory").click();
@@ -290,13 +325,13 @@ public class CategoryE2ETest {
 
         //clear up everything
         justWait(4000);
-        categoryPage.ensureIsDisplayed("deleteSubcategory1");
+        categoryPage.ensureIsDisplayed("deleteSubcatdsfsdegory14");
         //categoryPage.deleteBtnSubcategory(name).click();
 //        WebElement ele = driver.findElement(By.id("delete"+name));
 //        JavascriptExecutor executor = (JavascriptExecutor)driver;
 //        executor.executeScript("arguments[0].click();", ele);
         //iz nekog razloga mora ovako, dijalog koji iskoci ga zbuni i nece da klikne...
-        categoryPage.getElementById("deleteSubcategory1").sendKeys(Keys.RETURN);
+        categoryPage.getElementById("deleteSubcatdsfsdegory14").sendKeys(Keys.RETURN);
         justWait(1000);
         categoryPage.getConfirmationService().click();
         justWait(1000);
@@ -305,22 +340,31 @@ public class CategoryE2ETest {
 
     @Test
     public void addExistingSubcategory() throws InterruptedException {
+        String randomCategory = "okrwejfkwen213";
+        String randomSubcategory = "ojjewb1432";
         justWait(1000);
         driver.get("https://localhost:4200/categories");
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        String name = "Muzej";
+        justWait(1000);
+        addCategory(randomCategory);
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         justWait(1000);
-
-        categoryPage.getElementById("subcategoriesInstitucija").click();
+        addSubcategory(randomCategory, randomSubcategory);
         justWait(1000);
-
+    
+        justWait(1000);
+        driver.get("https://localhost:4200/categories");
+        categoryPage = PageFactory.initElements(driver, CategoryPage.class);
+        justWait(1000);
+    
+        categoryPage.getElementById("subcategories" + randomCategory).click();
+        justWait(1000);
+    
         categoryPage.getNewSubcategoryBtn().click();
         justWait(1000);
-
-        categoryPage.getSubcategoryName().sendKeys(name);
+    
+        categoryPage.getSubcategoryName().sendKeys(randomSubcategory);
         justWait(1000);
-
+    
         categoryPage.getElementById("saveSubcategory").click();
         justWait(1000);
 
@@ -329,6 +373,8 @@ public class CategoryE2ETest {
 
         assertEquals("Already exists\n" +
                 "A subcategory with this name already exists", toast);
+        deleteSubcategory(randomCategory, randomSubcategory);
+        deleteCategory(randomCategory);
     }
 
     @Test
@@ -339,8 +385,10 @@ public class CategoryE2ETest {
         String name = "";
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         justWait(1000);
-
-        categoryPage.getElementById("subcategoriesInstitucija").click();
+        addCategory("Institucijaaa");
+        justWait(1000);
+        
+        categoryPage.getElementById("subcategoriesInstitucijaaa").click();
         justWait(1000);
 
         categoryPage.getNewSubcategoryBtn().click();
@@ -356,6 +404,7 @@ public class CategoryE2ETest {
         justWait(1000);
 
         assertEquals("Required\nName is required.", toast);
+        deleteCategory("Institucijaaa");
     }
 
     @Test
@@ -366,9 +415,6 @@ public class CategoryE2ETest {
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         addCategory(categoryName);
-        justWait(1000);
-
-        jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
 
         justWait(1000);
         categoryPage.ensureIsDisplayed("p" + categoryName);
@@ -398,6 +444,8 @@ public class CategoryE2ETest {
         justWait(1000);
         assertEquals(subcategoriesNumberText,
                 "In total there are 0 subcategories for "+categoryName+".");
+        
+        deleteCategory(categoryName);
     }
 
     @Test
@@ -408,11 +456,7 @@ public class CategoryE2ETest {
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         addCategory(categoryName);
         justWait(1000);
-
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
-
-        justWait(1000);
+        
         categoryPage.ensureIsDisplayed("p" + categoryName);
 
         categoryPage.subcategoriesBtnCategory(categoryName).click();
@@ -443,6 +487,9 @@ public class CategoryE2ETest {
         justWait(1000);
 
         assertEquals("Saved\nSubcategory was successfully saved.", toast);
+        
+        deleteSubcategory(categoryName, subcategoryName);
+        deleteCategory(categoryName);
     }
 
 //    @Test
@@ -495,15 +542,13 @@ public class CategoryE2ETest {
     public void editSubcategoryNameExists() throws InterruptedException {
         justWait(1000);
         String categoryName = "TestCategory" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
-        String subcategoryName = "TestSubcategory" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
+        String subcategoryName = "TestSubcategoryaa" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
+        String subcategoryName2 = "TestSubcategoryaa2" + ThreadLocalRandom.current().nextInt(0, 9999 + 1);
+    
         categoryPage = PageFactory.initElements(driver, CategoryPage.class);
         addCategory(categoryName);
         justWait(1000);
 
-        JavascriptExecutor jse = (JavascriptExecutor) driver;
-        jse.executeScript("window.scrollTo(0, document.body.scrollHeight)");
-
-        justWait(1000);
         categoryPage.ensureIsDisplayed("p" + categoryName);
 
         categoryPage.subcategoriesBtnCategory(categoryName).click();
@@ -512,18 +557,27 @@ public class CategoryE2ETest {
         categoryPage.getNewSubcategoryBtn().click();
         justWait(1000);
 
-        categoryPage.getSubcategoryName().sendKeys("Subcategory1");
+        categoryPage.getSubcategoryName().sendKeys(subcategoryName);
         justWait(1000);
 
         categoryPage.getElementById("saveSubcategory").click();
         justWait(1000);
-
-        categoryPage.editBtnSubcategory("Subcategory1").click();
+        categoryPage.getNewSubcategoryBtn().click();
+        justWait(1000);
+    
+        categoryPage.getSubcategoryName().sendKeys(subcategoryName2);
+        justWait(1000);
+    
+        categoryPage.getElementById("saveSubcategory").click();
+        justWait(1000);
+    
+    
+        categoryPage.editBtnSubcategory(subcategoryName).click();
         justWait(1000);
         categoryPage.getSubcategoryName().clear();
         justWait(1000);
 
-        categoryPage.getSubcategoryName().sendKeys(subcategoryName);
+        categoryPage.getSubcategoryName().sendKeys(subcategoryName2);
         justWait(1000);
 
         categoryPage.getElementById("saveSubcategory").click();
@@ -532,7 +586,10 @@ public class CategoryE2ETest {
         String toast = categoryPage.ensureIsDisplayedToast();
         justWait(1000);
 
-        assertEquals("Saved\nSubcategory was successfully saved.", toast);
+    assertEquals("Already exists\n" + "A subcategory with this name already exists", toast);
+        deleteSubcategory(categoryName, subcategoryName2);
+        deleteSubcategory(categoryName, subcategoryName);
+        deleteCategory(categoryName);
     }
 
 

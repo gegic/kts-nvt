@@ -299,8 +299,6 @@ public class CategoriesControllerIntegrationTest {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(CategoryConstants.DB_COUNT, categories.size());
-        assertEquals(CategoryConstants.EXISTING_ID1, categories.get(0).getId());
-        assertEquals(CategoryConstants.EXISTING_ID2, categories.get(1).getId());
 
         this.accessToken = null;
     }
