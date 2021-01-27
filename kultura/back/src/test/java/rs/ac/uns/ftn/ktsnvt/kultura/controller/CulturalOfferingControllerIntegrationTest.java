@@ -96,7 +96,7 @@ public class CulturalOfferingControllerIntegrationTest {
         culturalOfferingDto.setLongitude(CulturalOfferingConstants.TEST_LONGITUDE1);
         culturalOfferingDto.setSubcategoryId(CulturalOfferingConstants.TEST_SUBCATEGORY_ID1);
         culturalOfferingDto.setName(CulturalOfferingConstants.TEST_NAME1);
-        culturalOfferingDto.setPhotoId(3L);
+        culturalOfferingDto.setPhotoId(4L);
         this.accessToken = LoginUtil.login(restTemplate, MODERATOR_EMAIL, MODERATOR_PASSWORD);
 
         HttpHeaders headers = new HttpHeaders();

@@ -23,6 +23,14 @@ INSERT INTO cultural_offering (id, address, brief_info, latitude, longitude, nam
 
 UPDATE cultural_offering_main_photo SET cultural_offering_id = 2 WHERE id = 2;
 
+
+INSERT INTO cultural_offering_main_photo (height, width, time_added, token) VALUES (429, 763, UTC_TIMESTAMP(), '');
+
+INSERT INTO cultural_offering (id, address, brief_info, latitude, longitude, name, subcategory_id, photo_id) VALUES (3, 'Bačka tvrđava 41', 'Dani evropske baštine', 45.393086697536496, 19.221788262046566, 'Dani evropske baštine', 2, 3);
+
+UPDATE cultural_offering_main_photo SET cultural_offering_id = 3 WHERE id = 3;
+
+
 INSERT INTO cultural_offering_photo (height, time_added, width, cultural_offering_id) VALUES (720, UTC_TIMESTAMP(), 480, 1);
 
 INSERT INTO cultural_offering_main_photo (height, time_added, width, token) VALUES (288, UTC_TIMESTAMP(), 512, '');

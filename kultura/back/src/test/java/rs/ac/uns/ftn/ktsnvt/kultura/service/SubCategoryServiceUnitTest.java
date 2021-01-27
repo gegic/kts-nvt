@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotNull;
 @Rollback(false)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:test.properties")
-public class SubCategoryUnitTest {
+public class SubCategoryServiceUnitTest {
 
     @MockBean
     private SubcategoryRepository subcategoryRepository;

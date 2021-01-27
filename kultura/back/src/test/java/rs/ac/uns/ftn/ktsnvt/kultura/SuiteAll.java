@@ -4,7 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.springframework.test.context.TestPropertySource;
 import rs.ac.uns.ftn.ktsnvt.kultura.controller.*;
-import rs.ac.uns.ftn.ktsnvt.kultura.model.CulturalOfferingMainPhoto;
 import rs.ac.uns.ftn.ktsnvt.kultura.repository.*;
 import rs.ac.uns.ftn.ktsnvt.kultura.service.*;
 
@@ -31,7 +30,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.service.*;
         ReviewPhotoServiceIntegrationTest.class,
         ReviewServiceIntegrationTest.class,
         SubcategoryServiceIntegrationTest.class,
-        SubCategoryUnitTest.class,
+        SubCategoryServiceUnitTest.class,
         UserServiceIntegrationTest.class,
         UserServiceUnitTest.class,
         // repositories

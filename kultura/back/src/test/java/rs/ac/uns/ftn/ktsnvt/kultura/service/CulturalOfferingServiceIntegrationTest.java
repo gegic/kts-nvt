@@ -27,6 +27,7 @@ import rs.ac.uns.ftn.ktsnvt.kultura.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Collection;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,7 +83,7 @@ public class CulturalOfferingServiceIntegrationTest {
                         false
                         );
 
-        assertEquals(2, returnedCulturalOfferings.getContent().size());
+        assertEquals(3, returnedCulturalOfferings.getContent().size());
 
     }
 
@@ -113,6 +114,44 @@ public class CulturalOfferingServiceIntegrationTest {
             assertTrue(c.getName().toLowerCase().contains("vasar"));
         });
     }
+
+
+    @Test
+    @Transactional
+    public void testSearchByUser() {
+        CulturalOffering old = culturalOfferingRepository.getOne(1L);
+        User u = userRepository.getOne(1L);
+        old.getSubscribedUsers().add(u);
+
+        Pageable pageRequest = PageRequest.of(0, Integer.MAX_VALUE);
+
+        Page<CulturalOfferingDto> returnedCulturalOfferings = culturalOfferingService
+                .readAll(pageRequest,
+                        "vasar",
+                        1,
+                        5,
+                        true,
+                        -1,
+                        -1,
+                        -90,
+                        90,
+                        -180,
+                        180,
+                        1L,
+                        false
+                );
+
+        assertEquals(1, returnedCulturalOfferings.getContent().size());
+        returnedCulturalOfferings.forEach(c -> {
+            assertEquals(1L, (long) c.getId());
+        });
+
+        culturalOfferingRepository.save(old);
+
+        culturalOfferingService.unsubscribe(1, 1);
+
+    }
+
     @Test
     @Transactional
     public void testOnlyWithReviews() {
@@ -346,6 +385,32 @@ public class CulturalOfferingServiceIntegrationTest {
         culturalOfferingRepository.deleteById(created.getId());
     }
 
+
+    @Test
+    @Transactional
+    public void testByBounds(){
+
+        Collection<CulturalOfferingDto> culturalOfferingDtos = culturalOfferingService.findByBounds(-90, 90, -180, 180,-1);
+
+        assertEquals(3, culturalOfferingDtos.size());
+
+        culturalOfferingDtos = culturalOfferingService.findByBounds(44, 46, -180, 180,-1);
+
+        assertEquals(1, culturalOfferingDtos.size());
+
+        culturalOfferingDtos = culturalOfferingService.findByBounds(40, 43, -180, 180,-1);
+
+        assertEquals(2, culturalOfferingDtos.size());
+
+        culturalOfferingDtos = culturalOfferingService.findByBounds(49, 90, -100, -99,-1);
+
+        assertEquals(0, culturalOfferingDtos.size());
+
+        culturalOfferingDtos = culturalOfferingService.findByBounds(40, 90, 15, 25,-1);
+
+        assertEquals(3, culturalOfferingDtos.size());
+    }
+
 //    @Test
 //    @Transactional
 //    public void testUpdate() {
@@ -378,7 +443,6 @@ public class CulturalOfferingServiceIntegrationTest {
         CulturalOffering newOffering = culturalOfferingRepository.findById(1L).get();
         assertEquals(oldSubscribers + 1, dto.getNumSubscribed().longValue());
         assertTrue(newOffering.getSubscribedUsers().stream().anyMatch(u -> u.getId() == 1L));
-
         co.getSubscribedUsers().removeIf(u -> u.getId() == 1L);
         culturalOfferingRepository.save(co);
     }
@@ -395,6 +459,9 @@ public class CulturalOfferingServiceIntegrationTest {
         CulturalOfferingDto unsubscribed = culturalOfferingService.unsubscribe(1, 1);
 
         assertEquals(oldSubscribers - 1, unsubscribed.getNumSubscribed().longValue());
+
+        old = culturalOfferingRepository.findById(1L).get();
+        assertFalse(old.getSubscribedUsers().stream().anyMatch(su->su.getId() == 1L));
 
     }
 
