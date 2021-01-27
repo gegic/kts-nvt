@@ -74,7 +74,7 @@
   <button class="delete-button p-button-rounded p-button-text"
           icon="pi pi-trash"
           id="delete-photo"
-          *ngIf="galleriaVisible"
+          *ngIf="galleriaVisible && getUserRole() === 'MODERATOR'"
           (click)="onClickDelete()"
           pRipple
           pButton>

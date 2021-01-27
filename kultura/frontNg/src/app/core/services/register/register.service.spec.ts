@@ -95,9 +95,10 @@ describe('RegisterService', () => {
     let error: HttpErrorResponse;
     const mockResult = '1';
 
-    service.getIdByMail(mockResult).subscribe(null, e => {
-      error = e;
-    });
+    service.getIdByMail(mockResult).subscribe({next: null,
+      error: e => {
+        error = e;
+      }});
     const req = httpMock.expectOne('/auth/exists/email/id/1');
     expect(req.request.method).toBe('GET');
 

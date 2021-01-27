@@ -79,9 +79,10 @@ describe('PhotoService', () => {
   it('should throw error', () => {
     let error: HttpErrorResponse;
 
-    service.delete(1).subscribe(null, e => {
-      error = e;
-    });
+    service.delete(1).subscribe({next: null,
+      error: e => {
+        error = e;
+      }});
     const req = httpMock
       .expectOne('/api/photos/1');
     expect(req.request.method).toBe('DELETE');

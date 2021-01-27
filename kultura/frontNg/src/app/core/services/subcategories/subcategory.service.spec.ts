@@ -88,9 +88,10 @@ describe('SubcategoryService', () => {
   it('should throw error', () => {
     let error: HttpErrorResponse;
 
-    service.getSubcategories(1).subscribe(null, e => {
-      error = e;
-    });
+    service.getSubcategories(1).subscribe({next: null,
+      error: e => {
+        error = e;
+      }});
     const req = httpMock.expectOne('/api/subcategories/category/1');
     expect(req.request.method).toBe('GET');
 
