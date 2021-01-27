@@ -142,7 +142,7 @@ describe('AddOfferingService', () => {
   });
 
   it('addPhoto()  should query url and add a photo', fakeAsync(() => {
-    let newPhoto: File = new File([''], 'photo');
+    const newPhoto: File = new File([''], 'photo');
 
     const mockPost: File = new File(
       [''],
@@ -361,9 +361,10 @@ describe('AddOfferingService', () => {
         categoryName: 'Category1',
         categoryId: 1,
       };
-    service.getOffering(1).subscribe(null, e => {
+    service.getOffering(1).subscribe({next: null,
+      error: e => {
       error = e;
-    });
+    }});
     const req = httpMock.expectOne('/api/cultural-offerings/1');
     expect(req.request.method).toBe('GET');
 

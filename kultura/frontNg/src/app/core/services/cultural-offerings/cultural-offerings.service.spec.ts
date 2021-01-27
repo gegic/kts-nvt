@@ -337,9 +337,10 @@ describe('CulturalOfferingsService', () => {
   it('should throw error', () => {
     let error: HttpErrorResponse;
 
-    service.getCulturalOfferings(1,  'a').subscribe(null, e => {
-      error = e;
-    });
+    service.getCulturalOfferings(1,  'a').subscribe({next: null,
+      error: e => {
+        error = e;
+      }});
     const req = httpMock
       .expectOne('/api/cultural-offerings?page=1&sort=a&no-reviews=true&search=&rating-min=1&rating-max=5');
     expect(req.request.method).toBe('GET');

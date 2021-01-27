@@ -76,9 +76,10 @@ describe('VerifyService', () => {
   it('should throw error', () => {
     let error: HttpErrorResponse;
 
-    service.verify('1').subscribe(null, e => {
-      error = e;
-    });
+    service.verify('1').subscribe({next: null,
+      error: e => {
+        error = e;
+      }});
 
     const req = httpMock.expectOne('/auth/verify/1');
     expect(req.request.method).toBe('GET');
