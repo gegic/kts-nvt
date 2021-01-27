@@ -14,10 +14,10 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public class DataGenerator {
-    public static final int MAX_OFFERINGS = 120;
+    public static final int MAX_OFFERINGS = 200;
     public static final int MAX_USERS = 70;
-    public static final int MAX_CATEGORIES = 10;
-    public static final int MAX_SUBCATEGORIES = 20;
+    public static final int MAX_CATEGORIES = 20;
+    public static final int MAX_SUBCATEGORIES = 40;
     public static final int MAX_POSTS = 35;
 
     private long categoriesNumber = 0;
